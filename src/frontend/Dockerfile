@@ -1,5 +1,5 @@
 # Use an official Node runtime as the base image
-FROM node:14-alpine
+FROM node:22
 
 # Set the working directory in the container
 WORKDIR /app
@@ -13,17 +13,8 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# Build the app
-RUN npm run build
+# Expose the default React Native port
+EXPOSE 8081
 
-# Use a lightweight nginx image to serve the static files
-FROM nginx:alpine
-
-# Copy the build output to replace the default nginx contents.
-COPY --from=0 /app/build /usr/share/nginx/html
-
-# Expose port 80
-EXPOSE 80
-
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Start the React Native development server
+CMD ["npm", "start"]

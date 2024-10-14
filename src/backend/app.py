@@ -16,9 +16,11 @@ app.add_middleware(
 )
 
 # Configure boto3 to use LocalStack
-localstack_endpoint = os.environ.get('LOCALSTACK_ENDPOINT', 'http://localhost:4566')
-lambda_client = boto3.client('lambda', endpoint_url=localstack_endpoint)
-
+localstack_endpoint = os.environ.get('LOCALSTACK_ENDPOINT', 'http://localstack:4566')
+lambda_client = boto3.client('lambda', endpoint_url=localstack_endpoint, 
+                             region_name='us-west-1',  # match with CDK stack region
+                             aws_access_key_id='test',
+                             aws_secret_access_key='test')
 @app.get("/")
 async def root():
     try:
