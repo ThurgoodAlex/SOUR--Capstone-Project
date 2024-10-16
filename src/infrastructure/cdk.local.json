@@ -1,0 +1,8 @@
+{
+  "app": "npx ts-node --prefer-ts-exts bin/infrastructure.ts",
+  "context": {
+    "@aws-cdk/core:bootstrapQualifier": "local"
+  },
+  "toolkitStackName": "CDKToolkitLocal",
+  "toolkitBucketName": "cdk-local-toolkit-bucket"
+}

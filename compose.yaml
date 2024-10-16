@@ -1,0 +1,45 @@
+services: 
+  backend:
+    build: src/backend/ 
+    ports: 
+      - "8000:8000"
+    environment:
+      - AWS_DEFAULT_REGION=us-west-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - ENDPOINT_URL=http://localstack:4566
+    depends_on: 
+      - localstack
+  frontend:
+    build: src/frontend/
+    ports:
+      - "8081:8081"
+
+  localstack:
+    container_name: "${LOCALSTACK_DOCKER_NAME:-localstack-main}"
+    image: localstack/localstack
+    ports:
+      - "4566:4566"            # LocalStack Gateway
+    environment:
+      - DEBUG=${DEBUG:-0}
+    volumes:
+      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+
+  infrastructure: 
+      build: 
+        context: ./src/infrastructure
+        dockerfile: Dockerfile    
+      environment:
+        - AWS_ACCESS_KEY_ID=test
+        - AWS_SECRET_ACCESS_KEY=test
+        - AWS_DEFAULT_REGION=us-west-1
+        - CDK_DEFAULT_ACCOUNT=000000000000
+        - CDK_DEFAULT_REGION=us-west-1
+        - AWS_ENDPOINT_URL=http://localstack:4566
+
+      volumes: 
+        - ./src/:/app/
+      depends_on: 
+        - localstack
+
