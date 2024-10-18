@@ -20,9 +20,6 @@ RUN apt-get update && apt-get install -y \
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs
 
-# Install CDK and TypeScript
-RUN npm install -g aws-cdk aws-cdk-local typescript
-
 # Install AWS CLI and LocalStack
 RUN pip3 install awscli awscli-local
 
