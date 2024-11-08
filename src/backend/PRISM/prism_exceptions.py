@@ -1,3 +1,5 @@
+from fastapi import HTTPException
+
 class DuplicateUserRegistration(HTTPException):
     status_code = 409
     default_detail = "Entity already exists."

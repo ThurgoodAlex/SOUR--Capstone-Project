@@ -43,8 +43,8 @@ def create_new_user(newUser: UserRegistration)-> UserResponse:
     
 #TODO: find a cleaner way to do this besides UserRegistration
 #TODO: use a form instead of UserRegistration 
-@auth_router.post("/login", response_model=UserResponse, status_code=200):
-    def login_user(user:UserRegistration)
+@auth_router.post("/login", response_model=UserResponse, status_code=200)
+def login_user(user:UserRegistration):
         user = select(UserInDB).where(UserInDB.username == user.username).first()
 
         if user is None or not pwd_context.verify(user.password, user.hashed_password):
