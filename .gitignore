@@ -4,3 +4,4 @@ node_modules/
 src/infrastructure/node_modules
 src/infrastructure/package-lock.json
 src/frontend/node_modules
+volume/*
