@@ -1,14 +1,17 @@
 from datetime import datetime
 from typing import Optional
 
-from sqlmodel import Field, Relationship, SQLModel
+from sqlmodel import Field, SQLModel  # Using only SQLModel for table and validation
 from pydantic import BaseModel
+
 
 class Metadata(BaseModel):
     count: int 
 
+
 class UserInDB(SQLModel, table=True): 
     __tablename__ = "users"
+    __table_args__ = {'extend_existing': True}  
 
     id: Optional[int] = Field(default=None, primary_key=True)
     username: str = Field(unique=True, index=True)
@@ -21,8 +24,10 @@ class User(BaseModel):
     username: str
     email: str
 
+
 class UserResponse(BaseModel):
     user: User
+
 
 class UserRegistration(BaseModel):
     username: str

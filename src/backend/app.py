@@ -1,8 +1,14 @@
 import os
+import sys
 import json
 import boto3
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+# Now you should be able to import 'schema' and 'auth'
+from PRISM.src.prism_services.schema import *
+
+from PRISM.src.prism_services.auth import auth_router
 
 app = FastAPI()
 
@@ -14,6 +20,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(auth_router)
 
 # Configure boto3 to use LocalStack
 localstack_endpoint = os.environ.get('LOCALSTACK_ENDPOINT', 'http://localstack:4566')

@@ -11,7 +11,7 @@ services:
     depends_on: 
       - localstack
     volumes: 
-      - ./src/:/backend/
+      - ./src/backend:/backend/
   frontend:
     build: src/frontend/
     ports:

@@ -1,4 +1,5 @@
 import os
+import sys
 from passlib.context import CryptContext
 from fastapi import APIRouter, Depends, HTTPException
 from datetime import datetime, timezone
@@ -12,10 +13,17 @@ from fastapi.security import (
 )
 
 
-from backend.schema import(
+from schema import(
     UserInDB, UserResponse, UserRegistration
 )
-from backend.prism_exceptions import *
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
+
+from prism_exceptions import(
+    AuthException, 
+    InvalidCredentials, 
+    DuplicateUserRegistration
+
+) 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 jwt_key = str(os.environ.get("JWT_KEY"))
@@ -48,7 +56,7 @@ def login_user(user:UserRegistration):
         user = select(UserInDB).where(UserInDB.username == user.username).first()
 
         if user is None or not pwd_context.verify(user.password, user.hashed_password):
-            raise InvalidCredential()
+            raise InvalidCredentials()
         return user
 
 def check_email(newUser):
