@@ -4,11 +4,14 @@ import { SafeAreaView } from 'react-native'
 
 import { HelloWave } from '@/components/HelloWave';
 import BackendData from '@/components/BackendData';
+import { SignUp } from '@/components/SignUp';
 export default function HomeScreen() {
   return (
-   <SafeAreaView style={{ flex: 1 }}>
-      <BackendData />
-    </SafeAreaView> 
+    <>
+    <HelloWave></HelloWave>
+    <SignUp></SignUp>  
+    </>
+   
   );
 }
 

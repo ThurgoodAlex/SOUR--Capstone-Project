@@ -10,12 +10,15 @@ services:
       - ENDPOINT_URL=http://localstack:4566
     depends_on: 
       - localstack
+    volumes:
+      - "./src/backend:/app/"
+
   frontend:
     build: src/frontend/
     ports:
-      - "19000:19000"
-      - "19001:19001"
-      - "19002:19002"
+      - "8081:8081"
+    volumes:
+      - "./src/frontend:/app/"
 
 
   localstack:
