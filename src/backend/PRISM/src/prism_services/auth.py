@@ -1,5 +1,7 @@
 import os
 import sys
+import json
+import boto3
 from passlib.context import CryptContext
 from fastapi import APIRouter, Depends, HTTPException
 from datetime import datetime, timezone
@@ -32,22 +34,40 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 auth_router = APIRouter(prefix="/auth", tags=["Authentication"])
 access_token_duration = 3600 
 
+localstack_endpoint = os.environ.get('LOCALSTACK_ENDPOINT', 'http://localstack:4566')
+lambda_client = boto3.client('lambda', endpoint_url=localstack_endpoint, 
+                             region_name='us-west-1',  # match with CDK stack region
+                             aws_access_key_id='test',
+                             aws_secret_access_key='test')
+
+
 @auth_router.post("/createuser", response_model=UserResponse, status_code=201)
-def create_new_user(newUser: UserRegistration)-> UserResponse:
+def create_new_user(newUser: UserRegistration) -> UserResponse:
+    try:
+        # Invoke the create_user_lambda function
+        response = lambda_client.invoke(
+            FunctionName='create_user_lambda',  # Ensure this name matches the Lambda function in CDK
+            InvocationType='RequestResponse',
+            Payload=json.dumps(newUser.model_dump())  # Pass the user data as payload if needed
+        )
+        lambda_response = json.loads(response['Payload'].read())
+
+        hashed_pwd = pwd_context.hash(newUser.password)
+
+        if check_username(newUser):
+            raise DuplicateUserRegistration("User", "username", newUser.username)
+        elif check_email(newUser):
+            raise DuplicateUserRegistration("User", "email", newUser.email)
+        else:
+            user = UserInDB(
+                **newUser.model_dump(),
+                hashed_password=hashed_pwd
+            )
+            return UserResponse(user=user)
     
-    hashed_pwd = pwd_context.hash(newUser.password)
+    except Exception as e:
+        return {"error": str(e)}
 
-    if check_username(newUser):
-        raise DuplicateUserRegistration("User", "username", newUser.username)
-    elif check_email(newUser):
-        raise DuplicateUserRegistration("User", "email", newUser.email)
-    else: 
-        user = UserInDB(
-                **newUser.model_dump(), 
-                hashed_password = hashed_pwd
-                )
-
-        return UserResponse(user = user)
     
 #TODO: find a cleaner way to do this besides UserRegistration
 #TODO: use a form instead of UserRegistration 
@@ -64,6 +84,3 @@ def check_email(newUser):
 
 def check_username(newUser):
     return select(UserInDB.username).where(UserInDB.username == newUser.username).first() is not None 
-
-
-

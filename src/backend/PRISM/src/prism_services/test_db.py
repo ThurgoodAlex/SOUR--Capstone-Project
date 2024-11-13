@@ -13,18 +13,6 @@ from schema import(
     UserInDB
 )
 
-s3 = boto3.client(
-    's3',
-    endpoint_url="http://host.docker.internal:4566",
-    region_name="us-east-1",               
-    aws_access_key_id="test",              
-    aws_secret_access_key="test"
-)
-
-def setup_s3_bucket():
-    bucket_name = "test-bucket"
-    s3.create_bucket(Bucket=bucket_name)
-
 
 engine = create_engine(
     f"sqlite:///./test_prism.db",
@@ -64,7 +52,6 @@ def get_all_users(session: Session) -> list[UserInDB]:
 
 #Test create a user
 def test_create_new_user():
-    setup_s3_bucket()
     client = TestClient(app)
     user_data = {
         "username": "newuser",
