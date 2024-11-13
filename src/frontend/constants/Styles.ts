@@ -15,6 +15,13 @@ export const Styles = StyleSheet.create({
       marginBottom: 20,
       color: '#333',
     },
+    subtitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginBottom: 20,
+        color: '#222',
+      },
     input: {
       borderWidth: 1,
       borderColor: '#ddd',
@@ -24,15 +31,28 @@ export const Styles = StyleSheet.create({
       fontSize: 16,
       marginBottom: 16,
     },
-    button: {
+    buttonLight: {
+      backgroundColor: '#D3D3D3',
+      padding: 16,
+      borderRadius: 8,
+      alignItems: 'center',
+      marginBottom: 16,
+    },
+    buttonDark:{
       backgroundColor: '#454545',
       padding: 16,
       borderRadius: 8,
       alignItems: 'center',
+      marginBottom: 16,
     },
-    buttonText: {
+    buttonTextLight: {
       color: '#fff',
       fontSize: 16,
       fontWeight: 'bold',
     },
+    buttonTextDark: {
+        color: '#000',
+        fontSize: 16,
+        fontWeight: 'bold',
+    }
   });

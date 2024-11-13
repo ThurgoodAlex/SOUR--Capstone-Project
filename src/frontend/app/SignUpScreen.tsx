@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
-
 import { Styles } from '@/constants/Styles';
+import { Stack } from 'expo-router';
 
-export function SignUp() {
+export function SignUpScreen() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -29,7 +29,13 @@ export function SignUp() {
   };
 
   return (
-    <View style={Styles.container}>
+    <>
+      <Stack.Screen
+        options={{
+          title: "SignUpScreen",
+        }}
+      />
+      <View style={Styles.container}>
       <Text style={Styles.title}>Create an Account</Text>
       
       <TextInput
@@ -54,19 +60,21 @@ export function SignUp() {
       />
 
       <TouchableOpacity
-        style={Styles.button}
+        style={Styles.buttonDark}
         onPress={handleSignUp}
         disabled={loading}
       >
         {loading ? (
           <ActivityIndicator color="#ffffff" />
         ) : (
-          <Text style={Styles.buttonText}>Sign Up</Text>
+          <Text style={Styles.buttonTextLight}>Sign Up</Text>
         )}
       </TouchableOpacity>
-    </View>
+      </View>
+      
+    </>
+    
   );
 }
 
-
-export default SignUp;
+export default SignUpScreen;

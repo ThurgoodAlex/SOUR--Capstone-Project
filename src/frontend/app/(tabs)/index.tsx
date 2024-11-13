@@ -1,17 +1,6 @@
-import { Image, StyleSheet, Platform } from 'react-native';
-import React from 'react'
-import { SafeAreaView } from 'react-native'
+import React from 'react';
+import LoggedOutScreen from '@/app/LoggedOutScreen'; // Import your logged-out screen
 
-import { HelloWave } from '@/components/HelloWave';
-import BackendData from '@/components/BackendData';
-import { SignUp } from '@/components/SignUp';
 export default function HomeScreen() {
-  return (
-    <>
-    <SignUp></SignUp>  
-    </>
-   
-  );
+  return <LoggedOutScreen />;
 }
-
-
