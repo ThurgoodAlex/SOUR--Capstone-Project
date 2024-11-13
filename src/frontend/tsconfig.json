@@ -1,12 +1,36 @@
+
+//old way
+// {
+//   "extends": "expo/tsconfig.base",
+//   "compilerOptions": {
+//     "strict": true,
+//     "paths": {
+//       "@/*": [
+//         "./*"
+//       ]
+//     }
+//   },
+//   "include": [
+//     "**/*.ts",
+//     "**/*.tsx",
+//     ".expo/types/**/*.ts",
+//     "expo-env.d.ts"
+//   ]
+// }
+
+
+//ashlyn's new stuff
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
+    "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ]
-    }
+      "@/*": ["*"]  
+    },
+    "jsx": "react-native",
+    "lib": ["esnext", "dom"],
+    "types": ["react", "react-native"]
   },
   "include": [
     "**/*.ts",
@@ -15,3 +39,4 @@
     "expo-env.d.ts"
   ]
 }
+
