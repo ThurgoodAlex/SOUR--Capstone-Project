@@ -29,6 +29,9 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
+# Install aws cdk depencies 
+RUN npm install -g aws-cdk aws-cdk-local
+
 # Copy the rest of your CDK code
 COPY . .
 
