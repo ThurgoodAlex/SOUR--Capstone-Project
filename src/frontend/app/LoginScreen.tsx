@@ -4,7 +4,6 @@ import { Styles } from '@/constants/Styles';
 import { Stack, router } from 'expo-router';
 
 export default function LoginScreen() {
-  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -29,7 +28,7 @@ export default function LoginScreen() {
         }}
       />
       <View style={Styles.container}>
-      <Text style={Styles.title}>Create an Account</Text>
+      <Text style={Styles.title}>Login</Text>
       
       <TextInput
         style={Styles.input}
