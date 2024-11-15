@@ -10,6 +10,8 @@ services:
       - ENDPOINT_URL=http://localstack:4566
     depends_on: 
       - localstack
+    volumes:
+      - ./src/backend:/app/
   frontend:
     build: src/frontend/
     ports:
@@ -33,9 +35,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
 
   infrastructure: 
-      build: 
-        context: ./src/infrastructure
-        dockerfile: Dockerfile    
+      build: src/infrastructure/    
       environment:
         - AWS_ACCESS_KEY_ID=test
         - AWS_SECRET_ACCESS_KEY=test

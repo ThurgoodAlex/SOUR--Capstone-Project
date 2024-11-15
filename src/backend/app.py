@@ -5,8 +5,7 @@ import boto3
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-# Now you should be able to import 'schema' and 'auth'
-from PRISM.src.prism_services.schema import *
+from PRISM.src.prism_services.schema import * 
 
 from PRISM.src.prism_services.auth import auth_router
 
