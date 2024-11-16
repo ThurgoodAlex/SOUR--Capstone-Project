@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import boto3
+import logging
 from passlib.context import CryptContext
 from fastapi import APIRouter, Depends, HTTPException
 from datetime import datetime, timezone
@@ -13,25 +14,38 @@ from fastapi.security import (
     OAuth2PasswordBearer,
     OAuth2PasswordRequestForm,
 )
+from .test_db import get_session
 
-
-from schema import(
+SessionDep = Annotated[Session, Depends(get_session)]
+from .schema import(
     UserInDB, UserResponse, UserRegistration
 )
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
-from prism_exceptions import(
+from .prism_exceptions import(
     AuthException, 
     InvalidCredentials, 
     DuplicateUserRegistration
-
 ) 
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('logs/app_auth.log'),
+        logging.StreamHandler()
+    ]
+)
+
+# Create logger instance
+logger = logging.getLogger(__name__)
+
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 jwt_key = str(os.environ.get("JWT_KEY"))
 jwt_alg = "HS256"
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
-auth_router = APIRouter(prefix="/auth", tags=["Authentication"])
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
+auth_router = APIRouter( tags=["Authentication"])
 access_token_duration = 3600 
 
 localstack_endpoint = os.environ.get('LOCALSTACK_ENDPOINT', 'http://localstack:4566')
@@ -42,7 +56,7 @@ lambda_client = boto3.client('lambda', endpoint_url=localstack_endpoint,
 
 
 @auth_router.post("/createuser", response_model=UserResponse, status_code=201)
-def create_new_user(newUser: UserRegistration) -> UserResponse:
+def create_new_user(newUser: UserRegistration, session: Session) -> UserResponse:
     try:
         # Invoke the create_user_lambda function
         response = lambda_client.invoke(
@@ -50,7 +64,6 @@ def create_new_user(newUser: UserRegistration) -> UserResponse:
             InvocationType='RequestResponse',
             Payload=json.dumps(newUser.model_dump())  # Pass the user data as payload if needed
         )
-        lambda_response = json.loads(response['Payload'].read())
 
         hashed_pwd = pwd_context.hash(newUser.password)
 
@@ -59,10 +72,14 @@ def create_new_user(newUser: UserRegistration) -> UserResponse:
         elif check_email(newUser):
             raise DuplicateUserRegistration("User", "email", newUser.email)
         else:
+            logger.info(str(**newUser.model_dump()))
             user = UserInDB(
                 **newUser.model_dump(),
                 hashed_password=hashed_pwd
             )
+            session.add(user)
+            session.commit()
+            session.refresh()
             return UserResponse(user=user)
     
     except Exception as e:
@@ -79,8 +96,8 @@ def login_user(user:UserRegistration):
             raise InvalidCredentials()
         return user
 
-def check_email(newUser):
+def check_email(newUser:UserRegistration):
     return select(UserInDB.email).where(UserInDB.email == newUser.email).first() is not None 
 
-def check_username(newUser):
+def check_username(newUser:UserRegistration):
     return select(UserInDB.username).where(UserInDB.username == newUser.username).first() is not None 
