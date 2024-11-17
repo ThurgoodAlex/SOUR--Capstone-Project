@@ -1,0 +1,549 @@
+2024-11-17 20:29:54,383 - app - INFO - Creating database and database tables...
+2024-11-17 20:29:54,389 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 20:29:54,389 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 20:29:54,390 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 20:29:54,394 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 20:30:01,336 - app - INFO - Creating database and database tables...
+2024-11-17 20:30:01,341 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 20:30:01,342 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 20:30:01,342 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 20:30:01,346 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 20:32:23,372 - app - INFO - Creating database and database tables...
+2024-11-17 20:32:23,377 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 20:32:23,378 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 20:32:23,378 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 20:32:23,382 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 20:32:29,259 - app - INFO - Creating database and database tables...
+2024-11-17 20:32:29,263 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 20:32:29,264 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 20:32:29,264 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 20:32:29,268 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 20:32:48,983 - app - INFO - Creating database and database tables...
+2024-11-17 20:32:48,988 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 20:32:48,989 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 20:32:48,990 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 20:32:48,994 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 20:33:44,059 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-17 20:36:09,177 - app - INFO - Creating database and database tables...
+2024-11-17 20:36:09,182 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 20:36:09,182 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 20:36:09,183 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 20:36:09,186 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 20:36:18,864 - app - INFO - Creating database and database tables...
+2024-11-17 20:36:18,868 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 20:36:18,869 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 20:36:18,870 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 20:36:18,875 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 20:36:29,283 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-17 20:36:29,549 - PRISM.src.prism_services.auth - INFO - Creating user....
+2024-11-17 20:36:43,192 - PRISM.src.prism_services.auth - INFO - Creating user....
+2024-11-17 20:37:28,448 - app - INFO - Creating database and database tables...
+2024-11-17 20:37:28,452 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 20:37:28,453 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 20:37:28,453 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 20:37:28,457 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 20:37:31,497 - app - INFO - Creating database and database tables...
+2024-11-17 20:37:31,500 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 20:37:31,501 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 20:37:31,501 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 20:37:31,504 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 20:37:34,050 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-17 20:37:34,329 - PRISM.src.prism_services.auth - INFO - Creating user....
+2024-11-17 20:37:34,330 - PRISM.src.prism_services.auth - INFO - usernamestring
+2024-11-17 20:37:34,330 - PRISM.src.prism_services.auth - INFO - pwdstring
+2024-11-17 20:38:11,382 - app - INFO - Creating database and database tables...
+2024-11-17 20:38:11,386 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 20:38:11,387 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 20:38:11,387 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 20:38:11,391 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 20:39:11,354 - app - INFO - Creating database and database tables...
+2024-11-17 20:39:11,358 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 20:39:11,359 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 20:39:11,359 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 20:39:11,362 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 20:39:13,143 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-17 20:39:13,409 - PRISM.src.prism_services.auth - INFO - Creating user....
+2024-11-17 20:39:13,409 - PRISM.src.prism_services.auth - INFO - username:string
+2024-11-17 20:39:13,410 - PRISM.src.prism_services.auth - INFO - pwd:string
+2024-11-17 20:39:30,901 - app - INFO - Creating database and database tables...
+2024-11-17 20:39:30,905 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 20:39:30,906 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 20:39:30,906 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 20:39:30,910 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 20:39:33,901 - app - INFO - Creating database and database tables...
+2024-11-17 20:39:33,905 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 20:39:33,906 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 20:39:33,906 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 20:39:33,910 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 20:40:20,892 - app - INFO - Creating database and database tables...
+2024-11-17 20:40:20,896 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 20:40:20,897 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 20:40:20,897 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 20:40:20,901 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 20:40:24,732 - app - INFO - Creating database and database tables...
+2024-11-17 20:40:24,737 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 20:40:24,739 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 20:40:24,739 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 20:40:24,745 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 20:40:32,667 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-17 20:40:32,904 - PRISM.src.prism_services.auth - INFO - Creating user....
+2024-11-17 20:40:32,904 - PRISM.src.prism_services.auth - INFO - username:string
+2024-11-17 20:40:32,905 - PRISM.src.prism_services.auth - INFO - pwd:string
+2024-11-17 20:40:35,913 - PRISM.src.prism_services.auth - INFO - Creating user....
+2024-11-17 20:40:35,913 - PRISM.src.prism_services.auth - INFO - username:string
+2024-11-17 20:40:35,914 - PRISM.src.prism_services.auth - INFO - pwd:string
+2024-11-17 20:41:47,874 - app - INFO - Creating database and database tables...
+2024-11-17 20:41:47,880 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 20:41:47,881 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 20:41:47,881 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 20:41:47,886 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 20:42:13,435 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-17 20:42:13,669 - PRISM.src.prism_services.auth - INFO - Creating user....
+2024-11-17 20:42:13,669 - PRISM.src.prism_services.auth - INFO - username:Alex
+2024-11-17 20:42:13,670 - PRISM.src.prism_services.auth - INFO - pwd:pwd
+2024-11-17 20:42:59,810 - app - INFO - Creating database and database tables...
+2024-11-17 20:42:59,814 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 20:42:59,815 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 20:42:59,815 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 20:42:59,819 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 20:43:21,469 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-17 20:43:21,736 - PRISM.src.prism_services.auth - INFO - Creating user....
+2024-11-17 20:43:21,736 - PRISM.src.prism_services.auth - INFO - username:string
+2024-11-17 20:43:21,737 - PRISM.src.prism_services.auth - INFO - pwd:string
+2024-11-17 20:44:02,266 - app - INFO - Creating database and database tables...
+2024-11-17 20:44:02,271 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 20:44:02,272 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 20:44:02,272 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 20:44:02,277 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 20:45:37,056 - app - INFO - Creating database and database tables...
+2024-11-17 20:45:37,059 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 20:45:37,060 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 20:45:37,060 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 20:45:37,064 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 20:45:44,169 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-17 20:45:44,403 - PRISM.src.prism_services.auth - INFO - Creating user....
+2024-11-17 20:45:44,403 - PRISM.src.prism_services.auth - INFO - username:string
+2024-11-17 20:45:44,404 - PRISM.src.prism_services.auth - INFO - pwd:string
+2024-11-17 20:46:56,064 - app - INFO - Creating database and database tables...
+2024-11-17 20:46:56,071 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 20:46:56,072 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 20:46:56,073 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 20:46:56,078 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 20:47:01,676 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-17 20:47:01,927 - PRISM.src.prism_services.auth - INFO - Creating user....
+2024-11-17 20:47:01,927 - PRISM.src.prism_services.auth - INFO - username:string
+2024-11-17 20:47:01,928 - PRISM.src.prism_services.auth - INFO - pwd:string
+2024-11-17 20:47:11,129 - app - INFO - Creating database and database tables...
+2024-11-17 20:47:11,134 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 20:47:11,135 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 20:47:11,136 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 20:47:11,141 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 20:47:15,199 - app - INFO - Creating database and database tables...
+2024-11-17 20:47:15,205 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 20:47:15,206 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 20:47:15,207 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 20:47:15,213 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 20:47:29,541 - PRISM.src.prism_services.auth - INFO - Lambda response: {'ResponseMetadata': {'RequestId': 'ee96b3d6-40d5-4f46-b469-bac6cd4d7c8a', 'HTTPStatusCode': 200, 'HTTPHeaders': {'server': 'TwistedWeb/24.3.0', 'date': 'Sun, 17 Nov 2024 20:47:28 GMT', 'content-type': 'text/plain; charset=utf-8', 'x-amz-function-error': 'Unhandled', 'x-amz-executed-version': '$LATEST', 'content-length': '141', 'x-amzn-requestid': 'ee96b3d6-40d5-4f46-b469-bac6cd4d7c8a', 'x-amz-request-id': 'ee96b3d6-40d5-4f46-b469-bac6cd4d7c8a'}, 'RetryAttempts': 0}, 'StatusCode': 200, 'FunctionError': 'Unhandled', 'ExecutedVersion': '$LATEST', 'Payload': <botocore.response.StreamingBody object at 0x7f292bda1360>}
+2024-11-17 20:47:29,542 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-17 20:47:29,786 - PRISM.src.prism_services.auth - INFO - Creating user....
+2024-11-17 20:47:29,786 - PRISM.src.prism_services.auth - INFO - username:string
+2024-11-17 20:47:29,787 - PRISM.src.prism_services.auth - INFO - pwd:string
+2024-11-17 20:48:15,569 - app - INFO - Creating database and database tables...
+2024-11-17 20:48:15,573 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 20:48:15,574 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 20:48:15,574 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 20:48:15,578 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 20:48:23,148 - app - INFO - Creating database and database tables...
+2024-11-17 20:48:23,152 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 20:48:23,153 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 20:48:23,153 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 20:48:23,158 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 20:48:33,312 - app - INFO - Creating database and database tables...
+2024-11-17 20:48:33,316 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 20:48:33,317 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 20:48:33,318 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 20:48:33,322 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 20:49:03,650 - app - INFO - Creating database and database tables...
+2024-11-17 20:49:03,657 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 20:49:03,657 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 20:49:03,658 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 20:49:03,662 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 20:49:33,974 - app - INFO - Creating database and database tables...
+2024-11-17 20:49:33,979 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 20:49:33,979 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 20:49:33,980 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 20:49:33,985 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 20:49:45,918 - PRISM.src.prism_services.auth - INFO - Lambda Payload (JSON): {
+    "errorMessage": "Unable to import module 'prism.auth': No module named 'prism'",
+    "errorType": "Runtime.ImportModuleError",
+    "stackTrace": []
+}
+2024-11-17 20:49:45,918 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-17 20:49:46,161 - PRISM.src.prism_services.auth - INFO - Creating user....
+2024-11-17 20:49:46,161 - PRISM.src.prism_services.auth - INFO - username:string
+2024-11-17 20:49:46,162 - PRISM.src.prism_services.auth - INFO - pwd:string
+2024-11-17 20:56:20,837 - app - INFO - Creating database and database tables...
+2024-11-17 20:56:20,842 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 20:56:20,843 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 20:56:20,844 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 20:56:20,848 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 21:04:11,998 - app - INFO - Creating database and database tables...
+2024-11-17 21:04:12,002 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 21:04:12,002 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 21:04:12,003 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 21:04:12,005 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 21:04:36,824 - app - INFO - Creating database and database tables...
+2024-11-17 21:04:36,828 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 21:04:36,829 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 21:04:36,829 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 21:04:36,834 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 21:06:40,634 - app - INFO - Creating database and database tables...
+2024-11-17 21:06:40,638 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 21:06:40,638 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 21:06:40,639 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 21:06:40,642 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 21:06:43,053 - app - INFO - Creating database and database tables...
+2024-11-17 21:06:43,058 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 21:06:43,059 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 21:06:43,060 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 21:06:43,064 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 21:08:27,642 - PRISM.src.prism_services.auth - INFO - Lambda Payload (JSON): {
+    "errorMessage": "Unable to import module 'prism.auth': No module named 'prism'",
+    "errorType": "Runtime.ImportModuleError",
+    "stackTrace": []
+}
+2024-11-17 21:08:27,643 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-17 21:08:27,884 - PRISM.src.prism_services.auth - INFO - Creating user....
+2024-11-17 21:08:27,885 - PRISM.src.prism_services.auth - INFO - username:string
+2024-11-17 21:08:27,885 - PRISM.src.prism_services.auth - INFO - pwd:string
+2024-11-17 21:08:54,832 - app - INFO - Creating database and database tables...
+2024-11-17 21:08:54,837 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 21:08:54,838 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 21:08:54,838 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 21:08:54,843 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 21:09:17,718 - app - INFO - Creating database and database tables...
+2024-11-17 21:09:17,724 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 21:09:17,725 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 21:09:17,725 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 21:09:17,730 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 21:09:25,278 - app - INFO - Creating database and database tables...
+2024-11-17 21:09:25,283 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 21:09:25,284 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 21:09:25,285 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 21:09:25,290 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 21:09:54,455 - app - INFO - Creating database and database tables...
+2024-11-17 21:09:54,460 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 21:09:54,460 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 21:09:54,461 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 21:09:54,464 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 21:09:56,077 - app - INFO - Creating database and database tables...
+2024-11-17 21:09:56,083 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 21:09:56,084 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 21:09:56,085 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 21:09:56,090 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 21:10:03,052 - PRISM.src.prism_services.auth - INFO - Lambda Payload (JSON): {
+    "errorMessage": "Unable to import module 'prism.auth': No module named 'prism'",
+    "errorType": "Runtime.ImportModuleError",
+    "stackTrace": []
+}
+2024-11-17 21:10:03,053 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-17 21:10:03,299 - PRISM.src.prism_services.auth - INFO - Creating user....
+2024-11-17 21:10:03,300 - PRISM.src.prism_services.auth - INFO - username:string
+2024-11-17 21:10:03,300 - PRISM.src.prism_services.auth - INFO - pwd:string
+2024-11-17 21:11:26,709 - app - INFO - Creating database and database tables...
+2024-11-17 21:11:26,714 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 21:11:26,715 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 21:11:26,715 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 21:11:26,720 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 21:11:29,892 - app - INFO - Creating database and database tables...
+2024-11-17 21:11:29,896 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 21:11:29,896 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 21:11:29,897 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 21:11:29,900 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 21:12:15,348 - PRISM.src.prism_services.auth - INFO - Lambda Payload (JSON): {
+    "errorMessage": "Unable to import module 'prism.auth': No module named 'prism'",
+    "errorType": "Runtime.ImportModuleError",
+    "stackTrace": []
+}
+2024-11-17 21:12:15,349 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-17 21:12:15,582 - PRISM.src.prism_services.auth - INFO - Creating user....
+2024-11-17 21:12:15,583 - PRISM.src.prism_services.auth - INFO - username:string
+2024-11-17 21:12:15,584 - PRISM.src.prism_services.auth - INFO - pwd:string
+2024-11-17 21:13:56,698 - PRISM.src.prism_services.auth - INFO - Lambda Payload (JSON): {
+    "errorMessage": "Unable to import module 'prism.auth': No module named 'prism'",
+    "errorType": "Runtime.ImportModuleError",
+    "stackTrace": []
+}
+2024-11-17 21:13:56,924 - PRISM.src.prism_services.auth - INFO - Creating user....
+2024-11-17 21:13:56,925 - PRISM.src.prism_services.auth - INFO - username:string
+2024-11-17 21:13:56,925 - PRISM.src.prism_services.auth - INFO - pwd:string
+2024-11-17 21:14:19,220 - app - INFO - Creating database and database tables...
+2024-11-17 21:14:19,224 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 21:14:19,225 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 21:14:19,226 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 21:14:19,232 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 21:14:32,197 - PRISM.src.prism_services.auth - INFO - Lambda Payload (JSON): {
+    "errorMessage": "Unable to import module 'prism.auth': No module named 'prism'",
+    "errorType": "Runtime.ImportModuleError",
+    "stackTrace": []
+}
+2024-11-17 21:14:32,198 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-17 21:14:32,434 - PRISM.src.prism_services.auth - INFO - Creating user....
+2024-11-17 21:14:32,434 - PRISM.src.prism_services.auth - INFO - username:string
+2024-11-17 21:14:32,435 - PRISM.src.prism_services.auth - INFO - pwd:string
+2024-11-17 21:16:06,728 - app - INFO - Creating database and database tables...
+2024-11-17 21:16:06,733 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 21:16:06,733 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 21:16:06,734 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 21:16:06,738 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 21:16:37,983 - app - INFO - Creating database and database tables...
+2024-11-17 21:16:37,987 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 21:16:37,988 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 21:16:37,988 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 21:16:37,993 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 21:19:10,554 - PRISM.src.prism_services.auth - INFO - Lambda Payload (JSON): {
+    "errorMessage": "Unable to import module 'lambda.create_user_handler': No module named 'sour'",
+    "errorType": "Runtime.ImportModuleError",
+    "stackTrace": []
+}
+2024-11-17 21:19:10,555 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-17 21:19:10,804 - PRISM.src.prism_services.auth - INFO - Creating user....
+2024-11-17 21:19:10,804 - PRISM.src.prism_services.auth - INFO - username:string
+2024-11-17 21:19:10,805 - PRISM.src.prism_services.auth - INFO - pwd:string
+2024-11-17 21:19:41,680 - app - INFO - Creating database and database tables...
+2024-11-17 21:19:41,686 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 21:19:41,687 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 21:19:41,688 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 21:19:41,693 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 21:20:49,129 - app - INFO - Creating database and database tables...
+2024-11-17 21:20:49,133 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 21:20:49,133 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 21:20:49,134 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 21:20:49,137 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 21:20:50,870 - app - INFO - Creating database and database tables...
+2024-11-17 21:20:50,875 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 21:20:50,876 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 21:20:50,876 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 21:20:50,879 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 21:22:00,713 - PRISM.src.prism_services.auth - INFO - Lambda Payload (JSON): {
+    "errorMessage": "Unable to import module 'lambda.create_user_handler': No module named 'sour'",
+    "errorType": "Runtime.ImportModuleError",
+    "stackTrace": []
+}
+2024-11-17 21:22:00,714 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-17 21:22:00,954 - PRISM.src.prism_services.auth - INFO - Creating user....
+2024-11-17 21:22:00,955 - PRISM.src.prism_services.auth - INFO - username:string
+2024-11-17 21:22:00,956 - PRISM.src.prism_services.auth - INFO - pwd:string
+2024-11-17 21:23:11,164 - app - INFO - Creating database and database tables...
+2024-11-17 21:23:11,168 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 21:23:11,169 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 21:23:11,170 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 21:23:11,174 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 21:26:04,230 - PRISM.src.prism_services.auth - INFO - Lambda Payload (JSON): {
+    "errorMessage": "Unable to import module 'lambda.create_user_handler': No module named 'sour'",
+    "errorType": "Runtime.ImportModuleError",
+    "stackTrace": []
+}
+2024-11-17 21:26:04,231 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-17 21:26:04,482 - PRISM.src.prism_services.auth - INFO - Creating user....
+2024-11-17 21:26:04,483 - PRISM.src.prism_services.auth - INFO - username:string
+2024-11-17 21:26:04,484 - PRISM.src.prism_services.auth - INFO - pwd:string
+2024-11-17 21:27:58,678 - app - INFO - Creating database and database tables...
+2024-11-17 21:27:58,683 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 21:27:58,684 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 21:27:58,684 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 21:27:58,688 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 21:28:03,845 - app - INFO - Creating database and database tables...
+2024-11-17 21:28:03,850 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 21:28:03,851 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 21:28:03,851 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 21:28:03,855 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 21:28:59,386 - app - INFO - Creating database and database tables...
+2024-11-17 21:28:59,391 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 21:28:59,391 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 21:28:59,392 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 21:28:59,395 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 21:29:03,433 - app - INFO - Creating database and database tables...
+2024-11-17 21:29:03,436 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 21:29:03,437 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 21:29:03,437 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 21:29:03,441 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 21:29:24,105 - PRISM.src.prism_services.auth - INFO - Lambda Payload (JSON): {
+    "errorMessage": "Unable to import module 'lambda.create_user_handler': No module named 'passlib'",
+    "errorType": "Runtime.ImportModuleError",
+    "stackTrace": []
+}
+2024-11-17 21:29:24,107 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-17 21:29:24,353 - PRISM.src.prism_services.auth - INFO - Creating user....
+2024-11-17 21:29:24,354 - PRISM.src.prism_services.auth - INFO - username:string
+2024-11-17 21:29:24,354 - PRISM.src.prism_services.auth - INFO - pwd:string
+2024-11-17 21:29:27,050 - PRISM.src.prism_services.auth - INFO - Lambda Payload (JSON): {
+    "errorMessage": "Unable to import module 'lambda.create_user_handler': No module named 'passlib'",
+    "errorType": "Runtime.ImportModuleError",
+    "stackTrace": []
+}
+2024-11-17 21:29:27,279 - PRISM.src.prism_services.auth - INFO - Creating user....
+2024-11-17 21:29:27,280 - PRISM.src.prism_services.auth - INFO - username:string
+2024-11-17 21:29:27,282 - PRISM.src.prism_services.auth - INFO - pwd:string
+2024-11-17 21:35:28,330 - PRISM.src.prism_services.auth - INFO - Lambda Payload (JSON): {
+    "errorMessage": "Unable to import module 'lambda.create_user_handler': No module named 'passlib'",
+    "errorType": "Runtime.ImportModuleError",
+    "stackTrace": []
+}
+2024-11-17 21:35:28,547 - PRISM.src.prism_services.auth - INFO - Creating user....
+2024-11-17 21:35:28,548 - PRISM.src.prism_services.auth - INFO - username:string
+2024-11-17 21:35:28,548 - PRISM.src.prism_services.auth - INFO - pwd:string
+2024-11-17 21:35:39,288 - PRISM.src.prism_services.auth - INFO - Lambda Payload (JSON): {
+    "errorMessage": "Unable to import module 'lambda.create_user_handler': No module named 'passlib'",
+    "errorType": "Runtime.ImportModuleError",
+    "stackTrace": []
+}
+2024-11-17 21:35:39,521 - PRISM.src.prism_services.auth - INFO - Creating user....
+2024-11-17 21:35:39,521 - PRISM.src.prism_services.auth - INFO - username:string
+2024-11-17 21:35:39,522 - PRISM.src.prism_services.auth - INFO - pwd:string
+2024-11-17 21:36:18,829 - app - INFO - Creating database and database tables...
+2024-11-17 21:36:18,834 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 21:36:18,835 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 21:36:18,835 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 21:36:18,839 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 21:38:21,823 - app - INFO - Creating database and database tables...
+2024-11-17 21:38:21,827 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 21:38:21,828 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 21:38:21,828 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 21:38:21,832 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 21:39:14,722 - PRISM.src.prism_services.auth - INFO - Lambda Payload (JSON): {
+    "errorMessage": "Unable to import module 'lambda.create_user_handler': No module named 'passlib'",
+    "errorType": "Runtime.ImportModuleError",
+    "stackTrace": []
+}
+2024-11-17 21:39:14,723 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-17 21:39:14,971 - PRISM.src.prism_services.auth - INFO - Creating user....
+2024-11-17 21:39:14,972 - PRISM.src.prism_services.auth - INFO - username:string
+2024-11-17 21:39:14,972 - PRISM.src.prism_services.auth - INFO - pwd:string
+2024-11-17 21:39:18,227 - PRISM.src.prism_services.auth - INFO - Lambda Payload (JSON): {
+    "errorMessage": "Unable to import module 'lambda.create_user_handler': No module named 'passlib'",
+    "errorType": "Runtime.ImportModuleError",
+    "stackTrace": []
+}
+2024-11-17 21:39:18,598 - PRISM.src.prism_services.auth - INFO - Creating user....
+2024-11-17 21:39:18,599 - PRISM.src.prism_services.auth - INFO - username:string
+2024-11-17 21:39:18,600 - PRISM.src.prism_services.auth - INFO - pwd:string
+2024-11-17 21:39:30,689 - app - INFO - Creating database and database tables...
+2024-11-17 21:39:30,692 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 21:39:30,693 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 21:39:30,693 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 21:39:30,697 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 21:41:30,165 - PRISM.src.prism_services.auth - INFO - Lambda Payload (JSON): {
+    "errorMessage": "Unable to import module 'sour.src.backend.PRISM.src.prism_services.auth': No module named 'sour'",
+    "errorType": "Runtime.ImportModuleError",
+    "stackTrace": []
+}
+2024-11-17 21:41:30,166 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-17 21:41:30,417 - PRISM.src.prism_services.auth - INFO - Creating user....
+2024-11-17 21:41:30,418 - PRISM.src.prism_services.auth - INFO - username:string
+2024-11-17 21:41:30,418 - PRISM.src.prism_services.auth - INFO - pwd:string

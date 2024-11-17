@@ -18,7 +18,7 @@ from .test_db import get_session
 
 SessionDep = Annotated[Session, Depends(get_session)]
 from .schema import(
-    UserInDB, UserResponse, UserRegistration
+    UserInDB, UserResponse, UserRegistration, User
 )
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
@@ -56,7 +56,8 @@ lambda_client = boto3.client('lambda', endpoint_url=localstack_endpoint,
 
 
 @auth_router.post("/createuser", response_model=UserResponse, status_code=201)
-def create_new_user(newUser: UserRegistration, session: Session) -> UserResponse:
+def create_new_user(newUser: UserRegistration, session: Annotated[Session, Depends(get_session)]) -> UserResponse:
+    """Registering a new User"""
     try:
         # Invoke the create_user_lambda function
         response = lambda_client.invoke(
@@ -64,23 +65,28 @@ def create_new_user(newUser: UserRegistration, session: Session) -> UserResponse
             InvocationType='RequestResponse',
             Payload=json.dumps(newUser.model_dump())  # Pass the user data as payload if needed
         )
-
+        payload_content = response['Payload'].read().decode('utf-8')
+        payload_json = json.loads(payload_content)
+        logger.info(f"Lambda Payload (JSON): {json.dumps(payload_json, indent=4)}")
         hashed_pwd = pwd_context.hash(newUser.password)
+        logger.info("Creating user....")
+        logger.info("username:" + newUser.username)
+        logger.info("pwd:" + newUser.password)
+        #if check_username(newUser):
+            #elif check_email(newUser):
+            #raise DuplicateUserRegistration("User", "email", newUser.email)
+        
+        logger.info(str(**newUser.model_dump()))
+        userDB = UserInDB(
+            **newUser.model_dump(),
+            hashed_password=hashed_pwd
+        )
 
-        if check_username(newUser):
-            raise DuplicateUserRegistration("User", "username", newUser.username)
-        elif check_email(newUser):
-            raise DuplicateUserRegistration("User", "email", newUser.email)
-        else:
-            logger.info(str(**newUser.model_dump()))
-            user = UserInDB(
-                **newUser.model_dump(),
-                hashed_password=hashed_pwd
-            )
-            session.add(user)
-            session.commit()
-            session.refresh()
-            return UserResponse(user=user)
+        session.add(userDB)
+        session.commit()
+        session.refresh(userDB)
+        user_data = User(username=userDB.username, email=userDB.email)
+        return UserResponse(user=user_data)
     
     except Exception as e:
         return {"error": str(e)}
@@ -90,6 +96,7 @@ def create_new_user(newUser: UserRegistration, session: Session) -> UserResponse
 #TODO: use a form instead of UserRegistration 
 @auth_router.post("/login", response_model=UserResponse, status_code=200)
 def login_user(user:UserRegistration):
+        """Logging a user in"""
         user = select(UserInDB).where(UserInDB.username == user.username).first()
 
         if user is None or not pwd_context.verify(user.password, user.hashed_password):

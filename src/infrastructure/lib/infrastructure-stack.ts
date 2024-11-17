@@ -26,8 +26,8 @@ export class BackendInfrastructureStack extends cdk.Stack {
     // Create Lambda function
     const createUserLambda = new lambda.Function(this, 'CreateUserLambda', {
       runtime: lambda.Runtime.PYTHON_3_8,
-      handler: 'prism.auth.create_new_user',
-      code: lambda.Code.fromAsset(path.join(__dirname, '../../backend/')),
+      handler: 'lambda.create_user_handler.create_user_lambda',
+       code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
       functionName: 'create_user_lambda',
       environment: {
         PYTHONPATH: '/var/task',
