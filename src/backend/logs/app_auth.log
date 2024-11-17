@@ -1298,3 +1298,32 @@ WHERE users.username = ?
 2024-11-17 23:24:04,349 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
 2024-11-17 23:24:04,350 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
 2024-11-17 23:24:04,355 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 23:24:11,679 - app - INFO - Creating database and database tables...
+2024-11-17 23:24:11,682 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 23:24:11,683 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-17 23:24:11,684 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-17 23:24:11,687 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-17 23:24:27,185 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 23:24:27,189 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.username = ?
+2024-11-17 23:24:27,190 - sqlalchemy.engine.Engine - INFO - [generated in 0.00067s] ('Emma',)
+2024-11-17 23:24:27,194 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-17 23:24:27,489 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-17 23:24:29,572 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 23:24:29,572 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.username = ?
+2024-11-17 23:24:29,573 - sqlalchemy.engine.Engine - INFO - [cached since 2.383s ago] ('Emma',)
+2024-11-17 23:24:29,805 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-17 23:24:46,163 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-17 23:24:46,163 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.username = ?
+2024-11-17 23:24:46,164 - sqlalchemy.engine.Engine - INFO - [cached since 18.97s ago] ('test',)
+2024-11-17 23:24:46,167 - sqlalchemy.engine.Engine - INFO - ROLLBACK
