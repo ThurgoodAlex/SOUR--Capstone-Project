@@ -19,7 +19,7 @@ from .test_db import get_session
 
 SessionDep = Annotated[Session, Depends(get_session)]
 from .schema import(
-    UserInDB, UserResponse, UserRegistration, User
+    UserInDB, UserResponse, UserRegistration, User, UserLogin
 )
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
@@ -88,13 +88,13 @@ def create_new_user(newUser: UserRegistration, session: Annotated[Session, Depen
 #TODO: find a cleaner way to do this besides UserRegistration
 #TODO: use a form instead of UserRegistration 
 @auth_router.post("/login", response_model=UserResponse, status_code=200)
-def login_user(user:UserRegistration):
+def login_user(user:UserLogin, session: Annotated[Session, Depends(get_session)]):
         """Logging a user in"""
-        user = select(UserInDB).where(UserInDB.username == user.username).first()
+        user_check = session.exec(select(UserInDB).filter(UserInDB.username == user.username)).first()
 
-        if user is None or not pwd_context.verify(user.password, user.hashed_password):
+        if user is None or not pwd_context.verify(user.password, user_check.hashed_password):
             raise InvalidCredentials()
-        return user
+        return UserResponse(user={"username": user.username, "email": user_check.email})
 
 def check_username(newUser, session):
     result = session.exec(select(UserInDB.username).where(UserInDB.username == newUser.username))

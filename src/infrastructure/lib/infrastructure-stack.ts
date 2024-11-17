@@ -26,7 +26,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
     // Create Lambda function
     const createUserLambda = new lambda.Function(this, 'CreateUserLambda', {
       runtime: lambda.Runtime.PYTHON_3_8,
-      handler: 'lambda.create_user_handler.create_user_lambda',
+      handler: 'lambda.auth_handlers.create_user_lambda',
        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
       functionName: 'create_user_lambda',
       environment: {
@@ -34,6 +34,16 @@ export class BackendInfrastructureStack extends cdk.Stack {
       },
     });
 
+    const loginUserLambdaPath = path.join(__dirname, '../../backend/')
+    const loginUserLambda = new lambda.Function(this, 'LoginUserLambda', {
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.auth_handlers.login_user_lambda',
+       code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'login_user_lambda',
+      environment: {
+        PYTHONPATH: '/var/task',
+      },
+    });
 
     // Create API Gateway
     const api = new apigateway.RestApi(this, 'StarterPageApi', {
@@ -44,12 +54,16 @@ export class BackendInfrastructureStack extends cdk.Stack {
     // Create Lambda integration
     const starterPageIntegration = new apigateway.LambdaIntegration(starterPageLambda);
     const createUserIntergration = new apigateway.LambdaIntegration(createUserLambda);
+    const loginUserIntergration = new apigateway.LambdaIntegration(loginUserLambda)
 
     // Add root resource and method
     api.root.addMethod('GET', starterPageIntegration);
     // Adding Create user route from Auth
     const createUserResource = api.root.addResource('createuser');
     createUserResource.addMethod('POST', createUserIntergration);
+
+    const loginUserResource = api.root.addResource('loginuser')
+    loginUserResource.addMethod('Post', loginUserIntergration)
 
     // Add /health endpoint
     const healthResource = api.root.addResource('health');
