@@ -8,6 +8,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from datetime import datetime, timezone
 from pydantic import BaseModel, ValidationError
 from typing import Annotated
+from sqlalchemy.future import select
 from sqlmodel import Session, SQLModel, select
 from jose import ExpiredSignatureError, JWTError, jwt
 from fastapi.security import (
@@ -59,37 +60,29 @@ lambda_client = boto3.client('lambda', endpoint_url=localstack_endpoint,
 def create_new_user(newUser: UserRegistration, session: Annotated[Session, Depends(get_session)]) -> UserResponse:
     """Registering a new User"""
     try:
-        # Invoke the create_user_lambda function
-        response = lambda_client.invoke(
-            FunctionName='create_user_lambda',  # Ensure this name matches the Lambda function in CDK
-            InvocationType='RequestResponse',
-            Payload=json.dumps(newUser.model_dump())  # Pass the user data as payload if needed
-        )
-        payload_content = response['Payload'].read().decode('utf-8')
-        payload_json = json.loads(payload_content)
-        logger.info(f"Lambda Payload (JSON): {json.dumps(payload_json, indent=4)}")
         hashed_pwd = pwd_context.hash(newUser.password)
         logger.info("Creating user....")
         logger.info("username:" + newUser.username)
         logger.info("pwd:" + newUser.password)
-        #if check_username(newUser):
-            #elif check_email(newUser):
-            #raise DuplicateUserRegistration("User", "email", newUser.email)
-        
-        logger.info(str(**newUser.model_dump()))
-        userDB = UserInDB(
-            **newUser.model_dump(),
-            hashed_password=hashed_pwd
-        )
-
-        session.add(userDB)
-        session.commit()
-        session.refresh(userDB)
-        user_data = User(username=userDB.username, email=userDB.email)
-        return UserResponse(user=user_data)
+        if check_username(newUser, session):
+            raise DuplicateUserRegistration("User", "username", newUser.username)
+        elif check_email(newUser, session):
+            raise DuplicateUserRegistration("User", "email", newUser.email)
+        else:
+            userDB = UserInDB(
+                **newUser.model_dump(),
+                hashed_password=hashed_pwd
+            )
+            session.add(userDB)
+            session.commit()
+            session.refresh(userDB)
+            logger.info("create user...")
+            user_data = User(username=userDB.username, email=userDB.email)
+            return UserResponse(user=user_data)
     
     except Exception as e:
-        return {"error": str(e)}
+        logger.error(f"Error creating user: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
     
 #TODO: find a cleaner way to do this besides UserRegistration
@@ -103,8 +96,10 @@ def login_user(user:UserRegistration):
             raise InvalidCredentials()
         return user
 
-def check_email(newUser:UserRegistration):
-    return select(UserInDB.email).where(UserInDB.email == newUser.email).first() is not None 
-
-def check_username(newUser:UserRegistration):
-    return select(UserInDB.username).where(UserInDB.username == newUser.username).first() is not None 
+def check_username(newUser, session):
+    result = session.exec(select(UserInDB.username).where(UserInDB.username == newUser.username))
+    return result.first() is not None
+   
+def check_email(newUser, session):
+    result = session.exec(select(UserInDB.email).where(UserInDB.email == newUser.email))
+    return result.first() is not None
