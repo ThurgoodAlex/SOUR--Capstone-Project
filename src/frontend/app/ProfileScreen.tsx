@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, FlatList } from 'react-native';
 import { ProfileStyles } from '@/constants/Styles';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function ProfileScreen() {
   const posts = Array<any>;
@@ -12,7 +13,6 @@ export default function ProfileScreen() {
 
   return (
     <View style={ProfileStyles.container}>
-      <TopBar />
       <ProfileInfo />
       <StatsBar />
       <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} />
@@ -26,15 +26,7 @@ export default function ProfileScreen() {
   );
 }
 
-function TopBar() {
-  return (
-    <View style={ProfileStyles.topBar}>
-      <TouchableOpacity>
-        <Text style={ProfileStyles.cartIcon}>🛒</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
+
 
 function ProfileInfo() {
   return (

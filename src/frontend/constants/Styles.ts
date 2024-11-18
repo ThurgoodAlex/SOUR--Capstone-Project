@@ -54,7 +54,20 @@ export const Styles = StyleSheet.create({
         color: '#000',
         fontSize: 16,
         fontWeight: 'bold',
-    }
+    },
+
+    carouselContainer: {
+      flex: 1,
+      alignItems: 'center',
+      marginVertical: 20,
+    },
+    
+    carouselImage: {
+      width:400,
+      height: 600,
+      marginHorizontal: 10,
+      borderRadius: 10,
+    },
   });
 
   export const ProfileStyles = StyleSheet.create({
@@ -135,7 +148,28 @@ export const Styles = StyleSheet.create({
       margin: 5,
       position: 'relative',
     },
-   
+   thumbnailImage: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+   },
+   thumbnailContainer: {
+      flexDirection: 'row',
+      paddingLeft: 15,
+   },
+   thumbnailName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginTop: 2,
+    marginLeft: 5,
+   },
+   thumbnailUsername: {
+    fontSize: 12,
+    marginLeft: 5,
+   }
+
     
 
   })
+
+
