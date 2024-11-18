@@ -56,6 +56,7 @@ export const Styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 
+
     carouselContainer: {
       flex: 1,
       alignItems: 'center',
@@ -68,6 +69,26 @@ export const Styles = StyleSheet.create({
       marginHorizontal: 10,
       borderRadius: 10,
     },
+    gridContainer: {
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      flexWrap: 'wrap'
+  },
+  postPreview: {
+      flexDirection: 'column',
+      margin: 5
+  },
+  imagePreview: {
+      height: 175,
+      width: 175
+  },
+  iconOverlay: {
+      position: 'absolute',
+      top: 10,
+      right: 10,
+  }
+
   });
 
   export const ProfileStyles = StyleSheet.create({
@@ -172,4 +193,7 @@ export const Styles = StyleSheet.create({
 
   })
 
+
+
+   
 
