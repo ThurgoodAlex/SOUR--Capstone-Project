@@ -5,6 +5,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { Ionicons } from '@expo/vector-icons';
 
 // Prevent splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -30,14 +31,17 @@ export default function RootLayout() {
     <Stack
         screenOptions={{
           headerTitle: "SOUR",
+         
           headerStyle: {
-            backgroundColor: '#f4511e',
+            backgroundColor: '#bde0eb',
           },
+          headerRight: () => ( <Ionicons size={30} name="cart-outline"/> ),
           headerTintColor: '#fff',
           headerTitleStyle: {
             fontWeight: 'bold',
           },
         }}>
+       
     
     </Stack>
   );

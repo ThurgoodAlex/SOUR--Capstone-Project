@@ -30,11 +30,7 @@ export function SignUpScreen() {
 
   return (
     <>
-      <Stack.Screen
-        options={{
-          title: "SignUpScreen",
-        }}
-      />
+      
       <View style={Styles.container}>
       <Text style={Styles.title}>Create an Account</Text>
       
