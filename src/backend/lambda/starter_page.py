@@ -4,6 +4,6 @@ def lambda_handler(event, context):
         "statusCode": 200,
         "body": json.dumps({
             "message": "Welcome to the Starter Page!",
-            "info": "This content is served by a Lambda function through FastAPI and LocalStack."
+            "info": "This content is served by a Lambda function through FastAPI and LocalStack. This are some new changes"
         })
     }

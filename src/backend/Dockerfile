@@ -7,9 +7,12 @@ WORKDIR /app
 # Copy the requirements file into the container
 COPY requirements.txt .
 
-# Install the required packages
-RUN pip install --no-cache-dir -r requirements.txt
+ENV PYTHONPATH=/app:$PYTHONPATH
 
+# Install the required packages
+RUN pip install -r requirements.txt
+
+RUN echo $PYTHONPATH
 # Copy the rest of the application code
 COPY . .
 
@@ -17,4 +20,4 @@ COPY . .
 EXPOSE 8000
 
 # Run the application
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app:app", "--reload","--host", "0.0.0.0", "--port", "8000", "--log-level", "debug"]
