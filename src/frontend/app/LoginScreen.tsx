@@ -4,20 +4,43 @@ import { Styles } from '@/constants/Styles';
 import { Stack, router } from 'expo-router';
 
 export default function LoginScreen() {
-    const [email, setEmail] = useState('example');
-    const [password, setPassword] = useState('examplepassword');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const handleLogin = () => {
-        if (!email || !password) {
+    const handleLogin = async () => {
+        if (!username || !password) {
             Alert.alert('Error', 'Please fill out all fields.');
             return;
         }
-        else {
-            setLoading(true);
-            router.push('/DiscoverScreen');
+
+        setLoading(true);
+
+        try {
+            const response = await fetch('http://localhost:8000/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
+                }),
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+            router.replace('/DiscoverScreen')
+        } else {
+            Alert.alert('Error', result.message || 'Incorrect username or password. Please try again.');
+        }
+        } catch (error) {
+            console.error('Error logging in:', error);
+            Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
+        } finally {
             setLoading(false);
         }
+        
     };
 
     return (
@@ -32,10 +55,9 @@ export default function LoginScreen() {
 
                 <TextInput
                     style={Styles.input}
-                    placeholder="Email"
-                    keyboardType="email-address"
-                    value={email}
-                    onChangeText={setEmail}
+                    placeholder="Username"
+                    value={username}
+                    onChangeText={setUsername}
                 />
                 <TextInput
                     style={Styles.input}

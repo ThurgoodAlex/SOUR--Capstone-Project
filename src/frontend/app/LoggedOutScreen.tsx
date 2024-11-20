@@ -11,7 +11,7 @@ export default function LoggedOutScreen() {
     <View style={Styles.container}>
       <TouchableOpacity
         style={Styles.buttonDark}
-        onPress={() => router.push('/ProfileScreen')}
+        onPress={() => router.push('/LoginScreen')}
       >
       <Text style={Styles.buttonTextLight}>Login</Text>
       </TouchableOpacity>
