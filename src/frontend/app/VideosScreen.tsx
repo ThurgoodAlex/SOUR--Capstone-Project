@@ -4,8 +4,8 @@ import { Button, View, Text, ScrollView } from 'react-native';
 import { PostPreview } from '@/components/PostPreview'
 import { NavBar } from '@/components/NavBar'
 
-export default function DiscoverScreen() {
-    const dummyPosts = [
+export default function VideosScreen() {
+    const dummyVideos = [
         {
             id: 1,
             data: './imgs/toad.png',
@@ -34,8 +34,11 @@ export default function DiscoverScreen() {
     return (
         <>
             <ScrollView showsVerticalScrollIndicator={false}>
+                <Text>
+                    video screen
+                </Text>
                 <View style={Styles.gridContainer}>
-                    {dummyPosts.map((post) => (
+                    {dummyVideos.map((post) => (
                         <PostPreview
                             key={post.id}
                             id={post.id}
