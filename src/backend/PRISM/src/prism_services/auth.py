@@ -40,8 +40,6 @@ logging.basicConfig(
 
 # Create logger instance
 logger = logging.getLogger(__name__)
-
-
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 jwt_key = str(os.environ.get("JWT_KEY"))
 jwt_alg = "HS256"
@@ -56,14 +54,12 @@ lambda_client = boto3.client('lambda', endpoint_url=localstack_endpoint,
                              aws_secret_access_key='test')
 
 
+
 @auth_router.post("/createuser", response_model=UserResponse, status_code=201)
 def create_new_user(newUser: UserRegistration, session: Annotated[Session, Depends(get_session)]) -> UserResponse:
     """Registering a new User"""
     try:
         hashed_pwd = pwd_context.hash(newUser.password)
-        logger.info("Creating user....")
-        logger.info("username:" + newUser.username)
-        logger.info("pwd:" + newUser.password)
         if check_username(newUser, session):
             raise DuplicateUserRegistration("User", "username", newUser.username)
         elif check_email(newUser, session):
@@ -76,17 +72,13 @@ def create_new_user(newUser: UserRegistration, session: Annotated[Session, Depen
             session.add(userDB)
             session.commit()
             session.refresh(userDB)
-            logger.info("create user...")
             user_data = User(username=userDB.username, email=userDB.email)
             return UserResponse(user=user_data)
     
     except Exception as e:
-        logger.error(f"Error creating user: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-    
-#TODO: find a cleaner way to do this besides UserRegistration
-#TODO: use a form instead of UserRegistration 
+
 @auth_router.post("/login", response_model=UserResponse, status_code=200)
 def login_user(user:UserLogin, session: Annotated[Session, Depends(get_session)]):
         """Logging a user in"""

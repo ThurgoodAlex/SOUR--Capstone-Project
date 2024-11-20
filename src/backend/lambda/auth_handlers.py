@@ -2,7 +2,6 @@ import json
 
 def create_user_lambda(event, context):
     try:
-
         new_user_data = json.loads(event['body'])  
 
         return {
@@ -19,7 +18,6 @@ def create_user_lambda(event, context):
             "body": json.dumps({"error": str(e)})
         }
     
-
 def login_user_lambda(event, context):
     try:
         login_user = json.loads(event['body'])

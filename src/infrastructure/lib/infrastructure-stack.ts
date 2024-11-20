@@ -10,6 +10,8 @@ export class BackendInfrastructureStack extends cdk.Stack {
     super(scope, id, props);
 
 
+
+    //here is a boiler code template for Lambda path code.
     const starterPageLambdaPath = path.join(__dirname, '../../backend/')
     // Create Lambda function
     const starterPageLambda = new lambda.Function(this, 'StarterPageLambda', {
@@ -21,6 +23,9 @@ export class BackendInfrastructureStack extends cdk.Stack {
         PYTHONPATH: '/var/task',
       },
     });
+
+
+    // Here are the PRISM lambdas
 
     const createUserLambdaPath = path.join(__dirname, '../../backend/')
     // Create Lambda function
@@ -45,6 +50,8 @@ export class BackendInfrastructureStack extends cdk.Stack {
       },
     });
 
+    //Here is the intergration to API gateway.
+
     // Create API Gateway
     const api = new apigateway.RestApi(this, 'StarterPageApi', {
       restApiName: 'Starter Page API',
@@ -55,13 +62,14 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const starterPageIntegration = new apigateway.LambdaIntegration(starterPageLambda);
     const createUserIntergration = new apigateway.LambdaIntegration(createUserLambda);
     const loginUserIntergration = new apigateway.LambdaIntegration(loginUserLambda)
-
-    // Add root resource and method
     api.root.addMethod('GET', starterPageIntegration);
+
+
     // Adding Create user route from Auth
     const createUserResource = api.root.addResource('createuser');
     createUserResource.addMethod('POST', createUserIntergration);
 
+    // Adding login user route from Auth
     const loginUserResource = api.root.addResource('loginuser')
     loginUserResource.addMethod('Post', loginUserIntergration)
 

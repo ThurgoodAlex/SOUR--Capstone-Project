@@ -1327,3 +1327,28 @@ FROM users
 WHERE users.username = ?
 2024-11-17 23:24:46,164 - sqlalchemy.engine.Engine - INFO - [cached since 18.97s ago] ('test',)
 2024-11-17 23:24:46,167 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-20 17:13:28,995 - app - INFO - Creating database and database tables...
+2024-11-20 17:13:29,001 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-20 17:13:29,002 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-20 17:13:29,002 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-20 17:13:29,005 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-20 17:48:31,611 - app - INFO - Creating database and database tables...
+2024-11-20 17:48:31,617 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-20 17:48:31,617 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-20 17:48:31,618 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-20 17:48:31,622 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-20 17:48:57,615 - app - INFO - Creating database and database tables...
+2024-11-20 17:48:57,619 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-20 17:48:57,619 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-20 17:48:57,620 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-20 17:48:57,623 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-20 17:49:39,924 - app - INFO - Creating database and database tables...
+2024-11-20 17:49:39,931 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-20 17:49:39,931 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-20 17:49:39,932 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-20 17:49:39,936 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-20 18:39:42,754 - app - INFO - Creating database and database tables...
+2024-11-20 18:39:42,758 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-20 18:39:42,759 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-20 18:39:42,759 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-20 18:39:42,764 - sqlalchemy.engine.Engine - INFO - COMMIT

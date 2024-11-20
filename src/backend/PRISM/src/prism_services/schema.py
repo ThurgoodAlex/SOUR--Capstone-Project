@@ -8,6 +8,7 @@ from pydantic import BaseModel
 class Metadata(BaseModel):
     count: int 
 
+#All database Tables
 
 class UserInDB(SQLModel, table=True): 
     __tablename__ = "users"
@@ -19,6 +20,15 @@ class UserInDB(SQLModel, table=True):
     hashed_password: str
     created_at: Optional[datetime] = Field(default_factory=datetime.now)
 
+
+class ListingInDB(SQLModel, table = True):
+    __tablename__ = "listings"
+    __table_args__ = {'extend_existing': True}  
+
+    
+
+
+#All schemas for users
 
 class User(BaseModel):
     username: str
@@ -37,3 +47,6 @@ class UserRegistration(BaseModel):
 class UserLogin(BaseModel):
     username: str
     password: str
+
+
+#All schemas for listings
