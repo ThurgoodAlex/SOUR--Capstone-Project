@@ -1,10 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 
+
+/******************************
+ * This is basically just example code for how to request data from the backend.
+ * Updated by Ashlyn on 11/18/24
+ * Not being used anywhere- can probably be deleted
+ ********************************/
 const BackendData = () => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState({
+    body: {
+      message: "Default",
+      info: "Something went wrong if you are seeing this default data",
+    },
+    statusCode: 400,
+  });
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     fetchBackendData();
@@ -12,9 +24,16 @@ const BackendData = () => {
 
   const fetchBackendData = async () => {
     try {
-      const response = await fetch('http://backend:8000');
+      const response = await fetch('http://localhost:8000/');
       const json = await response.json();
-      setData(json);
+
+      // Parse body if it's a stringified JSON
+      const parsedBody = JSON.parse(json.body);
+      setData({
+        body: parsedBody,
+        statusCode: json.statusCode,
+      });
+      console.log("Requested data from \"/\" Received:", json);
     } catch (error) {
       console.error('Error fetching data:', error);
       setError('Failed to fetch data from the backend');
@@ -33,8 +52,8 @@ const BackendData = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.message}>{data?.message}</Text>
-      <Text style={styles.info}>{data?.info}</Text>
+      <Text style={styles.message}>{data.body.message}</Text>
+      <Text style={styles.info}>{data.body.info}</Text>
     </View>
   );
 };

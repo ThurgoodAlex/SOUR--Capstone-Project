@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { Styles } from '@/constants/Styles';
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
 
 export function SignUpScreen() {
   const [name, setName] = useState('');
@@ -9,7 +9,7 @@ export function SignUpScreen() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSignUp = () => {
+  const requestCreateUser = async () => {
     if (!name || !email || !password) {
       Alert.alert('Error', 'Please fill out all fields.');
       return;
@@ -17,23 +17,39 @@ export function SignUpScreen() {
 
     setLoading(true);
 
-    // Simulating an async operation like a network request
-    setTimeout(() => {
+    try {
+      const response = await fetch('http://localhost:8000/auth/createuser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: name,
+          email: email,
+          password: password,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        Alert.alert('Success', `Account created successfully! Welcome, ${result.username || name}`);
+        router.replace('/LoginScreen')
+      } else {
+        Alert.alert('Error', result.message || 'Failed to create an account. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error creating account:', error);
+      Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
+    } finally {
       setLoading(false);
-      Alert.alert('Success', 'Account created successfully!');
-      // Reset form fields
-      setName('');
-      setEmail('');
-      setPassword('');
-    }, 2000);
+    }
   };
 
   return (
-    <>
-      
-      <View style={Styles.container}>
+    <View style={Styles.container}>
       <Text style={Styles.title}>Create an Account</Text>
-      
+
       <TextInput
         style={Styles.input}
         placeholder="Name"
@@ -57,7 +73,7 @@ export function SignUpScreen() {
 
       <TouchableOpacity
         style={Styles.buttonDark}
-        onPress={handleSignUp}
+        onPress={requestCreateUser}
         disabled={loading}
       >
         {loading ? (
@@ -66,10 +82,7 @@ export function SignUpScreen() {
           <Text style={Styles.buttonTextLight}>Sign Up</Text>
         )}
       </TouchableOpacity>
-      </View>
-      
-    </>
-    
+    </View>
   );
 }
 
