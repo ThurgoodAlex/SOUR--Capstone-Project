@@ -2,10 +2,13 @@ import { Styles } from '@/constants/Styles';
 import { Link, router } from 'expo-router';
 import { Button, View, Text, ScrollView, TouchableOpacity, } from 'react-native';
 import { PostPreview } from '@/components/PostPreview'
+import { GridPosts } from '@/components/GridPosts';
+import { Post } from '@/constants/Types';
 
 export default function DiscoverScreen() {
 
-    const dummyPosts = [
+
+    const dummyPosts: Post[] = [
         {
             id: 1,
             data: './imgs/toad.png',
@@ -29,31 +32,9 @@ export default function DiscoverScreen() {
             data: './imgs/toad.png',
             user: 'Princess Daisy',
             type: 'listing',
-        },
+        }
     ];
     return (
-        <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={Styles.gridContainer}>
-                {dummyPosts.map((post) => (
-                    <PostPreview
-                        key={post.id}
-                        id={post.id}
-                        data={post.data}
-                        user={post.user}
-                        type={post.type as 'video' | 'post' | 'listing'}
-                    />
-                ))}
-            </View>
-
-
-            {/* temporary button until navbar */}
-            <TouchableOpacity
-                style={Styles.buttonLight}
-                onPress={() => router.push('/ProfileScreen')}
-            >
-            <Text style={Styles.buttonTextDark}>Profile</Text>
-            </TouchableOpacity>
-            
-        </ScrollView>
+        <GridPosts posts={dummyPosts}/>
     );
 }

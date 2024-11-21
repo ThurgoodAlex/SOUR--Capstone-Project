@@ -14,12 +14,12 @@ export default function LoginScreen() {
     const api = useApi();
 
     const handleLogin = async () => {
-        if (!username || !password) {
-            Alert.alert('Error', 'Please fill out all fields.');
-            return;
-        }
+        // if (!username || !password) {
+        //     Alert.alert('Error', 'Please fill out all fields.');
+        //     return;
+        // }
 
-        setLoading(true);
+        // setLoading(true);
 
         try {
             
