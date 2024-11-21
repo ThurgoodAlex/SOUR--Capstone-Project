@@ -35,6 +35,16 @@ export default function DiscoverScreen() {
         }
     ];
     return (
-        <GridPosts posts={dummyPosts}/>
+        <>
+            <GridPosts posts={dummyPosts}/>
+            <TouchableOpacity
+            style={Styles.buttonDark}
+            onPress={() => router.push('/ProfileScreen')}
+            >
+                <Text style={Styles.buttonTextLight}>Profile</Text>
+            </TouchableOpacity>
+        </>
+        
+
     );
 }

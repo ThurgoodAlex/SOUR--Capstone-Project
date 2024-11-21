@@ -26,16 +26,17 @@ export default function ProfileScreen() {
 
   return (
     <View style={ProfileStyles.container}>
-      <ProfileInfo user={user} />
-      <StatsBar />
-      <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} /
+        <ProfileInfo user={user} />
+        <StatsBar />
+        <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} 
 
-            {activeTab === 'Posts' ? (
+            {...activeTab === 'Posts' ? (
                 <PostsGrid posts={new posts} />
             ) : (
                 <LikesGrid />
             )}
-        </View>
+        />
+    </View>
     );
 }
 
