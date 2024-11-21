@@ -1,7 +1,13 @@
+import { Styles } from '@/constants/Styles';
+import { Link, router } from 'expo-router';
+import { Button, View, Text, ScrollView, TouchableOpacity, } from 'react-native';
+import { PostPreview } from '@/components/PostPreview'
 import { GridPosts } from '@/components/GridPosts';
 import { Post } from '@/constants/Types';
 
 export default function DiscoverScreen() {
+
+
     const dummyPosts: Post[] = [
         {
             id: 1,
