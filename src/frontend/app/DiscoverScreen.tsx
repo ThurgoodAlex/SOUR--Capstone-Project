@@ -1,9 +1,10 @@
 import { Styles } from '@/constants/Styles';
 import { Link, router } from 'expo-router';
-import { Button, View, Text, ScrollView } from 'react-native';
-import { PostPreview } from '../components/PostPreview'
+import { Button, View, Text, ScrollView, TouchableOpacity, } from 'react-native';
+import { PostPreview } from '@/components/PostPreview'
 
 export default function DiscoverScreen() {
+
     const dummyPosts = [
         {
             id: 1,
@@ -43,6 +44,16 @@ export default function DiscoverScreen() {
                     />
                 ))}
             </View>
+
+
+            {/* temporary button until navbar */}
+            <TouchableOpacity
+                style={Styles.buttonLight}
+                onPress={() => router.push('/ProfileScreen')}
+            >
+            <Text style={Styles.buttonTextDark}>Profile</Text>
+            </TouchableOpacity>
+            
         </ScrollView>
     );
 }
