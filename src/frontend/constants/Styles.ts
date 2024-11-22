@@ -60,12 +60,12 @@ export const Styles = StyleSheet.create({
     carouselContainer: {
       flex: 1,
       alignItems: 'center',
-      marginVertical: 20,
+      marginVertical: 10,
     },
     
     carouselImage: {
       width:400,
-      height: 600,
+      height: 400,
       marginHorizontal: 10,
       borderRadius: 10,
     },
@@ -96,17 +96,7 @@ export const Styles = StyleSheet.create({
       flex: 1,
       backgroundColor: '#ffffff',
     },
-    topBar: {
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-      paddingHorizontal: 16,
-      paddingVertical: 10,
-      alignItems: 'center',
-    },
-    cartIcon: {
-      fontSize: 20,
-      textAlign: 'right'
-    },
+    
     profileSection: {
       alignItems: 'center',
       marginTop: 10,
@@ -188,6 +178,56 @@ export const Styles = StyleSheet.create({
     fontSize: 12,
     marginLeft: 5,
    }
+
+    
+
+  })
+
+
+
+   
+
+
+
+
+  export const ListingStyles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#ffffff',
+      justifyContent: 'space-evenly'
+    },
+    titleContainer:{
+      padding: 8,
+      flex:1,
+      flexDirection:'row',
+      justifyContent:'space-between'
+    },
+    descriptionContainer:{
+      padding: 8,
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      color: '#333', 
+    },
+   
+    description: {
+      fontSize: 16,
+      color: '#666', 
+      lineHeight: 22,
+      marginBottom: 8,
+    },
+    size: {
+      fontSize: 16,
+      fontWeight: '500',
+      color: '#333',
+      marginBottom: 4,
+    },
+    price: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: '#1e90ff', 
+    },
 
     
 
