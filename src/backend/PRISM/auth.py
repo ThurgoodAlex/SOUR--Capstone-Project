@@ -82,7 +82,7 @@ def create_new_user(newUser: UserRegistration, session: Annotated[Session, Depen
     
     except Exception as e:
         logger.error(f"Error creating user: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=409, detail=str(e))
 
     
 #TODO: find a cleaner way to do this besides UserRegistration

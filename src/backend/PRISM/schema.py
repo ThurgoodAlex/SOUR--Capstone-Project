@@ -3,7 +3,7 @@ from typing import Optional
 
 from sqlmodel import Field, SQLModel  # Using only SQLModel for table and validation
 from pydantic import BaseModel
-
+from typing import ClassVar
 
 class Metadata(BaseModel):
     count: int 
@@ -37,3 +37,19 @@ class UserRegistration(BaseModel):
 class UserLogin(BaseModel):
     username: str
     password: str
+
+class ItemListing(BaseModel):
+    Title:str
+    Description:str 
+    Price:float 
+    SellerId:int
+
+class ItemListingResponse(BaseModel):
+    id: int
+    message: str = "Item successfully created" 
+    data: ItemListing
+
+class ErrorResponse(BaseModel):
+    error: str
+    details: str
+    code: str
