@@ -1,15 +1,7 @@
-import { Alert, View, Image, Text, StyleSheet, Dimensions, ImageBackground } from 'react-native';
-import { useEffect, useState } from 'react';
+import { View, Text, ImageBackground } from 'react-native';
 import { Styles } from '@/constants/Styles';
 import Ionicons from '@expo/vector-icons/Ionicons';
-
-type Post = {
-    id: number;
-    // data: TexImageSource;
-    data: string;
-    user: string;
-    type: string;
-};
+import { Post } from '@/constants/Types';
 
 /**
  * The visualization of how a campus post looks like.
