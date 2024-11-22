@@ -48,6 +48,17 @@ export class BackendInfrastructureStack extends cdk.Stack {
       },
     });
 
+    // Get Access Token Lambda
+    const getAccessTokenLambda = new lambda.Function(this, 'getAccessTokenLambda', {
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.auth_handlers.get_access_token_lambda',
+       code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'get_access_token_lambda',
+      environment: {
+        PYTHONPATH: '/var/task',
+      },
+    });
+
     const createListingLambda = new lambda.Function(this, 'CreateListingLambda',{
       runtime: lambda.Runtime.PYTHON_3_8,
       handler: 'lambda.listings_handlers.create_new_listing',
@@ -71,6 +82,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const createUserIntergration = new apigateway.LambdaIntegration(createUserLambda);
     const loginUserIntergration = new apigateway.LambdaIntegration(loginUserLambda);
     const createListingIntergration = new apigateway.LambdaIntegration(createListingLambda);
+    const getAcessTokenIntergration = new apigateway.LambdaIntegration(getAccessTokenLambda);
     api.root.addMethod('GET', starterPageIntegration);
 
 
@@ -81,6 +93,10 @@ export class BackendInfrastructureStack extends cdk.Stack {
     // Adding login user route from Auth
     const loginUserResource = api.root.addResource('loginuser')
     loginUserResource.addMethod('POST', loginUserIntergration)
+
+    // adding get access token route from auth
+    const getAccessTokenResource = api.root.addResource('getaccesstoken')
+    getAccessTokenResource.addMethod('POST', getAcessTokenIntergration)
 
     //Adding Listing endpoints
     const createListingResource = api.root.addResource('createlisting');

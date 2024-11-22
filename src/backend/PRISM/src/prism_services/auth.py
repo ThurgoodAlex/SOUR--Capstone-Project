@@ -18,14 +18,16 @@ from .test_db import get_session
 
 SessionDep = Annotated[Session, Depends(get_session)]
 from .schema import(
-    UserInDB, UserResponse, UserRegistration, User, UserLogin
+    UserInDB, UserResponse, UserRegistration, User, UserLogin, AccessToken, Claims
 )
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
 from .prism_exceptions import(
     AuthException, 
     InvalidCredentials, 
-    DuplicateUserRegistration
+    DuplicateUserRegistration,
+    ExpiredToken,
+    InvalidToken
 ) 
 
 logging.basicConfig(
@@ -51,6 +53,7 @@ lambda_client = boto3.client('lambda', endpoint_url=localstack_endpoint,
                              region_name='us-west-1',  # match with CDK stack region
                              aws_access_key_id='test',
                              aws_secret_access_key='test')
+
 
 
 
@@ -94,3 +97,58 @@ def check_username(newUser, session):
 def check_email(newUser, session):
     result = session.exec(select(UserInDB.email).where(UserInDB.email == newUser.email))
     return result.first() is not None
+
+
+@auth_router.post("/token", response_model=AccessToken, status_code=200)
+def get_access_token(form: OAuth2PasswordRequestForm = Depends(),session: Session = Depends(get_session)):
+    """Get access token for user."""
+
+    user = get_authenticated_user(session, form)
+    return build_access_token(user)
+
+
+def auth_get_current_user(session = Depends(get_session), token: str = Depends(oauth2_scheme)) -> UserInDB:
+    """Getting the current authenticated user"""
+    user = decode_access_token(session, token)
+    return user
+
+def get_authenticated_user(session: Session,form: OAuth2PasswordRequestForm,) -> UserInDB:
+    """Authenticating User"""
+    user = session.exec(select(UserInDB).where(UserInDB.username == form.username)).first()
+    if user is None or not pwd_context.verify(form.password, user.hashed_password):
+        raise InvalidCredentials()
+    return user
+
+def build_access_token(user: UserInDB) -> AccessToken:
+    """Building access token for user"""
+    expiration = int(datetime.now(timezone.utc).timestamp()) + access_token_duration
+    claims = Claims(sub=str(user.id), exp=expiration)
+    access_token = jwt.encode(claims.model_dump(), key=jwt_key, algorithm=jwt_alg)
+
+    return AccessToken(
+        access_token=access_token,
+        token_type="Bearer",
+        expires_in=access_token_duration,
+    )
+
+
+def decode_access_token(session: Session, token : str) -> UserInDB:
+    """decoding acess token for user"""
+    try:
+        claims_dict = jwt.decode(token, key = jwt_key, algorithms=[jwt_alg])
+        claims = Claims(**claims_dict)
+        user_id =claims.sub
+        user = session.get(UserInDB, user_id)
+
+        if user is None:
+            raise InvalidToken()
+
+      
+        return user
+    
+    except ExpiredSignatureError:
+        raise ExpiredToken()
+    except JWTError:
+        raise InvalidToken()
+    except ValidationError():
+        raise InvalidToken()

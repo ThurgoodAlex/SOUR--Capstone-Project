@@ -1895,3 +1895,328 @@ WHERE listings.seller_id = ?
 2024-11-22 03:37:21,980 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
 2024-11-22 03:37:21,981 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
 2024-11-22 03:37:21,983 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 17:16:21,144 - app - INFO - Creating database and database tables...
+2024-11-22 17:16:21,152 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:16:21,152 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 17:16:21,153 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:16:21,157 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 17:16:21,157 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:16:21,159 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 17:17:26,329 - app - INFO - Creating database and database tables...
+2024-11-22 17:17:26,334 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:17:26,335 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 17:17:26,336 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:17:26,341 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 17:17:26,341 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:17:26,344 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 17:26:40,756 - app - INFO - Creating database and database tables...
+2024-11-22 17:26:40,763 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:26:40,763 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 17:26:40,764 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:26:40,767 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 17:26:40,768 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:26:40,769 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 17:26:58,368 - app - INFO - Creating database and database tables...
+2024-11-22 17:26:58,371 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:26:58,372 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 17:26:58,372 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:26:58,376 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 17:26:58,376 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:26:58,378 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 17:27:40,728 - app - INFO - Creating database and database tables...
+2024-11-22 17:27:40,732 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:27:40,732 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 17:27:40,733 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:27:40,735 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 17:27:40,736 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:27:40,738 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 17:27:46,020 - app - INFO - Creating database and database tables...
+2024-11-22 17:27:46,023 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:27:46,024 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 17:27:46,025 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:27:46,028 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 17:27:46,029 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:27:46,031 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 17:28:00,276 - app - INFO - Creating database and database tables...
+2024-11-22 17:28:00,280 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:28:00,280 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 17:28:00,280 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:28:00,283 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 17:28:00,284 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:28:00,285 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 17:28:01,585 - app - INFO - Creating database and database tables...
+2024-11-22 17:28:01,590 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:28:01,590 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 17:28:01,591 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:28:01,595 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 17:28:01,595 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:28:01,597 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 17:29:14,336 - app - INFO - Creating database and database tables...
+2024-11-22 17:29:14,341 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:29:14,342 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 17:29:14,342 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:29:14,345 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 17:29:14,346 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:29:14,347 - sqlalchemy.engine.Engine - INFO - PRAGMA temp.table_info("listings")
+2024-11-22 17:29:14,348 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:29:14,349 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE listings (
+	id INTEGER NOT NULL, 
+	title VARCHAR NOT NULL, 
+	description VARCHAR NOT NULL, 
+	price NUMERIC NOT NULL, 
+	seller VARCHAR NOT NULL, 
+	created_at DATETIME, 
+	PRIMARY KEY (id)
+)
+
+
+2024-11-22 17:29:14,350 - sqlalchemy.engine.Engine - INFO - [no key 0.00070s] ()
+2024-11-22 17:29:14,365 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 17:34:41,216 - app - INFO - Creating database and database tables...
+2024-11-22 17:34:41,220 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:34:41,220 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 17:34:41,221 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:34:41,224 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 17:34:41,224 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:34:41,226 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 17:36:06,788 - app - INFO - Creating database and database tables...
+2024-11-22 17:36:06,792 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:36:06,792 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 17:36:06,793 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:36:06,796 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 17:36:06,796 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:36:06,798 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 17:36:25,465 - app - INFO - Creating database and database tables...
+2024-11-22 17:36:25,468 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:36:25,469 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 17:36:25,469 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:36:25,472 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 17:36:25,473 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:36:25,475 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 17:37:55,369 - app - INFO - Creating database and database tables...
+2024-11-22 17:37:55,372 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:37:55,373 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 17:37:55,373 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:37:55,377 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 17:37:55,377 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:37:55,379 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 17:38:11,673 - app - INFO - Creating database and database tables...
+2024-11-22 17:38:11,677 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:38:11,677 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 17:38:11,678 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:38:11,681 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 17:38:11,681 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:38:11,683 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 17:38:16,510 - app - INFO - Creating database and database tables...
+2024-11-22 17:38:16,513 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:38:16,514 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 17:38:16,514 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:38:16,517 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 17:38:16,518 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:38:16,519 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 17:38:42,695 - app - INFO - Creating database and database tables...
+2024-11-22 17:38:42,699 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:38:42,700 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 17:38:42,700 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:38:42,703 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 17:38:42,703 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:38:42,705 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 17:38:52,991 - app - INFO - Creating database and database tables...
+2024-11-22 17:38:52,996 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:38:52,997 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 17:38:52,998 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:38:53,004 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 17:38:53,005 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:38:53,007 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 17:39:12,321 - app - INFO - Creating database and database tables...
+2024-11-22 17:39:12,326 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:39:12,327 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 17:39:12,327 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:39:12,331 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 17:39:12,331 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:39:12,333 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 17:39:13,858 - app - INFO - Creating database and database tables...
+2024-11-22 17:39:13,862 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:39:13,862 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 17:39:13,863 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:39:13,866 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 17:39:13,866 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:39:13,868 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 17:39:28,492 - app - INFO - Creating database and database tables...
+2024-11-22 17:39:28,497 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:39:28,497 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 17:39:28,498 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:39:28,502 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 17:39:28,502 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:39:28,504 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 17:40:20,234 - fastapi - ERROR - Form data requires "python-multipart" to be installed. 
+You can install "python-multipart" with: 
+
+pip install python-multipart
+
+2024-11-22 17:40:26,704 - fastapi - ERROR - Form data requires "python-multipart" to be installed. 
+You can install "python-multipart" with: 
+
+pip install python-multipart
+
+2024-11-22 17:40:57,457 - fastapi - ERROR - Form data requires "python-multipart" to be installed. 
+You can install "python-multipart" with: 
+
+pip install python-multipart
+
+2024-11-22 17:41:01,773 - fastapi - ERROR - Form data requires "python-multipart" to be installed. 
+You can install "python-multipart" with: 
+
+pip install python-multipart
+
+2024-11-22 17:44:58,894 - app - INFO - Creating database and database tables...
+2024-11-22 17:44:58,899 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:44:58,899 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 17:44:58,899 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:44:58,903 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 17:44:58,903 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:44:58,906 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 17:46:42,046 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:46:42,049 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-22 17:48:41,605 - app - INFO - Creating database and database tables...
+2024-11-22 17:48:41,609 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:48:41,610 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 17:48:41,610 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:48:41,613 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 17:48:41,613 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:48:41,615 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 17:48:42,926 - app - INFO - Creating database and database tables...
+2024-11-22 17:48:42,929 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:48:42,929 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 17:48:42,930 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:48:42,933 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 17:48:42,933 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:48:42,935 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 17:52:13,645 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:52:13,648 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-22 17:52:15,180 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:52:15,183 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-22 17:54:32,222 - app - INFO - Creating database and database tables...
+2024-11-22 17:54:32,226 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:54:32,226 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 17:54:32,227 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:54:32,230 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 17:54:32,230 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:54:32,233 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 17:54:57,229 - app - INFO - Creating database and database tables...
+2024-11-22 17:54:57,232 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:54:57,233 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 17:54:57,234 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:54:57,238 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 17:54:57,238 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:54:57,240 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 17:55:42,827 - app - INFO - Creating database and database tables...
+2024-11-22 17:55:42,831 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 17:55:42,831 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 17:55:42,832 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:55:42,837 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 17:55:42,837 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 17:55:42,840 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 18:02:49,565 - app - INFO - Creating database and database tables...
+2024-11-22 18:02:49,569 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:02:49,570 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 18:02:49,570 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:02:49,574 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 18:02:49,574 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:02:49,576 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 18:06:07,421 - app - INFO - Creating database and database tables...
+2024-11-22 18:06:07,425 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:06:07,425 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 18:06:07,426 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:06:07,429 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 18:06:07,430 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:06:07,433 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 18:06:17,203 - app - INFO - Creating database and database tables...
+2024-11-22 18:06:17,206 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:06:17,207 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 18:06:17,207 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:06:17,210 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 18:06:17,211 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:06:17,213 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 11:07:23,732 - fastapi - ERROR - Form data requires "python-multipart" to be installed. 
+You can install "python-multipart" with: 
+
+pip install python-multipart
+
+2024-11-22 18:08:43,796 - app - INFO - Creating database and database tables...
+2024-11-22 18:08:43,800 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:08:43,801 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 18:08:43,801 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:08:43,805 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 18:08:43,805 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:08:43,807 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 18:09:23,280 - app - INFO - Creating database and database tables...
+2024-11-22 18:09:23,285 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:09:23,285 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 18:09:23,286 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:09:23,290 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 18:09:23,290 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:09:23,292 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 18:09:25,892 - app - INFO - Creating database and database tables...
+2024-11-22 18:09:25,895 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:09:25,896 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 18:09:25,897 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:09:25,901 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 18:09:25,901 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:09:25,903 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 18:09:27,299 - app - INFO - Creating database and database tables...
+2024-11-22 18:09:27,303 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:09:27,304 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 18:09:27,304 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:09:27,308 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 18:09:27,309 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:09:27,311 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 18:10:25,246 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-22 18:10:25,485 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:10:25,494 - sqlalchemy.engine.Engine - INFO - SELECT users.username 
+FROM users 
+WHERE users.username = ?
+2024-11-22 18:10:25,495 - sqlalchemy.engine.Engine - INFO - [generated in 0.00075s] ('AlexThurgood',)
+2024-11-22 18:10:25,499 - sqlalchemy.engine.Engine - INFO - SELECT users.email 
+FROM users 
+WHERE users.email = ?
+2024-11-22 18:10:25,499 - sqlalchemy.engine.Engine - INFO - [generated in 0.00048s] ('adthurgood@gmail.com',)
+2024-11-22 18:10:25,505 - sqlalchemy.engine.Engine - INFO - INSERT INTO users (username, email, hashed_password, created_at) VALUES (?, ?, ?, ?)
+2024-11-22 18:10:25,506 - sqlalchemy.engine.Engine - INFO - [generated in 0.00076s] ('AlexThurgood', 'adthurgood@gmail.com', '$2b$12$iWqqdLkq1Ndh/X1G2kwe9exYpX532T3/orMYFlmVjFT0iyuIMbVza', '2024-11-22 18:10:25.503168')
+2024-11-22 18:10:25,513 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 18:10:25,522 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:10:25,525 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.id = ?
+2024-11-22 18:10:25,526 - sqlalchemy.engine.Engine - INFO - [generated in 0.00052s] (7,)
+2024-11-22 18:10:25,529 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-22 18:10:39,186 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:10:39,187 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.username = ?
+2024-11-22 18:10:39,188 - sqlalchemy.engine.Engine - INFO - [generated in 0.00075s] ('AlexThurgood',)
+2024-11-22 18:10:39,402 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-22 18:10:41,503 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:10:41,504 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.username = ?
+2024-11-22 18:10:41,505 - sqlalchemy.engine.Engine - INFO - [cached since 2.317s ago] ('AlexThurgood',)
+2024-11-22 18:10:41,726 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-22 18:10:52,944 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:10:52,945 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.username = ?
+2024-11-22 18:10:52,945 - sqlalchemy.engine.Engine - INFO - [cached since 13.76s ago] ('AlexThurgood',)
+2024-11-22 18:10:53,163 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-22 18:11:06,164 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:11:06,165 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.username = ?
+2024-11-22 18:11:06,166 - sqlalchemy.engine.Engine - INFO - [cached since 26.98s ago] ('AlexThurgood',)
+2024-11-22 18:11:06,384 - sqlalchemy.engine.Engine - INFO - ROLLBACK
