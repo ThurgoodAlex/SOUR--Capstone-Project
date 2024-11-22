@@ -166,7 +166,6 @@ export const Styles = StyleSheet.create({
    },
    thumbnailContainer: {
       flexDirection: 'row',
-      paddingLeft: 15,
    },
    thumbnailName: {
     fontSize: 18,
@@ -194,22 +193,16 @@ export const Styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: '#ffffff',
-      justifyContent: 'space-evenly'
+      justifyContent: 'space-evenly',
+      padding:16
     },
     titleContainer:{
-      padding: 8,
       flex:1,
       flexDirection:'row',
       justifyContent:'space-between'
     },
-    descriptionContainer:{
-      padding: 8,
-    },
-    title: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      color: '#333', 
-    },
+   
+  
    
     description: {
       fontSize: 16,
@@ -229,6 +222,72 @@ export const Styles = StyleSheet.create({
       color: '#1e90ff', 
     },
 
+    
+     
+    title: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: '#333',
+      marginBottom: 16,
+      textTransform: "uppercase",
+    },
+    imageUpload: {
+      backgroundColor: '#e9e9e9',
+      height: 200,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: 8,
+      marginBottom: 16,
+    },
+    uploadText: {
+      color: '#aaa',
+      fontSize: 16,
+    },
+    uploadedImage: {
+      width: '100%',
+      height: '100%',
+      borderRadius: 8,
+    },
+    formGroup: {
+      marginBottom: 16,
+      flexDirection:'row',
+      gap:8,
+      alignItems:'flex-start',
+      justifyContent:'space-between'
+    },
+    label: {
+      fontSize: 14,
+      fontWeight: '600',
+      color: '#555',
+      marginBottom: 4,
+      marginTop: 8,
+    },
+    input: {
+      backgroundColor: '#fff',
+      padding: 12,
+      borderRadius: 8,
+      borderWidth: 1,
+      borderColor: '#ddd',
+      fontSize: 16,
+      width:260
+    },
+    textArea: {
+      height: 120,
+      textAlignVertical: 'top',
+    },
+    submitButton: {
+      backgroundColor: '#1e90ff',
+      padding: 16,
+      borderRadius: 8,
+      alignItems: 'center',
+      marginTop: 16,
+    },
+    submitButtonText: {
+      fontSize: 16,
+      color: '#fff',
+      fontWeight: 'bold',
+    },
+    
     
 
   })
