@@ -21,6 +21,7 @@ class UserInDB(SQLModel, table=True):
     hashed_password: str
     created_at: Optional[datetime] = Field(default_factory=datetime.now)
 
+#TODO: Messed up the table creation. Will redo once JWT gets implemented
 class ListingInDB(SQLModel, table=True):
     __tablename__ = "listings"
     __table_args__ = {'extend_existing': True}

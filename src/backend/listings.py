@@ -33,7 +33,7 @@ lambda_client = boto3.client('lambda', endpoint_url=localstack_endpoint,
 listing_router = APIRouter(tags=["Listings"])
 
 
-
+#TODO: add seller_id to the listing_data. First needs to implement JWT tokens.
 @listing_router.post('/createlisting', response_model= ListingResponse, status_code=201)
 def create_new_listing(newListing:createListing, session: Annotated[Session, Depends(get_session)]) -> ListingResponse:
     """Creating a new listing"""
@@ -43,6 +43,5 @@ def create_new_listing(newListing:createListing, session: Annotated[Session, Dep
     session.add(listingDB)
     session.commit()
     session.refresh(listingDB)
-    #need to add seller info. First needs to implement JWT tokens.
     listing_data = Listing(title = listingDB.title, description=listingDB.description, price=listingDB.price)
     return ListingResponse(Listing=listing_data)
