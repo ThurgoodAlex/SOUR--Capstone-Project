@@ -1,8 +1,9 @@
 from datetime import datetime
 from typing import Optional
-
-from sqlmodel import Field, SQLModel  # Using only SQLModel for table and validation
+from sqlmodel import Field, SQLModel
 from pydantic import BaseModel
+from sqlalchemy.types import Text, DECIMAL
+from decimal import Decimal
 
 
 class Metadata(BaseModel):
@@ -20,12 +21,16 @@ class UserInDB(SQLModel, table=True):
     hashed_password: str
     created_at: Optional[datetime] = Field(default_factory=datetime.now)
 
-
-class ListingInDB(SQLModel, table = True):
+class ListingInDB(SQLModel, table=True):
     __tablename__ = "listings"
-    __table_args__ = {'extend_existing': True}  
-
-    
+    __table_args__ = {'extend_existing': True}
+    seller_id: Optional[int] = Field(default=None, primary_key=True)
+    #Not sure if we want titles to be unique or not...
+    title: str = Field(unique=False)
+    description: str = Field(sa_column=Text)
+    # Decimal(precision, scale)
+    price: Decimal = Field(sa_column=DECIMAL(10, 2))
+    created_at: Optional[datetime] = Field(default_factory=datetime.now)
 
 
 #All schemas for users
@@ -50,3 +55,29 @@ class UserLogin(BaseModel):
 
 
 #All schemas for listings
+
+#I know these are basically the same... but for clarity sakes it might be nice to seperate them.
+
+
+
+#frontend sends this
+class createListing(BaseModel):
+    title: str
+    description: str
+    price: Decimal
+    #seller_id: User
+
+#backend sends this
+class Listing(BaseModel):
+    title: str
+    description: str
+    price: Decimal
+    #seller_id: User
+
+#cleaner way to hold a Listing
+class ListingResponse(BaseModel):
+    Listing: Listing
+
+class ListingList(BaseModel):
+    meta: Metadata
+    listings: list[Listing]

@@ -10,9 +10,8 @@ export class BackendInfrastructureStack extends cdk.Stack {
     super(scope, id, props);
 
 
-
     //here is a boiler code template for Lambda path code.
-    const starterPageLambdaPath = path.join(__dirname, '../../backend/')
+
     // Create Lambda function
     const starterPageLambda = new lambda.Function(this, 'StarterPageLambda', {
       runtime: lambda.Runtime.PYTHON_3_8,
@@ -27,7 +26,6 @@ export class BackendInfrastructureStack extends cdk.Stack {
 
     // Here are the PRISM lambdas
 
-    const createUserLambdaPath = path.join(__dirname, '../../backend/')
     // Create Lambda function
     const createUserLambda = new lambda.Function(this, 'CreateUserLambda', {
       runtime: lambda.Runtime.PYTHON_3_8,
@@ -39,7 +37,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
       },
     });
 
-    const loginUserLambdaPath = path.join(__dirname, '../../backend/')
+    // login Lambda function
     const loginUserLambda = new lambda.Function(this, 'LoginUserLambda', {
       runtime: lambda.Runtime.PYTHON_3_8,
       handler: 'lambda.auth_handlers.login_user_lambda',
@@ -49,6 +47,16 @@ export class BackendInfrastructureStack extends cdk.Stack {
         PYTHONPATH: '/var/task',
       },
     });
+
+    const createListingLambda = new lambda.Function(this, 'CreateListingLambda',{
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.listings_handlers.create_new_listing',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'create_listing_lambda',
+      environment: {
+        PYTHONPATH: '/var/task',
+      },
+    })
 
     //Here is the intergration to API gateway.
 
@@ -61,7 +69,8 @@ export class BackendInfrastructureStack extends cdk.Stack {
     // Create Lambda integration
     const starterPageIntegration = new apigateway.LambdaIntegration(starterPageLambda);
     const createUserIntergration = new apigateway.LambdaIntegration(createUserLambda);
-    const loginUserIntergration = new apigateway.LambdaIntegration(loginUserLambda)
+    const loginUserIntergration = new apigateway.LambdaIntegration(loginUserLambda);
+    const createListingIntergration = new apigateway.LambdaIntegration(createListingLambda);
     api.root.addMethod('GET', starterPageIntegration);
 
 
@@ -71,7 +80,11 @@ export class BackendInfrastructureStack extends cdk.Stack {
 
     // Adding login user route from Auth
     const loginUserResource = api.root.addResource('loginuser')
-    loginUserResource.addMethod('Post', loginUserIntergration)
+    loginUserResource.addMethod('POST', loginUserIntergration)
+
+    //Adding Listing endpoints
+    const createListingResource = api.root.addResource('createlisting');
+    createListingResource.addMethod('POST', createListingIntergration)
 
     // Add /health endpoint
     const healthResource = api.root.addResource('health');

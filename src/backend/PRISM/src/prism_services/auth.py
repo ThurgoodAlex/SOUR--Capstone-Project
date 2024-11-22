@@ -1,6 +1,5 @@
 import os
 import sys
-import json
 import boto3
 import logging
 from passlib.context import CryptContext
