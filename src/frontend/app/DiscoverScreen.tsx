@@ -1,3 +1,7 @@
+import { Styles } from '@/constants/Styles';
+import { Link, router } from 'expo-router';
+import { Button, View, Text, ScrollView, TouchableOpacity, } from 'react-native';
+import { PostPreview } from '@/components/PostPreview'
 import { GridPosts } from '@/components/GridPosts';
 import { Post } from '@/constants/Types';
 import { Styles } from '@/constants/Styles';
@@ -7,6 +11,8 @@ import { PostPreview } from '@/components/PostPreview'
 import { NavBar } from '@/components/NavBar'
 
 export default function DiscoverScreen() {
+
+
     const dummyPosts: Post[] = [
         {
             id: 1,
@@ -34,6 +40,16 @@ export default function DiscoverScreen() {
         }
     ];
     return (
-        <GridPosts posts={dummyPosts}/>
+        <>
+            <GridPosts posts={dummyPosts}/>
+            <TouchableOpacity
+            style={Styles.buttonDark}
+            onPress={() => router.push('/ProfileScreen')}
+            >
+                <Text style={Styles.buttonTextLight}>Profile</Text>
+            </TouchableOpacity>
+        </>
+        
+
     );
 }

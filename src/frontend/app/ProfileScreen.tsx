@@ -1,11 +1,22 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Alert } from 'react-native';
 import { ProfileStyles } from '@/constants/Styles';
+import { Ionicons } from '@expo/vector-icons';
+import { useUser } from '@/context/user';
 import { Post } from '@/constants/Types';
 import { GridPosts } from '@/components/GridPosts';
 import { NavBar } from '@/components/NavBar';
 
 export default function ProfileScreen() {
+    const user = useUser(); // Fetch user details
+
+    //test alerts
+    if (user) {
+        Alert.alert('User Info (from fake tokens)', `Name: ${user.name}\nEmail: ${user.email}`);
+    } else {
+        Alert.alert('No User Logged in', 'User details are not available.');
+    }
+
     const posts = Array<any>;
     const [activeTab, setActiveTab] = useState('Posts');
 
@@ -13,38 +24,35 @@ export default function ProfileScreen() {
         setActiveTab(tab);
     };
 
-    return (
-        <>
-            <View style={ProfileStyles.container}>
-                <ProfileInfo />
-                <StatsBar />
-                <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} />
 
-                {activeTab === 'Posts' ? (
-                    <PostsGrid posts={new posts} />
-                ) : (
-                    <LikesGrid />
-                )}
-            </View>
-            <NavBar/>
-        </>
+  return (
+    <View style={ProfileStyles.container}>
+        <ProfileInfo user={user} />
+        <StatsBar />
+        <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} 
 
+            {...activeTab === 'Posts' ? (
+                <PostsGrid posts={new posts} />
+            ) : (
+                <LikesGrid />
+            )}
+        />
+    </View>
     );
 }
 
 
-
-function ProfileInfo() {
-    return (
-        <View style={ProfileStyles.profileSection}>
-            <Image
-                source={require('../assets/images/profile_pic.jpg')}
-                style={ProfileStyles.profileImage}
-            />
-            <Text style={ProfileStyles.username}>Hanna</Text>
-            <Text style={ProfileStyles.location}>Salt Lake City, UT</Text>
-        </View>
-    );
+function ProfileInfo({ user }: { user: any }) {
+  return (
+    <View style={ProfileStyles.profileSection}>
+      <Image
+        source={require('../assets/images/profile_pic.jpg')}
+        style={ProfileStyles.profileImage}
+      />
+      <Text style={ProfileStyles.username}>{user?.name || "No User"}</Text> 
+      <Text style={ProfileStyles.location}>Salt Lake City, UT</Text>
+    </View>
+  );
 }
 
 function StatsBar() {
