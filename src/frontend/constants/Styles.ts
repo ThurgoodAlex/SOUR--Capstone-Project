@@ -62,33 +62,48 @@ export const Styles = StyleSheet.create({
       alignItems: 'center',
       marginVertical: 20,
     },
-    
     carouselImage: {
       width:400,
       height: 600,
       marginHorizontal: 10,
       borderRadius: 10,
     },
+
     gridContainer: {
       flex: 1,
       flexDirection: 'row',
       justifyContent: 'space-around',
       flexWrap: 'wrap'
-  },
-  postPreview: {
-      flexDirection: 'column',
-      margin: 5
-  },
-  imagePreview: {
-      height: 175,
-      width: 175
-  },
-  iconOverlay: {
-      position: 'absolute',
-      top: 10,
-      right: 10,
-  }
+    },
+    postPreview: {
+        flexDirection: 'column',
+        margin: 5
+    },
+    imagePreview: {
+        height: 175,
+        width: 175
+    },
+    iconOverlay: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+    }
+  });
 
+  export const NavBarStyles = StyleSheet.create({
+    navBar: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        margin: 5
+    },
+    icon: {
+        flexDirection: 'column'
+    },
+    activeIcon: {
+        color: '#000',
+        borderTopWidth: 2,
+        borderTopColor: '#000',
+      },
   });
 
   export const ProfileStyles = StyleSheet.create({

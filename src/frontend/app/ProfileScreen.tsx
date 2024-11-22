@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, Image, FlatList } from 'react-native';
 import { ProfileStyles } from '@/constants/Styles';
 import { Post } from '@/constants/Types';
 import { GridPosts } from '@/components/GridPosts';
+import { NavBar } from '@/components/NavBar';
 
 export default function ProfileScreen() {
     const posts = Array<any>;
@@ -13,17 +14,21 @@ export default function ProfileScreen() {
     };
 
     return (
-        <View style={ProfileStyles.container}>
-            <ProfileInfo />
-            <StatsBar />
-            <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} />
+        <>
+            <View style={ProfileStyles.container}>
+                <ProfileInfo />
+                <StatsBar />
+                <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} />
 
-            {activeTab === 'Posts' ? (
-                <PostsGrid posts={new posts} />
-            ) : (
-                <LikesGrid />
-            )}
-        </View>
+                {activeTab === 'Posts' ? (
+                    <PostsGrid posts={new posts} />
+                ) : (
+                    <LikesGrid />
+                )}
+            </View>
+            <NavBar/>
+        </>
+
     );
 }
 

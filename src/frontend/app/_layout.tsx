@@ -35,7 +35,7 @@ export default function RootLayout() {
           headerStyle: {
             backgroundColor: '#bde0eb',
           },
-          headerRight: () => ( <Ionicons size={30} name="cart-outline"/> ),
+          headerRight: () => ( <Ionicons size={40} name="cart-outline"/> ),
           headerTintColor: '#fff',
           headerTitleStyle: {
             fontWeight: 'bold',

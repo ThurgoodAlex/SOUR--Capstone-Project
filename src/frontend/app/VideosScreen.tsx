@@ -1,13 +1,11 @@
-import { GridPosts } from '@/components/GridPosts';
-import { Post } from '@/constants/Types';
 import { Styles } from '@/constants/Styles';
 import { Link, router } from 'expo-router';
 import { Button, View, Text, ScrollView } from 'react-native';
 import { PostPreview } from '@/components/PostPreview'
 import { NavBar } from '@/components/NavBar'
 
-export default function DiscoverScreen() {
-    const dummyPosts: Post[] = [
+export default function VideosScreen() {
+    const dummyVideos = [
         {
             id: 1,
             data: './imgs/toad.png',
@@ -31,9 +29,28 @@ export default function DiscoverScreen() {
             data: './imgs/toad.png',
             user: 'Princess Daisy',
             type: 'listing',
-        }
+        },
     ];
     return (
-        <GridPosts posts={dummyPosts}/>
+        <>
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <Text>
+                    video screen
+                </Text>
+                <View style={Styles.gridContainer}>
+                    {dummyVideos.map((post) => (
+                        <PostPreview
+                            key={post.id}
+                            id={post.id}
+                            data={post.data}
+                            user={post.user}
+                            type={post.type as 'video' | 'post' | 'listing'}
+                        />
+                    ))}
+                </View>
+            </ScrollView>
+            <NavBar/>
+        </>
+        
     );
 }

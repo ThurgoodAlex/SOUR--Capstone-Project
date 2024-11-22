@@ -4,8 +4,8 @@ import { Styles } from '@/constants/Styles';
 import { Stack, router } from 'expo-router';
 
 export default function LoginScreen() {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [username, setUsername] = useState('example');
+    const [password, setPassword] = useState('example');
     const [loading, setLoading] = useState(false);
 
     const handleLogin = async () => {
@@ -40,7 +40,8 @@ export default function LoginScreen() {
         // } finally {
         //     setLoading(false);
         // }
-        router.replace('/ProfileScreen')
+        router.replace('/DiscoverScreen');
+        
     };
 
     return (
