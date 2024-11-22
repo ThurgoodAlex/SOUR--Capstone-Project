@@ -60,11 +60,11 @@ export const Styles = StyleSheet.create({
     carouselContainer: {
       flex: 1,
       alignItems: 'center',
-      marginVertical: 20,
+      marginVertical: 10,
     },
     carouselImage: {
       width:400,
-      height: 600,
+      height: 400,
       marginHorizontal: 10,
       borderRadius: 10,
     },
@@ -115,17 +115,7 @@ export const Styles = StyleSheet.create({
       flex: 1,
       backgroundColor: '#ffffff',
     },
-    topBar: {
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-      paddingHorizontal: 16,
-      paddingVertical: 10,
-      alignItems: 'center',
-    },
-    cartIcon: {
-      fontSize: 20,
-      textAlign: 'right'
-    },
+    
     profileSection: {
       alignItems: 'center',
       marginTop: 10,
@@ -195,7 +185,6 @@ export const Styles = StyleSheet.create({
    },
    thumbnailContainer: {
       flexDirection: 'row',
-      paddingLeft: 15,
    },
    thumbnailName: {
     fontSize: 18,
@@ -208,6 +197,116 @@ export const Styles = StyleSheet.create({
     marginLeft: 5,
    }
 
+    
+
+  })
+
+
+
+   
+
+
+
+
+  export const ListingStyles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#ffffff',
+      justifyContent: 'space-evenly',
+      padding:16
+    },
+    titleContainer:{
+      flex:1,
+      flexDirection:'row',
+      justifyContent:'space-between'
+    },
+   
+  
+   
+    description: {
+      fontSize: 16,
+      color: '#666', 
+      lineHeight: 22,
+      marginBottom: 8,
+    },
+    size: {
+      fontSize: 16,
+      fontWeight: '500',
+      color: '#333',
+      marginBottom: 4,
+    },
+    price: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: '#1e90ff', 
+    },
+
+    
+     
+    title: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: '#333',
+      marginBottom: 16,
+      textTransform: "uppercase",
+    },
+    imageUpload: {
+      backgroundColor: '#e9e9e9',
+      height: 200,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: 8,
+      marginBottom: 16,
+    },
+    uploadText: {
+      color: '#aaa',
+      fontSize: 16,
+    },
+    uploadedImage: {
+      width: '100%',
+      height: '100%',
+      borderRadius: 8,
+    },
+    formGroup: {
+      marginBottom: 16,
+      flexDirection:'row',
+      gap:8,
+      alignItems:'flex-start',
+      justifyContent:'space-between'
+    },
+    label: {
+      fontSize: 14,
+      fontWeight: '600',
+      color: '#555',
+      marginBottom: 4,
+      marginTop: 8,
+    },
+    input: {
+      backgroundColor: '#fff',
+      padding: 12,
+      borderRadius: 8,
+      borderWidth: 1,
+      borderColor: '#ddd',
+      fontSize: 16,
+      width:260
+    },
+    textArea: {
+      height: 120,
+      textAlignVertical: 'top',
+    },
+    submitButton: {
+      backgroundColor: '#1e90ff',
+      padding: 16,
+      borderRadius: 8,
+      alignItems: 'center',
+      marginTop: 16,
+    },
+    submitButtonText: {
+      fontSize: 16,
+      color: '#fff',
+      fontWeight: 'bold',
+    },
+    
     
 
   })
