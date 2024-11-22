@@ -79,10 +79,14 @@ export const Styles = StyleSheet.create({
         flexDirection: 'column',
         margin: 5
     },
-    imagePreview: {
-        height: 175,
-        width: 175
-    },
+    // imagePreview: {
+    //     height: 175,
+    //     width: 175
+    // },
+    // imageCarousel:{
+    //     height: 350,
+    //     width: 350
+    // },
     iconOverlay: {
         position: 'absolute',
         top: 10,

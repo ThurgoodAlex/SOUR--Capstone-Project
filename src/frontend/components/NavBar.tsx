@@ -1,23 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { router } from 'expo-router';
+import { usePathname, router } from 'expo-router';
 import { NavBarStyles } from '@/constants/Styles';
 
-
 export function NavBar() {
-  const [activePage, setActivePage] = useState('DiscoverScreen');
+  const pathname = usePathname(); // Get the current route name dynamically.
 
   const handleNavigation = (page: string) => {
-    setActivePage(page);
-    try{
-        // @ts-ignore
+    if (pathname !== `/${page}`) {
+      try {
+        //@ts-ignore
         router.replace(`/${page}`);
+      } catch {
+        router.push('/+not-found');
+      }
     }
-    catch{
-        router.push('/+not-found')
-    }
-    
   };
 
   return (
@@ -25,32 +23,44 @@ export function NavBar() {
       <Ionicons
         style={[
           NavBarStyles.icon,
-          activePage === 'DiscoverScreen' && NavBarStyles.activeIcon,
+          pathname === '/DiscoverScreen' && NavBarStyles.activeIcon,
         ]}
         size={40}
         name="home"
         onPress={() => handleNavigation('DiscoverScreen')}
       />
       <Ionicons
-        style={[NavBarStyles.icon, activePage === 'VideosScreen' && NavBarStyles.activeIcon]}
+        style={[
+          NavBarStyles.icon,
+          pathname === '/VideosScreen' && NavBarStyles.activeIcon,
+        ]}
         size={40}
         name="film"
         onPress={() => handleNavigation('VideosScreen')}
       />
       <Ionicons
-        style={[NavBarStyles.icon, activePage === 'SellerScreen' && NavBarStyles.activeIcon]}
+        style={[
+          NavBarStyles.icon,
+          pathname === '/SellerScreen' && NavBarStyles.activeIcon,
+        ]}
         size={40}
         name="add-circle-outline"
         onPress={() => handleNavigation('SellerScreen')}
       />
       <Ionicons
-        style={[NavBarStyles.icon, activePage === 'MessagesScreen' && NavBarStyles.activeIcon]}
+        style={[
+          NavBarStyles.icon,
+          pathname === '/MessagesScreen' && NavBarStyles.activeIcon,
+        ]}
         size={40}
         name="chatbubbles"
         onPress={() => handleNavigation('MessagesScreen')}
       />
       <Ionicons
-        style={[NavBarStyles.icon, activePage === 'ProfileScreen' && NavBarStyles.activeIcon]}
+        style={[
+          NavBarStyles.icon,
+          pathname === '/ProfileScreen' && NavBarStyles.activeIcon,
+        ]}
         size={40}
         name="person"
         onPress={() => handleNavigation('ProfileScreen')}
