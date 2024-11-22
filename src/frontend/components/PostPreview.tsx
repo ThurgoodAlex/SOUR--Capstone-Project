@@ -16,7 +16,7 @@ type Post = {
  * @param post - Props object containing the post details.
  * @returns A post view component.
  */
-export function PostPreview(post: Post) {
+export function PostPreview({post, size}: {post: Post, size: number}) {
   const { id, data, user, type } = post;
   let icon;
   if (type === 'video'){
@@ -32,7 +32,7 @@ export function PostPreview(post: Post) {
   return (
     <View key={id} style={Styles.postPreview}>
         {/* <Image source={{ uri: 'https://via.placeholder.com/200'}} style={{resizeMode: 'contain'}}/> */}
-        <ImageBackground source={require('./imgs/toad.png')} style={Styles.imagePreview}>
+        <ImageBackground source={require('./imgs/toad.png')} style={{height: size, width:size}}>
             {icon}
         </ImageBackground>
         <Text>{user}</Text>
