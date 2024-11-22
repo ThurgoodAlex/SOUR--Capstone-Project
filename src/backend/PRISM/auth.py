@@ -90,11 +90,16 @@ def create_new_user(newUser: UserRegistration, session: Annotated[Session, Depen
 @auth_router.post("/login", response_model=UserResponse, status_code=200)
 def login_user(user:UserLogin, session: Annotated[Session, Depends(get_session)]):
         """Logging a user in"""
-        user_check = session.exec(select(UserInDB).filter(UserInDB.username == user.username)).first()
 
-        if user is None or not pwd_context.verify(user.password, user_check.hashed_password):
+        if user is None: 
             raise InvalidCredentials()
-        return UserResponse(user={"username": user.username, "email": user_check.email})
+        
+        user_in_db = session.exec(select(UserInDB).filter(UserInDB.username == user.username)).first()
+
+        if user_in_db is None or not pwd_context.verify(user.password, user_in_db.hashed_password):
+            raise InvalidCredentials()
+
+        return UserResponse(user={"username": user.username, "email": user_in_db.email})
 
 def check_username(newUser, session):
     result = session.exec(select(UserInDB.username).where(UserInDB.username == newUser.username))

@@ -10,7 +10,6 @@ def valid_user_data():
         "password": "testpass123"
     }
 
-# Tests
 def test_create_user_success(client,valid_user_data):
     response = client.post("/createuser", 
         json=valid_user_data)
@@ -22,7 +21,6 @@ def test_create_user_success(client,valid_user_data):
 def test_create_user_duplicate_username(client, valid_user_data):
     client.post("/createuser", json=valid_user_data)
     
-    # Try duplicate username
     duplicate_data = valid_user_data.copy()
     duplicate_data["email"] = "different@example.com"
     response = client.post("/createuser", json=duplicate_data)
@@ -39,3 +37,43 @@ def test_create_user_duplicate_email(client, valid_user_data):
     assert response.status_code == 409
     assert f"409: User with email '{valid_user_data['email']}' already exists" in response.json()["detail"] 
 
+@pytest.fixture
+def user_login():
+    return {
+        "username": "testuser",
+        "password": "testpass123"
+    }
+def test_login_user_success(client, valid_user_data, user_login):
+    client.post("/createuser", 
+                json=valid_user_data)
+
+    response = client.post("/login", json=user_login)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["user"]["username"] == "testuser"
+    assert data["user"]["email"] == "test@example.com"
+
+def test_login_invalid_username(client, valid_user_data, user_login):
+    client.post("/createuser", 
+                json=valid_user_data)
+
+    duplicate_data = user_login.copy()
+    duplicate_data["username"] = "invaliduser"
+    response = client.post("/login", json=duplicate_data)
+    data = response.json()
+    assert response.status_code == 401
+    assert data['detail']['error'] == "Invalid_login"
+    assert data['detail']['error_description'] == "Username or password is incorrect"
+
+ 
+def test_login_invalid_password(client, valid_user_data, user_login):
+    client.post("/createuser", 
+                json=valid_user_data)
+
+    duplicate_data = user_login.copy()
+    duplicate_data["password"] = "invalid_password"
+    response = client.post("/login", json=duplicate_data)
+    data = response.json()
+    assert response.status_code == 401
+    assert data['detail']['error'] == "Invalid_login"
+    assert data['detail']['error_description'] == "Username or password is incorrect"

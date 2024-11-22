@@ -23,14 +23,14 @@ class AuthException(HTTPException):
 class InvalidCredentials(AuthException):
     def __init__(self):
         super().__init__(
-            error="invalid_client",
-            description="invalid username or password",
+            error="Invalid_login",
+            description="Username or password is incorrect",
         )
 
 class InvalidToken(AuthException):
     def __init__(self):
         super().__init__(
-            error="invalid_client",
+            error="Invalid_token",
             description="invalid access token",
         )
 
@@ -38,6 +38,6 @@ class InvalidToken(AuthException):
 class ExpiredToken(AuthException):
     def __init__(self):
         super().__init__(
-            error="invalid_client",
+            error="Token_expired",
             description="expired access token",
         )
