@@ -2220,3 +2220,175 @@ FROM users
 WHERE users.username = ?
 2024-11-22 18:11:06,166 - sqlalchemy.engine.Engine - INFO - [cached since 26.98s ago] ('AlexThurgood',)
 2024-11-22 18:11:06,384 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-22 18:22:17,625 - app - INFO - Creating database and database tables...
+2024-11-22 18:22:17,628 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:22:17,629 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 18:22:17,629 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:22:17,632 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 18:22:17,633 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:22:17,635 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 18:24:51,275 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:24:51,285 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.username = ?
+2024-11-22 18:24:51,285 - sqlalchemy.engine.Engine - INFO - [generated in 0.00071s] ('AlexThurgood',)
+2024-11-22 18:24:51,290 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-22 18:24:51,532 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-22 18:24:54,286 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:24:54,286 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.username = ?
+2024-11-22 18:24:54,287 - sqlalchemy.engine.Engine - INFO - [cached since 3.002s ago] ('AlexThurgood',)
+2024-11-22 18:24:54,505 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-22 18:26:01,737 - app - INFO - Creating database and database tables...
+2024-11-22 18:26:01,741 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:26:01,742 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 18:26:01,742 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:26:01,746 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 18:26:01,746 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:26:01,748 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 18:27:23,534 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-22 18:27:23,773 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:27:23,782 - sqlalchemy.engine.Engine - INFO - SELECT users.username 
+FROM users 
+WHERE users.username = ?
+2024-11-22 18:27:23,783 - sqlalchemy.engine.Engine - INFO - [generated in 0.00074s] ('AlexThurgood2',)
+2024-11-22 18:27:23,786 - sqlalchemy.engine.Engine - INFO - SELECT users.email 
+FROM users 
+WHERE users.email = ?
+2024-11-22 18:27:23,787 - sqlalchemy.engine.Engine - INFO - [generated in 0.00073s] ('email',)
+2024-11-22 18:27:23,792 - sqlalchemy.engine.Engine - INFO - INSERT INTO users (username, email, hashed_password, created_at) VALUES (?, ?, ?, ?)
+2024-11-22 18:27:23,793 - sqlalchemy.engine.Engine - INFO - [generated in 0.00064s] ('AlexThurgood2', 'email', '$2b$12$eSkVr9yKfpAiIrCfjCeq3ennomJRPTBO0gn8HZdV9Mv.yv7RSHTNe', '2024-11-22 18:27:23.790495')
+2024-11-22 18:27:23,800 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 18:27:23,809 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:27:23,811 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.id = ?
+2024-11-22 18:27:23,811 - sqlalchemy.engine.Engine - INFO - [generated in 0.00048s] (8,)
+2024-11-22 18:27:23,815 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-22 18:27:40,107 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:27:40,109 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.username = ?
+2024-11-22 18:27:40,109 - sqlalchemy.engine.Engine - INFO - [generated in 0.00058s] ('AlexThurgood2',)
+2024-11-22 18:27:40,332 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-22 18:35:51,390 - app - INFO - Creating database and database tables...
+2024-11-22 18:35:51,393 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:35:51,394 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 18:35:51,394 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:35:51,397 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 18:35:51,398 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:35:51,399 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 18:35:53,877 - app - INFO - Creating database and database tables...
+2024-11-22 18:35:53,881 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:35:53,882 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 18:35:53,882 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:35:53,885 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 18:35:53,886 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:35:53,887 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 18:36:24,153 - app - INFO - Creating database and database tables...
+2024-11-22 18:36:24,156 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:36:24,157 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 18:36:24,157 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:36:24,160 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 18:36:24,161 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:36:24,162 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 18:36:25,981 - app - INFO - Creating database and database tables...
+2024-11-22 18:36:25,984 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:36:25,985 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 18:36:25,985 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:36:25,988 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 18:36:25,989 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:36:25,990 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 18:36:32,993 - app - INFO - Creating database and database tables...
+2024-11-22 18:36:32,996 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:36:32,997 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 18:36:32,997 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:36:33,000 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 18:36:33,000 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:36:33,002 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 18:39:35,500 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:39:35,508 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.username = ?
+2024-11-22 18:39:35,509 - sqlalchemy.engine.Engine - INFO - [generated in 0.00089s] ('AlexThurgood',)
+2024-11-22 18:39:35,513 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-22 18:39:35,766 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-22 18:39:42,984 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:39:42,987 - sqlalchemy.engine.Engine - INFO - SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.hashed_password AS users_hashed_password, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = ?
+2024-11-22 18:39:42,987 - sqlalchemy.engine.Engine - INFO - [generated in 0.00046s] ('7',)
+2024-11-22 18:39:42,990 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-22 18:41:20,263 - app - INFO - Creating database and database tables...
+2024-11-22 18:41:20,267 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:41:20,267 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 18:41:20,268 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:41:20,272 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 18:41:20,272 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:41:20,275 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 18:41:31,267 - app - INFO - Creating database and database tables...
+2024-11-22 18:41:31,271 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:41:31,272 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 18:41:31,272 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:41:31,275 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 18:41:31,275 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:41:31,278 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 18:41:35,175 - app - INFO - Creating database and database tables...
+2024-11-22 18:41:35,180 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:41:35,181 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 18:41:35,181 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:41:35,184 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 18:41:35,185 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 18:41:35,186 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-22 18:43:15,820 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:43:15,827 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.username = ?
+2024-11-22 18:43:15,828 - sqlalchemy.engine.Engine - INFO - [generated in 0.00068s] ('AlexThurgood',)
+2024-11-22 18:43:15,831 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-22 18:43:16,069 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-22 18:43:26,075 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:43:26,075 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.username = ?
+2024-11-22 18:43:26,076 - sqlalchemy.engine.Engine - INFO - [cached since 10.25s ago] ('AlexThurgood',)
+2024-11-22 18:43:26,293 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-22 18:43:39,849 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:43:39,850 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.username = ?
+2024-11-22 18:43:39,851 - sqlalchemy.engine.Engine - INFO - [cached since 24.02s ago] ('AlexThurgood',)
+2024-11-22 18:43:40,072 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-22 18:43:55,601 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:43:55,601 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.username = ?
+2024-11-22 18:43:55,601 - sqlalchemy.engine.Engine - INFO - [cached since 39.77s ago] ('AlexThurgood',)
+2024-11-22 18:43:55,810 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-22 18:44:01,057 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 18:44:01,059 - sqlalchemy.engine.Engine - INFO - SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.hashed_password AS users_hashed_password, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = ?
+2024-11-22 18:44:01,060 - sqlalchemy.engine.Engine - INFO - [generated in 0.00064s] ('7',)
+2024-11-22 18:44:01,064 - sqlalchemy.engine.Engine - INFO - ROLLBACK

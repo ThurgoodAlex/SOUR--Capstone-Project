@@ -57,3 +57,22 @@ def get_access_token_lambda(event, context):
             "body": json.dumps({"error": str(e)})
         }
     
+
+def get_current_user_lambda(event, context):
+    try:
+        access_token = json.loads(event['body'])
+
+        return {
+            "statusCode": 200,
+            "body": json.dumps({
+                "message": "User logged in correctly",
+                "user": access_token
+
+            })
+
+        }
+    except Exception as e:
+        return {
+            "statusCode": 500,
+            "body": json.dumps({"error": str(e)})
+        }

@@ -59,6 +59,18 @@ export class BackendInfrastructureStack extends cdk.Stack {
       },
     });
 
+
+      // Get current user Lambda
+      const getCurrentUserLambda = new lambda.Function(this, 'getCurrentUserLambda', {
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.auth_handlers.get_current_user_lambda',
+         code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'get_current_user_lambda',
+        environment: {
+          PYTHONPATH: '/var/task',
+        },
+      });
+
     const createListingLambda = new lambda.Function(this, 'CreateListingLambda',{
       runtime: lambda.Runtime.PYTHON_3_8,
       handler: 'lambda.listings_handlers.create_new_listing',
@@ -83,6 +95,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const loginUserIntergration = new apigateway.LambdaIntegration(loginUserLambda);
     const createListingIntergration = new apigateway.LambdaIntegration(createListingLambda);
     const getAcessTokenIntergration = new apigateway.LambdaIntegration(getAccessTokenLambda);
+    const getCurrentUserIntergration = new apigateway.LambdaIntegration(getCurrentUserLambda)
     api.root.addMethod('GET', starterPageIntegration);
 
 
@@ -97,6 +110,11 @@ export class BackendInfrastructureStack extends cdk.Stack {
     // adding get access token route from auth
     const getAccessTokenResource = api.root.addResource('getaccesstoken')
     getAccessTokenResource.addMethod('POST', getAcessTokenIntergration)
+
+
+    // adding get current user route from auth
+    const getCurrentUserResource = api.root.addResource('getcurrentuser')
+    getCurrentUserResource.addMethod('GET', getCurrentUserIntergration)
 
     //Adding Listing endpoints
     const createListingResource = api.root.addResource('createlisting');

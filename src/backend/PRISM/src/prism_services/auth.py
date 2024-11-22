@@ -44,7 +44,7 @@ logger = logging.getLogger(__name__)
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 jwt_key = str(os.environ.get("JWT_KEY"))
 jwt_alg = "HS256"
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 auth_router = APIRouter( tags=["Authentication"])
 access_token_duration = 3600 
 
@@ -152,3 +152,10 @@ def decode_access_token(session: Session, token : str) -> UserInDB:
         raise InvalidToken()
     except ValidationError():
         raise InvalidToken()
+    
+
+@auth_router.get("/me", response_model=UserResponse)
+def get_current_user(user: UserInDB = Depends(auth_get_current_user)):
+    """Get current user."""
+    user_response = User(**user.model_dump(exclude={"hashed_password"}))
+    return UserResponse(user=user_response)
