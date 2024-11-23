@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, Alert } from 'react-native';
 import { ProfileStyles } from '@/constants/Styles';
 import { Ionicons } from '@expo/vector-icons';

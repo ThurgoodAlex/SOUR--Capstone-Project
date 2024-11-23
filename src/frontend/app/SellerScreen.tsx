@@ -18,31 +18,33 @@ export default function SellerScreen() {
         Alert.alert('No User Logged in', 'User details are not available.');
     }
 
-    const posts = Array<any>;
-    const [activeTab, setActiveTab] = useState('Active');
+    if (user?.isSeller) {
+        const posts = Array<any>;
+        const [activeTab, setActiveTab] = useState('Active');
 
-    const handleTabSwitch = (tab: string) => {
-        setActiveTab(tab);
-    };
+        const handleTabSwitch = (tab: string) => {
+            setActiveTab(tab);
+        };
 
-
-    return (
-        <>
-            <Stack.Screen options={{ title: 'SellerScreen' }} />
-            <View style={ProfileStyles.container}>
-                <StatsBar />
-                <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch}
-
-                    {...activeTab === 'Active' ? (
-                        <ActivePostsGrid />
-                    ) : (
-                        <ClosedPostsGrid />
-                    )}
-                />
-            </View>
-            <NavBar/>
-        </>
-    );
+        return(
+            <>
+                <StatsBar/>
+                <Text>You are a seller, make a post!</Text>
+                <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} />
+                {activeTab === 'Active' ? (
+                    <ActivePostsGrid />
+                ) : (
+                    <ClosedPostsGrid />
+                )}
+            </>
+        );
+    } else {
+        return(
+            <>
+                <Text>You are not a seller, sign up now!</Text>
+            </>
+        );
+    }
 }
 
 function StatsBar() {
