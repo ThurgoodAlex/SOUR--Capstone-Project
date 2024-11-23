@@ -20,6 +20,7 @@ interface User {
   id: string;
   name: string;
   email: string;
+  isSeller: boolean;
 }
 
 const UserContext = createContext<User | null>(null);
@@ -35,6 +36,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         id: "1",
         name: "Fake User",
         email: "fakeuser@example.com",
+        isSeller: false
       });
     } else {
       setUser(null);
