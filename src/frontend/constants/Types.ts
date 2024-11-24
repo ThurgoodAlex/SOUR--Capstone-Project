@@ -1,3 +1,5 @@
+import { TextProps, ViewProps } from "react-native";
+
 export type Post = {
     id: number;
     // data: TexImageSource;
@@ -8,4 +10,15 @@ export type Post = {
 
 export type GridPostsProps = {
     posts: Post[];
+};
+
+export type ThemedViewProps = ViewProps & {
+    lightColor?: string;
+    darkColor?: string;
+};
+
+export type ThemedTextProps = TextProps & {
+    lightColor?: string;
+    darkColor?: string;
+    type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link';
 };

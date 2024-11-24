@@ -1,8 +1,8 @@
-import { Styles } from '@/constants/Styles';
-import { Link, router } from 'expo-router';
-import { Button, View, Text, ScrollView } from 'react-native';
-import { PostPreview } from '@/components/PostPreview'
+import { Text, ScrollView, View } from 'react-native';
 import { NavBar } from '@/components/NavBar'
+import { GridPosts } from '@/components/GridPosts';
+import { Stack } from 'expo-router';
+import { Styles } from '@/constants/Styles';
 
 export default function VideosScreen() {
     const dummyVideos = [
@@ -33,20 +33,17 @@ export default function VideosScreen() {
     ];
     return (
         <>
-            <ScrollView showsVerticalScrollIndicator={false}>
-                <Text>
-                    video screen
-                </Text>
-                <View style={Styles.gridContainer}>
-                    {dummyVideos.map((post) => (
-                        <PostPreview 
-                            key={post.id}
-                            post={post}
-                            size={175}
-                        />
-                    ))}
-                </View>
-            </ScrollView>
+            <Stack.Screen
+                options={{ title: 'VideosScreen' }}
+            />
+            <View style={Styles.container}>
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    <Text>
+                        video screen
+                    </Text>
+                    <GridPosts posts={dummyVideos}/>
+                </ScrollView>
+            </View>
             <NavBar/>
         </>
         

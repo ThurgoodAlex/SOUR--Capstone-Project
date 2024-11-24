@@ -14,22 +14,14 @@ export default function LoginScreen() {
     const api = useApi();
 
     const handleLogin = async () => {
-        // if (!username || !password) {
-        //     Alert.alert('Error', 'Please fill out all fields.');
-        //     return;
-        // }
-
-        // setLoading(true);
-
         try {
-            
             const response = await api.post('/auth/login', { username, password });
             const result = await response.json();
 
             if (response.ok) {
                 console.log("response after log in request: ", result)
                 login(); //need to pass token later
-                router.push('/DiscoverScreen');
+                router.replace('/DiscoverScreen');
             } else {
                 Alert.alert('Incorrect username or password. Please try again.');
             }
@@ -39,6 +31,7 @@ export default function LoginScreen() {
         } finally {
             setLoading(false);
         }
+        // router.replace('/DiscoverScreen');
     };
 
     return (

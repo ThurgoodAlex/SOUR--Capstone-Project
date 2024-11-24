@@ -6,6 +6,7 @@ import { useUser } from '@/context/user';
 import { Post } from '@/constants/Types';
 import { GridPosts } from '@/components/GridPosts';
 import { NavBar } from '@/components/NavBar';
+import { Stack } from 'expo-router';
 
 export default function ProfileScreen() {
     const user = useUser(); // Fetch user details
@@ -25,39 +26,36 @@ export default function ProfileScreen() {
     };
 
 
-  return (
-    <>
-    <View style={ProfileStyles.container}>
-        <ProfileInfo user={user} />
-        <StatsBar />
-        <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} 
-
-            {...activeTab === 'Posts' ? (
-                <PostsGrid posts={new posts} />
-            ) : (
-                <LikesGrid />
-            )}
-        />
-         
-    </View>
-    <NavBar/>
-    </>
-    
+    return (
+        <>
+            <Stack.Screen options={{ title: 'ProfileScreen' }} />
+            <View style={ProfileStyles.container}>
+                <ProfileInfo user={user} />
+                <StatsBar />
+                <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} />
+                {activeTab === 'Posts' ? (
+                    <PostsGrid />
+                ) : (
+                    <LikesGrid />
+                )}
+            </View>
+            <NavBar/>
+        </>
     );
 }
 
 
 function ProfileInfo({ user }: { user: any }) {
-  return (
-    <View style={ProfileStyles.profileSection}>
-      <Image
-        source={require('../assets/images/profile_pic.jpg')}
-        style={ProfileStyles.profileImage}
-      />
-      <Text style={ProfileStyles.username}>{user?.name || "No User"}</Text> 
-      <Text style={ProfileStyles.location}>Salt Lake City, UT</Text>
-    </View>
-  );
+    return (
+        <View style={ProfileStyles.profileSection}>
+            <Image
+                source={require('../assets/images/profile_pic.jpg')}
+                style={ProfileStyles.profileImage}
+            />
+            <Text style={ProfileStyles.username}>{user?.name || "No User"}</Text>
+            <Text style={ProfileStyles.location}>Salt Lake City, UT</Text>
+        </View>
+    );
 }
 
 function StatsBar() {
@@ -101,7 +99,7 @@ function Tabs({ activeTab, handleTabSwitch }: { activeTab: string; handleTabSwit
 }
 
 
-function PostsGrid({ posts }: { posts: Array<any> }) {
+function PostsGrid() {
     const dummyPosts: Post[] = [
         {
             id: 1,
