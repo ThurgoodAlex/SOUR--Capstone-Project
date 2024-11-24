@@ -2,6 +2,7 @@ import { View, Text, ImageBackground } from 'react-native';
 import { Styles } from '@/constants/Styles';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Post } from '@/constants/Types';
+import ProfileThumbnail from '@/components/ProfileThumbnail';
 
 /**
  * The visualization of how a campus post looks like.
@@ -27,8 +28,8 @@ export function PostPreview({post, size}: {post: Post, size: number}) {
         <ImageBackground source={require('./imgs/toad.png')} style={{height: size, width:size}}>
             {icon}
         </ImageBackground>
-        <Text>{user}</Text>
-        <Text>{type}</Text>
+      
+        
     </View>
   );
 }

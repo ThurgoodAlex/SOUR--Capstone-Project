@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, FlatList, ScrollView } from 'react-native';
 import { ProfileStyles, Styles } from '@/constants/Styles';
 import { PostPreview } from './PostPreview';
+import ProfileThumbnail from '@/components/ProfileThumbnail';
 
 export default function PhotoCarousel() {
     
@@ -34,13 +35,16 @@ export default function PhotoCarousel() {
 
     return (
         <View style={Styles.carouselContainer}>
-            <ScrollView horizontal={true}>
+            <ScrollView horizontal={true} >
                 {dummyPosts.map((post) => (
-                    <PostPreview
-                        key={post.id}
-                        post={post}
-                        size={350}
-                    />
+                    <View style={Styles.carouselItem}>
+                        <PostPreview
+                            key={post.id}
+                            post={post}
+                            size={350}
+                        />
+                        <ProfileThumbnail/>
+                    </View>
                 ))}
             </ScrollView>
         </View>

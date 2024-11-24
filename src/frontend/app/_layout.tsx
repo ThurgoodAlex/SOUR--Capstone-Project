@@ -34,6 +34,9 @@ export default function RootLayout() {
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
           <Stack
             screenOptions={{
+             
+              animation: 'none', // Disable screen animations globally
+            
               headerTitle: "SOUR", // Header title
               headerStyle: {
                 backgroundColor: '#bde0eb', // Header background color
@@ -45,7 +48,6 @@ export default function RootLayout() {
               },
             }}
           >
-            {/* Ensure Slot is here to dynamically render screens */}
             <Slot />
           </Stack>
         </ThemeProvider>

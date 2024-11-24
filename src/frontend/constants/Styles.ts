@@ -62,6 +62,12 @@ export const Styles = StyleSheet.create({
       alignItems: 'center',
       marginVertical: 10,
     },
+    carouselItem: {
+      flex: 1,
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+      marginVertical: 10,
+    },
     carouselImage: {
       width:400,
       height: 400,
@@ -98,7 +104,9 @@ export const Styles = StyleSheet.create({
     navBar: {
         flexDirection: 'row',
         justifyContent: 'space-around',
-        margin: 5
+        marginTop:8,
+        marginBottom:18
+        
     },
     icon: {
         flexDirection: 'column'

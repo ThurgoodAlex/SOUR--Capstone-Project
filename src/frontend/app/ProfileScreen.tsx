@@ -26,6 +26,7 @@ export default function ProfileScreen() {
 
 
   return (
+    <>
     <View style={ProfileStyles.container}>
         <ProfileInfo user={user} />
         <StatsBar />
@@ -37,7 +38,11 @@ export default function ProfileScreen() {
                 <LikesGrid />
             )}
         />
+         
     </View>
+    <NavBar/>
+    </>
+    
     );
 }
 

@@ -25,7 +25,7 @@ export function NavBar() {
           NavBarStyles.icon,
           pathname === '/DiscoverScreen' && NavBarStyles.activeIcon,
         ]}
-        size={40}
+        size={32}
         name="home"
         onPress={() => handleNavigation('DiscoverScreen')}
       />
@@ -34,7 +34,7 @@ export function NavBar() {
           NavBarStyles.icon,
           pathname === '/VideosScreen' && NavBarStyles.activeIcon,
         ]}
-        size={40}
+        size={32}
         name="film"
         onPress={() => handleNavigation('VideosScreen')}
       />
@@ -43,7 +43,7 @@ export function NavBar() {
           NavBarStyles.icon,
           pathname === '/SellerScreen' && NavBarStyles.activeIcon,
         ]}
-        size={40}
+        size={32}
         name="add-circle-outline"
         onPress={() => handleNavigation('SellerScreen')}
       />
@@ -52,7 +52,7 @@ export function NavBar() {
           NavBarStyles.icon,
           pathname === '/MessagesScreen' && NavBarStyles.activeIcon,
         ]}
-        size={40}
+        size={32}
         name="chatbubbles"
         onPress={() => handleNavigation('MessagesScreen')}
       />
@@ -61,7 +61,7 @@ export function NavBar() {
           NavBarStyles.icon,
           pathname === '/ProfileScreen' && NavBarStyles.activeIcon,
         ]}
-        size={40}
+        size={32}
         name="person"
         onPress={() => handleNavigation('ProfileScreen')}
       />
