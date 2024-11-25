@@ -11,7 +11,7 @@ from contextlib import asynccontextmanager
 import warnings
 
 from .schema import(
-    UserInDB
+    UserInDB, ListingInDB
 )
 
 
@@ -40,8 +40,17 @@ def get_all_users(session: Session) -> list[UserInDB]:
     """
     Retrieve all users from the database.
 
-    :return: ordered list of users
+    :return: list of users
     """
 
     return session.exec(select(UserInDB)).all()
+
+def get_all_listings(session: Session) -> list[ListingInDB]:
+    """
+    Retrieve all listings from the database.
+
+    :return: list of listings
+
+    """
+    return session.exec(select(ListingInDB)).all()
 

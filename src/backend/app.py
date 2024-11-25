@@ -9,6 +9,7 @@ from contextlib import asynccontextmanager
 from PRISM.src.prism_services.test_db import create_db_and_tables
 from PRISM.src.prism_services.schema import * 
 from PRISM.src.prism_services.auth import auth_router
+from listings import listing_router
 # Create logs directory if it doesn't exist
 os.makedirs('logs', exist_ok=True)
 
@@ -29,6 +30,7 @@ logger = logging.getLogger(__name__)
 async def lifespan(app:FastAPI):
     logger.info("Creating database and database tables...")
     create_db_and_tables()
+    
     yield 
 
 
@@ -44,6 +46,7 @@ app.add_middleware(
 )
 
 app.include_router(auth_router, prefix="/auth")
+app.include_router(listing_router, prefix="/listing")
 
 # Configure boto3 to use LocalStack
 localstack_endpoint = os.environ.get('LOCALSTACK_ENDPOINT', 'http://localstack:4566')

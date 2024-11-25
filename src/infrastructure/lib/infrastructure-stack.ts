@@ -10,7 +10,8 @@ export class BackendInfrastructureStack extends cdk.Stack {
     super(scope, id, props);
 
 
-    const starterPageLambdaPath = path.join(__dirname, '../../backend/')
+    //here is a boiler code template for Lambda path code.
+
     // Create Lambda function
     const starterPageLambda = new lambda.Function(this, 'StarterPageLambda', {
       runtime: lambda.Runtime.PYTHON_3_8,
@@ -22,7 +23,9 @@ export class BackendInfrastructureStack extends cdk.Stack {
       },
     });
 
-    const createUserLambdaPath = path.join(__dirname, '../../backend/')
+
+    // Here are the PRISM lambdas
+
     // Create Lambda function
     const createUserLambda = new lambda.Function(this, 'CreateUserLambda', {
       runtime: lambda.Runtime.PYTHON_3_8,
@@ -34,7 +37,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
       },
     });
 
-    const loginUserLambdaPath = path.join(__dirname, '../../backend/')
+    // login Lambda function
     const loginUserLambda = new lambda.Function(this, 'LoginUserLambda', {
       runtime: lambda.Runtime.PYTHON_3_8,
       handler: 'lambda.auth_handlers.login_user_lambda',
@@ -45,6 +48,41 @@ export class BackendInfrastructureStack extends cdk.Stack {
       },
     });
 
+    // Get Access Token Lambda
+    const getAccessTokenLambda = new lambda.Function(this, 'getAccessTokenLambda', {
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.auth_handlers.get_access_token_lambda',
+       code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'get_access_token_lambda',
+      environment: {
+        PYTHONPATH: '/var/task',
+      },
+    });
+
+
+      // Get current user Lambda
+      const getCurrentUserLambda = new lambda.Function(this, 'getCurrentUserLambda', {
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.auth_handlers.get_current_user_lambda',
+         code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'get_current_user_lambda',
+        environment: {
+          PYTHONPATH: '/var/task',
+        },
+      });
+
+    const createListingLambda = new lambda.Function(this, 'CreateListingLambda',{
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.listings_handlers.create_new_listing',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'create_listing_lambda',
+      environment: {
+        PYTHONPATH: '/var/task',
+      },
+    })
+
+    //Here is the intergration to API gateway.
+
     // Create API Gateway
     const api = new apigateway.RestApi(this, 'StarterPageApi', {
       restApiName: 'Starter Page API',
@@ -54,16 +92,33 @@ export class BackendInfrastructureStack extends cdk.Stack {
     // Create Lambda integration
     const starterPageIntegration = new apigateway.LambdaIntegration(starterPageLambda);
     const createUserIntergration = new apigateway.LambdaIntegration(createUserLambda);
-    const loginUserIntergration = new apigateway.LambdaIntegration(loginUserLambda)
-
-    // Add root resource and method
+    const loginUserIntergration = new apigateway.LambdaIntegration(loginUserLambda);
+    const createListingIntergration = new apigateway.LambdaIntegration(createListingLambda);
+    const getAcessTokenIntergration = new apigateway.LambdaIntegration(getAccessTokenLambda);
+    const getCurrentUserIntergration = new apigateway.LambdaIntegration(getCurrentUserLambda)
     api.root.addMethod('GET', starterPageIntegration);
+
+
     // Adding Create user route from Auth
     const createUserResource = api.root.addResource('createuser');
     createUserResource.addMethod('POST', createUserIntergration);
 
+    // Adding login user route from Auth
     const loginUserResource = api.root.addResource('loginuser')
-    loginUserResource.addMethod('Post', loginUserIntergration)
+    loginUserResource.addMethod('POST', loginUserIntergration)
+
+    // adding get access token route from auth
+    const getAccessTokenResource = api.root.addResource('getaccesstoken')
+    getAccessTokenResource.addMethod('POST', getAcessTokenIntergration)
+
+
+    // adding get current user route from auth
+    const getCurrentUserResource = api.root.addResource('getcurrentuser')
+    getCurrentUserResource.addMethod('GET', getCurrentUserIntergration)
+
+    //Adding Listing endpoints
+    const createListingResource = api.root.addResource('createlisting');
+    createListingResource.addMethod('POST', createListingIntergration)
 
     // Add /health endpoint
     const healthResource = api.root.addResource('health');
