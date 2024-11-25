@@ -2392,3 +2392,270 @@ FROM users
 WHERE users.id = ?
 2024-11-22 18:44:01,060 - sqlalchemy.engine.Engine - INFO - [generated in 0.00064s] ('7',)
 2024-11-22 18:44:01,064 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-22 19:43:08,723 - app - INFO - Creating database and database tables...
+2024-11-22 19:43:08,731 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-22 19:43:08,732 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-22 19:43:08,732 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 19:43:08,736 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-22 19:43:08,737 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-22 19:43:08,738 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-25 17:14:44,540 - app - INFO - Creating database and database tables...
+2024-11-25 17:14:44,547 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:14:44,548 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-25 17:14:44,548 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:14:44,552 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-25 17:14:44,553 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:14:44,555 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-25 17:15:17,398 - app - INFO - Creating database and database tables...
+2024-11-25 17:15:17,403 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:15:17,403 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-25 17:15:17,403 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:15:17,408 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-25 17:15:17,408 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:15:17,410 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-25 17:18:45,018 - app - INFO - Creating database and database tables...
+2024-11-25 17:18:45,024 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:18:45,024 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-25 17:18:45,025 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:18:45,031 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-25 17:18:45,031 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:18:45,034 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-25 17:21:13,834 - app - INFO - Creating database and database tables...
+2024-11-25 17:21:13,842 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:21:13,842 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-25 17:21:13,842 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:21:13,848 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-25 17:21:13,848 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:21:13,851 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-25 17:22:09,431 - app - INFO - Creating database and database tables...
+2024-11-25 17:22:09,436 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:22:09,436 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-25 17:22:09,437 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:22:09,441 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-25 17:22:09,441 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:22:09,444 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-25 17:24:34,317 - app - INFO - Creating database and database tables...
+2024-11-25 17:24:34,321 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:24:34,321 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-25 17:24:34,322 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:24:34,326 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-25 17:24:34,327 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:24:34,329 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-25 17:25:34,479 - app - INFO - Creating database and database tables...
+2024-11-25 17:25:34,483 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:25:34,483 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-25 17:25:34,484 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:25:34,488 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-25 17:25:34,488 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:25:34,490 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-25 17:26:24,733 - app - INFO - Creating database and database tables...
+2024-11-25 17:26:24,738 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:26:24,738 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-25 17:26:24,739 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:26:24,743 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-25 17:26:24,743 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:26:24,745 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-25 17:26:40,736 - app - INFO - Creating database and database tables...
+2024-11-25 17:26:40,743 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:26:40,744 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-25 17:26:40,744 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:26:40,751 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-25 17:26:40,752 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:26:40,755 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-25 17:26:43,075 - app - INFO - Creating database and database tables...
+2024-11-25 17:26:43,080 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:26:43,080 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-25 17:26:43,081 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:26:43,086 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-25 17:26:43,086 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:26:43,089 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-25 17:26:51,323 - app - INFO - Creating database and database tables...
+2024-11-25 17:26:51,327 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:26:51,328 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-25 17:26:51,328 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:26:51,332 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-25 17:26:51,333 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:26:51,335 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-25 17:26:58,341 - app - INFO - Creating database and database tables...
+2024-11-25 17:26:58,346 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:26:58,346 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-25 17:26:58,347 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:26:58,351 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-25 17:26:58,351 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:26:58,354 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-25 17:27:25,981 - app - INFO - Creating database and database tables...
+2024-11-25 17:27:25,986 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:27:25,987 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-25 17:27:25,987 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:27:25,992 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-25 17:27:25,992 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:27:25,995 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-25 17:31:15,811 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:31:15,830 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.username = ?
+2024-11-25 17:31:15,832 - sqlalchemy.engine.Engine - INFO - [generated in 0.00131s] ('AlexThurgood',)
+2024-11-25 17:31:15,838 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-25 17:31:16,103 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-25 17:31:22,966 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:31:22,975 - sqlalchemy.engine.Engine - INFO - SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.hashed_password AS users_hashed_password, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = ?
+2024-11-25 17:31:22,976 - sqlalchemy.engine.Engine - INFO - [generated in 0.00131s] ('7',)
+2024-11-25 17:31:22,984 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-25 17:31:34,452 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:31:34,455 - sqlalchemy.engine.Engine - INFO - SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.hashed_password AS users_hashed_password, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = ?
+2024-11-25 17:31:34,456 - sqlalchemy.engine.Engine - INFO - [cached since 11.48s ago] ('7',)
+2024-11-25 17:31:34,492 - sqlalchemy.engine.Engine - INFO - INSERT INTO listings (title, description, price, seller, created_at, seller_id) VALUES (?, ?, ?, ?, ?, ?)
+2024-11-25 17:31:34,493 - sqlalchemy.engine.Engine - INFO - [generated in 0.00257s] ('test', 'test', 2.5, 'AlexThurgood', '2024-11-25 17:31:34.479253', 7)
+2024-11-25 17:31:34,503 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-25 17:37:21,043 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:37:21,044 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.username = ?
+2024-11-25 17:37:21,045 - sqlalchemy.engine.Engine - INFO - [cached since 365.2s ago] ('AlexThurgood',)
+2024-11-25 17:37:21,281 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-25 17:37:28,077 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:37:28,081 - sqlalchemy.engine.Engine - INFO - SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.hashed_password AS users_hashed_password, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = ?
+2024-11-25 17:37:28,083 - sqlalchemy.engine.Engine - INFO - [cached since 365.1s ago] ('7',)
+2024-11-25 17:37:28,123 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-25 17:37:29,628 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:37:29,630 - sqlalchemy.engine.Engine - INFO - SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.hashed_password AS users_hashed_password, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = ?
+2024-11-25 17:37:29,631 - sqlalchemy.engine.Engine - INFO - [cached since 366.7s ago] ('7',)
+2024-11-25 17:37:29,637 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-25 17:37:39,597 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:37:39,598 - sqlalchemy.engine.Engine - INFO - SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.hashed_password AS users_hashed_password, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = ?
+2024-11-25 17:37:39,598 - sqlalchemy.engine.Engine - INFO - [cached since 376.6s ago] ('7',)
+2024-11-25 17:37:39,605 - sqlalchemy.engine.Engine - INFO - INSERT INTO listings (title, description, price, seller, created_at, seller_id) VALUES (?, ?, ?, ?, ?, ?)
+2024-11-25 17:37:39,606 - sqlalchemy.engine.Engine - INFO - [cached since 365.1s ago] ('test', 'test', 2.4, 'AlexThurgood', '2024-11-25 17:37:39.603588', 7)
+2024-11-25 17:37:39,609 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-25 17:37:42,817 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:37:42,818 - sqlalchemy.engine.Engine - INFO - SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.hashed_password AS users_hashed_password, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = ?
+2024-11-25 17:37:42,818 - sqlalchemy.engine.Engine - INFO - [cached since 379.8s ago] ('7',)
+2024-11-25 17:37:42,823 - sqlalchemy.engine.Engine - INFO - INSERT INTO listings (title, description, price, seller, created_at, seller_id) VALUES (?, ?, ?, ?, ?, ?)
+2024-11-25 17:37:42,824 - sqlalchemy.engine.Engine - INFO - [cached since 368.3s ago] ('test', 'test', 2.4, 'AlexThurgood', '2024-11-25 17:37:42.823078', 7)
+2024-11-25 17:37:42,826 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-25 17:39:07,574 - app - INFO - Creating database and database tables...
+2024-11-25 17:39:07,579 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:39:07,580 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-25 17:39:07,580 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:39:07,585 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-25 17:39:07,585 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:39:07,588 - sqlalchemy.engine.Engine - INFO - PRAGMA temp.table_info("listings")
+2024-11-25 17:39:07,588 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:39:07,590 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE listings (
+	id INTEGER NOT NULL, 
+	title VARCHAR NOT NULL, 
+	description VARCHAR NOT NULL, 
+	price NUMERIC NOT NULL, 
+	seller VARCHAR NOT NULL, 
+	created_at DATETIME, 
+	seller_id INTEGER, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(seller_id) REFERENCES users (id)
+)
+
+
+2024-11-25 17:39:07,591 - sqlalchemy.engine.Engine - INFO - [no key 0.00079s] ()
+2024-11-25 17:39:07,608 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-25 17:42:31,570 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:42:31,578 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.username = ?
+2024-11-25 17:42:31,578 - sqlalchemy.engine.Engine - INFO - [generated in 0.00052s] ('AlexThurgood',)
+2024-11-25 17:42:31,583 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-25 17:42:31,846 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-25 17:42:40,764 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:42:40,766 - sqlalchemy.engine.Engine - INFO - SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.hashed_password AS users_hashed_password, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = ?
+2024-11-25 17:42:40,767 - sqlalchemy.engine.Engine - INFO - [generated in 0.00076s] ('7',)
+2024-11-25 17:42:40,771 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-25 17:42:51,453 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:42:51,455 - sqlalchemy.engine.Engine - INFO - SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.hashed_password AS users_hashed_password, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = ?
+2024-11-25 17:42:51,456 - sqlalchemy.engine.Engine - INFO - [cached since 10.69s ago] ('7',)
+2024-11-25 17:42:51,480 - sqlalchemy.engine.Engine - INFO - INSERT INTO listings (title, description, price, seller, created_at, seller_id) VALUES (?, ?, ?, ?, ?, ?)
+2024-11-25 17:42:51,481 - sqlalchemy.engine.Engine - INFO - [generated in 0.00191s] ('test', 'test', 0.0, 'AlexThurgood', '2024-11-25 17:42:51.470349', 7)
+2024-11-25 17:42:51,502 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-25 17:42:51,527 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:42:51,533 - sqlalchemy.engine.Engine - INFO - SELECT listings.id, listings.title, listings.description, listings.price, listings.seller, listings.created_at, listings.seller_id 
+FROM listings 
+WHERE listings.id = ?
+2024-11-25 17:42:51,534 - sqlalchemy.engine.Engine - INFO - [generated in 0.00154s] (1,)
+2024-11-25 17:42:51,547 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-25 17:46:29,083 - app - INFO - Creating database and database tables...
+2024-11-25 17:46:29,088 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:46:29,089 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-11-25 17:46:29,089 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:46:29,094 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-11-25 17:46:29,094 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-11-25 17:46:29,097 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-25 17:48:56,279 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:48:56,289 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.username = ?
+2024-11-25 17:48:56,289 - sqlalchemy.engine.Engine - INFO - [generated in 0.00070s] ('AlexThurgood',)
+2024-11-25 17:48:56,294 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-11-25 17:48:56,551 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-25 17:49:03,704 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:49:03,707 - sqlalchemy.engine.Engine - INFO - SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.hashed_password AS users_hashed_password, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = ?
+2024-11-25 17:49:03,708 - sqlalchemy.engine.Engine - INFO - [generated in 0.00064s] ('7',)
+2024-11-25 17:49:03,712 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-25 17:49:17,689 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:49:17,690 - sqlalchemy.engine.Engine - INFO - SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.hashed_password AS users_hashed_password, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = ?
+2024-11-25 17:49:17,690 - sqlalchemy.engine.Engine - INFO - [cached since 13.98s ago] ('7',)
+2024-11-25 17:49:17,700 - sqlalchemy.engine.Engine - INFO - INSERT INTO listings (title, description, price, seller, created_at, seller_id) VALUES (?, ?, ?, ?, ?, ?)
+2024-11-25 17:49:17,700 - sqlalchemy.engine.Engine - INFO - [generated in 0.00089s] ('shirt', 'This is a red shirt', 1.3, 'AlexThurgood', '2024-11-25 17:49:17.696057', 7)
+2024-11-25 17:49:17,710 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-25 17:49:17,720 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:49:17,722 - sqlalchemy.engine.Engine - INFO - SELECT listings.id, listings.title, listings.description, listings.price, listings.seller, listings.created_at, listings.seller_id 
+FROM listings 
+WHERE listings.id = ?
+2024-11-25 17:49:17,723 - sqlalchemy.engine.Engine - INFO - [generated in 0.00069s] (2,)
+2024-11-25 17:49:17,727 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-11-25 17:49:20,371 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:49:20,372 - sqlalchemy.engine.Engine - INFO - SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.hashed_password AS users_hashed_password, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = ?
+2024-11-25 17:49:20,373 - sqlalchemy.engine.Engine - INFO - [cached since 16.67s ago] ('7',)
+2024-11-25 17:49:20,378 - sqlalchemy.engine.Engine - INFO - INSERT INTO listings (title, description, price, seller, created_at, seller_id) VALUES (?, ?, ?, ?, ?, ?)
+2024-11-25 17:49:20,379 - sqlalchemy.engine.Engine - INFO - [cached since 2.679s ago] ('shirt', 'This is a red shirt', 1.3, 'AlexThurgood', '2024-11-25 17:49:20.377599', 7)
+2024-11-25 17:49:20,390 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-11-25 17:49:20,404 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-11-25 17:49:20,405 - sqlalchemy.engine.Engine - INFO - SELECT listings.id, listings.title, listings.description, listings.price, listings.seller, listings.created_at, listings.seller_id 
+FROM listings 
+WHERE listings.id = ?
+2024-11-25 17:49:20,406 - sqlalchemy.engine.Engine - INFO - [cached since 2.684s ago] (3,)
+2024-11-25 17:49:20,411 - sqlalchemy.engine.Engine - INFO - ROLLBACK

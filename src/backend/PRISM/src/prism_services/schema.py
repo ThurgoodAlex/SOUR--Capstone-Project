@@ -62,6 +62,14 @@ class Listing(BaseModel):
     title: str
     description: str
     price: Decimal
+    seller: str
+
+    # need this to convert decimal from scientific notation to normal.
+    class Config:
+        json_encoders = {
+            Decimal: lambda v: f"{v:.2f}"  \
+        }
+
 
 #cleaner way to hold a Listing
 class ListingResponse(BaseModel):
@@ -81,9 +89,7 @@ class ListingInDB(SQLModel, table=True):
     description: str = Field(sa_column=Text)
     # Decimal(precision, scale)
     price: Decimal = Field(sa_column=DECIMAL(10, 2))
-    seller: str = Field(
-        sa_column=Field(sa_column="users.username"),
-    )
+    seller: str
     created_at: Optional[datetime] = Field(default_factory=datetime.now)
     # I think this creates the foreign key relationship
     seller_id: Optional[int] = Field(default=None, foreign_key="users.id")

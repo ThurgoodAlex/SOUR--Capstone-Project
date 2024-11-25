@@ -10,9 +10,12 @@ from sqlalchemy.future import select
 from jose import JWTError, jwt
 from sqlmodel import Session, SQLModel, select
 from PRISM.src.prism_services.schema import (
-    Listing, ListingResponse, ListingInDB, createListing, ListingList, User
+    Listing, ListingResponse, ListingInDB, createListing, ListingList, UserInDB
 )
 from PRISM.src.prism_services.test_db import get_session
+from PRISM.src.prism_services.auth import auth_get_current_user
+
+
 SessionDep = Annotated[Session, Depends(get_session)]
 logging.basicConfig(
     level=logging.INFO,
@@ -35,13 +38,16 @@ listing_router = APIRouter(tags=["Listings"])
 
 #TODO: add seller_id to the listing_data. First needs to implement JWT tokens.
 @listing_router.post('/createlisting', response_model= ListingResponse, status_code=201)
-def create_new_listing(newListing:createListing, session: Annotated[Session, Depends(get_session)]) -> ListingResponse:
+def create_new_listing(newListing:createListing, session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)) -> ListingResponse:
     """Creating a new listing"""
     listingDB = ListingInDB(
-        **newListing.model_dump()
+        **newListing.model_dump(),
+        seller = currentUser.username,
+        seller_id = currentUser.id,
+        seller_user = currentUser,
     )
     session.add(listingDB)
     session.commit()
     session.refresh(listingDB)
-    listing_data = Listing(title = listingDB.title, description=listingDB.description, price=listingDB.price)
+    listing_data = Listing(title = listingDB.title, description=listingDB.description, price=listingDB.price, seller=listingDB.seller)
     return ListingResponse(Listing=listing_data)
