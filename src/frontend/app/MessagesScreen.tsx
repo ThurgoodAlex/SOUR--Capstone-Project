@@ -1,13 +1,17 @@
 import { NavBar } from '@/components/NavBar';
-import { Text } from 'react-native';
+import { ScreenStyles } from '@/constants/Styles';
+import { Text, View } from 'react-native';
 
 export default function MessagesScreen() {
     return (
         <>
-            <Text style={{flex: 1}}>
+        <View style={ScreenStyles.screen}>
+            <Text style={{ flex: 1 }}>
                 this is the messages screen
             </Text>
-            <NavBar/>
+
+        </View>
+        <NavBar/>
         </>
         
     );

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image, FlatList, ScrollView } from 'react-native';
-import { ProfileStyles, Styles } from '@/constants/Styles';
+import { View, Text, TouchableOpacity, Image, FlatList, ScrollView, ImageBackground } from 'react-native';
+import { Styles } from '@/constants/Styles';
 import { PostPreview } from './PostPreview';
 import ProfileThumbnail from '@/components/ProfileThumbnail';
 
@@ -8,42 +8,29 @@ export default function PhotoCarousel() {
     
     const dummyPosts = [
         {
-            id: 1,
-            data: './imgs/toad.png',
-            user: 'Princess Peach',
-            type: 'video',
+          id: 1,
+          data: require('../assets/images/sweater1.png'), // Use require here
         },
         {
-            id: 2,
-            data: './imgs/toad.png',
-            user: 'Mario',
-            type: 'post',
+          id: 2,
+          data: require('../assets/images/sweater2.png'), // Use require here
         },
         {
-            id: 3,
-            data: './imgs/toad.png',
-            user: 'Bowser',
-            type: 'listing',
+          id: 3,
+          data: require('../assets/images/sweater3.png'), // Use require here
         },
         {
-            id: 4,
-            data: './imgs/toad.png',
-            user: 'Princess Daisy',
-            type: 'listing',
+          id: 4,
+          data: require('../assets/images/sweater4.png'), // Use require here
         },
     ];
 
     return (
-        <View style={Styles.carouselContainer}>
+        <View style={Styles.row}>
             <ScrollView horizontal={true} >
                 {dummyPosts.map((post) => (
-                    <View style={Styles.carouselItem}>
-                        <PostPreview
-                            key={post.id}
-                            post={post}
-                            size={350}
-                        />
-                        <ProfileThumbnail/>
+                    <View style={Styles.column}>
+                            <ImageBackground source={post.data} style={{height: 250, width:250}}></ImageBackground>
                     </View>
                 ))}
             </ScrollView>
