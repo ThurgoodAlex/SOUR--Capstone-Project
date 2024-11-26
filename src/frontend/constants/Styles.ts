@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native';
-import { Colors } from '@/constants/Colors';
 
 
 
@@ -71,27 +70,27 @@ export const TextStyles = StyleSheet.create({
 export const Styles = StyleSheet.create({
     
     input: {
-      borderWidth: 1,
-      borderColor: '#ddd',
-      backgroundColor: '#fff',
-      padding: 12,
-      borderRadius: 8,
-      fontSize: 16,
-      marginBottom: 16,
+        borderWidth: 1,
+        borderColor: '#ddd',
+        backgroundColor: '#fff',
+        padding: 12,
+        borderRadius: 8,
+        fontSize: 16,
+        marginBottom: 16,
     },
     buttonLight: {
-      backgroundColor: '#D3D3D3',
-      padding: 16,
-      borderRadius: 8,
-      alignItems: 'center',
-      marginBottom: 16,
+        backgroundColor: '#D3D3D3',
+        padding: 16,
+        borderRadius: 8,
+        alignItems: 'center',
+        marginBottom: 16,
     },
-    buttonDark:{
-      backgroundColor: '#454545',
-      padding: 16,
-      borderRadius: 8,
-      alignItems: 'center',
-      marginBottom: 16,
+    buttonDark: {
+        backgroundColor: '#454545',
+        padding: 16,
+        borderRadius: 8,
+        alignItems: 'center',
+        marginBottom: 16,
     },
     
     row:{
@@ -121,7 +120,7 @@ export const Styles = StyleSheet.create({
         top: 10,
         right: 10,
     }
-  });
+});
 
   
 

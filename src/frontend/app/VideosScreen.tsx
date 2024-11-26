@@ -3,6 +3,8 @@ import { Link, router } from 'expo-router';
 import { Button, View, Text, ScrollView } from 'react-native';
 import { PostPreview } from '@/components/PostPreview'
 import { NavBar } from '@/components/NavBar'
+import { GridPosts } from '@/components/GridPosts';
+import { Stack } from 'expo-router';
 
 export default function VideosScreen() {
     const dummyVideos = [
@@ -33,6 +35,9 @@ export default function VideosScreen() {
     ];
     return (
         <>
+         <Stack.Screen
+         options={{ title: 'VideosScreen' }}
+         />
          <View style={ScreenStyles.screen}>
             <ScrollView showsVerticalScrollIndicator={false} >
                 <Text>

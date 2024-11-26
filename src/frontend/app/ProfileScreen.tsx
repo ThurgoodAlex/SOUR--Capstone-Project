@@ -6,6 +6,7 @@ import { useUser } from '@/context/user';
 import { Post } from '@/constants/Types';
 import { GridPosts } from '@/components/GridPosts';
 import { NavBar } from '@/components/NavBar';
+import { Stack } from 'expo-router';
 
 export default function ProfileScreen() {
 
@@ -30,6 +31,7 @@ export default function ProfileScreen() {
 
   return (
     <>
+    <Stack.Screen options={{ title: 'ProfileScreen' }} />
     <View style={ScreenStyles.screen}>
         <ProfileInfo user={user} />
         <StatsBar />
@@ -105,7 +107,7 @@ function Tabs({ activeTab, handleTabSwitch }: { activeTab: string; handleTabSwit
 }
 
 
-function PostsGrid({ posts }: { posts: Array<any> }) {
+function PostsGrid() {
     const dummyPosts: Post[] = [
         {
             id: 1,

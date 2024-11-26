@@ -16,32 +16,32 @@ type Post = {
 
 export default function DiscoverScreen() {
 
-  const dummyPosts = [
-    {
-      id: 1,
-      data: './imgs/toad.png',
-      user: 'Princess Peach',
-      type: 'video',
-    },
-    {
-      id: 2,
-      data: './imgs/toad.png',
-      user: 'Mario',
-      type: 'post',
-    },
-    {
-      id: 3,
-      data: './imgs/toad.png',
-      user: 'Bowser',
-      type: 'listing',
-    },
-    {
-      id: 4,
-      data: './imgs/toad.png',
-      user: 'Princess Daisy',
-      type: 'listing',
-    },
-  ];
+    const dummyPosts = [
+        {
+            id: 1,
+            data: './imgs/toad.png',
+            user: 'Princess Peach',
+            type: 'video',
+        },
+        {
+            id: 2,
+            data: './imgs/toad.png',
+            user: 'Mario',
+            type: 'post',
+        },
+        {
+            id: 3,
+            data: './imgs/toad.png',
+            user: 'Bowser',
+            type: 'listing',
+        },
+        {
+            id: 4,
+            data: './imgs/toad.png',
+            user: 'Princess Daisy',
+            type: 'listing',
+        },
+    ];
 
   const renderPost = ({ item }: {item: Post}) => (
     <PostPreview

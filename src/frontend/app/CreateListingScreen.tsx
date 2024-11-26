@@ -4,31 +4,31 @@ import React, { useState } from 'react';
 import {View, Text, TextInput, TouchableOpacity, Image, ScrollView, KeyboardTypeOptions, StyleSheet,} from 'react-native';
 
 export default function CreateListing() {
-  const [image, setImage] = useState(null); // For image upload
-  const [name, setName] = useState('');
-  const [size, setSize] = useState('');
-  const [description, setDescription] = useState('');
-  const [brand, setBrand] = useState('');
-  const [condition, setCondition] = useState('');
-  const [colors, setColors] = useState('');
-  const [price, setPrice] = useState('');
+    const [image, setImage] = useState(null); // For image upload
+    const [name, setName] = useState('');
+    const [size, setSize] = useState('');
+    const [description, setDescription] = useState('');
+    const [brand, setBrand] = useState('');
+    const [condition, setCondition] = useState('');
+    const [colors, setColors] = useState('');
+    const [price, setPrice] = useState('');
 
-  const uploadImage = () => {
-    // Placeholder for image upload logic
-    console.log('Upload Image');
-  };
+    const uploadImage = () => {
+        // Placeholder for image upload logic
+        console.log('Upload Image');
+    };
 
-  const handleSubmit = () => {
-    console.log({
-      name,
-      size,
-      description,
-      brand,
-      condition,
-      colors,
-      price,
-    });
-  };
+    const handleSubmit = () => {
+        console.log({
+            name,
+            size,
+            description,
+            brand,
+            condition,
+            colors,
+            price,
+        });
+    };
 
   return (
     <>
@@ -73,14 +73,14 @@ function FormGroup({
     setter,
     keyboardType,
     multiline
-  }: {
+}: {
     labelText: string;
     placeholderText: string;
     value: string;
     setter: React.Dispatch<React.SetStateAction<string>>;
-    keyboardType?: KeyboardTypeOptions; 
+    keyboardType?: KeyboardTypeOptions;
     multiline?: boolean
-  }) {
+}) {
 
     return (
     <View style={CreateListingStyles.formGroup}>
