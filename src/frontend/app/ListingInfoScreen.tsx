@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image, FlatList } from 'react-native';
-import { ListingStyles, Styles } from '@/constants/Styles';
+import { View, Text, TouchableOpacity, Image, FlatList, ScrollView } from 'react-native';
+import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 import ProfileThumbnail from '@/components/ProfileThumbnail';
 import PhotoCarousel from '@/components/PhotoCarousel';
-import { Stack } from 'expo-router';
+import { NavBar } from '@/components/NavBar';
+import { Colors } from '@/constants/Colors';
 
 export default function ListingInfoScreen() {
   const [liked, setLike] = useState(false);
@@ -18,33 +19,32 @@ export default function ListingInfoScreen() {
   };
 
   return (
-    <View style={ListingStyles.container}>
-      <PhotoCarousel/>
-      <ProfileThumbnail />
-      <ListingInfo listing={listing} />
+    <>
+     <View style={ScreenStyles.screen}>
+      <ScrollView>
+        <PhotoCarousel />
+        <ProfileThumbnail />
+        <ListingInfo listing={listing} />
+      </ScrollView>
     </View>
+    <NavBar/>
+   
+    </>
   );
 }
 
 function ListingInfo({ listing }: { listing: { title: string; price: string ;description: string; size: string;} }) {
   return (
     <>
-        <Stack.Screen
-            options={{ title: 'ListingInfoScreen' }}
-        />
-        <View style={Styles.container}>
-            <View style={ListingStyles.titleContainer}>
-                <Text style={ListingStyles.title}>{listing.title}</Text>
-                <Text style={ListingStyles.price}>{listing.price}</Text>
-            </View>
-            <View>
-                <Text style={ListingStyles.size}>Size: {listing.size}</Text>
-                <Text style={ListingStyles.description}>{listing.description}</Text>
-            </View>
-        </View>
-        
+      <View style={[Styles.row, {justifyContent:'space-between', flexWrap:'wrap'}]}>
+        <Text style={[TextStyles.h1, TextStyles.uppercase]}>{listing.title}</Text>
+        <Text style={TextStyles.h2}>{listing.price}</Text>
+      </View>
+      <View >
+        <Text style={TextStyles.h3}>Size: {listing.size}</Text>
+        <Text style={TextStyles.p}>{listing.description}</Text>
+      </View>
     </>
-    
-   
+  
   );
 }

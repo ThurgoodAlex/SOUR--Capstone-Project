@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
-import { Styles } from '@/constants/Styles';
+import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 import { Stack, router } from 'expo-router';
 import { useAuth } from '@/context/auth'; 
 import { useApi } from '@/context/api'; 
@@ -41,8 +41,8 @@ export default function LoginScreen() {
                     title: "LoginScreen",
                 }}
             />
-            <View style={Styles.container}>
-                <Text style={Styles.title}>Login</Text>
+            <View style={ScreenStyles.screenCentered}>
+                <Text style={[TextStyles.h2, TextStyles.uppercase]}>Login</Text>
 
                 <TextInput
                     style={Styles.input}
@@ -67,7 +67,7 @@ export default function LoginScreen() {
                     {loading ? (
                         <ActivityIndicator color="#ffffff" />
                     ) : (
-                        <Text style={Styles.buttonTextLight}>Login</Text>
+                        <Text style={TextStyles.light}>Login</Text>
                     )}
                 </TouchableOpacity>
             </View>

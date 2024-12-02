@@ -1,9 +1,10 @@
-import { Styles } from '@/constants/Styles';
+import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
+import { View } from 'react-native';
 import { PostPreview } from '@/components/PostPreview';
 import { NavBar } from '@/components/NavBar';
 import PhotoCarousel from '@/components/PhotoCarousel';
-import { FlatList, View } from 'react-native';
-import { Stack } from 'expo-router';
+import { FlatList, Text } from 'react-native';
+import PostCarousel from '@/components/PostCarousel';
 
 type Post = {
     id: number;
@@ -42,31 +43,35 @@ export default function DiscoverScreen() {
         },
     ];
 
-    const renderPost = ({ item }: { item: Post }) => (
-        <PostPreview
-            post={item}
-            size={175}
-        />
-    );
+  const renderPost = ({ item }: {item: Post}) => (
+    <PostPreview
+      post={item}
+      size={160}
+    />
+  );
 
-    return (
-        <>
-            <Stack.Screen
-                options={{ title: 'DiscoverScreen' }}
-            />
-            <View style={Styles.container}>
-                <FlatList
-                    ListHeaderComponent={<PhotoCarousel />}
-                    data={dummyPosts}
-                    keyExtractor={(item) => item.id.toString()}
-                    renderItem={renderPost}
-                    numColumns={2}
-                    columnWrapperStyle={Styles.gridContainer}
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ paddingBottom: 80 }}
-                />
-            </View>
-            <NavBar />
-        </>
-    );
+  return (
+    <>
+    <View style={ScreenStyles.screen}>
+      <FlatList
+        ListHeaderComponent={
+          <>
+          <Text style={[TextStyles.h2, TextStyles.uppercase]} >What's New Today?</Text>
+          <PostCarousel />
+          <Text style={[TextStyles.h2, TextStyles.uppercase]} >You Might Like</Text>
+          </>
+        } // Carousel at the top
+        data={dummyPosts} // Data for FlatList
+        keyExtractor={(item) => item.id.toString()} // Unique key for each item
+        renderItem={renderPost} // Function to render each item
+        numColumns={2} // Grid layout with 2 columns
+        columnWrapperStyle={Styles.grid} // Style for the row container
+        showsVerticalScrollIndicator={false} // Hide vertical scroll indicator
+      />
+     
+    </View>
+    <NavBar />
+    </>
+    
+  );
 }

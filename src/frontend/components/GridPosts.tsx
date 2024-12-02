@@ -12,7 +12,7 @@ import { GridPostsProps } from '@/constants/Types';
 export const GridPosts: React.FC<GridPostsProps> = ({ posts }) => {
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={Styles.gridContainer}>
+            <View style={Styles.grid}>
                 {posts.map((post) => (
                     <PostPreview
                         key={post.id}

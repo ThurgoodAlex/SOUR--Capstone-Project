@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
-import { Styles } from '@/constants/Styles';
+import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 import { router, Stack } from 'expo-router';
 
 export function SignUpScreen() {
@@ -46,13 +46,9 @@ export function SignUpScreen() {
         }
     };
 
-    return (
-        <>
-            <Stack.Screen
-                options={{ title: 'SignUpScreen' }}
-            />
-            <View style={Styles.container}>
-                <Text style={Styles.title}>Create an Account</Text>
+  return (
+    <View style={ScreenStyles.screenCentered}>
+      <Text style={[TextStyles.h2, TextStyles.uppercase]}>Create an Account</Text>
 
                 <TextInput
                     style={Styles.input}
@@ -75,20 +71,19 @@ export function SignUpScreen() {
                     onChangeText={setPassword}
                 />
 
-                <TouchableOpacity
-                    style={Styles.buttonDark}
-                    onPress={requestCreateUser}
-                    disabled={loading}
-                >
-                    {loading ? (
-                        <ActivityIndicator color="#ffffff" />
-                    ) : (
-                        <Text style={Styles.buttonTextLight}>Sign Up</Text>
-                    )}
-                </TouchableOpacity>
-            </View>
-        </>
-    );
+      <TouchableOpacity
+        style={Styles.buttonDark}
+        onPress={requestCreateUser}
+        disabled={loading}
+      >
+        {loading ? (
+          <ActivityIndicator color="#ffffff" />
+        ) : (
+          <Text style={TextStyles.light}>Sign Up</Text>
+        )}
+      </TouchableOpacity>
+    </View>
+  );
 }
 
 export default SignUpScreen;

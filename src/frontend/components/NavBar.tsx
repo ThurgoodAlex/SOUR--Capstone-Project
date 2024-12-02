@@ -1,8 +1,7 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { usePathname, router } from 'expo-router';
-import { NavBarStyles } from '@/constants/Styles';
 
 export function NavBar() {
   const pathname = usePathname(); // Get the current route name dynamically.
@@ -17,6 +16,22 @@ export function NavBar() {
       }
     }
   };
+  
+  const NavBarStyles = StyleSheet.create({
+    navBar: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginBottom:16 
+    },
+    icon: {
+        flexDirection: 'column'
+    },
+    activeIcon: {
+      color: '#000',
+      borderTopWidth: 2,
+      borderTopColor: '#000',
+    },
+  });
 
   return (
     <View style={NavBarStyles.navBar}>
@@ -25,7 +40,7 @@ export function NavBar() {
           NavBarStyles.icon,
           pathname === '/DiscoverScreen' && NavBarStyles.activeIcon,
         ]}
-        size={40}
+        size={32}
         name="home"
         onPress={() => handleNavigation('DiscoverScreen')}
       />
@@ -34,25 +49,25 @@ export function NavBar() {
           NavBarStyles.icon,
           pathname === '/VideosScreen' && NavBarStyles.activeIcon,
         ]}
-        size={40}
+        size={32}
         name="film"
         onPress={() => handleNavigation('VideosScreen')}
       />
       <Ionicons
         style={[
           NavBarStyles.icon,
-          pathname === '/SellerScreen' && NavBarStyles.activeIcon,
+          pathname === '/CreateListingScreen' && NavBarStyles.activeIcon,
         ]}
-        size={40}
+        size={32}
         name="add-circle-outline"
-        onPress={() => handleNavigation('SellerScreen')}
+        onPress={() => handleNavigation('CreateListingScreen')}
       />
       <Ionicons
         style={[
           NavBarStyles.icon,
           pathname === '/MessagesScreen' && NavBarStyles.activeIcon,
         ]}
-        size={40}
+        size={32}
         name="chatbubbles"
         onPress={() => handleNavigation('MessagesScreen')}
       />
@@ -61,7 +76,7 @@ export function NavBar() {
           NavBarStyles.icon,
           pathname === '/ProfileScreen' && NavBarStyles.activeIcon,
         ]}
-        size={40}
+        size={32}
         name="person"
         onPress={() => handleNavigation('ProfileScreen')}
       />
