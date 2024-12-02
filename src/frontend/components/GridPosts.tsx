@@ -12,14 +12,12 @@ import { GridPostsProps } from '@/constants/Types';
 export const GridPosts: React.FC<GridPostsProps> = ({ posts }) => {
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={Styles.gridContainer}>
+            <View style={Styles.grid}>
                 {posts.map((post) => (
                     <PostPreview
                         key={post.id}
-                        id={post.id}
-                        data={post.data}
-                        user={post.user}
-                        type={post.type as 'video' | 'post' | 'listing'}
+                        post={post}
+                        size={175}
                     />
                 ))}
             </View>

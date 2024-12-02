@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
-import { Styles } from '@/constants/Styles';
+import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 import { Stack, router } from 'expo-router';
 import { useAuth } from '@/context/auth'; 
 import { useApi } from '@/context/api'; 
@@ -14,22 +14,14 @@ export default function LoginScreen() {
     const api = useApi();
 
     const handleLogin = async () => {
-        // if (!username || !password) {
-        //     Alert.alert('Error', 'Please fill out all fields.');
-        //     return;
-        // }
-
-        // setLoading(true);
-
         try {
-            
             const response = await api.post('/auth/login', { username, password });
             const result = await response.json();
 
             if (response.ok) {
                 console.log("response after log in request: ", result)
                 login(); //need to pass token later
-                router.push('/DiscoverScreen');
+                router.replace('/DiscoverScreen');
             } else {
                 Alert.alert('Incorrect username or password. Please try again.');
             }
@@ -39,6 +31,7 @@ export default function LoginScreen() {
         } finally {
             setLoading(false);
         }
+        // router.replace('/DiscoverScreen');
     };
 
     return (
@@ -48,8 +41,8 @@ export default function LoginScreen() {
                     title: "LoginScreen",
                 }}
             />
-            <View style={Styles.container}>
-                <Text style={Styles.title}>Login</Text>
+            <View style={ScreenStyles.screenCentered}>
+                <Text style={[TextStyles.h2, TextStyles.uppercase]}>Login</Text>
 
                 <TextInput
                     style={Styles.input}
@@ -74,7 +67,7 @@ export default function LoginScreen() {
                     {loading ? (
                         <ActivityIndicator color="#ffffff" />
                     ) : (
-                        <Text style={Styles.buttonTextLight}>Login</Text>
+                        <Text style={TextStyles.light}>Login</Text>
                     )}
                 </TouchableOpacity>
             </View>
