@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, Alert, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { useUser } from '@/context/user';
 import { Post } from '@/constants/Types';
 import { GridPosts } from '@/components/GridPosts';
@@ -10,6 +9,13 @@ import { Stack } from 'expo-router';
 
 export default function SellerScreen() {
     const user = useUser();
+    const [isSeller, setActiveIsSeller] = useState(user?.isSeller ?? false);
+    const posts = Array<any>;
+    const [activeTab, setActiveTab] = useState('Active');
+
+    const handleTabSwitch = (tab: string) => {
+        setActiveTab(tab);
+    };
 
     //test alerts
     if (user) {
@@ -41,9 +47,9 @@ export default function SellerScreen() {
                     )}
                 />
             </View>
-            <NavBar/>
         </>
-    );
+        
+    )
 }
 
 function StatsBar() {
@@ -85,7 +91,6 @@ function Tabs({ activeTab, handleTabSwitch }: { activeTab: string; handleTabSwit
         </View>
     );
 }
-
 
 function ActivePostsGrid() {
     const dummyPosts: Post[] = [
