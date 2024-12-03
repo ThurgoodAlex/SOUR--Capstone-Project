@@ -41,6 +41,7 @@ export default function RootLayout() {
               headerStyle: {
                 backgroundColor: '#bde0eb', // Header background color
               },
+              
               headerRight: () => <Ionicons size={30} name="cart-outline" />, // Custom header icon
               headerTintColor: '#fff', // Header text/icon color
               headerTitleStyle: {
@@ -48,6 +49,57 @@ export default function RootLayout() {
               },
             }}
           >
+
+          {/* All of these screens should not have a back option- you must log out in the profile page instead */}
+          <Stack.Screen 
+            name="DiscoverScreen" 
+            options={{
+              headerLeft: () => ""
+            }} 
+          />
+
+          <Stack.Screen 
+            name="ProfileScreen" 
+            options={{
+              headerLeft: () => ""
+            }} 
+          />
+
+          <Stack.Screen 
+            name="VideosScreen" 
+            options={{
+              headerLeft: () => ""
+            }} 
+          />
+
+
+          <Stack.Screen 
+            name="SellerScreen" 
+            options={{
+              headerLeft: () => ""
+            }} 
+          />
+
+          <Stack.Screen 
+            name="CreateListingScreen" 
+            options={{
+              headerLeft: () => ""
+            }} 
+          />
+
+          <Stack.Screen 
+            name="LoggedOutScreen" 
+            options={{
+              headerLeft: () => ""
+            }} 
+          />
+
+          <Stack.Screen 
+            name="MessagesScreen" 
+            options={{
+              headerLeft: () => ""
+            }} 
+          />
             <Slot />
           </Stack>
         </ThemeProvider>

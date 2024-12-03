@@ -12,33 +12,40 @@
  * - Wrap components with `AuthProvider` to supply authentication state. (This is done in app/_layout.tsx)
  * - Use `useAuth` to manage login, logout, and check authentication status.
  */
+import { router } from 'expo-router';
 import { createContext, useContext, useState, ReactNode } from 'react';
 
 interface AuthContextType {
-  login: () => void;
+  login: (token: string) => void;
   logout: () => void;
   token: string | null;
   isLoggedIn: boolean;
 }
 
+// const getToken = () => sessionStorage.getItem("__sour_token__");
+// const storeToken = (token: string) => sessionStorage.setItem("__sour_token__", token);
+// const clearToken = () => sessionStorage.removeItem("__sour_token__");
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useState("");
 
-  const login = () => {
-    const fakeToken = "FAKE_TOKEN_123"; // Using a fake stoken string
-    setToken(fakeToken);
+  const login = (token: string) => {
+    setToken(token);
+    //storeToken(token);
   };
 
   const logout = () => {
-    setToken(null);
+    setToken("");
+    //clearToken();
+    router.replace('/LoggedOutScreen');
   };
 
   const isLoggedIn = !!token;
 
   return (
-    <AuthContext.Provider value={{ login, logout, token, isLoggedIn }}>
+    <AuthContext.Provider value={{ login,logout, token, isLoggedIn }}>
       {children}
     </AuthContext.Provider>
   );
