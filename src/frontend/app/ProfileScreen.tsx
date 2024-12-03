@@ -9,19 +9,12 @@ import { Post } from '@/constants/Types';
 import { GridPosts } from '@/components/GridPosts';
 import { NavBar } from '@/components/NavBar';
 import { Stack } from 'expo-router';
+import { useAuth } from '@/context/auth';
 
 export default function ProfileScreen() {
 
     const user = useUser(); // Fetch user details
-
-
-
-    //test alerts
-    if (user) {
-       // Alert.alert('User Info (from fake tokens)', `Name: ${user.name}\nEmail: ${user.email}`);
-    } else {
-       // Alert.alert('No User Logged in', 'User details are not available.');
-    }
+    const {logout} = useAuth();
 
     const posts = Array<any>;
     const [activeTab, setActiveTab] = useState('Posts');
@@ -35,6 +28,16 @@ export default function ProfileScreen() {
     <>
     <Stack.Screen options={{ title: 'ProfileScreen' }} />
     <View style={ScreenStyles.screen}>
+        <TouchableOpacity
+            onPress={() => logout()}
+            style= {Styles.buttonDark}>
+                 <Text style={[
+                        TextStyles.uppercase,
+                        TextStyles.light
+                    ]}>
+                    Logout
+                </Text>
+        </TouchableOpacity>
         <ProfileInfo user={user} />
         <StatsBar />
         <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} />

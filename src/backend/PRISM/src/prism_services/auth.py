@@ -45,6 +45,12 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 jwt_key = str(os.environ.get("JWT_KEY"))
 jwt_alg = "HS256"
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
+
+class TokenRequest(BaseModel):
+    username: str
+    password: str
+    grant_type: str = "password"
+
 auth_router = APIRouter( tags=["Authentication"])
 access_token_duration = 3600 
 
@@ -100,22 +106,34 @@ def check_email(newUser, session):
 
 
 @auth_router.post("/token", response_model=AccessToken, status_code=200)
-def get_access_token(form: OAuth2PasswordRequestForm = Depends(),session: Session = Depends(get_session)):
+def get_access_token(
+    token_request: TokenRequest, 
+    session: Session = Depends(get_session)
+):
     """Get access token for user."""
-
-    user = get_authenticated_user(session, form)
+    # Authenticate the user with the provided credentials
+    user = get_authenticated_user(session, token_request)
     return build_access_token(user)
-
 
 def auth_get_current_user(session = Depends(get_session), token: str = Depends(oauth2_scheme)) -> UserInDB:
     """Getting the current authenticated user"""
     user = decode_access_token(session, token)
     return user
 
-def get_authenticated_user(session: Session,form: OAuth2PasswordRequestForm,) -> UserInDB:
+# old stuff uses formData in URL Parameter encoding: replaced below using JSON (Token Request BaseModel) for consistency
+# def get_authenticated_user(session: Session,form: OAuth2PasswordRequestForm,) -> UserInDB:
+#     """Authenticating User"""
+#     user = session.exec(select(UserInDB).where(UserInDB.username == form.username)).first()
+#     if user is None or not pwd_context.verify(form.password, user.hashed_password):
+#         raise InvalidCredentials()
+#     return user
+
+def get_authenticated_user(session: Session, token_request: TokenRequest) -> UserInDB:
     """Authenticating User"""
-    user = session.exec(select(UserInDB).where(UserInDB.username == form.username)).first()
-    if user is None or not pwd_context.verify(form.password, user.hashed_password):
+    user = session.exec(
+        select(UserInDB).where(UserInDB.username == token_request.username)
+    ).first()
+    if user is None or not pwd_context.verify(token_request.password, user.hashed_password):
         raise InvalidCredentials()
     return user
 
