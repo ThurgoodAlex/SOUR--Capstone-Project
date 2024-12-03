@@ -2667,3 +2667,100 @@ WHERE listings.id = ?
 2024-12-03 00:26:49,901 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
 2024-12-03 00:26:49,905 - sqlalchemy.engine.Engine - INFO - COMMIT
 >>>>>>> 64d7c137 (seller page completed)
+2024-12-03 18:42:16,038 - app - INFO - Creating database and database tables...
+2024-12-03 18:42:16,044 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-12-03 18:42:16,045 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-12-03 18:42:16,046 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-12-03 18:42:16,048 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-12-03 18:42:16,049 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-12-03 18:42:16,051 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-12-03 18:46:47,809 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-12-03 18:46:47,819 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.username = ?
+2024-12-03 18:46:47,820 - sqlalchemy.engine.Engine - INFO - [generated in 0.00101s] ('A',)
+2024-12-03 18:46:47,823 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-12-03 18:47:05,774 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-12-03 18:47:06,055 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-12-03 18:47:06,057 - sqlalchemy.engine.Engine - INFO - SELECT users.username 
+FROM users 
+WHERE users.username = ?
+2024-12-03 18:47:06,057 - sqlalchemy.engine.Engine - INFO - [generated in 0.00067s] ('Ashlyn',)
+2024-12-03 18:47:06,059 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-12-03 18:47:16,979 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-12-03 18:47:16,981 - sqlalchemy.engine.Engine - INFO - SELECT users.username 
+FROM users 
+WHERE users.username = ?
+2024-12-03 18:47:16,982 - sqlalchemy.engine.Engine - INFO - [cached since 10.93s ago] ('Ashlyn',)
+2024-12-03 18:47:16,984 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-12-03 18:47:36,430 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-12-03 18:47:36,433 - sqlalchemy.engine.Engine - INFO - SELECT users.username 
+FROM users 
+WHERE users.username = ?
+2024-12-03 18:47:36,433 - sqlalchemy.engine.Engine - INFO - [cached since 30.38s ago] ('A',)
+2024-12-03 18:47:36,437 - sqlalchemy.engine.Engine - INFO - SELECT users.email 
+FROM users 
+WHERE users.email = ?
+2024-12-03 18:47:36,438 - sqlalchemy.engine.Engine - INFO - [generated in 0.00058s] ('a',)
+2024-12-03 18:47:36,448 - sqlalchemy.engine.Engine - INFO - INSERT INTO users (username, email, hashed_password, created_at) VALUES (?, ?, ?, ?)
+2024-12-03 18:47:36,448 - sqlalchemy.engine.Engine - INFO - [generated in 0.00070s] ('A', 'a', '$2b$12$Q2Dk8LioT1Om6kbCCM9WNucULB9WBAqpGz4dyQsHwKn85b0CTU3q2', '2024-12-03 18:47:36.445344')
+2024-12-03 18:47:36,455 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-12-03 18:47:36,460 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-12-03 18:47:36,462 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.id = ?
+2024-12-03 18:47:36,462 - sqlalchemy.engine.Engine - INFO - [generated in 0.00041s] (9,)
+2024-12-03 18:47:36,465 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-12-03 18:47:39,886 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-12-03 18:47:39,889 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.username = ?
+2024-12-03 18:47:39,892 - sqlalchemy.engine.Engine - INFO - [cached since 52.07s ago] ('A',)
+2024-12-03 18:47:40,170 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-12-03 18:47:40,276 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-12-03 18:47:40,285 - sqlalchemy.engine.Engine - INFO - SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.hashed_password AS users_hashed_password, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = ?
+2024-12-03 18:47:40,286 - sqlalchemy.engine.Engine - INFO - [generated in 0.00157s] ('9',)
+2024-12-03 18:47:40,290 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-12-03 18:48:40,152 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-12-03 18:48:40,156 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.username = ?
+2024-12-03 18:48:40,157 - sqlalchemy.engine.Engine - INFO - [cached since 112.3s ago] ('A',)
+2024-12-03 18:48:40,413 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-12-03 18:48:40,499 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-12-03 18:48:40,501 - sqlalchemy.engine.Engine - INFO - SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.hashed_password AS users_hashed_password, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = ?
+2024-12-03 18:48:40,503 - sqlalchemy.engine.Engine - INFO - [cached since 60.22s ago] ('9',)
+2024-12-03 18:48:40,509 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-12-03 18:48:51,846 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-12-03 18:48:51,850 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.username = ?
+2024-12-03 18:48:51,854 - sqlalchemy.engine.Engine - INFO - [cached since 124s ago] ('A',)
+2024-12-03 18:48:52,122 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-12-03 18:49:44,343 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-12-03 18:49:44,349 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.username = ?
+2024-12-03 18:49:44,350 - sqlalchemy.engine.Engine - INFO - [cached since 176.5s ago] ('Emma',)
+2024-12-03 18:49:44,606 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-12-03 18:49:48,938 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-12-03 18:49:48,942 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.username = ?
+2024-12-03 18:49:48,944 - sqlalchemy.engine.Engine - INFO - [cached since 181.1s ago] ('A',)
+2024-12-03 18:49:49,217 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-12-03 18:49:49,325 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-12-03 18:49:49,327 - sqlalchemy.engine.Engine - INFO - SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.hashed_password AS users_hashed_password, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = ?
+2024-12-03 18:49:49,329 - sqlalchemy.engine.Engine - INFO - [cached since 129s ago] ('9',)
+2024-12-03 18:49:49,338 - sqlalchemy.engine.Engine - INFO - ROLLBACK
