@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, Alert } from 'react-native';
-import { ProfileStyles } from '@/constants/Styles';
-import { Ionicons } from '@expo/vector-icons';
+import { ProfileStyles, Styles } from '@/constants/Styles';
 import { useUser } from '@/context/user';
 import { Post } from '@/constants/Types';
 import { GridPosts } from '@/components/GridPosts';
@@ -10,6 +9,13 @@ import { Stack } from 'expo-router';
 
 export default function SellerScreen() {
     const user = useUser();
+    const [isSeller, setActiveIsSeller] = useState(user?.isSeller ?? false);
+    const posts = Array<any>;
+    const [activeTab, setActiveTab] = useState('Active');
+
+    const handleTabSwitch = (tab: string) => {
+        setActiveTab(tab);
+    };
 
     //test alerts
     if (user) {
@@ -17,34 +23,22 @@ export default function SellerScreen() {
     } else {
         Alert.alert('No User Logged in', 'User details are not available.');
     }
-
-    if (user?.isSeller) {
-        const posts = Array<any>;
-        const [activeTab, setActiveTab] = useState('Active');
-
-        const handleTabSwitch = (tab: string) => {
-            setActiveTab(tab);
-        };
-
-        return(
-            <>
-                <StatsBar/>
-                <Text>You are a seller, make a post!</Text>
-                <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} />
-                {activeTab === 'Active' ? (
-                    <ActivePostsGrid />
+        
+    return (
+        <>
+            <Stack.Screen
+                options={{ title: 'SellerScreen' }}
+            />
+            <View style={Styles.container}>
+                {isSeller ? (
+                    <SellerInfo activeTab={activeTab} handleTabSwitch={handleTabSwitch} />
                 ) : (
-                    <ClosedPostsGrid />
+                    <NonSellerInfo />
                 )}
-            </>
-        );
-    } else {
-        return(
-            <>
-                <Text>You are not a seller, sign up now!</Text>
-            </>
-        );
-    }
+            </View>
+            <NavBar/>
+        </>
+    );
 }
 
 function StatsBar() {
@@ -86,7 +80,6 @@ function Tabs({ activeTab, handleTabSwitch }: { activeTab: string; handleTabSwit
         </View>
     );
 }
-
 
 function ActivePostsGrid() {
     const dummyPosts: Post[] = [
@@ -131,5 +124,28 @@ function ClosedPostsGrid() {
             <Text>None closed yet!</Text>
             <GridPosts posts={dummyPosts} />
         </View>
+    );
+}
+
+function SellerInfo({ activeTab, handleTabSwitch }: { activeTab: string; handleTabSwitch: (tab: string) => void }) {
+    return(
+        <>
+            <StatsBar/>
+            <Text>You are a seller, make a post!</Text>
+            <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} />
+            {activeTab === 'Active' ? (
+                <ActivePostsGrid />
+            ) : (
+                <ClosedPostsGrid />
+            )}
+        </>
+    );
+}
+
+function NonSellerInfo() {
+    return(
+        <>
+            <Text>You are not a seller, sign up now!</Text>
+        </>
     );
 }

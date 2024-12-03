@@ -1327,3 +1327,8 @@ FROM users
 WHERE users.username = ?
 2024-11-17 23:24:46,164 - sqlalchemy.engine.Engine - INFO - [cached since 18.97s ago] ('test',)
 2024-11-17 23:24:46,167 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2024-12-03 00:26:49,891 - app - INFO - Creating database and database tables...
+2024-12-03 00:26:49,899 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-12-03 00:26:49,900 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-12-03 00:26:49,901 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-12-03 00:26:49,905 - sqlalchemy.engine.Engine - INFO - COMMIT
