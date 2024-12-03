@@ -12,8 +12,6 @@ export default function ProfileScreen() {
 
     const user = useUser(); // Fetch user details
 
-
-
     //test alerts
     if (user) {
        // Alert.alert('User Info (from fake tokens)', `Name: ${user.name}\nEmail: ${user.email}`);
@@ -31,14 +29,13 @@ export default function ProfileScreen() {
 
   return (
     <>
-    <Stack.Screen options={{ title: 'ProfileScreen' }} />
-    <View style={ScreenStyles.screen}>
-        <ProfileInfo user={user} />
-        <StatsBar />
-        <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} />
-         
-    </View>
-    <NavBar/>
+        <Stack.Screen options={{ title: 'ProfileScreen' }} />
+        <View style={ScreenStyles.screen}>
+            <ProfileInfo user={user} />
+            <StatsBar />
+            <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} />
+            <NavBar/>
+        </View>
     </>
     
     );
@@ -111,15 +108,9 @@ function PostsGrid() {
     const dummyPosts: Post[] = [
         {
             id: 1,
-            data: './imgs/toad.png',
+            data: require('../assets/images/video.png'),
             user: 'Princess Peach',
             type: 'video',
-        },
-        {
-            id: 2,
-            data: './imgs/toad.png',
-            user: 'Mario',
-            type: 'post',
         }
     ];
     return (
@@ -134,13 +125,13 @@ function LikesGrid() {
     const dummyPosts: Post[] = [
         {
             id: 3,
-            data: './imgs/toad.png',
+            data: require('../assets/images/listing.png'),
             user: 'Bowser',
             type: 'listing',
         },
         {
             id: 4,
-            data: './imgs/toad.png',
+            data: require('../assets/images/listing2.png'),
             user: 'Princess Daisy',
             type: 'listing',
         }

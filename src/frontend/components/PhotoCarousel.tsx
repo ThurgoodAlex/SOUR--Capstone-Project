@@ -9,19 +9,19 @@ export default function PhotoCarousel() {
     const dummyPosts = [
         {
           id: 1,
-          data: require('../assets/images/sweater1.png'), // Use require here
+          data: require('../assets/images/sweater1.png'),
         },
         {
           id: 2,
-          data: require('../assets/images/sweater2.png'), // Use require here
+          data: require('../assets/images/sweater2.png'),
         },
         {
           id: 3,
-          data: require('../assets/images/sweater3.png'), // Use require here
+          data: require('../assets/images/sweater3.png'),
         },
         {
           id: 4,
-          data: require('../assets/images/sweater4.png'), // Use require here
+          data: require('../assets/images/sweater4.png'),
         },
     ];
 
@@ -30,7 +30,7 @@ export default function PhotoCarousel() {
             <ScrollView horizontal={true} >
                 {dummyPosts.map((post) => (
                     <View style={Styles.column}>
-                            <ImageBackground source={post.data} style={{height: 250, width:250}}></ImageBackground>
+                        <ImageBackground source={post.data} style={{height: 250, width:250}}></ImageBackground>
                     </View>
                 ))}
             </ScrollView>

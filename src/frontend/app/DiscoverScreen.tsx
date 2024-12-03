@@ -1,42 +1,35 @@
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
-import { View } from 'react-native';
+import { ImageSourcePropType, View } from 'react-native';
 import { PostPreview } from '@/components/PostPreview';
 import { NavBar } from '@/components/NavBar';
 import { FlatList, Text } from 'react-native';
 import PostCarousel from '@/components/PostCarousel';
-
-type Post = {
-    id: number;
-    // data: TexImageSource;
-    data: string;
-    user: string;
-    type: string;
-};
+import { Post } from '@/constants/Types';
 
 export default function DiscoverScreen() {
 
     const dummyPosts = [
         {
             id: 1,
-            data: './imgs/toad.png',
+            data: require('../assets/images/video.png'),
             user: 'Princess Peach',
             type: 'video',
         },
         {
             id: 2,
-            data: './imgs/toad.png',
+            data: require('../assets/images/post.png'),
             user: 'Mario',
             type: 'post',
         },
         {
             id: 3,
-            data: './imgs/toad.png',
+            data: require('../assets/images/sweater1.png'),
             user: 'Bowser',
             type: 'listing',
         },
         {
             id: 4,
-            data: './imgs/toad.png',
+            data: require('../assets/images/listing.png'),
             user: 'Princess Daisy',
             type: 'listing',
         },
@@ -65,10 +58,10 @@ export default function DiscoverScreen() {
         renderItem={renderPost} // Function to render each item
         numColumns={2} // Grid layout with 2 columns
         columnWrapperStyle={Styles.grid} // Style for the row container
-        showsVerticalScrollIndicator={false} // Hide vertical scroll indicator
+        showsVerticalScrollIndicator={false}
       />
+      <NavBar />
     </View>
-    <NavBar />
     </>
     
   );

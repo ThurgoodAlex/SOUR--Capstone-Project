@@ -30,13 +30,11 @@ export function PostPreview({post, size}: {post: Post, size: number}) {
         onPress={() => router.push('/ListingInfoScreen')} // Navigate on press
         style={{ flex: 1, margin: 5 }} // Add styles for spacing
       >
-        <ImageBackground source={require('./imgs/toad.png')} style={{height: size, width:size}}>
+        <ImageBackground source={post.data} style={{height: size, width:size}}>
             {icon}
         </ImageBackground>
       
     </TouchableOpacity>
-      
-        
     </View>
   );
 }
