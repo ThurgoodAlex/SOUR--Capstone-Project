@@ -14,24 +14,24 @@ export default function LoginScreen() {
     const api = useApi();
 
     const handleLogin = async () => {
-        try {
-            const response = await api.post('/auth/login', { username, password });
-            const result = await response.json();
+        // try {
+        //     const response = await api.post('/auth/login', { username, password });
+        //     const result = await response.json();
 
-            if (response.ok) {
-                console.log("response after log in request: ", result)
-                login(); //need to pass token later
-                router.replace('/DiscoverScreen');
-            } else {
-                Alert.alert('Incorrect username or password. Please try again.');
-            }
-        } catch (error) {
-            console.error('Error logging in:', error);
-            Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
-        } finally {
-            setLoading(false);
-        }
-        // router.replace('/DiscoverScreen');
+        //     if (response.ok) {
+        //         console.log("response after log in request: ", result)
+        //         login(); //need to pass token later
+        //         router.replace('/DiscoverScreen');
+        //     } else {
+        //         Alert.alert('Incorrect username or password. Please try again.');
+        //     }
+        // } catch (error) {
+        //     console.error('Error logging in:', error);
+        //     Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
+        // } finally {
+        //     setLoading(false);
+        // }
+        router.replace('/DiscoverScreen');
     };
 
     return (

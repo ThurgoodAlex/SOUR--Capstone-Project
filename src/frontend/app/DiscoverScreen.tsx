@@ -2,7 +2,6 @@ import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 import { View } from 'react-native';
 import { PostPreview } from '@/components/PostPreview';
 import { NavBar } from '@/components/NavBar';
-import PhotoCarousel from '@/components/PhotoCarousel';
 import { FlatList, Text } from 'react-native';
 import PostCarousel from '@/components/PostCarousel';
 
@@ -68,7 +67,6 @@ export default function DiscoverScreen() {
         columnWrapperStyle={Styles.grid} // Style for the row container
         showsVerticalScrollIndicator={false} // Hide vertical scroll indicator
       />
-     
     </View>
     <NavBar />
     </>
