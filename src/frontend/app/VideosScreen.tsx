@@ -5,47 +5,33 @@ import { useState, useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView, PanGestureHandler, ScrollView } from 'react-native-gesture-handler';
 
-const bigBuckBunnySource: VideoSource =
-  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+const testFashion =
+//   'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+    require('../components/vids/testFashion.mp4');
 
 const elephantsDreamSource: VideoSource =
   'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4';
 
-const forBiggerBlazesSource: VideoSource = 
-  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4';
+const bigBuckBunnySource: VideoSource = 
+  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
 
 export default function PreloadingVideoPlayerScreen() {
-  const player1 = useVideoPlayer(bigBuckBunnySource, player => {
+  const player1 = useVideoPlayer(testFashion, player => {
+    player.loop = true;
     player.play();
   });
 
   const player2 = useVideoPlayer(elephantsDreamSource, player => {
-    player.currentTime = 20;
+    player.loop = true;
   });
 
-  const player3 = useVideoPlayer(forBiggerBlazesSource, player => {
-    player.currentTime = 20;
+  const player3 = useVideoPlayer(bigBuckBunnySource, player => {
+    player.loop = true;
   });
 
   const [currentPlayer, setCurrentPlayer] = useState(player1);
 
-  const replacePlayerPrevious = useCallback(() => {
-    currentPlayer.pause();
-    if (currentPlayer === player1) {
-      setCurrentPlayer(player3);
-      player3.play();
-    }
-    else if(currentPlayer === player2){
-      setCurrentPlayer(player1);
-      player1.play();
-    }
-    else{
-        setCurrentPlayer(player2);
-        player2.play();
-    }
-  }, [currentPlayer, player1, player2]);
-
-  const replacePlayerNext = useCallback(() => {
+  const replacePlayer = useCallback(() => {
     currentPlayer.pause();
     if (currentPlayer === player1) {
       setCurrentPlayer(player2);
@@ -59,17 +45,17 @@ export default function PreloadingVideoPlayerScreen() {
         setCurrentPlayer(player1);
         player1.play();
     }
-  }, [currentPlayer, player1, player2]);
+  }, [currentPlayer, player1, player2, player3]);
 
   const handleSwipe = useCallback(({ nativeEvent }) => {
     if (nativeEvent.translationY < -50) {
       // Swipe up
-      replacePlayerNext();
+      replacePlayer();
     } else if (nativeEvent.translationY > 50) {
       // Swipe down
-      replacePlayerPrevious();
+      replacePlayer();
     }
-  }, [replacePlayerNext, replacePlayerPrevious]);
+  }, [replacePlayer]);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
