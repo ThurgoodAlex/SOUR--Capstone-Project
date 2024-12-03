@@ -6,6 +6,7 @@ import { router } from "expo-router";
 interface User {
   name: string;
   email: string;
+  isSeller: boolean;
 }
 
 const UserContext = createContext<User | null>(null);
@@ -34,6 +35,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
           const returnedUser: User = {
             name: responseData.user.username, 
             email: responseData.user.email, 
+            isSeller: true
           };
 
           setUser(returnedUser);

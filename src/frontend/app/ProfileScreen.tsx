@@ -1,6 +1,8 @@
+
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, Alert, StyleSheet } from 'react-native';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
+
 import { Ionicons } from '@expo/vector-icons';
 import { useUser } from '@/context/user';
 import { Post } from '@/constants/Types';
