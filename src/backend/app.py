@@ -10,6 +10,7 @@ from PRISM.src.prism_services.test_db import create_db_and_tables
 from PRISM.src.prism_services.schema import * 
 from PRISM.src.prism_services.auth import auth_router
 from listings import listing_router
+from fastapi.openapi.utils import get_openapi
 # Create logs directory if it doesn't exist
 os.makedirs('logs', exist_ok=True)
 
@@ -45,6 +46,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+
+
 app.include_router(auth_router, prefix="/auth")
 app.include_router(listing_router, prefix="/listing")
 
@@ -70,3 +74,27 @@ async def root():
 @app.get("/health")
 async def health():
     return {"status": "healthy"}
+
+
+
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title="Custom API",
+        version="1.0.0",
+        description="An example API",
+        routes=app.routes,
+    )
+    openapi_schema["components"]["securitySchemes"] = {
+        "BearerAuth": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT",
+        }
+    }
+    openapi_schema["security"] = [{"BearerAuth": []}]
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+app.openapi = custom_openapi
