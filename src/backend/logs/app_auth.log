@@ -4438,3 +4438,15 @@ WHERE users.id = ?
 2024-12-04 16:54:00,475 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
 2024-12-04 16:54:00,475 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
 2024-12-04 16:54:00,478 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-12-04 16:54:21,906 - app - INFO - Creating database and database tables...
+2024-12-04 16:54:21,910 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-12-04 16:54:21,910 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2024-12-04 16:54:21,911 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-12-04 16:54:21,915 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2024-12-04 16:54:21,915 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2024-12-04 16:54:21,918 - sqlalchemy.engine.Engine - INFO - COMMIT
+2024-12-04 16:57:24,550 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2024-12-04 16:57:24,560 - sqlalchemy.engine.Engine - INFO - SELECT listings.id, listings.title, listings.description, listings.price, listings.seller, listings.created_at, listings.seller_id 
+FROM listings
+2024-12-04 16:57:24,561 - sqlalchemy.engine.Engine - INFO - [generated in 0.00065s] ()
+2024-12-04 16:57:24,568 - sqlalchemy.engine.Engine - INFO - ROLLBACK
