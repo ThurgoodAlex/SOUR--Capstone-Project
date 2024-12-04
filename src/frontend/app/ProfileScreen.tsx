@@ -10,17 +10,40 @@ import { GridPosts } from '@/components/GridPosts';
 import { NavBar } from '@/components/NavBar';
 import { Stack } from 'expo-router';
 import { useAuth } from '@/context/auth';
+import { useApi } from '@/context/api';
 
 export default function ProfileScreen() {
 
     const user = useUser(); // Fetch user details
     const {logout} = useAuth();
 
+    const api = useApi();
+
+
     const posts = Array<any>;
     const [activeTab, setActiveTab] = useState('Posts');
 
-    const handleTabSwitch = (tab: string) => {
+    const handleTabSwitch = async (tab: string) => {
         setActiveTab(tab);
+
+        try {
+            const response = await api.get("/listing/alllistings");
+            const result = await response.json();
+  
+            if (response.ok) {
+                console.log("received all listing: ", result)
+             
+              
+            } else {
+                console.log(response)
+                Alert.alert('Error', 'Could not find listings.');
+  
+            }
+          } catch (error) {
+              console.error('Error fetching listings:', error);
+              Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
+          } 
+          // router.replace('/DiscoverScreen');
     };
 
 
@@ -113,6 +136,9 @@ function Tabs({ activeTab, handleTabSwitch }: { activeTab: string; handleTabSwit
 
 
 function PostsGrid() {
+    
+
+
     const dummyPosts: Post[] = [
         {
             id: 1,
