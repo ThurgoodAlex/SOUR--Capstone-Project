@@ -36,3 +36,21 @@ def get_all_listings_lambda(event, context):
             "statusCode": 500,
             "body": json.dumps({"error": str(e)})
         }
+
+def get_listing_by_id_lambda(event, context):
+    try:
+        listing= json.loads(event['body'])  
+
+        return {
+            "statusCode": 200,
+            "body": json.dumps({
+                "message": "User created successfully",
+                "user": listing
+            })
+        }
+
+    except Exception as e:
+        return {
+            "statusCode": 500,
+            "body": json.dumps({"error": str(e)})
+        }
