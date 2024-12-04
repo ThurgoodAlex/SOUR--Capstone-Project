@@ -71,11 +71,23 @@ export class BackendInfrastructureStack extends cdk.Stack {
         },
       });
 
+    // creating a listing
     const createListingLambda = new lambda.Function(this, 'CreateListingLambda',{
       runtime: lambda.Runtime.PYTHON_3_8,
       handler: 'lambda.listings_handlers.create_new_listing',
         code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
       functionName: 'create_listing_lambda',
+      environment: {
+        PYTHONPATH: '/var/task',
+      },
+    })
+
+    // get all listings lambda
+    const getAllListingsLambda = new lambda.Function(this, 'GetAllListingsLambda',{
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.listings_handlers.get_all_listings_lambda',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'get_all_listings_lambda',
       environment: {
         PYTHONPATH: '/var/task',
       },
@@ -95,7 +107,11 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const loginUserIntergration = new apigateway.LambdaIntegration(loginUserLambda);
     const createListingIntergration = new apigateway.LambdaIntegration(createListingLambda);
     const getAcessTokenIntergration = new apigateway.LambdaIntegration(getAccessTokenLambda);
-    const getCurrentUserIntergration = new apigateway.LambdaIntegration(getCurrentUserLambda)
+    const getCurrentUserIntergration = new apigateway.LambdaIntegration(getCurrentUserLambda);
+    const getAllListingsIntergration = new apigateway.LambdaIntegration(getAllListingsLambda);
+
+
+
     api.root.addMethod('GET', starterPageIntegration);
 
 
@@ -119,6 +135,9 @@ export class BackendInfrastructureStack extends cdk.Stack {
     //Adding Listing endpoints
     const createListingResource = api.root.addResource('createlisting');
     createListingResource.addMethod('POST', createListingIntergration)
+
+    const getAllListingsResource = api.root.addResource('getAllListings');
+    getAllListingsResource.addMethod('GET', getAllListingsIntergration);
 
     // Add /health endpoint
     const healthResource = api.root.addResource('health');

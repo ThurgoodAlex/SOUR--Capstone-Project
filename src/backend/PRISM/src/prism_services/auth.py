@@ -14,6 +14,7 @@ from fastapi.security import (
     OAuth2PasswordBearer,
     OAuth2PasswordRequestForm,
 )
+
 from .test_db import get_session
 
 SessionDep = Annotated[Session, Depends(get_session)]
@@ -44,6 +45,8 @@ logger = logging.getLogger(__name__)
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 jwt_key = str(os.environ.get("JWT_KEY"))
 jwt_alg = "HS256"
+
+
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
 class TokenRequest(BaseModel):
@@ -111,14 +114,29 @@ def get_access_token(
     session: Session = Depends(get_session)
 ):
     """Get access token for user."""
+    
+    logger.info("in the /token")
     # Authenticate the user with the provided credentials
     user = get_authenticated_user(session, token_request)
     return build_access_token(user)
 
-def auth_get_current_user(session = Depends(get_session), token: str = Depends(oauth2_scheme)) -> UserInDB:
+# def auth_get_current_user(session = Depends(get_session)) -> UserInDB:
+#     """Getting the current authenticated user"""
+#     logger.info("getting current user")
+#     token = session
+#     user = decode_access_token(session, token)
+    
+#     return user
+
+
+def auth_get_current_user(token: str = Depends(oauth2_scheme), session: Session = Depends(get_session)) -> UserInDB:
     """Getting the current authenticated user"""
-    user = decode_access_token(session, token)
+    # Decode the token to get the user data
+    user = decode_access_token(token, session)
+    
     return user
+
+
 
 # old stuff uses formData in URL Parameter encoding: replaced below using JSON (Token Request BaseModel) for consistency
 # def get_authenticated_user(session: Session,form: OAuth2PasswordRequestForm,) -> UserInDB:
@@ -150,30 +168,49 @@ def build_access_token(user: UserInDB) -> AccessToken:
     )
 
 
-def decode_access_token(session: Session, token : str) -> UserInDB:
-    """decoding acess token for user"""
+def decode_access_token(token: str, session: Session) -> UserInDB:
+    """Decoding access token for user"""
+    logger.info("Attempting to decode the token.")
+    
+    # Log the token (be cautious when logging sensitive information in a production environment)
+    logger.debug(f"Token received for decoding: {token[:50]}...")  # Log only part of the token for privacy reasons
+    
     try:
-        claims_dict = jwt.decode(token, key = jwt_key, algorithms=[jwt_alg])
+        # Decode the token using the secret key and algorithm
+        logger.info("Decoding the token using the JWT key and algorithm.")
+        claims_dict = jwt.decode(token, key=jwt_key, algorithms=[jwt_alg])
+        
         claims = Claims(**claims_dict)
-        user_id =claims.sub
+        
+        user_id = claims.sub
+        
         user = session.get(UserInDB, user_id)
 
         if user is None:
             raise InvalidToken()
 
-      
+        logger.info(f"User with ID {user_id} found in the database.")
         return user
     
     except ExpiredSignatureError:
+        logger.error("Token has expired.")
         raise ExpiredToken()
-    except JWTError:
+    except JWTError as e:
+        logger.error(f"JWT error occurred: {str(e)}")
         raise InvalidToken()
-    except ValidationError():
+    except ValidationError as e:
+        logger.error(f"Validation error occurred while decoding claims: {str(e)}")
         raise InvalidToken()
-    
+    except Exception as e:
+        logger.error(f"Unexpected error during token decoding: {str(e)}")
+        raise InvalidToken()
+
+
 
 @auth_router.get("/me", response_model=UserResponse)
-def get_current_user(user: UserInDB = Depends(auth_get_current_user)):
+def get_current_user(current_user: UserInDB = Depends(auth_get_current_user)):
     """Get current user."""
-    user_response = User(**user.model_dump(exclude={"hashed_password"}))
+    logger.info("In the /me endpoint")
+    # Return user response without including the hashed password
+    user_response = User(**current_user.model_dump(exclude={"hashed_password"}))
     return UserResponse(user=user_response)

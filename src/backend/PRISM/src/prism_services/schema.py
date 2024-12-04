@@ -75,9 +75,10 @@ class Listing(BaseModel):
 class ListingResponse(BaseModel):
     Listing: Listing
 
-class ListingList(BaseModel):
-    meta: Metadata
-    listings: list[Listing]
+
+#class ListingList(BaseModel):
+    #meta: Metadata
+    #listings: list[Listing]
 
 #TODO: Messed up the table creation. Will redo once JWT gets implemented
 class ListingInDB(SQLModel, table=True):

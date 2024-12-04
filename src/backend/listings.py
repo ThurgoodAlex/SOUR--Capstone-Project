@@ -10,7 +10,7 @@ from sqlalchemy.future import select
 from jose import JWTError, jwt
 from sqlmodel import Session, SQLModel, select
 from PRISM.src.prism_services.schema import (
-    Listing, ListingResponse, ListingInDB, createListing, ListingList, UserInDB
+    Listing, ListingResponse, ListingInDB, createListing, UserInDB
 )
 from PRISM.src.prism_services.test_db import get_session
 from PRISM.src.prism_services.auth import auth_get_current_user
@@ -40,6 +40,7 @@ listing_router = APIRouter(tags=["Listings"])
 @listing_router.post('/createlisting', response_model= ListingResponse, status_code=201)
 def create_new_listing(newListing:createListing, session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)) -> ListingResponse:
     """Creating a new listing"""
+    logger.info("testing create listing")
     listingDB = ListingInDB(
         **newListing.model_dump(),
         seller = currentUser.username,
@@ -51,3 +52,10 @@ def create_new_listing(newListing:createListing, session: Annotated[Session, Dep
     session.refresh(listingDB)
     listing_data = Listing(title = listingDB.title, description=listingDB.description, price=listingDB.price, seller=listingDB.seller)
     return ListingResponse(Listing=listing_data)
+
+
+@listing_router.get('/allListings', response_model= list[ListingInDB], status_code=201)
+def get_all_listings(session :Annotated[Session, Depends(get_session)])-> list[ListingInDB]:
+    """Getting all listings"""
+    return session.exec(select(ListingInDB)).all()
+

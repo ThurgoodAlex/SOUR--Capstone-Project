@@ -47,8 +47,6 @@ app.add_middleware(
 )
 
 
-
-
 app.include_router(auth_router, prefix="/auth")
 app.include_router(listing_router, prefix="/listing")
 
@@ -76,14 +74,13 @@ async def health():
     return {"status": "healthy"}
 
 
-
 def custom_openapi():
     if app.openapi_schema:
         return app.openapi_schema
     openapi_schema = get_openapi(
-        title="Custom API",
+        title="Sour API",
         version="1.0.0",
-        description="An example API",
+        description="Sours API",
         routes=app.routes,
     )
     openapi_schema["components"]["securitySchemes"] = {
