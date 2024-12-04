@@ -58,6 +58,8 @@ export default function PreloadingVideoPlayerScreen() {
   }, [replacePlayer]);
 
   return (
+    <>
+    
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={ScreenStyles.screen}>
         <PanGestureHandler onGestureEvent={handleSwipe}>
@@ -65,9 +67,12 @@ export default function PreloadingVideoPlayerScreen() {
             <VideoView player={currentPlayer} style={styles.video} nativeControls={false} />
           {/* </ScrollView> */}
         </PanGestureHandler>
-        <NavBar />
+       
       </View>
     </GestureHandlerRootView>
+    <NavBar />
+    </>
+    
   );
 }
 

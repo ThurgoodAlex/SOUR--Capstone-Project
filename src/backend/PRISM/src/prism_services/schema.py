@@ -30,6 +30,7 @@ class UserInDB(SQLModel, table=True):
 class User(BaseModel):
     username: str
     email: str
+    id: int
     
 
 

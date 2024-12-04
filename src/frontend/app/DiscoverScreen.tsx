@@ -60,8 +60,9 @@ export default function DiscoverScreen() {
         columnWrapperStyle={Styles.grid} // Style for the row container
         showsVerticalScrollIndicator={false}
       />
-      <NavBar />
+      
     </View>
+    <NavBar />
     </>
     
   );

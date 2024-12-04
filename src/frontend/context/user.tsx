@@ -6,6 +6,7 @@ import { router } from "expo-router";
 interface User {
   name: string;
   email: string;
+  id: number;
   isSeller: boolean;
 }
 
@@ -30,11 +31,12 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         const response = await api.get("/auth/me");
 
         if (response.ok) {
-          const responseData: { user: { username: string; email: string } } = await response.json();
+          const responseData: { user: { username: string; email: string, id: number } } = await response.json();
 
           const returnedUser: User = {
             name: responseData.user.username, 
             email: responseData.user.email, 
+            id: responseData.user.id,
             isSeller: true
           };
 

@@ -65,7 +65,7 @@ def get_all_listings(session :Annotated[Session, Depends(get_session)], user_id:
     user = session.get(UserInDB, user_id)
     logger.info("This is the user", user)
     if user:
-        return session.exec(select(ListingInDB).where(ListingInDB.seller_id == user_id)).all()
+        return session.exec(select(ListingInDB).where(ListingInDB.seller_id == user_id).order_by(ListingInDB.created_at.desc())).all()
     else:
         raise HTTPException(
                 status_code=404,

@@ -83,7 +83,7 @@ def create_new_user(newUser: UserRegistration, session: Annotated[Session, Depen
             session.add(userDB)
             session.commit()
             session.refresh(userDB)
-            user_data = User(username=userDB.username, email=userDB.email)
+            user_data = User(username=userDB.username, email=userDB.email, id=userDB.id)
             return UserResponse(user=user_data)
     
     except Exception as e:
