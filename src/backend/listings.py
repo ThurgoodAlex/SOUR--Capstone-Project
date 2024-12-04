@@ -59,3 +59,35 @@ def get_all_listings(session :Annotated[Session, Depends(get_session)])-> list[L
     """Getting all listings"""
     return session.exec(select(ListingInDB)).all()
 
+@listing_router.get('/listing/{listing_id}', response_model= ListingInDB, status_code=201)
+def get_all_listings(session :Annotated[Session, Depends(get_session)], listing_id: int)-> ListingInDB:
+    """Gets listing by id"""
+    listing = session.get(ListingInDB, listing_id)
+    if listing:
+        return listing
+    else:
+        raise HTTPException(
+                status_code=404,
+                detail={
+                    "type":"entity_not_found",
+                    "entity_name":"Listing",
+                    "entity_id":listing_id
+                }
+            )
+
+# @listing_router.get('/listing/{user_id}', response_model= list[ListingInDB], status_code=201)
+# def get_all_listings(session :Annotated[Session, Depends(get_session)], user_id: int)-> list[ListingInDB]:
+#     """Gets listing authored by a certain user"""
+#     user_listings = session.get(ListingInDB, user_id).all
+#     if listing:
+#         return user_listings
+#     else:
+#         raise HTTPException(
+#                 status_code=404,
+#                 detail={
+#                     "type":"entity_not_found",
+#                     "entity_name":"user",
+#                     "entity_id":user_id
+#                 }
+#             )
+

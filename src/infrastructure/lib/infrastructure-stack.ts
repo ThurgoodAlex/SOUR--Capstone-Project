@@ -93,6 +93,17 @@ export class BackendInfrastructureStack extends cdk.Stack {
       },
     })
 
+    // get all listings lambda
+    const getListingByIdLambda = new lambda.Function(this, 'GetListingByIdLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.listings_handlers.get_listing_by_id_lambda',
+          code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'get_listing_by_id_lambda',
+        environment: {
+          PYTHONPATH: '/var/task',
+        },
+      })
+
     //Here is the intergration to API gateway.
 
     // Create API Gateway
@@ -109,7 +120,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getAcessTokenIntergration = new apigateway.LambdaIntegration(getAccessTokenLambda);
     const getCurrentUserIntergration = new apigateway.LambdaIntegration(getCurrentUserLambda);
     const getAllListingsIntergration = new apigateway.LambdaIntegration(getAllListingsLambda);
-
+    const getListingByIdIntergration = new apigateway.LambdaIntegration(getListingByIdLambda);
 
 
     api.root.addMethod('GET', starterPageIntegration);
@@ -138,6 +149,9 @@ export class BackendInfrastructureStack extends cdk.Stack {
 
     const getAllListingsResource = api.root.addResource('getAllListings');
     getAllListingsResource.addMethod('GET', getAllListingsIntergration);
+
+    const getListingByIdResource = api.root.addResource('getListingById');
+    getListingByIdResource.addMethod('GET', getListingByIdIntergration);
 
     // Add /health endpoint
     const healthResource = api.root.addResource('health');

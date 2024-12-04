@@ -85,7 +85,6 @@ class ListingInDB(SQLModel, table=True):
     __tablename__ = "listings"
     __table_args__ = {'extend_existing': True}
     id: Optional[int] = Field(default=None, primary_key=True)
-    #Not sure if we want titles to be unique or not...
     title: str = Field(unique=False)
     description: str = Field(sa_column=Text)
     # Decimal(precision, scale)
