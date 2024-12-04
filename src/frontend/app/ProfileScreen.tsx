@@ -1,41 +1,72 @@
+
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, Alert, StyleSheet } from 'react-native';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
+
 import { Ionicons } from '@expo/vector-icons';
 import { useUser } from '@/context/user';
 import { Post } from '@/constants/Types';
 import { GridPosts } from '@/components/GridPosts';
 import { NavBar } from '@/components/NavBar';
 import { Stack } from 'expo-router';
+import { useAuth } from '@/context/auth';
+import { useApi } from '@/context/api';
 
 export default function ProfileScreen() {
 
     const user = useUser(); // Fetch user details
+    const {logout} = useAuth();
 
-    //test alerts
-    if (user) {
-       // Alert.alert('User Info (from fake tokens)', `Name: ${user.name}\nEmail: ${user.email}`);
-    } else {
-       // Alert.alert('No User Logged in', 'User details are not available.');
-    }
+    const api = useApi();
+
 
     const posts = Array<any>;
     const [activeTab, setActiveTab] = useState('Posts');
 
-    const handleTabSwitch = (tab: string) => {
+    const handleTabSwitch = async (tab: string) => {
         setActiveTab(tab);
+
+        try {
+            const response = await api.get("/listing/alllistings");
+            const result = await response.json();
+  
+            if (response.ok) {
+                console.log("received all listing: ", result)
+             
+              
+            } else {
+                console.log(response)
+                Alert.alert('Error', 'Could not find listings.');
+  
+            }
+          } catch (error) {
+              console.error('Error fetching listings:', error);
+              Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
+          } 
+          // router.replace('/DiscoverScreen');
     };
 
 
   return (
     <>
-        <Stack.Screen options={{ title: 'ProfileScreen' }} />
-        <View style={ScreenStyles.screen}>
-            <ProfileInfo user={user} />
-            <StatsBar />
-            <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} />
-            <NavBar/>
-        </View>
+    <Stack.Screen options={{ title: 'ProfileScreen' }} />
+    <View style={ScreenStyles.screen}>
+        <TouchableOpacity
+            onPress={() => logout()}
+            style= {Styles.buttonDark}>
+                 <Text style={[
+                        TextStyles.uppercase,
+                        TextStyles.light
+                    ]}>
+                    Logout
+                </Text>
+        </TouchableOpacity>
+        <ProfileInfo user={user} />
+        <StatsBar />
+        <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} />
+         
+    </View>
+    <NavBar/>
     </>
     
     );
@@ -105,6 +136,9 @@ function Tabs({ activeTab, handleTabSwitch }: { activeTab: string; handleTabSwit
 
 
 function PostsGrid() {
+    
+
+
     const dummyPosts: Post[] = [
         {
             id: 1,
