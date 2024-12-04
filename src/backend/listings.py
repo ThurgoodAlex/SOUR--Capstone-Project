@@ -59,6 +59,23 @@ def get_all_listings(session :Annotated[Session, Depends(get_session)])-> list[L
     """Getting all listings"""
     return session.exec(select(ListingInDB)).all()
 
+@listing_router.get('/allListings/{user_id}', response_model= list[ListingInDB], status_code=201)
+def get_all_listings(session :Annotated[Session, Depends(get_session)], user_id: int)-> list[ListingInDB]:
+    """Gets listing authored by a certain user"""
+    user = session.get(UserInDB, user_id)
+    logger.info("This is the user", user)
+    if user:
+        return session.exec(select(ListingInDB).where(ListingInDB.seller_id == user_id)).all()
+    else:
+        raise HTTPException(
+                status_code=404,
+                detail={
+                    "type":"entity_not_found",
+                    "entity_name":"user",
+                    "entity_id":user_id
+                }
+            )
+
 @listing_router.get('/listing/{listing_id}', response_model= ListingInDB, status_code=201)
 def get_all_listings(session :Annotated[Session, Depends(get_session)], listing_id: int)-> ListingInDB:
     """Gets listing by id"""
@@ -74,20 +91,4 @@ def get_all_listings(session :Annotated[Session, Depends(get_session)], listing_
                     "entity_id":listing_id
                 }
             )
-
-# @listing_router.get('/listing/{user_id}', response_model= list[ListingInDB], status_code=201)
-# def get_all_listings(session :Annotated[Session, Depends(get_session)], user_id: int)-> list[ListingInDB]:
-#     """Gets listing authored by a certain user"""
-#     user_listings = session.get(ListingInDB, user_id).all
-#     if listing:
-#         return user_listings
-#     else:
-#         raise HTTPException(
-#                 status_code=404,
-#                 detail={
-#                     "type":"entity_not_found",
-#                     "entity_name":"user",
-#                     "entity_id":user_id
-#                 }
-#             )
 

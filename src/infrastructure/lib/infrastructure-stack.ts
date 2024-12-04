@@ -93,7 +93,18 @@ export class BackendInfrastructureStack extends cdk.Stack {
       },
     })
 
-    // get all listings lambda
+    // get listings by users lambda
+    const getListingsByUserLambda = new lambda.Function(this, 'GetListingsByUserLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.listings_handlers.get_listing_by_user_lambda',
+          code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'get_listing_by_user_lambda',
+        environment: {
+          PYTHONPATH: '/var/task',
+        },
+      })
+
+    // get listing by id lambda
     const getListingByIdLambda = new lambda.Function(this, 'GetListingByIdLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
         handler: 'lambda.listings_handlers.get_listing_by_id_lambda',
@@ -120,6 +131,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getAcessTokenIntergration = new apigateway.LambdaIntegration(getAccessTokenLambda);
     const getCurrentUserIntergration = new apigateway.LambdaIntegration(getCurrentUserLambda);
     const getAllListingsIntergration = new apigateway.LambdaIntegration(getAllListingsLambda);
+    const getListingsByUserIntergration = new apigateway.LambdaIntegration(getListingsByUserLambda);
     const getListingByIdIntergration = new apigateway.LambdaIntegration(getListingByIdLambda);
 
 
@@ -149,6 +161,9 @@ export class BackendInfrastructureStack extends cdk.Stack {
 
     const getAllListingsResource = api.root.addResource('getAllListings');
     getAllListingsResource.addMethod('GET', getAllListingsIntergration);
+
+    const getListingsByUserResource = api.root.addResource('getListingByUser');
+    getListingsByUserResource.addMethod('GET', getListingsByUserIntergration);
 
     const getListingByIdResource = api.root.addResource('getListingById');
     getListingByIdResource.addMethod('GET', getListingByIdIntergration);
