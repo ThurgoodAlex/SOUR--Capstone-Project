@@ -60,7 +60,7 @@ def get_all_listings(session :Annotated[Session, Depends(get_session)])-> list[L
     return session.exec(select(ListingInDB)).all()
 
 @listing_router.get('/allListings/{user_id}', response_model= list[ListingInDB], status_code=201)
-def get_all_listings(session :Annotated[Session, Depends(get_session)], user_id: int)-> list[ListingInDB]:
+def get_all_listings_by_user(session :Annotated[Session, Depends(get_session)], user_id: int)-> list[ListingInDB]:
     """Gets listing authored by a certain user"""
     user = session.get(UserInDB, user_id)
     logger.info("This is the user", user)
@@ -77,7 +77,7 @@ def get_all_listings(session :Annotated[Session, Depends(get_session)], user_id:
             )
 
 @listing_router.get('/listing/{listing_id}', response_model= ListingInDB, status_code=201)
-def get_all_listings(session :Annotated[Session, Depends(get_session)], listing_id: int)-> ListingInDB:
+def get_all_listings_by_id(session :Annotated[Session, Depends(get_session)], listing_id: int)-> ListingInDB:
     """Gets listing by id"""
     listing = session.get(ListingInDB, listing_id)
     if listing:
