@@ -1,9 +1,9 @@
-import { TextProps, ViewProps } from "react-native";
+import { ImageSourcePropType, TextProps, ViewProps } from "react-native";
 
 export type Post = {
     id: number;
     // data: TexImageSource;
-    data: string;
+    data: ImageSourcePropType | undefined;
     user: string;
     type: string;
 };

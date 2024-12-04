@@ -4,7 +4,6 @@ import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 import ProfileThumbnail from '@/components/ProfileThumbnail';
 import PhotoCarousel from '@/components/PhotoCarousel';
 import { NavBar } from '@/components/NavBar';
-import { Colors } from '@/constants/Colors';
 
 export default function ListingInfoScreen() {
   const [liked, setLike] = useState(false);

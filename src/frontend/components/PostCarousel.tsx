@@ -9,32 +9,29 @@ export default function PostCarousel() {
     const dummyPosts = [
         {
             id: 1,
-            data: './imgs/toad.png',
+            data: require('../assets/images/video.png'),
             user: 'Princess Peach',
             type: 'video',
         },
         {
             id: 2,
-            data: './imgs/toad.png',
+            data: require('../assets/images/post.png'),
             user: 'Mario',
             type: 'post',
         },
         {
             id: 3,
-            data: './imgs/toad.png',
+            data: require('../assets/images/sweater1.png'),
             user: 'Bowser',
             type: 'listing',
         },
         {
             id: 4,
-            data: './imgs/toad.png',
+            data: require('../assets/images/listing2.png'),
             user: 'Princess Daisy',
             type: 'listing',
         },
     ];
-
-
-   
 
       return (
         <View style={[Styles.row, {marginBottom:18}]}>
