@@ -37,7 +37,7 @@ def get_all_listings_lambda(event, context):
             "body": json.dumps({"error": str(e)})
         }
 
-def get_listing_by_user_lambda(event, context):
+def get_listings_by_user_lambda(event, context):
     try:
         user_listings = json.loads(event['body'])  
 
