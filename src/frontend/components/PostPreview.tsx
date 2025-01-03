@@ -5,6 +5,7 @@ import { Listing, Post, User } from '@/constants/Types';
 import ProfileThumbnail from '@/components/ProfileThumbnail';
 import { router } from 'expo-router';
 import ProfileThumbnailSmall from '@/components/ProfileThumbnailSmall';
+import { useEffect, useState } from 'react';
 
 /**
  * The visualization of how a campus post looks like.
@@ -25,12 +26,20 @@ export function PostPreview({ post, size, thumbnailSize }: { post: Post, size: n
 
     //extract poster information into a User object
     // const author: User = post.user;
-    const author: User = {
-        name: 'hannah',
-        username: 'HansClothes',
-        id: 100,
-        profilePicture: '../assets/images/profile_pic.jpg'
-    };
+    // const author: User = {
+    //     name: 'hannah',
+    //     username: 'HansClothes',
+    //     id: 100,
+    //     profilePicture: '../assets/images/profile_pic.jpg'
+    // };
+
+  //extract poster information into a User object
+  const author: User = {
+    name: post.author.name,
+    username: post.author.username,
+    id: post.author.id,
+  }; 
+  
 
     return (
         <View key={post.id} style={[Styles.column, { marginBottom: 1 }]}>

@@ -3,9 +3,9 @@ import { ImageSourcePropType, TextProps, ViewProps } from "react-native";
 export type Post = {
     id: number;
     data: ImageSourcePropType | undefined;
-    title: string;
-    user: User;
     type: string;
+
+    author:User;
 };
 
 export type Listing = {
@@ -26,6 +26,8 @@ export type User = {
     id:number;
     profilePicture?:string | '../assets/images/profile_pic.jpg'
 };
+
+
 
 export type GridPostsProps = {
     posts: Post[];
