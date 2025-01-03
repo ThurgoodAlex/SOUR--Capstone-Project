@@ -3,8 +3,6 @@ import { ImageSourcePropType, TextProps, ViewProps } from "react-native";
 export type Post = {
     id: number;
     data: ImageSourcePropType | undefined;
-    title: string;
-    user: User;
     type: string;
 
     author:User;
