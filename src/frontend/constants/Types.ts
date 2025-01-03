@@ -2,10 +2,29 @@ import { ImageSourcePropType, TextProps, ViewProps } from "react-native";
 
 export type Post = {
     id: number;
-    // data: TexImageSource;
     data: ImageSourcePropType | undefined;
-    user: string;
     type: string;
+
+    poster:User;
+};
+
+export type Listing = {
+    id:number;
+    createdDate: string;
+
+    title: string;
+    price: string;
+    description: string;
+    size: string;
+
+    seller: User;
+};
+
+export type User = {
+    name: string;
+    username: string;
+    id:number;
+    profilePicture?:string | '../assets/images/profile_pic.jpg'
 };
 
 export type GridPostsProps = {
@@ -22,3 +41,8 @@ export type ThemedTextProps = TextProps & {
     darkColor?: string;
     type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link';
 };
+
+
+
+
+  
