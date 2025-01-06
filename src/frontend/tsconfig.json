@@ -1,25 +1,3 @@
-
-//old way
-// {
-//   "extends": "expo/tsconfig.base",
-//   "compilerOptions": {
-//     "strict": true,
-//     "paths": {
-//       "@/*": [
-//         "./*"
-//       ]
-//     }
-//   },
-//   "include": [
-//     "**/*.ts",
-//     "**/*.tsx",
-//     ".expo/types/**/*.ts",
-//     "expo-env.d.ts"
-//   ]
-// }
-
-
-//ashlyn's new stuff
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
@@ -28,7 +6,7 @@
     "paths": {
       "@/*": ["*"]  
     },
-    "jsx": "react-native",
+    "jsx": "react-jsx",
     "lib": ["esnext", "dom"],
     "types": ["react", "react-native"]
   },
