@@ -1,7 +1,7 @@
 # SOUR Source Code Repo
 
 ## Description
-this is the Primary(and so far only) repository for the SOUR 🍋  E-Commerce and Social media Application
+This is the Primary repository for the SOUR 🍋 E-Commerce and Social media Application
 
 ## Project Structure 
 
