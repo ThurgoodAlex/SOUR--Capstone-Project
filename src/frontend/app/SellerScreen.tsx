@@ -93,20 +93,34 @@ function Tabs({ activeTab, handleTabSwitch }: { activeTab: string; handleTabSwit
 }
 
 function ActivePostsGrid() {
-    const dummyPosts: Post[] = [
+    const dummyPosts = [
         {
             id: 1,
-            data: './imgs/toad.png',
-            user: 'Princess Peach',
+            data: require('../assets/images/video.png'),
+            poster: {name: "Dummy Data Name 1", username: "dummyuser1", id:1},
             type: 'video',
         },
         {
             id: 2,
-            data: './imgs/toad.png',
-            user: 'Mario',
+            data: require('../assets/images/post.png'),
+            poster: {name: "Dummy Data Name 2", username: "dummyuser2", id:2},
             type: 'post',
-        }
+        },
+        {
+            id: 3,
+            data: require('../assets/images/sweater1.png'),
+            poster: {name: "Dummy Data Name 3", username: "dummyuser3", id:3},
+            type: 'listing',
+        },
+        {
+            id: 4,
+            data: require('../assets/images/listing2.png'),
+            poster: {name: "Dummy Data Name 4", username: "dummyuser4", id:4},
+            type: 'listing',
+        },
     ];
+
+
     return (
         <View>
             <Text>No posts yet!</Text>
@@ -116,20 +130,21 @@ function ActivePostsGrid() {
 }
 
 function ClosedPostsGrid() {
-    const dummyPosts: Post[] = [
+    const dummyPosts = [
         {
-            id: 3,
-            data: './imgs/toad.png',
-            user: 'Bowser',
+            id: 5,
+            data: require('../assets/images/sweater1.png'),
+            poster: {name: "Dummy Data Name 3", username: "dummyuser3", id:3},
             type: 'listing',
         },
         {
-            id: 4,
-            data: './imgs/toad.png',
-            user: 'Princess Daisy',
+            id: 6,
+            data: require('../assets/images/listing2.png'),
+            poster: {name: "Dummy Data Name 4", username: "dummyuser4", id:4},
             type: 'listing',
-        }
+        },
     ];
+    
     return (
         <View>
             <Text>None closed yet!</Text>
