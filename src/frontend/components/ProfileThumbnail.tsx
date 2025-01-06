@@ -1,8 +1,9 @@
 import { Styles, TextStyles } from '@/constants/Styles';
+import { User } from '@/constants/Types';
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 
-export default function ProfileThumbnail() {
+export default function ProfileThumbnail({ user }: {user: User}) {
 
   const ProfileStyles = StyleSheet.create({
     thumbnailImage: {
@@ -14,16 +15,22 @@ export default function ProfileThumbnail() {
   })
 
   return (
+    <>
       <View style={Styles.row}>
         <Image
-          source={require('../assets/images/profile_pic.jpg')}
+          source={
+            user.profilePicture
+              ? user.profilePicture
+              : require('../assets/images/profile_pic.jpg') // Default fallback
+          }
           style={ProfileStyles.thumbnailImage}
         />
-        <View style={{alignItems:'flex-start'}}>
-          <Text style={[TextStyles.h3, {marginBottom:0, marginLeft:2}]}>Hanna</Text>
-          <Text style={TextStyles.small}>@hanna_sells_vintage</Text>
+        <View style={[Styles.column, Styles.alignLeft, {marginLeft:2}]}>
+          <Text style={[TextStyles.h3, {marginBottom:0}]}>{user.name}</Text>
+          <Text style={[TextStyles.small, {marginTop:1}]}>@{user.username}</Text>
         </View>
       </View>
-    );
-
-}
+    
+    </> 
+  );
+};

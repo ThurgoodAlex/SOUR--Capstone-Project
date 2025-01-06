@@ -10,25 +10,25 @@ export default function PostCarousel() {
         {
             id: 1,
             data: require('../assets/images/video.png'),
-            user: 'Princess Peach',
+            poster: {name: "Dummy Data Name 1", username: "dummyuser1", id:1},
             type: 'video',
         },
         {
             id: 2,
             data: require('../assets/images/post.png'),
-            user: 'Mario',
+            poster: {name: "Dummy Data Name 2", username: "dummyuser2", id:2},
             type: 'post',
         },
         {
             id: 3,
             data: require('../assets/images/sweater1.png'),
-            user: 'Bowser',
+            poster: {name: "Dummy Data Name 3", username: "dummyuser3", id:3},
             type: 'listing',
         },
         {
             id: 4,
             data: require('../assets/images/listing2.png'),
-            user: 'Princess Daisy',
+            poster: {name: "Dummy Data Name 4", username: "dummyuser4", id:4},
             type: 'listing',
         },
     ];
@@ -42,8 +42,9 @@ export default function PostCarousel() {
                             key={post.id}
                             post={post}
                             size={350}
+                            thumbnailSize='big'
                         />
-                        <ProfileThumbnail/>
+                       
                     </View>
                 ))}
             </ScrollView>

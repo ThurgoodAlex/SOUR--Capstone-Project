@@ -108,6 +108,14 @@ export const Styles = StyleSheet.create({
       alignItems:'center',
     },
 
+    alignLeft: {
+      alignItems:'flex-start',
+    },
+
+    alignRight: {
+      alignItems:'flex-end',
+    },
+
     grid: {
       flex: 1,
       flexDirection: 'row',
