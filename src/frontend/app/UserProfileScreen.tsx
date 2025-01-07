@@ -9,12 +9,10 @@ import { useApi } from '@/context/api';
 import { NavBar } from '@/components/NavBar';
 import { StatsBar } from '@/components/StatsBar';
 
-export default function SellerScreen() {
+export default function UserProfileScreen() {
     const user = useUser(); // Fetch user details
     const { logout } = useAuth();
     const api = useApi();
-
-    const [activeTab, setActiveTab] = useState('Posts');
     const [listings, setListings] = useState([]);
 
     // Fetch listings from the API
@@ -36,17 +34,6 @@ export default function SellerScreen() {
         }
     };
 
-    // Fetch listings on page load
-    useEffect(() => {
-        if (activeTab === 'Active') {
-            fetchListings();
-        }
-    }, [activeTab]);
-
-    const handleTabSwitch = (tab: string) => {
-        setActiveTab(tab);
-    };
-
     return (
         <>
             <Stack.Screen options={{ title: 'ProfileScreen' }} />
@@ -60,12 +47,7 @@ export default function SellerScreen() {
                 </TouchableOpacity>
                 <ProfileInfo user={user} />
                 <StatsBar />
-                <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} />
-                {activeTab === 'Active' ? (
-                    <PostsGrid listings={listings} />
-                ) : (
-                    <PostsGrid listings={listings} />
-                )}
+                <PostsGrid listings={listings} />
             </View>
             <NavBar/>
         </>
@@ -88,24 +70,24 @@ function ProfileInfo({ user }: { user: any }) {
 function Tabs({ activeTab, handleTabSwitch }: { activeTab: string; handleTabSwitch: (tab: string) => void }) {
     return (
         <View style={ProfileStyles.tabs}>
-            <TouchableOpacity onPress={() => handleTabSwitch('Active')}>
+            <TouchableOpacity onPress={() => handleTabSwitch('Posts')}>
                 <Text style={[
                     TextStyles.h2,
                     ProfileStyles.tab,
                     TextStyles.uppercase,
                     { marginBottom: 0 },
-                    activeTab === 'Active' && ProfileStyles.activeTab
+                    activeTab === 'Posts' && ProfileStyles.activeTab
                 ]}>
                     Posts
                 </Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleTabSwitch('Inactive')}>
+            <TouchableOpacity onPress={() => handleTabSwitch('Likes')}>
                 <Text style={[
                     TextStyles.h2,
                     ProfileStyles.tab,
                     TextStyles.uppercase,
                     { marginBottom: 0 },
-                    activeTab === 'Inactive' && ProfileStyles.activeTab
+                    activeTab === 'Likes' && ProfileStyles.activeTab
                 ]}>
                     Likes
                 </Text>

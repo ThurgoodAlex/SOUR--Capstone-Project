@@ -13,7 +13,6 @@ export default function MessagesScreen() {
             <Text style={{ flex: 1 }}>
                 this is the messages screen
             </Text>
-
         </View>
         <NavBar/>
         </>
