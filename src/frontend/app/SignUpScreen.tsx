@@ -27,7 +27,6 @@ export default function SignUpScreen() {
                 username: name,
                 email: email,
                 password: password,
-                isSeller: false
             });
 
             const result = await response.json();
@@ -49,6 +48,19 @@ export default function SignUpScreen() {
     return (
         <View style={ScreenStyles.screenCentered}>
             <Text style={[TextStyles.h2, TextStyles.uppercase]}>Create an Account</Text>
+
+            <TextInput
+                style={Styles.input}
+                placeholder="First Name"
+                value={name}
+                onChangeText={setName}
+            />
+            <TextInput
+                style={Styles.input}
+                placeholder="Last Name"
+                value={name}
+                onChangeText={setName}
+            />
             <TextInput
                 style={Styles.input}
                 placeholder="Username"
