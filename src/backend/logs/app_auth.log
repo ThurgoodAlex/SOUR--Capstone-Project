@@ -4619,3 +4619,10 @@ WHERE listings.seller_id = ?
 2025-01-06 22:41:44,175 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
 2025-01-06 22:41:44,176 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
 2025-01-06 22:41:44,180 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-07 20:12:11,370 - app - INFO - Creating database and database tables...
+2025-01-07 20:12:11,377 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-07 20:12:11,378 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-01-07 20:12:11,379 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-07 20:12:11,383 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2025-01-07 20:12:11,384 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-07 20:12:11,385 - sqlalchemy.engine.Engine - INFO - COMMIT
