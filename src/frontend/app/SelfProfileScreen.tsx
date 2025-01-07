@@ -2,22 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Image, Alert, StyleSheet, FlatList, ScrollView } from 'react-native';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 
-import { Ionicons } from '@expo/vector-icons';
 import { useUser } from '@/context/user';
 import { Stack } from 'expo-router';
 import { useAuth } from '@/context/auth';
 import { useApi } from '@/context/api';
 import { NavBar } from '@/components/NavBar';
+import { StatsBar } from '@/components/StatsBar';
 
-export default function ProfileScreen() {
+export default function SelfProfileScreen() {
     const user = useUser(); // Fetch user details
     const { logout } = useAuth();
     const api = useApi();
 
     const [activeTab, setActiveTab] = useState('Posts');
     const [listings, setListings] = useState([]);
-
-   
 
     // Fetch listings from the API
     const fetchListings = async () => {
@@ -49,7 +47,6 @@ export default function ProfileScreen() {
         setActiveTab(tab);
     };
 
-   
     return (
         <>
             <Stack.Screen options={{ title: 'ProfileScreen' }} />
@@ -84,29 +81,6 @@ function ProfileInfo({ user }: { user: any }) {
             />
             <Text style={TextStyles.h1}>{user?.name || "No User"}</Text>
             <Text style={TextStyles.p}>Salt Lake City, UT</Text>
-        </View>
-    );
-}
-
-function StatsBar() {
-    return (
-        <View style={ProfileStyles.statsSection}>
-            <View style={Styles.center}>
-                <Text style={[TextStyles.h2, { marginBottom: 0 }]}>2</Text>
-                <Text style={TextStyles.p}>sales</Text>
-            </View>
-            <View style={Styles.center}>
-                <Text style={[TextStyles.h2, { marginBottom: 0 }]}>2</Text>
-                <Text style={TextStyles.p}>listings</Text>
-            </View>
-            <View style={Styles.center}>
-                <Text style={[TextStyles.h2, { marginBottom: 0 }]}>20</Text>
-                <Text style={TextStyles.p}>followers</Text>
-            </View>
-            <View style={Styles.center}>
-                <Text style={[TextStyles.h2, { marginBottom: 0 }]}>1</Text>
-                <Text style={TextStyles.p}>following</Text>
-            </View>
         </View>
     );
 }
@@ -172,12 +146,6 @@ const ProfileStyles = StyleSheet.create({
         width: 80,
         height: 80,
         borderRadius: 40,
-    },
-    statsSection: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        marginTop: 16,
-        marginBottom: 10,
     },
     tabs: {
         flexDirection: 'row',

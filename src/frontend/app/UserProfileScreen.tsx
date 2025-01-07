@@ -9,12 +9,10 @@ import { useApi } from '@/context/api';
 import { NavBar } from '@/components/NavBar';
 import { StatsBar } from '@/components/StatsBar';
 
-export default function SellerScreen() {
+export default function UserProfileScreen() {
     const user = useUser(); // Fetch user details
     const { logout } = useAuth();
     const api = useApi();
-
-    const [activeTab, setActiveTab] = useState('Posts');
     const [listings, setListings] = useState([]);
 
     // Fetch listings from the API
@@ -36,17 +34,6 @@ export default function SellerScreen() {
         }
     };
 
-    // Fetch listings on page load
-    useEffect(() => {
-        if (activeTab === 'Active') {
-            fetchListings();
-        }
-    }, [activeTab]);
-
-    const handleTabSwitch = (tab: string) => {
-        setActiveTab(tab);
-    };
-
     return (
         <>
             <Stack.Screen options={{ title: 'ProfileScreen' }} />
@@ -60,12 +47,7 @@ export default function SellerScreen() {
                 </TouchableOpacity>
                 <ProfileInfo user={user} />
                 <StatsBar />
-                <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} />
-                {activeTab === 'Active' ? (
-                    <PostsGrid listings={listings} />
-                ) : (
-                    <PostsGrid listings={listings} />
-                )}
+                <PostsGrid listings={listings} />
             </View>
             <NavBar/>
         </>
@@ -77,7 +59,7 @@ function ProfileInfo({ user }: { user: any }) {
         <View style={Styles.center}>
             <Image
                 source={require('../assets/images/profile_pic.jpg')}
-                style={SellerStyles.profileImage}
+                style={ProfileStyles.profileImage}
             />
             <Text style={TextStyles.h1}>{user?.name || "No User"}</Text>
             <Text style={TextStyles.p}>Salt Lake City, UT</Text>
@@ -87,25 +69,25 @@ function ProfileInfo({ user }: { user: any }) {
 
 function Tabs({ activeTab, handleTabSwitch }: { activeTab: string; handleTabSwitch: (tab: string) => void }) {
     return (
-        <View style={SellerStyles.tabs}>
-            <TouchableOpacity onPress={() => handleTabSwitch('Active')}>
+        <View style={ProfileStyles.tabs}>
+            <TouchableOpacity onPress={() => handleTabSwitch('Posts')}>
                 <Text style={[
                     TextStyles.h2,
-                    SellerStyles.tab,
+                    ProfileStyles.tab,
                     TextStyles.uppercase,
                     { marginBottom: 0 },
-                    activeTab === 'Active' && SellerStyles.activeTab
+                    activeTab === 'Posts' && ProfileStyles.activeTab
                 ]}>
                     Posts
                 </Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleTabSwitch('Inactive')}>
+            <TouchableOpacity onPress={() => handleTabSwitch('Likes')}>
                 <Text style={[
                     TextStyles.h2,
-                    SellerStyles.tab,
+                    ProfileStyles.tab,
                     TextStyles.uppercase,
                     { marginBottom: 0 },
-                    activeTab === 'Inactive' && SellerStyles.activeTab
+                    activeTab === 'Likes' && ProfileStyles.activeTab
                 ]}>
                     Likes
                 </Text>
@@ -120,7 +102,7 @@ function PostsGrid({ listings }: { listings: any[] }) {
         <ScrollView contentContainerStyle={{ padding: 10 }}>
             {listings.length > 0 ? (
                 listings.map((item) => (
-                    <View key={item.id} style={SellerStyles.listingItem}>
+                    <View key={item.id} style={ProfileStyles.listingItem}>
                         <Text style={TextStyles.h2}>{item.title}</Text>
                         <Text style={TextStyles.p}>{item.description}</Text>
                         <Text style={TextStyles.p}>${parseFloat(item.price).toFixed(2)}</Text>
@@ -141,8 +123,7 @@ function LikesGrid() {
     );
 }
 
-const SellerStyles = StyleSheet.create({
-    
+const ProfileStyles = StyleSheet.create({
     profileImage: {
         width: 80,
         height: 80,
