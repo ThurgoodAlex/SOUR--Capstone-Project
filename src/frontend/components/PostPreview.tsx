@@ -5,7 +5,6 @@ import { Listing, Post, User } from '@/constants/Types';
 import ProfileThumbnail from '@/components/ProfileThumbnail';
 import { router } from 'expo-router';
 import ProfileThumbnailSmall from '@/components/ProfileThumbnailSmall';
-import { useEffect, useState } from 'react';
 
 /**
  * The visualization of how a campus post looks like.
