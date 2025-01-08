@@ -133,14 +133,6 @@ function PostsGrid({ listings }: { listings: any[] }) {
     );
 }
 
-function LikesGrid() {
-    return (
-        <View>
-            <Text>No likes yet!</Text>
-        </View>
-    );
-}
-
 const ProfileStyles = StyleSheet.create({
     profileImage: {
         width: 80,
