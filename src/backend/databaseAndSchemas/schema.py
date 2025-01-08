@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 from sqlmodel import Field, SQLModel, Relationship
-from pydantic import BaseModel
+from pydantic import BaseModel, AnyUrl
 from sqlalchemy.types import Text, DECIMAL
 from decimal import Decimal
 
@@ -111,3 +111,46 @@ class Claims(BaseModel):
 
     sub: str  # id of user
     exp: int  # unix timestamp
+
+## Image Schemas
+
+class Image(BaseModel):
+    url: AnyUrl
+    postID: Optional[int]
+    listingID: Optional[int]
+
+
+class ImageResponse(BaseModel):
+    Image: Image
+
+
+class ImageInDB(SQLModel, table=True):
+    __tablename__ = "images"
+    id: Optional[int] = Field(default=None, primary_key=True)
+    url: AnyUrl 
+    postID: Optional[int]  = Field(default=None, foreign_key="posts.id")
+    listingID: Optional[int] = Field(default=None, foreign_key="listings.id")  # Foreign key to ListingInDB
+
+
+
+## Posts Schemas
+
+
+class Post(BaseModel):
+    caption: str
+    user: User
+
+
+class PostResponse(BaseModel):
+    Post: Post
+
+
+class PostInDB(SQLModel, table = True):
+    __tablename__ = "posts"
+    id: Optional[int] = Field(default=None, primary_key=True)
+    caption: str
+    user_id: int = Field(foreign_key="users.id")  # Foreign key to UserInDB
+    user: Optional[UserInDB] = Relationship()  # Relationship to UserInDB
+    created_at: Optional[datetime] = Field(default_factory=datetime.now)
+
+    
