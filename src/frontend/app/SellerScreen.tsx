@@ -23,7 +23,7 @@ export default function SellerScreen() {
 
     return (
         <>
-            <Stack.Screen options={{ title: 'ProfileScreen' }} />
+            <Stack.Screen options={{ title: 'SellerScreen' }} />
             <View style={ScreenStyles.screen}>
                 {user?.isSeller ? (
                     <RegisteredSeller />
