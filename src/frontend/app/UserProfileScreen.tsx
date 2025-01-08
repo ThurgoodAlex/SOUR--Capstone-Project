@@ -1,18 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Image, Alert, StyleSheet, FlatList, ScrollView } from 'react-native';
+import { useState, useEffect } from 'react';
+import { View, Text, Image, Alert, StyleSheet, ScrollView } from 'react-native';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 
-import { useUser } from '@/context/user';
 import { Stack } from 'expo-router';
-import { useAuth } from '@/context/auth';
 import { useApi } from '@/context/api';
 import { NavBar } from '@/components/NavBar';
 import { StatsBar } from '@/components/StatsBar';
+import { User } from '@/constants/Types';
+import { useSearchParams } from 'expo-router/build/hooks';
 
 export default function UserProfileScreen() {
-    const user = useUser(); // Fetch user details
-    const { logout } = useAuth();
+    const searchParams = useSearchParams(); // Retrieve query parameters
+    const userParam = searchParams.get('user');
     const api = useApi();
+    const user: User | null = userParam ? JSON.parse(userParam) : null; 
     const [listings, setListings] = useState([]);
 
     // Fetch listings from the API
@@ -34,27 +35,24 @@ export default function UserProfileScreen() {
         }
     };
 
+    useEffect(() => {
+        fetchListings();
+    });
+
     return (
         <>
-            <Stack.Screen options={{ title: 'ProfileScreen' }} />
+            <Stack.Screen options={{ title: 'UserProfileScreen' }} />
             <View style={ScreenStyles.screen}>
-                <TouchableOpacity
-                    onPress={() => logout()}
-                    style={Styles.buttonDark}>
-                    <Text style={[TextStyles.uppercase, TextStyles.light]}>
-                        Logout
-                    </Text>
-                </TouchableOpacity>
                 <ProfileInfo user={user} />
                 <StatsBar />
                 <PostsGrid listings={listings} />
             </View>
-            <NavBar/>
+            <NavBar />
         </>
     );
 }
 
-function ProfileInfo({ user }: { user: any }) {
+function ProfileInfo({ user }: { user: User | null }) {
     return (
         <View style={Styles.center}>
             <Image
@@ -62,40 +60,9 @@ function ProfileInfo({ user }: { user: any }) {
                 style={ProfileStyles.profileImage}
             />
             <Text style={TextStyles.h1}>{user?.name || "No User"}</Text>
-            <Text style={TextStyles.p}>Salt Lake City, UT</Text>
         </View>
     );
 }
-
-function Tabs({ activeTab, handleTabSwitch }: { activeTab: string; handleTabSwitch: (tab: string) => void }) {
-    return (
-        <View style={ProfileStyles.tabs}>
-            <TouchableOpacity onPress={() => handleTabSwitch('Posts')}>
-                <Text style={[
-                    TextStyles.h2,
-                    ProfileStyles.tab,
-                    TextStyles.uppercase,
-                    { marginBottom: 0 },
-                    activeTab === 'Posts' && ProfileStyles.activeTab
-                ]}>
-                    Posts
-                </Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleTabSwitch('Likes')}>
-                <Text style={[
-                    TextStyles.h2,
-                    ProfileStyles.tab,
-                    TextStyles.uppercase,
-                    { marginBottom: 0 },
-                    activeTab === 'Likes' && ProfileStyles.activeTab
-                ]}>
-                    Likes
-                </Text>
-            </TouchableOpacity>
-        </View>
-    );
-}
-
 
 function PostsGrid({ listings }: { listings: any[] }) {
     return (
@@ -112,14 +79,6 @@ function PostsGrid({ listings }: { listings: any[] }) {
                 <Text>No posts yet!</Text>
             )}
         </ScrollView>
-    );
-}
-
-function LikesGrid() {
-    return (
-        <View>
-            <Text>No likes yet!</Text>
-        </View>
     );
 }
 
