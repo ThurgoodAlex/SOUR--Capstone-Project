@@ -54,7 +54,7 @@ def create_new_listing(newListing:createListing, session: Annotated[Session, Dep
     return ListingResponse(Listing=listing_data)
 
 
-@listing_router.get('/allListings', response_model= list[ListingInDB], status_code=201)
+@listing_router.get('/', response_model= list[ListingInDB], status_code=201)
 def get_all_listings(session :Annotated[Session, Depends(get_session)])-> list[ListingInDB]:
     """Getting all listings"""
     return session.exec(select(ListingInDB)).all()
