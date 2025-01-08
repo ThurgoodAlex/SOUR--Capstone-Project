@@ -75,11 +75,11 @@ export function NavBar() {
             <Ionicons
                 style={[
                     NavBarStyles.icon,
-                    pathname === '/ProfileScreen' && NavBarStyles.activeIcon,
+                    pathname === '/SelfProfileScreen' && NavBarStyles.activeIcon,
                 ]}
                 size={32}
                 name="person"
-                onPress={() => handleNavigation('ProfileScreen')}
+                onPress={() => handleNavigation('SelfProfileScreen')}
             />
         </View>
     );
