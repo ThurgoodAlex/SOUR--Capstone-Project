@@ -10,25 +10,29 @@ export default function PostCarousel() {
         {
             id: 1,
             data: require('../assets/images/video.png'),
-            poster: {name: "Dummy Data Name 1", username: "dummyuser1", id:1},
+            title: "a video",
+            user: {name: "Dummy Data Name 1", username: "dummyuser1", id:1},
             type: 'video',
         },
         {
             id: 2,
             data: require('../assets/images/post.png'),
-            poster: {name: "Dummy Data Name 2", username: "dummyuser2", id:2},
+            title: "a post",
+            user: {name: "Dummy Data Name 2", username: "dummyuser2", id:2},
             type: 'post',
         },
         {
             id: 3,
             data: require('../assets/images/sweater1.png'),
-            poster: {name: "Dummy Data Name 3", username: "dummyuser3", id:3},
+            title: "a listing",
+            user: {name: "Dummy Data Name 3", username: "dummyuser3", id:3},
             type: 'listing',
         },
         {
             id: 4,
             data: require('../assets/images/listing2.png'),
-            poster: {name: "Dummy Data Name 4", username: "dummyuser4", id:4},
+            title: "a listing",
+            user: {name: "Dummy Data Name 4", username: "dummyuser4", id:4},
             type: 'listing',
         },
     ];

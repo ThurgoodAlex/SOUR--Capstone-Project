@@ -16,20 +16,21 @@ export default function ProfileThumbnail({ user }: {user: User}) {
 
   return (
     <>
-      <View style={Styles.row}>
-        <Image
-          source={
-            user.profilePicture
-              ? user.profilePicture
-              : require('../assets/images/profile_pic.jpg') // Default fallback
-          }
-          style={ProfileStyles.thumbnailImage}
-        />
-        <View style={[Styles.column, Styles.alignLeft, {marginLeft:2}]}>
-          <Text style={[TextStyles.h3, {marginBottom:0}]}>{user.name}</Text>
-          <Text style={[TextStyles.small, {marginTop:1}]}>@{user.username}</Text>
-        </View>
-      </View>
+        <TouchableOpacity style={Styles.row}>
+            <Image
+            source={
+                user.profilePicture
+                ? user.profilePicture
+                : require('../assets/images/profile_pic.jpg') // Default fallback
+            }
+            style={ProfileStyles.thumbnailImage}
+            />
+            <View style={[Styles.column, Styles.alignLeft, {marginLeft:2}]}>
+            <Text style={[TextStyles.h3, {marginBottom:0}]}>{user.name}</Text>
+            <Text style={[TextStyles.small, {marginTop:1}]}>@{user.username}</Text>
+            </View>
+        </TouchableOpacity>
+        
     
     </> 
   );

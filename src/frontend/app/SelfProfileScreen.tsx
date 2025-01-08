@@ -49,7 +49,7 @@ export default function SelfProfileScreen() {
 
     return (
         <>
-            <Stack.Screen options={{ title: 'ProfileScreen' }} />
+            <Stack.Screen options={{ title: 'SelfProfileScreen' }} />
             <View style={ScreenStyles.screen}>
                 <TouchableOpacity
                     onPress={() => logout()}
@@ -80,7 +80,6 @@ function ProfileInfo({ user }: { user: any }) {
                 style={ProfileStyles.profileImage}
             />
             <Text style={TextStyles.h1}>{user?.name || "No User"}</Text>
-            <Text style={TextStyles.p}>Salt Lake City, UT</Text>
         </View>
     );
 }

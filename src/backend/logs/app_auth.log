@@ -4997,3 +4997,38 @@ WHERE listings.seller_id = ? ORDER BY listings.created_at DESC
 FROM listings
 2025-01-08 19:13:57,967 - sqlalchemy.engine.Engine - INFO - [cached since 3275s ago] ()
 2025-01-08 19:13:57,970 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-01-08 19:22:25,863 - app - INFO - Creating database and database tables...
+2025-01-08 19:22:25,869 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-08 19:22:25,870 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-01-08 19:22:25,870 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-08 19:22:25,875 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2025-01-08 19:22:25,875 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-08 19:22:25,877 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-08 19:22:30,790 - app - INFO - Creating database and database tables...
+2025-01-08 19:22:30,795 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-08 19:22:30,796 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-01-08 19:22:30,797 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-08 19:22:30,802 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2025-01-08 19:22:30,802 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-08 19:22:30,804 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-08 19:23:09,061 - app - INFO - Creating database and database tables...
+2025-01-08 19:23:09,065 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-08 19:23:09,066 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-01-08 19:23:09,066 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-08 19:23:09,070 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2025-01-08 19:23:09,071 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-08 19:23:09,072 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-08 19:24:28,500 - app - INFO - Creating database and database tables...
+2025-01-08 19:24:28,503 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-08 19:24:28,503 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-01-08 19:24:28,504 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-08 19:24:28,508 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2025-01-08 19:24:28,509 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-08 19:24:28,510 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-08 19:24:37,015 - app - INFO - Creating database and database tables...
+2025-01-08 19:24:37,020 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-08 19:24:37,021 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-01-08 19:24:37,021 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-08 19:24:37,024 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2025-01-08 19:24:37,025 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-08 19:24:37,027 - sqlalchemy.engine.Engine - INFO - COMMIT
