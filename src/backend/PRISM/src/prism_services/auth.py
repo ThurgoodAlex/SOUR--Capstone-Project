@@ -15,10 +15,10 @@ from fastapi.security import (
     OAuth2PasswordRequestForm,
 )
 
-from .test_db import get_session
+from ....databaseAndSchemas.test_db import get_session
 
 SessionDep = Annotated[Session, Depends(get_session)]
-from .schema import(
+from ....databaseAndSchemas.schema import(
     UserInDB, UserResponse, UserRegistration, User, UserLogin, AccessToken, Claims
 )
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
