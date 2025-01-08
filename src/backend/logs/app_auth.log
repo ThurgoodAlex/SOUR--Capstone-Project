@@ -4619,3 +4619,130 @@ WHERE listings.seller_id = ?
 2025-01-06 22:41:44,175 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
 2025-01-06 22:41:44,176 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
 2025-01-06 22:41:44,180 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-08 17:09:58,202 - app - INFO - Creating database and database tables...
+2025-01-08 17:09:58,210 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-08 17:09:58,212 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-01-08 17:09:58,212 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-08 17:09:58,217 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2025-01-08 17:09:58,217 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-08 17:09:58,220 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-08 17:22:36,756 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-01-08 17:22:37,088 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-08 17:22:37,136 - sqlalchemy.engine.Engine - INFO - SELECT users.username 
+FROM users 
+WHERE users.username = ?
+2025-01-08 17:22:37,137 - sqlalchemy.engine.Engine - INFO - [generated in 0.00064s] ('peppa',)
+2025-01-08 17:22:37,142 - sqlalchemy.engine.Engine - INFO - SELECT users.email 
+FROM users 
+WHERE users.email = ?
+2025-01-08 17:22:37,142 - sqlalchemy.engine.Engine - INFO - [generated in 0.00057s] ('peppa@gmail.com',)
+2025-01-08 17:22:37,154 - sqlalchemy.engine.Engine - INFO - INSERT INTO users (username, email, hashed_password, created_at) VALUES (?, ?, ?, ?)
+2025-01-08 17:22:37,155 - sqlalchemy.engine.Engine - INFO - [generated in 0.00096s] ('peppa', 'peppa@gmail.com', '$2b$12$dtTCB..sFCGLZjhabTH/zuwvlLQlmAXfVewIiJOfPNdWurryJApDi', '2025-01-08 17:22:37.150566')
+2025-01-08 17:22:37,164 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-08 17:22:37,174 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-08 17:22:37,177 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.id = ?
+2025-01-08 17:22:37,177 - sqlalchemy.engine.Engine - INFO - [generated in 0.00059s] (15,)
+2025-01-08 17:22:37,181 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-01-08 17:23:06,538 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-08 17:23:06,540 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.username = ?
+2025-01-08 17:23:06,542 - sqlalchemy.engine.Engine - INFO - [generated in 0.00207s] ('peppa',)
+2025-01-08 17:23:06,845 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-01-08 17:43:47,011 - app - INFO - Creating database and database tables...
+2025-01-08 17:43:47,019 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-08 17:43:47,020 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-01-08 17:43:47,021 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-08 17:43:47,025 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2025-01-08 17:43:47,025 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-08 17:43:47,027 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-08 17:55:19,950 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-01-08 17:55:20,303 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-08 17:55:20,310 - sqlalchemy.engine.Engine - INFO - SELECT users.username 
+FROM users 
+WHERE users.username = ?
+2025-01-08 17:55:20,311 - sqlalchemy.engine.Engine - INFO - [generated in 0.00079s] ('theo',)
+2025-01-08 17:55:20,315 - sqlalchemy.engine.Engine - INFO - SELECT users.email 
+FROM users 
+WHERE users.email = ?
+2025-01-08 17:55:20,316 - sqlalchemy.engine.Engine - INFO - [generated in 0.00069s] ('theo@gmail.com',)
+2025-01-08 17:55:20,322 - sqlalchemy.engine.Engine - INFO - INSERT INTO users (username, email, hashed_password, created_at) VALUES (?, ?, ?, ?)
+2025-01-08 17:55:20,322 - sqlalchemy.engine.Engine - INFO - [generated in 0.00054s] ('theo', 'theo@gmail.com', '$2b$12$SMa0B8gwrF7xt0lu1e7U2ORU2bEVYOP4dtOi7lTp/nFYUZBoOunSq', '2025-01-08 17:55:20.320362')
+2025-01-08 17:55:20,333 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-08 17:55:20,342 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-08 17:55:20,345 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.id = ?
+2025-01-08 17:55:20,345 - sqlalchemy.engine.Engine - INFO - [generated in 0.00052s] (16,)
+2025-01-08 17:55:20,349 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-01-08 17:56:25,194 - PRISM.src.prism_services.auth - INFO - in the /token
+2025-01-08 17:56:25,195 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-08 17:56:25,198 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.username = ?
+2025-01-08 17:56:25,199 - sqlalchemy.engine.Engine - INFO - [generated in 0.00095s] ('theo',)
+2025-01-08 17:56:25,556 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-01-08 17:56:25,714 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-08 17:56:25,719 - sqlalchemy.engine.Engine - INFO - SELECT listings.id, listings.title, listings.description, listings.price, listings.seller, listings.created_at, listings.seller_id 
+FROM listings
+2025-01-08 17:56:25,724 - PRISM.src.prism_services.auth - INFO - Attempting to decode the token.
+2025-01-08 17:56:25,725 - sqlalchemy.engine.Engine - INFO - [generated in 0.00635s] ()
+2025-01-08 17:56:25,727 - PRISM.src.prism_services.auth - INFO - Decoding the token using the JWT key and algorithm.
+2025-01-08 17:56:25,731 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-01-08 17:56:25,734 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-08 17:56:25,735 - sqlalchemy.engine.Engine - INFO - SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.hashed_password AS users_hashed_password, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = ?
+2025-01-08 17:56:25,736 - sqlalchemy.engine.Engine - INFO - [generated in 0.00108s] ('16',)
+2025-01-08 17:56:25,742 - PRISM.src.prism_services.auth - INFO - User with ID 16 found in the database.
+2025-01-08 17:56:25,743 - PRISM.src.prism_services.auth - INFO - In the /me endpoint
+2025-01-08 17:56:25,744 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-01-08 18:52:14,054 - PRISM.src.prism_services.auth - INFO - in the /token
+2025-01-08 18:52:14,062 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-08 18:52:14,065 - sqlalchemy.engine.Engine - INFO - SELECT users.id, users.username, users.email, users.hashed_password, users.created_at 
+FROM users 
+WHERE users.username = ?
+2025-01-08 18:52:14,066 - sqlalchemy.engine.Engine - INFO - [cached since 2396s ago] ('theo',)
+2025-01-08 18:52:14,293 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-01-08 18:52:14,441 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-08 18:52:14,442 - sqlalchemy.engine.Engine - INFO - SELECT listings.id, listings.title, listings.description, listings.price, listings.seller, listings.created_at, listings.seller_id 
+FROM listings
+2025-01-08 18:52:14,443 - sqlalchemy.engine.Engine - INFO - [cached since 2396s ago] ()
+2025-01-08 18:52:14,449 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-01-08 18:52:14,454 - PRISM.src.prism_services.auth - INFO - Attempting to decode the token.
+2025-01-08 18:52:14,455 - PRISM.src.prism_services.auth - INFO - Decoding the token using the JWT key and algorithm.
+2025-01-08 18:52:14,458 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-08 18:52:14,459 - sqlalchemy.engine.Engine - INFO - SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.hashed_password AS users_hashed_password, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = ?
+2025-01-08 18:52:14,460 - sqlalchemy.engine.Engine - INFO - [cached since 2396s ago] ('16',)
+2025-01-08 18:52:14,463 - PRISM.src.prism_services.auth - INFO - User with ID 16 found in the database.
+2025-01-08 18:52:14,464 - PRISM.src.prism_services.auth - INFO - In the /me endpoint
+2025-01-08 18:52:14,465 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-01-08 18:52:22,247 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-08 18:52:22,248 - sqlalchemy.engine.Engine - INFO - SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.hashed_password AS users_hashed_password, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = ?
+2025-01-08 18:52:22,248 - sqlalchemy.engine.Engine - INFO - [cached since 2404s ago] (16,)
+2025-01-08 18:52:22,290 - sqlalchemy.engine.Engine - INFO - SELECT listings.id, listings.title, listings.description, listings.price, listings.seller, listings.created_at, listings.seller_id 
+FROM listings 
+WHERE listings.seller_id = ? ORDER BY listings.created_at DESC
+2025-01-08 18:52:22,290 - sqlalchemy.engine.Engine - INFO - [generated in 0.00066s] (16,)
+2025-01-08 18:52:22,293 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-01-08 18:52:26,062 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-08 18:52:26,063 - sqlalchemy.engine.Engine - INFO - SELECT listings.id, listings.title, listings.description, listings.price, listings.seller, listings.created_at, listings.seller_id 
+FROM listings
+2025-01-08 18:52:26,064 - sqlalchemy.engine.Engine - INFO - [cached since 2408s ago] ()
+2025-01-08 18:52:26,067 - sqlalchemy.engine.Engine - INFO - ROLLBACK
