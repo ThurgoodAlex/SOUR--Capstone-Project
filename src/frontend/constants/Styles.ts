@@ -84,6 +84,7 @@ export const Styles = StyleSheet.create({
         borderRadius: 8,
         alignItems: 'center',
         marginBottom: 16,
+        justifyContent:'space-around'
     },
     buttonDark: {
         backgroundColor: '#454545',
@@ -91,6 +92,8 @@ export const Styles = StyleSheet.create({
         borderRadius: 8,
         alignItems: 'center',
         marginBottom: 16,
+        justifyContent:'space-around'
+       
     },
     
     row:{
@@ -123,11 +126,13 @@ export const Styles = StyleSheet.create({
       flexWrap: 'wrap'
     },
 
-    iconOverlay: {
-        position: 'absolute',
-        top: 10,
-        right: 10,
-    }
+    image: {
+      width: 250,
+      height: 250,
+      borderRadius: 8,
+      marginRight: 8,
+      marginBottom: 16,
+    },
 });
 
   
