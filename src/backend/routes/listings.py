@@ -9,10 +9,10 @@ import logging
 from sqlalchemy.future import select
 from jose import JWTError, jwt
 from sqlmodel import Session, SQLModel, select
-from sour.src.backend.databaseAndSchemas.schema import (
+from databaseAndSchemas.schema import (
     Listing, ListingResponse, ListingInDB, createListing, UserInDB
 )
-from sour.src.backend.databaseAndSchemas.test_db import get_session
+from databaseAndSchemas.test_db import get_session
 from PRISM.src.prism_services.auth import auth_get_current_user
 
 
