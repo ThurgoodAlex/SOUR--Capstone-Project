@@ -11,4 +11,4 @@ This is the Primary repository for the SOUR 🍋 E-Commerce and Social media App
 
 *tests*: test files for the Sour application
 
-*deploy*: contains all deployment specific scripts 
+*deploy*: contains all deployment specific scripts, including runner code
