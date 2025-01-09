@@ -3,10 +3,12 @@
 node_modules/
 src/infrastructure/node_modules
 src/infrastructure/package-lock.json
+src/backend/__pycache__
 src/frontend/node_modules
 volume/*
 
 # ignore all pycache 
-__pycache__/
+**/__pycache__/** 
 *.py[cod]
 *$py.class
+

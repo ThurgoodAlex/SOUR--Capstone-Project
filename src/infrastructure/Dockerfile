@@ -32,6 +32,8 @@ RUN npm install
 # Copy the rest of your CDK code
 COPY . .
 
+COPY --chmod=755 deploy.sh . 
+
 # Compile TypeScript to JavaScript
 RUN npm run build
 
@@ -40,5 +42,5 @@ RUN mkdir /root/.aws && \
   echo "[profile localstack]\nregion=us-west-2\noutput=json\nendpoint_url = http://localstack:4566" > /root/.aws/config && \
   echo "[localstack]\naws_access_key_id=test\naws_secret_access_key=test" > /root/.aws/credentials
 
-# Set the default command
-CMD ["/bin/bash"]
+# runs the container as an executable 
+ENTRYPOINT [ "/app/infrastructure/deploy.sh" ]
