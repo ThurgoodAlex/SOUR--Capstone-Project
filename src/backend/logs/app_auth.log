@@ -4759,3 +4759,25 @@ CREATE TABLE images (
 2025-01-10 16:40:34,706 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("posts")
 2025-01-10 16:40:34,706 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
 2025-01-10 16:40:34,708 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-10 16:51:56,308 - app - INFO - Creating database and database tables...
+2025-01-10 16:51:56,313 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-10 16:51:56,314 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-01-10 16:51:56,314 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:51:56,319 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2025-01-10 16:51:56,319 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:51:56,322 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("images")
+2025-01-10 16:51:56,322 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:51:56,324 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("posts")
+2025-01-10 16:51:56,325 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:51:56,327 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-10 16:53:27,565 - app - INFO - Creating database and database tables...
+2025-01-10 16:53:27,571 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-10 16:53:27,572 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-01-10 16:53:27,572 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:53:27,576 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2025-01-10 16:53:27,576 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:53:27,578 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("images")
+2025-01-10 16:53:27,578 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:53:27,580 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("posts")
+2025-01-10 16:53:27,580 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:53:27,582 - sqlalchemy.engine.Engine - INFO - COMMIT
