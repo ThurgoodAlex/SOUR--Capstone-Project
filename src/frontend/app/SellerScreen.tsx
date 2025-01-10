@@ -9,6 +9,14 @@ import { UnregisteredSeller } from '@/components/UnregisteredSeller';
 
 export default function SellerScreen() {
     const user = useUser(); // Fetch user details
+    if (user) {
+        console.log("user: " + user?.name);
+        console.log("isSeller: " + user?.isSeller);
+    }
+    else{
+        console.log("no user available");
+    }
+    
 
     return (
         <>

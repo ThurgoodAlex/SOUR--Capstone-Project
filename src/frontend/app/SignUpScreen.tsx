@@ -4,7 +4,7 @@ import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 import { router } from 'expo-router';
 import { useApi } from '@/context/api';
 
-export function SignUpScreen() {
+export default function SignUpScreen() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -84,5 +84,3 @@ export function SignUpScreen() {
         </View>
     );
 }
-
-export default SignUpScreen;
