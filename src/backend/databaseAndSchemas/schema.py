@@ -32,6 +32,7 @@ class User(BaseModel):
     username: str
     email: str
     id: int
+    isSeller:bool
     
 
 
@@ -43,6 +44,7 @@ class UserRegistration(BaseModel):
     username: str
     email: str
     password: str
+    isSeller: bool
 
 class UserLogin(BaseModel):
     username: str
