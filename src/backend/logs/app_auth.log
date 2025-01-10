@@ -4619,3 +4619,143 @@ WHERE listings.seller_id = ?
 2025-01-06 22:41:44,175 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
 2025-01-06 22:41:44,176 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
 2025-01-06 22:41:44,180 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-09 04:01:55,181 - app - INFO - Creating database and database tables...
+2025-01-09 04:01:55,185 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-09 04:01:55,186 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-01-09 04:01:55,186 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-09 04:01:55,192 - sqlalchemy.engine.Engine - INFO - PRAGMA temp.table_info("users")
+2025-01-09 04:01:55,192 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-09 04:01:55,193 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2025-01-09 04:01:55,194 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-09 04:01:55,197 - sqlalchemy.engine.Engine - INFO - PRAGMA temp.table_info("listings")
+2025-01-09 04:01:55,198 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-09 04:01:55,199 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("images")
+2025-01-09 04:01:55,199 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-09 04:01:55,202 - sqlalchemy.engine.Engine - INFO - PRAGMA temp.table_info("images")
+2025-01-09 04:01:55,203 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-09 04:01:55,203 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("posts")
+2025-01-09 04:01:55,203 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-09 04:01:55,206 - sqlalchemy.engine.Engine - INFO - PRAGMA temp.table_info("posts")
+2025-01-09 04:01:55,206 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-09 04:01:55,208 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE users (
+	id INTEGER NOT NULL, 
+	username VARCHAR NOT NULL, 
+	email VARCHAR NOT NULL, 
+	hashed_password VARCHAR NOT NULL, 
+	created_at DATETIME, 
+	PRIMARY KEY (id), 
+	UNIQUE (email)
+)
+
+
+2025-01-09 04:01:55,208 - sqlalchemy.engine.Engine - INFO - [no key 0.00067s] ()
+2025-01-09 04:01:55,229 - sqlalchemy.engine.Engine - INFO - CREATE UNIQUE INDEX ix_users_username ON users (username)
+2025-01-09 04:01:55,230 - sqlalchemy.engine.Engine - INFO - [no key 0.00083s] ()
+2025-01-09 04:01:55,254 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE listings (
+	id INTEGER NOT NULL, 
+	title VARCHAR NOT NULL, 
+	description VARCHAR NOT NULL, 
+	price NUMERIC NOT NULL, 
+	seller VARCHAR NOT NULL, 
+	created_at DATETIME, 
+	seller_id INTEGER, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(seller_id) REFERENCES users (id)
+)
+
+
+2025-01-09 04:01:55,255 - sqlalchemy.engine.Engine - INFO - [no key 0.00083s] ()
+2025-01-09 04:01:55,276 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE posts (
+	id INTEGER NOT NULL, 
+	caption VARCHAR NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	created_at DATETIME, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES users (id)
+)
+
+
+2025-01-09 04:01:55,277 - sqlalchemy.engine.Engine - INFO - [no key 0.00097s] ()
+2025-01-09 04:01:55,299 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE images (
+	id INTEGER NOT NULL, 
+	url VARCHAR NOT NULL, 
+	"postID" INTEGER, 
+	"listingID" INTEGER, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY("postID") REFERENCES posts (id), 
+	FOREIGN KEY("listingID") REFERENCES listings (id)
+)
+
+
+2025-01-09 04:01:55,300 - sqlalchemy.engine.Engine - INFO - [no key 0.00074s] ()
+2025-01-09 04:01:55,321 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-10 16:26:56,151 - app - INFO - Creating database and database tables...
+2025-01-10 16:26:56,159 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-10 16:26:56,160 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-01-10 16:26:56,160 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:26:56,164 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2025-01-10 16:26:56,164 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:26:56,165 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("images")
+2025-01-10 16:26:56,166 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:26:56,167 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("posts")
+2025-01-10 16:26:56,167 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:26:56,168 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-10 16:27:11,970 - app - INFO - Creating database and database tables...
+2025-01-10 16:27:11,974 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-10 16:27:11,974 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-01-10 16:27:11,975 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:27:11,978 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2025-01-10 16:27:11,978 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:27:11,980 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("images")
+2025-01-10 16:27:11,981 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:27:11,983 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("posts")
+2025-01-10 16:27:11,984 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:27:11,985 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-10 16:30:38,090 - app - INFO - Creating database and database tables...
+2025-01-10 16:30:38,095 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-10 16:30:38,096 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-01-10 16:30:38,096 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:30:38,099 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2025-01-10 16:30:38,099 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:30:38,101 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("images")
+2025-01-10 16:30:38,101 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:30:38,104 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("posts")
+2025-01-10 16:30:38,104 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:30:38,106 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-10 16:33:55,657 - app - INFO - Creating database and database tables...
+2025-01-10 16:33:55,662 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-10 16:33:55,663 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-01-10 16:33:55,663 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:33:55,667 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2025-01-10 16:33:55,667 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:33:55,670 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("images")
+2025-01-10 16:33:55,671 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:33:55,673 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("posts")
+2025-01-10 16:33:55,673 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:33:55,675 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-10 16:37:35,816 - app - INFO - Creating database and database tables...
+2025-01-10 16:37:35,822 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-10 16:37:35,823 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-01-10 16:37:35,823 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:37:35,827 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2025-01-10 16:37:35,827 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:37:35,829 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("images")
+2025-01-10 16:37:35,829 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:37:35,831 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("posts")
+2025-01-10 16:37:35,831 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:37:35,834 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-10 16:40:34,690 - app - INFO - Creating database and database tables...
+2025-01-10 16:40:34,696 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-10 16:40:34,696 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-01-10 16:40:34,697 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:40:34,700 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2025-01-10 16:40:34,701 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:40:34,703 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("images")
+2025-01-10 16:40:34,703 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:40:34,706 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("posts")
+2025-01-10 16:40:34,706 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-10 16:40:34,708 - sqlalchemy.engine.Engine - INFO - COMMIT

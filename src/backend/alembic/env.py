@@ -2,7 +2,7 @@ from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
-from sour.src.backend.databaseAndSchemas.schema import SQLModel
+from databaseAndSchemas.test_db import SQLModel
 
 from alembic import context
 

@@ -9,14 +9,18 @@ import sys
 import logging
 from contextlib import asynccontextmanager
 import warnings
+import os
 
 from .schema import(
     UserInDB, ListingInDB
 )
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+db_path = os.path.join(current_dir, "test_prism.db")
 
 engine = create_engine(
-    f"sqlite:///./test_prism.db",
+    f"sqlite:///{db_path}",
     pool_pre_ping=True,
     echo=True,
     connect_args={"check_same_thread": False},
