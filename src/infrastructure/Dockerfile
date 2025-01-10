@@ -26,9 +26,11 @@ RUN pip3 install awscli awscli-local
 ## Copy package.json from infrastructure directory
 COPY ./package*.json ./
 
-# Install dependencies
 RUN npm install && \
-    npm install -g aws-cdk-local
+    npm install -g aws-cdk && \
+    npm install -g aws-cdk-local && \
+    # Set NODE_PATH to include global modules
+    echo "export NODE_PATH=$(npm root -g)" >> /root/.bashrc
 
 # Setup AWS configuration
 RUN mkdir -p /root/.aws
