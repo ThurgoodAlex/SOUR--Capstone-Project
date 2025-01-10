@@ -1,9 +1,11 @@
 #!/bin/bash
+set -e
+
+export NODE_PATH=/usr/lib/node_modules
 
 # Change to infrastructure directory
 echo "switching to infrastructure directory" 
 
-cd infrastructure 
 
 echo "Checking AWS credentials..."
 aws configure list
