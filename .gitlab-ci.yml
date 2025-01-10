@@ -2,13 +2,13 @@ build-job:
   stage: build
   script:
     - echo "building docker containers" 
-    - docker compose build
+    - docker-compose build
 
 test-backend:
   stage: test
   script:
-    - docker compose up 
-    - docker compose exec -T backend pytest -v || {
+    - docker-compose up 
+    - docker-compose exec -T backend pytest -v || {
         echo "Tests failed"
         exit 1
       }
