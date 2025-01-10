@@ -20,4 +20,4 @@ COPY . .
 EXPOSE 8000
 
 # Run the application
-CMD ["uvicorn", "app:app", "--reload","--host", "0.0.0.0", "--port", "8000", "--log-level", "debug"]
+CMD ["uvicorn", "src.app:app", "--reload","--host", "0.0.0.0", "--port", "8000", "--log-level", "debug"]

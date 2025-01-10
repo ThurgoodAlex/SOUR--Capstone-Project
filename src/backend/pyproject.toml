@@ -11,26 +11,19 @@ authors = [
     { name = "Ricardo Baeza" }
 ]
 
-[tool.hatch.build.targets.wheel]
 packages = ["src"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = [
+    "src/tests"
+]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
 markers = [
     "auth: authentication related tests",
 ]
-addopts = [
-    "--verbose",
-    "--tb=short",
-    "--strict-markers",
-]
 
-[tool.coverage.run]
-source = ["prism"]
-omit = ["tests/*", "*/migrations/*"]
-
-[tool.coverage.report]
-fail_under = 80
+# Add this section to help pytest find your packages
+[tool.pytest]
+pythonpath = "src"

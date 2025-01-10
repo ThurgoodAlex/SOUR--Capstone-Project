@@ -29,13 +29,13 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
-# Copy the rest of your CDK code
 COPY . .
 
-COPY --chmod=755 deploy.sh . 
+RUN chmod +x deploy.sh 
 
 # Compile TypeScript to JavaScript
 RUN npm run build
+
 
 #Configuring a custom profile
 RUN mkdir /root/.aws && \

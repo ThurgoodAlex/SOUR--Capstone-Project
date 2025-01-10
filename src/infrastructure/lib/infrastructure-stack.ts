@@ -10,35 +10,33 @@ export class BackendInfrastructureStack extends cdk.Stack {
     super(scope, id, props);
 
 
-    const starterPageLambdaPath = path.join(__dirname, '../../backend/')
+    const LambdaPath = path.join(__dirname, '../../backend/src')
+
     // Create Lambda function
     const starterPageLambda = new lambda.Function(this, 'StarterPageLambda', {
       runtime: lambda.Runtime.PYTHON_3_8,
       handler: 'lambda.starter_page.lambda_handler',
-      code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      code: lambda.Code.fromAsset(LambdaPath),
       functionName: 'starter_page_lambda',
       environment: {
         PYTHONPATH: '/var/task',
       },
     });
 
-    const createUserLambdaPath = path.join(__dirname, '../../backend/')
-    // Create Lambda function
     const createUserLambda = new lambda.Function(this, 'CreateUserLambda', {
       runtime: lambda.Runtime.PYTHON_3_8,
       handler: 'lambda.auth_handlers.create_user_lambda',
-       code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      code: lambda.Code.fromAsset(LambdaPath),
       functionName: 'create_user_lambda',
       environment: {
         PYTHONPATH: '/var/task',
       },
     });
 
-    const loginUserLambdaPath = path.join(__dirname, '../../backend/')
     const loginUserLambda = new lambda.Function(this, 'LoginUserLambda', {
       runtime: lambda.Runtime.PYTHON_3_8,
       handler: 'lambda.auth_handlers.login_user_lambda',
-       code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      code: lambda.Code.fromAsset(LambdaPath),
       functionName: 'login_user_lambda',
       environment: {
         PYTHONPATH: '/var/task',

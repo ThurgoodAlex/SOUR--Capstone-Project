@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from sqlmodel import Session, SQLModel, create_engine
 from unittest.mock import patch
-from PRISM.auth import auth_router, get_session
+from src.PRISM.auth import auth_router, get_session
 
 __all__ = ['engine', 'session', 'client', 'mock_logging']
 

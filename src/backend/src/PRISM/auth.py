@@ -29,17 +29,6 @@ from .prism_exceptions import(
     DuplicateUserRegistration
 ) 
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('logs/app_auth.log'),
-        logging.StreamHandler()
-    ]
-)
-
-# Create logger instance
-logger = logging.getLogger(__name__)
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -61,9 +50,7 @@ def create_new_user(newUser: UserRegistration, session: Annotated[Session, Depen
     """Registering a new User"""
     try:
         hashed_pwd = pwd_context.hash(newUser.password)
-        logger.info("Creating user....")
-        logger.info("username:" + newUser.username)
-        logger.info("pwd:" + newUser.password)
+        
         if check_username(newUser, session):
             raise DuplicateUserRegistration("User", "username", newUser.username)
         elif check_email(newUser, session):
@@ -76,12 +63,10 @@ def create_new_user(newUser: UserRegistration, session: Annotated[Session, Depen
             session.add(userDB)
             session.commit()
             session.refresh(userDB)
-            logger.info("create user...")
             user_data = User(username=userDB.username, email=userDB.email)
             return UserResponse(user=user_data)
     
     except Exception as e:
-        logger.error(f"Error creating user: {e}")
         raise HTTPException(status_code=409, detail=str(e))
 
     

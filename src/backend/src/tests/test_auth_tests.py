@@ -1,7 +1,7 @@
 import pytest
-from PRISM.unit_tests.auth_tests_env_setup import engine_fixture, session_fixture, client_fixture, mock_logging
-from PRISM.prism_exceptions import DuplicateUserRegistration
-from PRISM.schema import UserRegistration
+from .auth_tests_env_setup import engine_fixture, session_fixture, client_fixture, mock_logging
+from src.PRISM.prism_exceptions import DuplicateUserRegistration
+from src.PRISM.schema import UserRegistration
 @pytest.fixture
 def valid_user_data():
     return {
@@ -10,6 +10,8 @@ def valid_user_data():
         "password": "testpass123"
     }
 
+
+@pytest.mark.auth
 def test_create_user_success(client,valid_user_data):
     response = client.post("/createuser", 
         json=valid_user_data)
@@ -18,6 +20,7 @@ def test_create_user_success(client,valid_user_data):
     assert data["user"]["username"] == "testuser"
     assert data["user"]["email"] == "test@example.com"
 
+@pytest.mark.auth
 def test_create_user_duplicate_username(client, valid_user_data):
     client.post("/createuser", json=valid_user_data)
     
@@ -27,6 +30,7 @@ def test_create_user_duplicate_username(client, valid_user_data):
     assert response.status_code == 409
     assert f"409: User with username '{valid_user_data['username']}' already exists" in response.json()["detail"] 
 
+@pytest.mark.auth
 def test_create_user_duplicate_email(client, valid_user_data):
     client.post("/createuser", 
                 json=valid_user_data)
@@ -43,6 +47,8 @@ def user_login():
         "username": "testuser",
         "password": "testpass123"
     }
+    
+@pytest.mark.auth
 def test_login_user_success(client, valid_user_data, user_login):
     client.post("/createuser", 
                 json=valid_user_data)
@@ -53,6 +59,7 @@ def test_login_user_success(client, valid_user_data, user_login):
     assert data["user"]["username"] == "testuser"
     assert data["user"]["email"] == "test@example.com"
 
+@pytest.mark.auth
 def test_login_invalid_username(client, valid_user_data, user_login):
     client.post("/createuser", 
                 json=valid_user_data)
@@ -66,6 +73,7 @@ def test_login_invalid_username(client, valid_user_data, user_login):
     assert data['detail']['error_description'] == "Username or password is incorrect"
 
  
+@pytest.mark.auth
 def test_login_invalid_password(client, valid_user_data, user_login):
     client.post("/createuser", 
                 json=valid_user_data)
