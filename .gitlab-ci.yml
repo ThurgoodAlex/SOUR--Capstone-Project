@@ -8,9 +8,19 @@ build-job:
 test-backend:
   stage: test
   script:
-    - docker-compose up 
-    - docker-compose exec -T backend pytest -v || {
-        echo "Tests failed"
+    - |
+      docker-compose up -d  # Run in detached mode
+      if [ $(docker-compose ps -q | wc -l) -eq 0 ]; then
+        echo "No containers are running - startup failed"
         exit 1
-      }
+      fi
+    - |
+      docker-compose logs -f &  # Show logs in background
+      docker-compose exec -T backend pytest -v
+      exit_code=$?
+      docker-compose down
+      if [ $exit_code -ne 0 ]; then
+        echo "Tests failed with exit code $exit_code"
+        exit 1
+      fi
     - echo "All tests passed"

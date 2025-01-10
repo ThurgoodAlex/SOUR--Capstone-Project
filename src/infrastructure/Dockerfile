@@ -41,6 +41,8 @@ COPY . ./
 
 RUN chmod +x deploy.sh 
 
+# installing type definitions for node
+RUN npm i --save-dev @types/node
 
 # Compile TypeScript to JavaScript
 RUN npm run build
