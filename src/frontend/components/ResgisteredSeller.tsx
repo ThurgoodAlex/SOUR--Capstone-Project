@@ -1,17 +1,16 @@
 import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Alert, StyleSheet, ScrollView } from 'react-native';
-import { ScreenStyles, TextStyles } from '@/constants/Styles';
+import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
+import { Tabs } from '@/components/Tabs';
 
 import { useUser } from '@/context/user';
-import { useAuth } from '@/context/auth';
 import { useApi } from '@/context/api';
 
 export function RegisteredSeller() {
     const user = useUser(); // Fetch user details
-    const { logout } = useAuth();
     const api = useApi();
 
-    const [activeTab, setActiveTab] = useState('Posts');
+    const [activeTab, setActiveTab] = useState('Active');
     const [listings, setListings] = useState([]);
 
     // Fetch listings from the API
@@ -22,7 +21,7 @@ export function RegisteredSeller() {
 
             if (response.ok) {
                 console.log("Received all listings: ", result);
-                setListings(result); // Update state with fetched listings
+                setListings(result);
             } else {
                 console.log(response);
                 Alert.alert('Error', 'Could not fetch listings.');
@@ -47,7 +46,14 @@ export function RegisteredSeller() {
     return (
         <>
             <View style={ScreenStyles.screen}>
-                <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} />
+                <View style={SellerStyles.earningsBox}>
+                    <Text style={[Styles.column, TextStyles.h2]}>Total Earnings:</Text>
+                    <View style={[Styles.column, {justifyContent: 'flex-end'}]}>
+                        <Text style={TextStyles.h2}>$00.00</Text>
+                        <Text style={TextStyles.p}>Sold items: 0</Text>
+                    </View>
+                </View>
+                <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} tab1={'Active'} tab2={'Inactive'} />
                 {activeTab === 'Active' ? (
                     <PostsGrid listings={listings} />
                 ) : (
@@ -55,35 +61,6 @@ export function RegisteredSeller() {
                 )}
             </View>
         </>
-    );
-}
-
-function Tabs({ activeTab, handleTabSwitch }: { activeTab: string; handleTabSwitch: (tab: string) => void }) {
-    return (
-        <View style={SellerStyles.tabs}>
-            <TouchableOpacity onPress={() => handleTabSwitch('Active')}>
-                <Text style={[
-                    TextStyles.h2,
-                    SellerStyles.tab,
-                    TextStyles.uppercase,
-                    { marginBottom: 0 },
-                    activeTab === 'Active' && SellerStyles.activeTab
-                ]}>
-                    Active
-                </Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleTabSwitch('Inactive')}>
-                <Text style={[
-                    TextStyles.h2,
-                    SellerStyles.tab,
-                    TextStyles.uppercase,
-                    { marginBottom: 0 },
-                    activeTab === 'Inactive' && SellerStyles.activeTab
-                ]}>
-                    Inactive
-                </Text>
-            </TouchableOpacity>
-        </View>
     );
 }
 
@@ -118,17 +95,6 @@ const SellerStyles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#ddd',
     },
-    tab: {
-        fontWeight: 'normal',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-    },
-    activeTab: {
-        color: '#000',
-        borderBottomWidth: 2,
-        borderBottomColor: '#000',
-        fontWeight: 'bold',
-    },
     listingItem: {
         marginVertical: 10,
         padding: 15,
@@ -136,4 +102,15 @@ const SellerStyles = StyleSheet.create({
         borderColor: '#ddd',
         borderRadius: 5,
     },
+    earningsBox: {
+        flexDirection: 'row',
+        width: '100%',
+        justifyContent: 'space-between',
+        shadowColor: '#692b20',
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        backgroundColor: '#fff',
+        padding: 16,
+        borderRadius: 8,
+    }
 });

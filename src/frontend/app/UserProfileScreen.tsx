@@ -57,7 +57,7 @@ function ProfileInfo({ user }: { user: User | null }) {
         <View style={Styles.center}>
             <Image
                 source={require('../assets/images/profile_pic.jpg')}
-                style={ProfileStyles.profileImage}
+                style={UserProfileStyles.profileImage}
             />
             <Text style={TextStyles.h1}>{user?.name || "No User"}</Text>
         </View>
@@ -69,7 +69,7 @@ function PostsGrid({ listings }: { listings: any[] }) {
         <ScrollView contentContainerStyle={{ padding: 10 }}>
             {listings.length > 0 ? (
                 listings.map((item) => (
-                    <View key={item.id} style={ProfileStyles.listingItem}>
+                    <View key={item.id} style={UserProfileStyles.listingItem}>
                         <Text style={TextStyles.h2}>{item.title}</Text>
                         <Text style={TextStyles.p}>{item.description}</Text>
                         <Text style={TextStyles.p}>${parseFloat(item.price).toFixed(2)}</Text>
@@ -82,28 +82,11 @@ function PostsGrid({ listings }: { listings: any[] }) {
     );
 }
 
-const ProfileStyles = StyleSheet.create({
+const UserProfileStyles = StyleSheet.create({
     profileImage: {
         width: 80,
         height: 80,
         borderRadius: 40,
-    },
-    tabs: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        borderBottomWidth: 1,
-        borderBottomColor: '#ddd',
-    },
-    tab: {
-        fontWeight: 'normal',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-    },
-    activeTab: {
-        color: '#000',
-        borderBottomWidth: 2,
-        borderBottomColor: '#000',
-        fontWeight: 'bold',
     },
     listingItem: {
         marginVertical: 10,

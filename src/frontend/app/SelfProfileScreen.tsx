@@ -8,6 +8,7 @@ import { useAuth } from '@/context/auth';
 import { useApi } from '@/context/api';
 import { NavBar } from '@/components/NavBar';
 import { StatsBar } from '@/components/StatsBar';
+import { Tabs } from '@/components/Tabs';
 
 export default function SelfProfileScreen() {
     const user = useUser(); // Fetch user details
@@ -60,7 +61,7 @@ export default function SelfProfileScreen() {
                 </TouchableOpacity>
                 <ProfileInfo user={user} />
                 <StatsBar />
-                <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} />
+                <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} tab1={'Posts'} tab2={'Likes'} />
                 {activeTab === 'Posts' ? (
                     <PostsGrid listings={listings} />
                 ) : (
@@ -83,36 +84,6 @@ function ProfileInfo({ user }: { user: any }) {
         </View>
     );
 }
-
-function Tabs({ activeTab, handleTabSwitch }: { activeTab: string; handleTabSwitch: (tab: string) => void }) {
-    return (
-        <View style={ProfileStyles.tabs}>
-            <TouchableOpacity onPress={() => handleTabSwitch('Posts')}>
-                <Text style={[
-                    TextStyles.h2,
-                    ProfileStyles.tab,
-                    TextStyles.uppercase,
-                    { marginBottom: 0 },
-                    activeTab === 'Posts' && ProfileStyles.activeTab
-                ]}>
-                    Posts
-                </Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleTabSwitch('Likes')}>
-                <Text style={[
-                    TextStyles.h2,
-                    ProfileStyles.tab,
-                    TextStyles.uppercase,
-                    { marginBottom: 0 },
-                    activeTab === 'Likes' && ProfileStyles.activeTab
-                ]}>
-                    Likes
-                </Text>
-            </TouchableOpacity>
-        </View>
-    );
-}
-
 
 function PostsGrid({ listings }: { listings: any[] }) {
     return (
@@ -145,23 +116,6 @@ const ProfileStyles = StyleSheet.create({
         width: 80,
         height: 80,
         borderRadius: 40,
-    },
-    tabs: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        borderBottomWidth: 1,
-        borderBottomColor: '#ddd',
-    },
-    tab: {
-        fontWeight: 'normal',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-    },
-    activeTab: {
-        color: '#000',
-        borderBottomWidth: 2,
-        borderBottomColor: '#000',
-        fontWeight: 'bold',
     },
     listingItem: {
         marginVertical: 10,
