@@ -5,7 +5,7 @@ FROM ubuntu:20.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Set the working directory
-WORKDIR /app
+WORKDIR /app/infrastructure
 
 # Update and install dependencies
 RUN apt-get update && apt-get install -y \
@@ -23,20 +23,22 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
 # Install AWS CLI and LocalStack
 RUN pip3 install awscli awscli-local
 
-# Copy package.json and package-lock.json (if available)
-COPY package*.json ./
+## Copy package.json from infrastructure directory
+COPY ./package*.json ./
 
 # Install dependencies
-RUN npm install \
-  npm install -g aws-cdk-local
+RUN npm install && \
+    npm install -g aws-cdk-local
 
-RUN mkdir /root/.aws 
+# Setup AWS configuration
+RUN mkdir -p /root/.aws
+COPY .aws/* /root/.aws/
 
-COPY ./.aws/* /root/.aws 
-
-COPY . .
+# Copy infrastructure directory content
+COPY . ./
 
 RUN chmod +x deploy.sh 
+
 
 # Compile TypeScript to JavaScript
 RUN npm run build
