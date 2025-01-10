@@ -1,6 +1,7 @@
 build-job:
   stage: build
   script:
+    - chmod -R 777 src/backend/src || true  # The || true prevents pipeline failure
     - echo "building docker containers" 
     - docker-compose build
 
