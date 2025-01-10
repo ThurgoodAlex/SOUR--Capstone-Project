@@ -27,7 +27,12 @@ RUN pip3 install awscli awscli-local
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm install \
+  npm install -g aws-cdk-local
+
+RUN mkdir /root/.aws 
+
+COPY ./.aws/* /root/.aws 
 
 COPY . .
 
@@ -38,9 +43,11 @@ RUN npm run build
 
 
 #Configuring a custom profile
-RUN mkdir /root/.aws && \
-  echo "[profile localstack]\nregion=us-west-2\noutput=json\nendpoint_url = http://localstack:4566" > /root/.aws/config && \
-  echo "[localstack]\naws_access_key_id=test\naws_secret_access_key=test" > /root/.aws/credentials
+#RUN mkdir /root/.aws && \
+#  echo "[profile localstack]\nregion=us-west-2\noutput=json\nendpoint_url = http://localstack:4566" > /root/.aws/config && \
+#  echo "[localstack]\naws_access_key_id=test\naws_secret_access_key=test" > /root/.aws/credentials
 
 # runs the container as an executable 
+#CMD [ "/bin/bash" ]
 ENTRYPOINT [ "/app/infrastructure/deploy.sh" ]
+

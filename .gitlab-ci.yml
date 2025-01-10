@@ -2,15 +2,27 @@ build-job:
   stage: build
   script:
     - echo "building docker containers" 
+<<<<<<< Updated upstream
     - docker-compose build
+=======
+    - docker compose build
+>>>>>>> Stashed changes
 
 test-backend:
   stage: test
   script:
+<<<<<<< Updated upstream
     - docker-compose up 
     - docker-compose exec -T backend pytest -v || {
+=======
+    - docker compose up 
+    - docker compose exec -T backend pytest -v || {
+>>>>>>> Stashed changes
         echo "Tests failed"
         exit 1
       }
     - echo "All tests passed"
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes

@@ -11,4 +11,3 @@ this is the Primary(and so far only) repository for the SOUR 🍋  E-Commerce an
 
 *tests*: test files for the Sour application
 
-*deploy*: contains all deployment specific scripts 

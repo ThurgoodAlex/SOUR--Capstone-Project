@@ -9,7 +9,7 @@ services:
       - AWS_SECRET_ACCESS_KEY=test
       - ENDPOINT_URL=http://localstack:4566
     depends_on: 
-      - localstack
+      - infrastructure
     volumes:
       - ./src/backend:/app/
   frontend:
