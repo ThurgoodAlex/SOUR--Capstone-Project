@@ -9,10 +9,10 @@ import logging
 from sqlalchemy.future import select
 from jose import JWTError, jwt
 from sqlmodel import Session, SQLModel, select
-from sour.src.backend.databaseAndSchemas.schema import (
-    Listing, ListingResponse, ListingInDB, createListing, UserInDB
+from databaseAndSchemas.schema import (
+    Image, ImageInDB, ImageResponse
 )
-from sour.src.backend.databaseAndSchemas.test_db import get_session
+from databaseAndSchemas.test_db import get_session
 from PRISM.src.prism_services.auth import auth_get_current_user
 
 
@@ -36,4 +36,15 @@ lambda_client = boto3.client('lambda', endpoint_url=localstack_endpoint,
 images_router = APIRouter(tags=["Images"])
 
 
-
+#In this, I decided that Image and CreateImage are the same thing since both requires URL, and associated links.
+#If need be, this can be easily changed
+@images_router.post('/uploadImage', response_model=ImageResponse,status_code=201)
+def upload_image(new_image : Image, session: Annotated[Session, Depends(get_session)]) -> ImageResponse:
+    """Uploading a new image to the database"""
+    imageDB = ImageInDB(
+        **new_image.model_dump()
+    )
+    session.add(imageDB)
+    session.commit()
+    session.refresh(imageDB)
+    return ImageResponse(Image=Image(url = imageDB.url, postID=imageDB.postID, listingID=imageDB.listingID))

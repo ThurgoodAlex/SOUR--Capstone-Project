@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import List, Optional
 from sqlmodel import Field, SQLModel, Relationship
 from pydantic import BaseModel
 from sqlalchemy.types import Text, DECIMAL
@@ -119,8 +119,8 @@ class Claims(BaseModel):
 
 class Image(BaseModel):
     url: str
-    postID: Optional[int]
-    listingID: Optional[int]
+    postID: Optional[list[int]] = None
+    listingID: Optional[list[int]] = None
 
 
 class ImageResponse(BaseModel):
@@ -132,7 +132,7 @@ class ImageInDB(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     url: str 
     postID: Optional[int]  = Field(default=None, foreign_key="posts.id")
-    listingID: Optional[int] = Field(default=None, foreign_key="listings.id")  # Foreign key to ListingInDB
+    listingID: Optional[int] = Field(default=None, foreign_key="listings.id")
 
 
 

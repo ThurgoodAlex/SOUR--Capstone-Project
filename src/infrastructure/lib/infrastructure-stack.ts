@@ -115,6 +115,19 @@ export class BackendInfrastructureStack extends cdk.Stack {
         },
       })
 
+
+      //upload image lambda
+    const uploadImageLambda = new lambda.Function(this, 'UploadImageLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.image_handlers.upload_image_lambda',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'upload_image_lambda',
+        environment: {
+        PYTHONPATH: '/var/task',
+        },
+      })
+
+
     //Here is the intergration to API gateway.
 
     // Create API Gateway
@@ -133,6 +146,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getAllListingsIntergration = new apigateway.LambdaIntegration(getAllListingsLambda);
     const getListingsByUserIntergration = new apigateway.LambdaIntegration(getListingsByUserLambda);
     const getListingByIdIntergration = new apigateway.LambdaIntegration(getListingByIdLambda);
+    const uploadImageIntergration = new apigateway.LambdaIntegration(uploadImageLambda);
 
 
     api.root.addMethod('GET', starterPageIntegration);
@@ -167,6 +181,9 @@ export class BackendInfrastructureStack extends cdk.Stack {
 
     const getListingByIdResource = api.root.addResource('getListingById');
     getListingByIdResource.addMethod('GET', getListingByIdIntergration);
+
+    const uploadImageResource = api.root.addResource('uploadImage');
+    uploadImageResource.addMethod('POST', uploadImageIntergration)
 
     // Add /health endpoint
     const healthResource = api.root.addResource('health');
