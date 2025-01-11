@@ -128,3 +128,23 @@
 2025-01-10 23:42:39,103 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
 2025-01-10 23:42:39,104 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
 2025-01-10 23:42:39,106 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-11 00:00:55,654 - src.app - INFO - Creating database and database tables...
+2025-01-11 00:00:55,658 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-11 00:00:55,659 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-01-11 00:00:55,659 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-11 00:00:55,662 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-11 00:07:04,844 - src.app - INFO - Creating database and database tables...
+2025-01-11 00:07:04,845 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-11 00:07:04,846 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-01-11 00:07:04,846 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-11 00:07:04,848 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-11 00:11:36,753 - src.app - INFO - Creating database and database tables...
+2025-01-11 00:11:36,757 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-11 00:11:36,758 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-01-11 00:11:36,758 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-11 00:11:36,762 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-11 00:12:53,363 - src.app - INFO - Creating database and database tables...
+2025-01-11 00:12:53,364 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-11 00:12:53,365 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-01-11 00:12:53,365 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-11 00:12:53,367 - sqlalchemy.engine.Engine - INFO - COMMIT
