@@ -97,7 +97,7 @@ def login_user(user:UserLogin, session: Annotated[Session, Depends(get_session)]
 
         if user_check is None or not pwd_context.verify(user.password, user_check.hashed_password):
             raise InvalidCredentials()
-        return UserResponse(user={"username": user.username, "email": user_check.email})
+        return UserResponse(user={"username": user.username, "email": user_check.email, "id":user_check.id, "isSeller": user_check.isSeller})
 
 def check_username(newUser, session):
     result = session.exec(select(UserInDB.username).where(UserInDB.username == newUser.username))
