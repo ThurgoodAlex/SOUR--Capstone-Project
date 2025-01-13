@@ -19,7 +19,7 @@ class UserInDB(SQLModel, table=True):
     username: str = Field(unique=True, index=True)
     email: str = Field(unique=True)
     hashed_password: str
-    isSeller: bool
+    isSeller: bool = Field(default=False, nullable=False)
     created_at: Optional[datetime] = Field(default_factory=datetime.now)
     listings: list["ListingInDB"] = Relationship(back_populates="seller_user")
 
