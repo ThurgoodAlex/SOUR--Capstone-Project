@@ -5079,3 +5079,14 @@ FROM images
 WHERE images.id = ?
 2025-01-13 17:31:15,778 - sqlalchemy.engine.Engine - INFO - [cached since 9.401s ago] (3,)
 2025-01-13 17:31:15,781 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-01-13 17:31:55,282 - app - INFO - Creating database and database tables...
+2025-01-13 17:31:55,287 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-13 17:31:55,287 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-01-13 17:31:55,288 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-13 17:31:55,291 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2025-01-13 17:31:55,291 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-13 17:31:55,293 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("images")
+2025-01-13 17:31:55,293 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-13 17:31:55,295 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("posts")
+2025-01-13 17:31:55,295 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-13 17:31:55,297 - sqlalchemy.engine.Engine - INFO - COMMIT
