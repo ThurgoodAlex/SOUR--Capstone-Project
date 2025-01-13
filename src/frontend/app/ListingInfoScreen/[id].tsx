@@ -72,6 +72,7 @@ export default function ListingInfoScreen()
   
     }; 
 
+    
     return (
       <>
         <View style={ScreenStyles.screen}>

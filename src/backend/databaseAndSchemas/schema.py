@@ -1,7 +1,7 @@
 from datetime import datetime
-from typing import Optional
+from typing import List, Optional
 from sqlmodel import Field, SQLModel, Relationship
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from sqlalchemy.types import Text, DECIMAL
 from decimal import Decimal
 
@@ -19,7 +19,7 @@ class UserInDB(SQLModel, table=True):
     username: str = Field(unique=True, index=True)
     email: str = Field(unique=True)
     hashed_password: str
-    isSeller: bool
+    isSeller: bool = Field(default=False, nullable=False)
     created_at: Optional[datetime] = Field(default_factory=datetime.now)
     listings: list["ListingInDB"] = Relationship(back_populates="seller_user")
 
@@ -119,8 +119,10 @@ class Claims(BaseModel):
 
 class Image(BaseModel):
     url: str
-    postID: Optional[int]
-    listingID: Optional[int]
+    postID: Optional[int] = None
+    listingID: Optional[int] = None
+    # This allows us to map from imageInDB to an image
+    model_config = ConfigDict(from_attributes=True)
 
 
 class ImageResponse(BaseModel):
@@ -132,7 +134,7 @@ class ImageInDB(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     url: str 
     postID: Optional[int]  = Field(default=None, foreign_key="posts.id")
-    listingID: Optional[int] = Field(default=None, foreign_key="listings.id")  # Foreign key to ListingInDB
+    listingID: Optional[int] = Field(default=None, foreign_key="listings.id")
 
 
 

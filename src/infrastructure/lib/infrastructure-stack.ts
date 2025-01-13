@@ -115,6 +115,49 @@ export class BackendInfrastructureStack extends cdk.Stack {
         },
       })
 
+
+      //upload image lambda
+    const uploadImageLambda = new lambda.Function(this, 'UploadImageLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.image_handlers.upload_image_lambda',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'upload_image_lambda',
+        environment: {
+        PYTHONPATH: '/var/task',
+        },
+      })
+
+      const getAllImageLambda = new lambda.Function(this, 'GetAllImageLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.image_handlers.get_all_images_lambda',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'get_all_images_lambda',
+        environment: {
+        PYTHONPATH: '/var/task',
+        },
+      })
+
+      const getImageByIDLambda = new lambda.Function(this, 'GetImageByIDLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.image_handlers.get_image_by_id_lambda',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'get_image_by_id_lambda',
+        environment: {
+        PYTHONPATH: '/var/task',
+        },
+      })
+
+      const getImageByUserLambda = new lambda.Function(this, 'GetImageByUserLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.image_handlers.get_image_by_user_lambda',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'get_image_by_user_lambda',
+        environment: {
+        PYTHONPATH: '/var/task',
+        },
+      })
+
+
     //Here is the intergration to API gateway.
 
     // Create API Gateway
@@ -133,6 +176,10 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getAllListingsIntergration = new apigateway.LambdaIntegration(getAllListingsLambda);
     const getListingsByUserIntergration = new apigateway.LambdaIntegration(getListingsByUserLambda);
     const getListingByIdIntergration = new apigateway.LambdaIntegration(getListingByIdLambda);
+    const uploadImageIntergration = new apigateway.LambdaIntegration(uploadImageLambda);
+    const getAllImageIntergration = new apigateway.LambdaIntegration(getAllImageLambda);
+    const getImageByIDIntergration = new apigateway.LambdaIntegration(getImageByIDLambda);
+    const getImageByUserIntergration = new apigateway.LambdaIntegration(getImageByUserLambda);
 
 
     api.root.addMethod('GET', starterPageIntegration);
@@ -168,6 +215,17 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getListingByIdResource = api.root.addResource('getListingById');
     getListingByIdResource.addMethod('GET', getListingByIdIntergration);
 
+    const uploadImageResource = api.root.addResource('uploadImage');
+    uploadImageResource.addMethod('POST', uploadImageIntergration)
+
+    const getAllImageResource = api.root.addResource('getAllImages');
+    getAllImageResource.addMethod('GET', getAllImageIntergration)
+
+    const getImageByIDResource = api.root.addResource('getImageByID');
+    getImageByIDResource.addMethod('GET', getImageByIDIntergration)
+
+    const getImageByUserResource = api.root.addResource('getImageByUser');
+    getImageByUserResource.addMethod('GET', getImageByUserIntergration)
     // Add /health endpoint
     const healthResource = api.root.addResource('health');
     healthResource.addMethod('GET', new apigateway.MockIntegration({
