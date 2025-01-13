@@ -14,7 +14,7 @@ export default function PostCarousel() {
         {
             id: 2,
             data: require('../assets/images/post.png'),
-            auhtor: {name: "Dummy Data Name 2", username: "dummyuser2", id:2},
+            author: {name: "Dummy Data Name 2", username: "dummyuser2", id:2},
             type: 'post',
         },
         {
