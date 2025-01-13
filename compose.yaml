@@ -27,13 +27,13 @@ services:
     container_name: "${LOCALSTACK_DOCKER_NAME:-localstack-main}"
     image: localstack/localstack
     ports:
-      - "4566:4566"            # LocalStack Gateway
+      - "4566:4566"            
     environment:
       - DEBUG=${DEBUG:-0}
     volumes:
       - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
-
+    privileged: true  # Add this
   infrastructure: 
       build: src/infrastructure/    
       environment:
@@ -43,9 +43,6 @@ services:
         - CDK_DEFAULT_ACCOUNT=000000000000
         - CDK_DEFAULT_REGION=us-west-1
         - AWS_ENDPOINT_URL=http://localstack:4566
-      stdin_open: true
-      tty: true
-      command: /bin/bash  
       volumes: 
         - ./src/:/app/
       depends_on: 

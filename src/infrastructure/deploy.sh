@@ -5,7 +5,11 @@ export NODE_PATH=/usr/lib/node_modules
 
 # Change to infrastructure directory
 echo "switching to infrastructure directory" 
+echo "working directory set to $(pwd)" 
 
+npm list
+npm install 
+npm run build
 
 echo "Checking AWS credentials..."
 aws configure list

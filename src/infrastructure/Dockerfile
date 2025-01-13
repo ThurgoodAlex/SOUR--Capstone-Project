@@ -24,36 +24,17 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
 RUN pip3 install awscli awscli-local
 
 ## Copy package.json from infrastructure directory
-COPY ./package*.json ./
+COPY package*.json ./
 
-RUN npm install && \
-    npm install -g aws-cdk && \
-    npm install -g aws-cdk-local && \
-    # Set NODE_PATH to include global modules
-    echo "export NODE_PATH=$(npm root -g)" >> /root/.bashrc
+COPY . .
 
 # Setup AWS configuration
 RUN mkdir -p /root/.aws
 COPY .aws/* /root/.aws/
 
-# Copy infrastructure directory content
-COPY . ./
 
 RUN chmod +x deploy.sh 
 
-# installing type definitions for node
-RUN npm i --save-dev @types/node
-
 # Compile TypeScript to JavaScript
-RUN npm run build
-
-
-#Configuring a custom profile
-#RUN mkdir /root/.aws && \
-#  echo "[profile localstack]\nregion=us-west-2\noutput=json\nendpoint_url = http://localstack:4566" > /root/.aws/config && \
-#  echo "[localstack]\naws_access_key_id=test\naws_secret_access_key=test" > /root/.aws/credentials
-
-# runs the container as an executable 
-#CMD [ "/bin/bash" ]
 ENTRYPOINT [ "/app/infrastructure/deploy.sh" ]
 
