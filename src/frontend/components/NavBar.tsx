@@ -57,11 +57,11 @@ export function NavBar() {
             <Ionicons
                 style={[
                     NavBarStyles.icon,
-                    pathname === '/CreateListingScreen' && NavBarStyles.activeIcon,
+                    pathname === '/SellerScreen' && NavBarStyles.activeIcon,
                 ]}
                 size={32}
                 name="add-circle-outline"
-                onPress={() => handleNavigation('CreateListingScreen')}
+                onPress={() => handleNavigation('SellerScreen')}
             />
             <Ionicons
                 style={[
