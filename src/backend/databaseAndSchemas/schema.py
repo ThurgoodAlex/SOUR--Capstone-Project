@@ -117,8 +117,8 @@ class Claims(BaseModel):
 
 class Image(BaseModel):
     url: str
-    postID: Optional[list[int]] = None
-    listingID: Optional[list[int]] = None
+    postID: Optional[int] = None
+    listingID: Optional[int] = None
 
 
 class ImageResponse(BaseModel):
