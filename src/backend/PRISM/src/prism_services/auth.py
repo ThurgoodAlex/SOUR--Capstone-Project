@@ -83,19 +83,19 @@ def create_new_user(newUser: UserRegistration, session: Annotated[Session, Depen
             session.add(userDB)
             session.commit()
             session.refresh(userDB)
-            user_data = User(username=userDB.username, email=userDB.email, id=userDB.id)
+            user_data = User(username=userDB.username, email=userDB.email, id=userDB.id, isSeller=userDB.isSeller)
             return UserResponse(user=user_data)
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-
+# logic for this is somehow incorrect, tested on swagger docs and does not work
 @auth_router.post("/login", response_model=UserResponse, status_code=200)
 def login_user(user:UserLogin, session: Annotated[Session, Depends(get_session)]):
         """Logging a user in"""
         user_check = session.exec(select(UserInDB).filter(UserInDB.username == user.username)).first()
 
-        if user is None or not pwd_context.verify(user.password, user_check.hashed_password):
+        if user_check is None or not pwd_context.verify(user.password, user_check.hashed_password):
             raise InvalidCredentials()
         return UserResponse(user={"username": user.username, "email": user_check.email})
 
