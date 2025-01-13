@@ -9,3 +9,6 @@ volume/*
 __pycache__/
 *.py[cod]
 *$py.class
+
+# ignore auth log
+*.log
