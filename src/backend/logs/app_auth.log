@@ -5003,3 +5003,79 @@ WHERE images.id = ?
 2025-01-10 17:26:10,771 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("posts")
 2025-01-10 17:26:10,772 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
 2025-01-10 17:26:10,774 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-13 17:26:11,050 - app - INFO - Creating database and database tables...
+2025-01-13 17:26:11,059 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-13 17:26:11,060 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-01-13 17:26:11,061 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-13 17:26:11,063 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2025-01-13 17:26:11,064 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-13 17:26:11,066 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("images")
+2025-01-13 17:26:11,066 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-13 17:26:11,067 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("posts")
+2025-01-13 17:26:11,068 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-13 17:26:11,069 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-13 17:26:24,742 - app - INFO - Creating database and database tables...
+2025-01-13 17:26:24,746 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-13 17:26:24,747 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-01-13 17:26:24,747 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-13 17:26:24,751 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("listings")
+2025-01-13 17:26:24,751 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-13 17:26:24,754 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("images")
+2025-01-13 17:26:24,755 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-13 17:26:24,757 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("posts")
+2025-01-13 17:26:24,758 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-13 17:26:24,760 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-13 17:30:16,490 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-13 17:30:16,500 - sqlalchemy.engine.Engine - INFO - SELECT images.id, images.url, images."postID", images."listingID" 
+FROM images
+2025-01-13 17:30:16,501 - sqlalchemy.engine.Engine - INFO - [generated in 0.00051s] ()
+2025-01-13 17:30:16,505 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-01-13 17:30:35,850 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-13 17:30:35,853 - sqlalchemy.engine.Engine - INFO - INSERT INTO images (url, "postID", "listingID") VALUES (?, ?, ?)
+2025-01-13 17:30:35,853 - sqlalchemy.engine.Engine - INFO - [generated in 0.00062s] ('yay', 1, 4)
+2025-01-13 17:30:35,859 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-13 17:30:35,875 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-13 17:30:35,877 - sqlalchemy.engine.Engine - INFO - SELECT images.id, images.url, images."postID", images."listingID" 
+FROM images 
+WHERE images.id = ?
+2025-01-13 17:30:35,878 - sqlalchemy.engine.Engine - INFO - [generated in 0.00070s] (3,)
+2025-01-13 17:30:35,881 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-01-13 17:30:38,013 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-13 17:30:38,014 - sqlalchemy.engine.Engine - INFO - INSERT INTO images (url, "postID", "listingID") VALUES (?, ?, ?)
+2025-01-13 17:30:38,015 - sqlalchemy.engine.Engine - INFO - [cached since 2.162s ago] ('yay', 1, 4)
+2025-01-13 17:30:38,023 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-13 17:30:38,035 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-13 17:30:38,036 - sqlalchemy.engine.Engine - INFO - SELECT images.id, images.url, images."postID", images."listingID" 
+FROM images 
+WHERE images.id = ?
+2025-01-13 17:30:38,037 - sqlalchemy.engine.Engine - INFO - [cached since 2.159s ago] (4,)
+2025-01-13 17:30:38,040 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-01-13 17:30:41,092 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-13 17:30:41,093 - sqlalchemy.engine.Engine - INFO - SELECT images.id, images.url, images."postID", images."listingID" 
+FROM images
+2025-01-13 17:30:41,094 - sqlalchemy.engine.Engine - INFO - [cached since 24.59s ago] ()
+2025-01-13 17:30:41,098 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-01-13 17:31:06,375 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-13 17:31:06,377 - sqlalchemy.engine.Engine - INFO - SELECT images.id AS images_id, images.url AS images_url, images."postID" AS "images_postID", images."listingID" AS "images_listingID" 
+FROM images 
+WHERE images.id = ?
+2025-01-13 17:31:06,377 - sqlalchemy.engine.Engine - INFO - [generated in 0.00054s] (0,)
+2025-01-13 17:31:06,381 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-01-13 17:31:10,287 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-13 17:31:10,288 - sqlalchemy.engine.Engine - INFO - SELECT images.id AS images_id, images.url AS images_url, images."postID" AS "images_postID", images."listingID" AS "images_listingID" 
+FROM images 
+WHERE images.id = ?
+2025-01-13 17:31:10,289 - sqlalchemy.engine.Engine - INFO - [cached since 3.912s ago] (1,)
+2025-01-13 17:31:10,292 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-01-13 17:31:13,791 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-13 17:31:13,792 - sqlalchemy.engine.Engine - INFO - SELECT images.id AS images_id, images.url AS images_url, images."postID" AS "images_postID", images."listingID" AS "images_listingID" 
+FROM images 
+WHERE images.id = ?
+2025-01-13 17:31:13,793 - sqlalchemy.engine.Engine - INFO - [cached since 7.416s ago] (2,)
+2025-01-13 17:31:13,797 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-01-13 17:31:15,776 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-13 17:31:15,777 - sqlalchemy.engine.Engine - INFO - SELECT images.id AS images_id, images.url AS images_url, images."postID" AS "images_postID", images."listingID" AS "images_listingID" 
+FROM images 
+WHERE images.id = ?
+2025-01-13 17:31:15,778 - sqlalchemy.engine.Engine - INFO - [cached since 9.401s ago] (3,)
+2025-01-13 17:31:15,781 - sqlalchemy.engine.Engine - INFO - ROLLBACK
