@@ -16,7 +16,7 @@ export function RegisteredSeller() {
     // Fetch listings from the API
     const fetchListings = async () => {
         try {
-            const response = await api.get(`/listing/allListings/${user?.id}`);
+            const response = await api.get(`/listing/${user?.id}`);
             const result = await response.json();
 
             if (response.ok) {

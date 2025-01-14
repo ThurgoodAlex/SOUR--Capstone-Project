@@ -39,7 +39,7 @@ export default function DiscoverScreen() {
       try {
 
           //TODO: right now this just fetches listings, but we will need to get all posts and listings
-          const response = await api.get(`/listing/allListings`);
+          const response = await api.get(`/listing/`);
           const result = await response.json();
 
           if (response.ok) {
@@ -50,7 +50,7 @@ export default function DiscoverScreen() {
                 id: item.id,
                 createdDate: item.created_at || new Date().toISOString(), 
                 
-                poster: {
+                author: {
                   name: item.seller|| "Unknown poster", // Fallback to a default value
                   username: item.seller || "unknown", // Fallback to a default value
                   id: item.seller_id,
