@@ -72,7 +72,7 @@ def get_image_by_id(session : Annotated[Session, Depends(get_session)], image_id
                 }
             )
     
-@images_router.get('/{user_id}', response_model=list[Image], status_code=201)
+@images_router.get('/{user_id}/images', response_model=list[Image], status_code=201)
 def get_images_by_user(session : Annotated[Session, Depends(get_session)], user_id : int) -> list[Image]:
     """Getting all images for a specific user."""
     user = session.get(UserInDB, user_id)
