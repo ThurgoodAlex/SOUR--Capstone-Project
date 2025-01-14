@@ -4,13 +4,14 @@ export type Post = {
     id: number;
     data: ImageSourcePropType | undefined;
     type: string;
+    createdDate: Date;
 
     author:User;
 };
 
 export type Listing = {
     id:number;
-    createdDate: string;
+    createdDate: Date;
 
     title: string;
     price: string;
