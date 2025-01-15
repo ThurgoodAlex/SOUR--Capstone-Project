@@ -59,11 +59,11 @@ def get_all_listings(session :Annotated[Session, Depends(get_session)])-> list[L
     """Getting all listings"""
     return session.exec(select(ListingInDB)).all()
 
-@listing_router.get('/{user_id}', response_model= list[ListingInDB], status_code=201)
+@listing_router.get('/{user_id}/listings', response_model= list[ListingInDB], status_code=201)
 def get_all_listings_by_user(session :Annotated[Session, Depends(get_session)], user_id: int)-> list[ListingInDB]:
     """Gets listing authored by a certain user"""
     user = session.get(UserInDB, user_id)
-    logger.info("This is the user", user)
+    logger.info(f"This is the user: {user}")
     if user:
         return session.exec(select(ListingInDB).where(ListingInDB.seller_id == user_id).order_by(ListingInDB.created_at.desc())).all()
     else:
@@ -80,6 +80,8 @@ def get_all_listings_by_user(session :Annotated[Session, Depends(get_session)], 
 def get_all_listings_by_id(session :Annotated[Session, Depends(get_session)], listing_id: int)-> ListingInDB:
     """Gets listing by id"""
     listing = session.get(ListingInDB, listing_id)
+    logger.info(f"This is the listing: {listing}")
+    print("helloooooooo")
     if listing:
         return listing
     else:
