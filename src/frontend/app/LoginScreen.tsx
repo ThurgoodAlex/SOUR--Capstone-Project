@@ -21,24 +21,24 @@ export default function LoginScreen() {
         // console.log(formData);
 
 
-        try {
-            const response = await api.post('/auth/token', {username, password});
-            const result = await response.json();
+        // try {
+        //     const response = await api.post('/auth/token', {username, password});
+        //     const result = await response.json();
 
-            if (response.ok) {
-                console.log("token response: ", result)
-                login(result.access_token); 
-                router.replace('/DiscoverScreen');
-            } else {
-                Alert.alert('Incorrect username or password. Please try again.');
-            }
-        } catch (error) {
-            console.error('Error logging in:', error);
-            Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
-        } finally {
-            setLoading(false);
-        }
-        // router.replace('/DiscoverScreen');
+        //     if (response.ok) {
+        //         console.log("token response: ", result)
+        //         login(result.access_token); 
+        //         router.replace('/DiscoverScreen');
+        //     } else {
+        //         Alert.alert('Incorrect username or password. Please try again.');
+        //     }
+        // } catch (error) {
+        //     console.error('Error logging in:', error);
+        //     Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
+        // } finally {
+        //     setLoading(false);
+        // }
+        router.replace('/DiscoverScreen');
     };
 
     return (

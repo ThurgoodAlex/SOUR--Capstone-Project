@@ -127,7 +127,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
       })
 
       // get user by id lambda
-    const getUserByIdLambda = new lambda.Function(this, 'GetListingByIdLambda',{
+    const getUserByIdLambda = new lambda.Function(this, 'GetUserByIdLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
         handler: 'lambda.users_handlers.get_user_by_id_lambda',
           code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),

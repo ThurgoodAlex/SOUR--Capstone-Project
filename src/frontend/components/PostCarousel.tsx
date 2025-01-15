@@ -35,15 +35,12 @@ export default function PostCarousel() {
         <View style={[Styles.row, {marginBottom:18}]}>
             <ScrollView horizontal={true} >
                 {dummyPosts.map((post) => (
-                    <View style={Styles.column}>
                         <PostPreview
                             key={post.id}
                             post={post}
                             size={350}
                             thumbnailSize='big'
                         />
-                       
-                    </View>
                 ))}
             </ScrollView>
         </View>
