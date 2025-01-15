@@ -10,7 +10,7 @@ from databaseAndSchemas.test_db import create_db_and_tables
 from databaseAndSchemas.schema import * 
 from PRISM.src.prism_services.auth import auth_router
 from routes.listings import listing_router
-from routes.images import images_router
+#from routes.images import images_router
 from fastapi.openapi.utils import get_openapi
 # Create logs directory if it doesn't exist
 os.makedirs('logs', exist_ok=True)
@@ -50,7 +50,7 @@ app.add_middleware(
 
 app.include_router(auth_router, prefix="/auth")
 app.include_router(listing_router, prefix="/listing")
-app.include_router(images_router, prefix="/images")
+#app.include_router(images_router, prefix="/images")
 
 # Configure boto3 to use LocalStack
 localstack_endpoint = os.environ.get('LOCALSTACK_ENDPOINT', 'http://localstack:4566')

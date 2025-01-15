@@ -94,7 +94,7 @@ export default function CreateListing() {
 
           if (response.ok) {
               console.log("created listing: ", result)
-              router.replace("/ProfileScreen")
+              router.replace("/SelfProfileScreen")
             
           } else {
               console.log(response)
