@@ -7,6 +7,8 @@ import { NavBar } from '@/components/NavBar';
 import { Stack } from 'expo-router';
 import { ScreenStyles } from '@/constants/Styles';
 
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+
 const videos = [
     "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
     "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
@@ -35,6 +37,8 @@ export default function VideoScreen() {
                     )}
                     keyExtractor={item => item}
                     pagingEnabled
+                    snapToAlignment="start"
+                    snapToInterval={SCREEN_HEIGHT}
                     horizontal={false}
                     showsVerticalScrollIndicator={false}
                     viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
@@ -79,8 +83,8 @@ const styles = StyleSheet.create({
         paddingBottom: 34
     },
     videoContainer: {
-        width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height,
+        width: SCREEN_WIDTH,
+        height: SCREEN_HEIGHT,
     },
     video: {
         width: '100%',
