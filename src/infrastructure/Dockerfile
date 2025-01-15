@@ -36,5 +36,6 @@ COPY .aws/* /root/.aws/
 RUN chmod +x deploy.sh 
 
 # Compile TypeScript to JavaScript
+
 ENTRYPOINT [ "/app/infrastructure/deploy.sh" ]
 
