@@ -32,10 +32,7 @@ clean-up:
       PAYLOAD=$(cat << EOF
       {
        "event_type": "cleanup"
-      }
-    EOF
-      )
-    # Make POST request to Lambda
+      }EOF)
     - |
       curl -X POST "${EC2_RUNNER_URL_CONTROL_URL}" \
         -H "Content-Type: application/json" \
