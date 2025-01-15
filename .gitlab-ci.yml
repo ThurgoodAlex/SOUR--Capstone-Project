@@ -1,7 +1,6 @@
 build-job:
   stage: build
   script:
-    - chmod -R 777 src/backend/src || true  # The || true prevents pipeline failure
     - echo "building docker containers" 
     - docker-compose build
 
@@ -24,3 +23,22 @@ test-backend:
         exit 1
       fi
     - echo "All tests passed"
+
+clean-up: 
+  stage: deploy
+  script: 
+    # Prepare payload with pipeline information
+    - |
+      PAYLOAD=$(cat << EOF
+      {
+       "event_type": "cleanup"
+      }
+    EOF
+      )
+    # Make POST request to Lambda
+    - |
+      curl -X POST "${EC2_RUNNER_URL_CONTROL_URL}" \
+        -H "Content-Type: application/json" \
+        -d "$PAYLOAD"
+  rules:
+    - when: always  
