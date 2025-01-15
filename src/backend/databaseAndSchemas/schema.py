@@ -15,16 +15,15 @@ class UserInDB(SQLModel, table=True):
     __tablename__ = "users"
     __table_args__ = {'extend_existing': True}  
     profilePic: Optional[str] = Field(default=None, foreign_key="media.url")
-    id: Optional[int] = Field(default=None, primary_key=True)
-    firstname: str = Field(unique= False, index = False)
-    lastname: str = Field(unique= False, index = False)
+    id: int = Field(default=None, primary_key=True)
+    firstname: str = Field(index = False)
+    lastname: str = Field(index = False)
     username: str = Field(unique=True, index=True)
     email: str = Field(unique=True)
     bio: Optional[str]
     hashed_password: str
     isSeller: bool = Field(default=False, nullable=False)
     created_at: Optional[datetime] = Field(default_factory=datetime.now)
-
 
 #All schemas for users
 
@@ -109,11 +108,11 @@ class ListingInDB(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
     title: str = Field(unique=False)
     description: Optional[str] = Field(sa_column=Text)
-    brand: str = Field(unique=False)
-    condition: str = Field(unique=False)
-    size: str = Field(unique=False)
-    gender: str = Field(unique=False)
-    coverImage: str = Field(unique=False)
+    brand: str = Field()
+    condition: str = Field()
+    size: str = Field()
+    gender: str = Field()
+    coverImage: str = Field()
     # Decimal(precision, scale)
     price: Decimal = Field(sa_column=DECIMAL(10, 2))
     created_at: datetime = Field(default_factory=datetime.now)
@@ -189,12 +188,12 @@ class PostResponse(BaseModel):
 
 class PostInDB(SQLModel, table = True):
     __tablename__ = "posts"
-    title: Optional[str] = Field(unique = False)
+    title: Optional[str]
     id: int = Field(default=None, primary_key=True)
-    caption: Optional[str] = Field(unique = False)
+    caption: Optional[str]
     sellerID: int = Field(foreign_key="users.id")  # Foreign key to UserInDB
     created_at: datetime = Field(default_factory=datetime.now)
-    coverImage: str = Field(unique=False)
+    coverImage: str
 
 
 class LikesInDB(SQLModel, table = True):
@@ -258,7 +257,7 @@ class SellerStatsInDB(SQLModel, table = True):
     __tablename__ = "SellerStats"
     id: int = Field(default=None, primary_key=True)
     sellerID: int = Field(foreign_key="users.id", index=True)
-    totalEarnings: Decimal = Field(default=0.0)
+    totalEarnings: Decimal = Field(default=0.00)
     itemsSold: int = Field(default=0)
 
 
@@ -268,6 +267,7 @@ class LikeResponse(BaseModel):
     userID: int
     postID: Optional[int]
     listingID: Optional[int]
+    model_config = ConfigDict(from_attributes=True)
 
 class CommentResponse(BaseModel):
     id: int
@@ -276,21 +276,25 @@ class CommentResponse(BaseModel):
     listingID: Optional[int]
     comment: str
     created_at: datetime
+    model_config = ConfigDict(from_attributes=True)
 
 class FollowingResponse(BaseModel):
     id: int
     followerID: int
     followeeID: int
+    model_config = ConfigDict(from_attributes=True)
 
 class LinkResponse(BaseModel):
     id: int
     listingID: int
     postID: int
+    model_config = ConfigDict(from_attributes=True)
 
 class ChatResponse(BaseModel):
     id: int
     senderID: int
     recipientID: int
+    model_config = ConfigDict(from_attributes=True)
 
 class MessageResponse(BaseModel):
     id: int
@@ -298,18 +302,25 @@ class MessageResponse(BaseModel):
     author: int
     message: str
     created_at: datetime
+    model_config = ConfigDict(from_attributes=True)
 
 class CartResponse(BaseModel):
     id: int
     userID: int
     listingID: int
     created_at: datetime
+    model_config = ConfigDict(from_attributes=True)
 
 class SellerStatResponse(BaseModel):
     id: int
     sellerID: int
     totalEarnings: Decimal
     itemsSold: int
+    model_config = ConfigDict(from_attributes=True)
+
+
+
+
 
 
 class LikeCreate(BaseModel):
