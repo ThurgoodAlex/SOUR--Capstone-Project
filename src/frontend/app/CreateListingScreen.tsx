@@ -14,7 +14,7 @@ export default function CreateListing() {
     const [description, setDescription] = useState('');
     const [brand, setBrand] = useState('');
     const [condition, setCondition] = useState('');
-    const [colors, setColors] = useState('');
+    const [color, setColor] = useState('');
     const [price, setPrice] = useState('');
     const PlaceholderImage = require('@/assets/images/icon.png');
 
@@ -78,7 +78,7 @@ export default function CreateListing() {
             description,
             brand,
             condition,
-            colors,
+            color,
             price,
         });
 
@@ -94,7 +94,7 @@ export default function CreateListing() {
 
           if (response.ok) {
               console.log("created listing: ", result)
-              router.replace("/ProfileScreen")
+              router.replace("/SelfProfileScreen")
             
           } else {
               console.log(response)
@@ -111,19 +111,21 @@ export default function CreateListing() {
   return (
     <>
      <View style={ScreenStyles.screen}>
-      <ScrollView >
+     
           <Text style={[TextStyles.h2, TextStyles.uppercase]}>New Listing</Text>
         
           {/* Display Selected Images */}
           <UploadPhotosCarousel images={images} onAddImages={uploadImages} />
-
+        <ScrollView >
           {/* Form Inputs */}
           <FormGroup labelText="Name" placeholderText="Enter item name" value={name} setter={setName}/>
           <FormGroup labelText="Size" placeholderText="Enter item size" value={size} setter={setSize}/>
-          <FormGroup labelText="Description" placeholderText="Enter item description" value={description} setter={setDescription} multiline/>
-          {/* <FormGroup labelText="Brand" placeholderText="Enter brand" value={brand} setter={setBrand}/>
-          <FormGroup labelText="Condition" placeholderText="Enter condition" value={condition} setter={setCondition}/> */}
           <FormGroup labelText="Price" placeholderText="Enter price" value={price} setter={setPrice} keyboardType="numeric"/>
+          <FormGroup labelText="Description" placeholderText="Enter item description" value={description} setter={setDescription} multiline/>
+          <FormGroup labelText="Brand" placeholderText="Enter brand" value={brand} setter={setBrand}/>
+          <FormGroup labelText="Condition" placeholderText="Enter condition" value={condition} setter={setCondition}/>
+          <FormGroup labelText="Color" placeholderText="Select a color" value={color} setter={setColor}/>
+          
           
           {/* Submit Button */}
           <TouchableOpacity style={Styles.buttonDark} onPress={handleSubmit}>
@@ -160,10 +162,10 @@ function UploadPhotosCarousel({
             />
           </View>
         ))}
-
+        
         {/* Add More Button */}
         <TouchableOpacity
-          style={[Styles.buttonLight, isButtonDisabled && { opacity: 0.5 }]}  // Apply style to indicate the button is disabled
+          style={[Styles.buttonLight, isButtonDisabled && { opacity: 0.5 }, {width:250, height:250}]}  // Apply style to indicate the button is disabled
           onPress={onAddImages}
           disabled={isButtonDisabled}  // Disable the button if there are 10 images
         >
@@ -202,7 +204,7 @@ function FormGroup({
     <View style={CreateListingStyles.formGroup}>
       <Text style={TextStyles.h3}>{labelText}</Text>
       <TextInput
-        style={[Styles.input, multiline ? CreateListingStyles.textArea : null, {width:240}]} // Conditionally apply styles.textArea
+        style={[Styles.input, multiline ? CreateListingStyles.textArea : null, {width:250}]} // Conditionally apply styles.textArea
         placeholder={placeholderText}
         value={value}
         onChangeText={setter}
@@ -227,21 +229,6 @@ function FormGroup({
       justifyContent:'space-between'
     },
 
-
-    imageUpload: {
-      backgroundColor: '#e9e9e9',
-      height: 200,
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderRadius: 8,
-      marginBottom: 16,
-    },
-  
-    uploadedImage: {
-      width: '100%',
-      height: '100%',
-      borderRadius: 8,
-    },
     
     textArea: {
       height: 120,

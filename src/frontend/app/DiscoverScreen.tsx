@@ -18,20 +18,22 @@ export default function DiscoverScreen() {
 
   const [posts, setPosts] = useState<Post[]>([]);
 
-    const dummyImages = [
-        {
-          data: require('../assets/images/video.png'),
-        },
-        {
-          data: require('../assets/images/post.png'),
-        },
-        {
-          data: require('../assets/images/sweater1.png'),
-        },
-        {
-          data: require('../assets/images/listing.png'),
-        },
-    ];
+// Define dummy images
+const dummyImages = [
+  require('../assets/images/video.png'),
+  require('../assets/images/post.png'),
+  require('../assets/images/sweater1.png'),
+  require('../assets/images/listing2.png'),
+  require('../assets/images/listing.png'),
+  require('../assets/images/random1.png'),
+  require('../assets/images/random2.png'),
+  require('../assets/images/random3.png'),
+  require('../assets/images/random4.png'),
+  require('../assets/images/random5.png'),
+];
+
+
+
 
 
   // Fetch posts from the API
@@ -45,16 +47,19 @@ export default function DiscoverScreen() {
           if (response.ok) {
               console.log("Received all listings: ", result);
 
+              // Function to get a random image
+              const getRandomImage = () => dummyImages[Math.floor(Math.random() * dummyImages.length)];
+
               // Transform the listings data to match the Post type
               const transformedPosts: Post[] = result.map((item: any, index: number) => ({
                 id: item.id,
                 createdDate: item.created_at || new Date().toISOString(), 
+                data: getRandomImage(),
                 
                 author: {
                   name: item.seller|| "Unknown poster", // Fallback to a default value
                   username: item.seller || "unknown", // Fallback to a default value
                   id: item.seller_id,
-              
                 },
               }));
 

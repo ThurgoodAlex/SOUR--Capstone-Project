@@ -10,9 +10,9 @@ import { useAuth } from "@/context/auth";
 // API utility function
 const api = (token: string | null = null) => {
     // local host url
-    //   const baseUrl = "http://127.0.0.1:8000";
+     const baseUrl = "http://127.0.0.1:8000";
     // emma's url
-    const baseUrl = 'http://10.18.50.27:8000';
+    // const baseUrl = 'http://10.18.50.27:8000';
 
     const getAuthHeaders = () => {
 

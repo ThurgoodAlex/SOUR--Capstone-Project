@@ -81,7 +81,6 @@ def get_all_listings_by_id(session :Annotated[Session, Depends(get_session)], li
     """Gets listing by id"""
     listing = session.get(ListingInDB, listing_id)
     logger.info(f"This is the listing: {listing}")
-    print("helloooooooo")
     if listing:
         return listing
     else:
