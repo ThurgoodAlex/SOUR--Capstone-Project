@@ -9,10 +9,13 @@ import { User } from "@/constants/Types";
 const UserContext = createContext<User | null>(null);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const { isLoggedIn, logout, token } = useAuth();
   
+  const { isLoggedIn, logout, token } = useAuth();
+  console.log("TOKEN", token);
   const [user, setUser] = useState<User | null>(null);
   const api = useApi();
+
+  
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -25,6 +28,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       
       try {
         const response = await api.get("/auth/me");
+        console.log("RESPONSE",response);
 
         if (response.ok) {
           const responseData: { user: User } = await response.json();
@@ -36,6 +40,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
             id: responseData.user.id,
             profilePicture: responseData.user.profilePicture,
             isSeller: true,
+            email: responseData.user.email
           };
 
           setUser(returnedUser);

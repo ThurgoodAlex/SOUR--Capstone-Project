@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert } fro
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 import { router } from 'expo-router';
 import { useApi } from '@/context/api';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 export default function SignUpScreen() {
     const [username, setUsername] = useState('');
@@ -53,53 +54,55 @@ export default function SignUpScreen() {
 
     return (
         <View style={ScreenStyles.screenCentered}>
-            <Text style={[TextStyles.h2, TextStyles.uppercase]}>Create an Account</Text>
-            
-            <TextInput
-                style={Styles.input}
-                placeholder="First Name"
-                value={firstName}
-                onChangeText={setFirstName}
-            />
-            <TextInput
-                style={Styles.input}
-                placeholder="Last Name"
-                value={lastName}
-                onChangeText={setLastName}
-            />
-            
-            <TextInput
-                style={Styles.input}
-                placeholder="Username"
-                value={username}
-                onChangeText={setUsername}
-            />
-            <TextInput
-                style={Styles.input}
-                placeholder="Email"
-                keyboardType="email-address"
-                value={email}
-                onChangeText={setEmail}
-            />
-            <TextInput
-                style={Styles.input}
-                placeholder="Password"
-                secureTextEntry
-                value={password}
-                onChangeText={setPassword}
-            />
+            <KeyboardAwareScrollView>
 
-            <TouchableOpacity
-                style={Styles.buttonDark}
-                onPress={requestCreateUser}
-                disabled={loading}
-            >
-                {loading ? (
-                    <ActivityIndicator color="#ffffff" />
-                ) : (
-                    <Text style={TextStyles.light}>Sign Up</Text>
-                )}
-            </TouchableOpacity>
+                <Text style={[TextStyles.h2, TextStyles.uppercase]}>Create an Account</Text>
+                <TextInput
+                    style={Styles.input}
+                    placeholder="First Name"
+                    value={firstName}
+                    onChangeText={setFirstName}
+                />
+                <TextInput
+                    style={Styles.input}
+                    placeholder="Last Name"
+                    value={lastName}
+                    onChangeText={setLastName}
+                />
+                
+                <TextInput
+                    style={Styles.input}
+                    placeholder="Username"
+                    value={username}
+                    onChangeText={setUsername}
+                />
+                <TextInput
+                    style={Styles.input}
+                    placeholder="Email"
+                    keyboardType="email-address"
+                    value={email}
+                    onChangeText={setEmail}
+                />
+                <TextInput
+                    style={Styles.input}
+                    placeholder="Password"
+                    secureTextEntry
+                    value={password}
+                    onChangeText={setPassword}
+                />
+
+                <TouchableOpacity
+                    style={Styles.buttonDark}
+                    onPress={requestCreateUser}
+                    disabled={loading}
+                >
+                    {loading ? (
+                        <ActivityIndicator color="#ffffff" />
+                    ) : (
+                        <Text style={TextStyles.light}>Sign Up</Text>
+                    )}
+                </TouchableOpacity>
+            </KeyboardAwareScrollView>
         </View>
     );
 }

@@ -27,8 +27,8 @@ export type User = {
     username: string;
     id:number;
     profilePicture?:string | '../assets/images/profile_pic.jpg';
-    bio?: string | '';
     isSeller: boolean;
+    email: string;
 };
 
 

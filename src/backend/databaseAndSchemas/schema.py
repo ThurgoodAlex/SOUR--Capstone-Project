@@ -36,7 +36,7 @@ class User(BaseModel):
     email: str
     id: int
     isSeller:bool
-    model_config = ConfigDict(from_attributes=True)
+ 
     
 
 class UserRegistration(BaseModel):
