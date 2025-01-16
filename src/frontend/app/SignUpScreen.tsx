@@ -5,7 +5,9 @@ import { router } from 'expo-router';
 import { useApi } from '@/context/api';
 
 export default function SignUpScreen() {
-    const [name, setName] = useState('');
+    const [username, setUsername] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -14,7 +16,7 @@ export default function SignUpScreen() {
     const { post } = useApi();
 
     const requestCreateUser = async () => {
-        if (!name || !email || !password) {
+        if (!username || !email || !password || !firstName || !lastName) {
             Alert.alert('Error', 'Please fill out all fields.');
             return;
         }
@@ -24,16 +26,19 @@ export default function SignUpScreen() {
         try {
             // Use the `post` method from the API abstraction
             const response = await post('/auth/createuser', {
-                username: name,
+                username: username,
+                firstname: firstName,
+                lastname: lastName,
                 email: email,
                 password: password,
-                isSeller: false
             });
 
             const result = await response.json();
+            console.log(result);
+
 
             if (response.ok) {
-                Alert.alert('Success', `Account created successfully! Welcome, ${result.username || name}`);
+                Alert.alert('Success', `Account created successfully! Welcome, ${result.firstName || firstName}!`);
                 router.replace('/LoginScreen');
             } else {
                 Alert.alert('Error', result.message || 'Failed to create an account. Please try again.');
@@ -49,11 +54,25 @@ export default function SignUpScreen() {
     return (
         <View style={ScreenStyles.screenCentered}>
             <Text style={[TextStyles.h2, TextStyles.uppercase]}>Create an Account</Text>
+            
+            <TextInput
+                style={Styles.input}
+                placeholder="First Name"
+                value={firstName}
+                onChangeText={setFirstName}
+            />
+            <TextInput
+                style={Styles.input}
+                placeholder="Last Name"
+                value={lastName}
+                onChangeText={setLastName}
+            />
+            
             <TextInput
                 style={Styles.input}
                 placeholder="Username"
-                value={name}
-                onChangeText={setName}
+                value={username}
+                onChangeText={setUsername}
             />
             <TextInput
                 style={Styles.input}
