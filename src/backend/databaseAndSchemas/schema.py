@@ -13,9 +13,10 @@ class Metadata(BaseModel):
 
 class UserInDB(SQLModel, table=True): 
     __tablename__ = "users"
-    __table_args__ = {'extend_existing': True}  
+    __table_args__ = {'extend_existing': True} 
+     
     profilePic: Optional[str] = Field(default=None, foreign_key="media.url")
-    id: int = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     firstname: str = Field(index = False)
     lastname: str = Field(index = False)
     username: str = Field(unique=True, index=True)
@@ -37,10 +38,6 @@ class User(BaseModel):
     isSeller:bool
     model_config = ConfigDict(from_attributes=True)
     
-
-
-class UserResponse(BaseModel):
-    user: User
 
 class UserRegistration(BaseModel):
     firstname: str
@@ -105,7 +102,7 @@ class ListingResponse(BaseModel):
 class ListingInDB(SQLModel, table=True):
     __tablename__ = "listings"
     __table_args__ = {'extend_existing': True}
-    id: int = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     title: str = Field(unique=False)
     description: Optional[str] = Field(sa_column=Text)
     brand: str = Field()
@@ -160,7 +157,7 @@ class MediaResponse(BaseModel):
 
 class MediaInDB(SQLModel, table=True):
     __tablename__ = "media"
-    id: int = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     url: str = Field(unique=True) 
     isVideo: bool
     postID: Optional[int]  = Field(default=None, foreign_key="posts.id", index=True)
@@ -189,7 +186,7 @@ class PostResponse(BaseModel):
 class PostInDB(SQLModel, table = True):
     __tablename__ = "posts"
     title: Optional[str]
-    id: int = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     caption: Optional[str]
     sellerID: int = Field(foreign_key="users.id")  # Foreign key to UserInDB
     created_at: datetime = Field(default_factory=datetime.now)
@@ -198,7 +195,7 @@ class PostInDB(SQLModel, table = True):
 
 class LikesInDB(SQLModel, table = True):
     __tablename__ = "Likes"
-    id: int = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     userID: int = Field(foreign_key="users.id")
     postID: Optional[int] = Field(foreign_key= "posts.id")
     listingID: Optional[int] = Field(foreign_key= "listings.id")
@@ -206,7 +203,7 @@ class LikesInDB(SQLModel, table = True):
 
 class CommentsInDB(SQLModel, table = True):
     __tablename__ = "Comments"
-    id: int = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     userID: int = Field(foreign_key="users.id")
     postID: Optional[int] = Field(foreign_key= "posts.id")
     listingID: Optional[int] = Field(foreign_key= "listings.id")
@@ -216,14 +213,14 @@ class CommentsInDB(SQLModel, table = True):
 
 class FollowingsInDB(SQLModel, table = True):
     __tablename__ = "FollowingAndFolowees"
-    id: int = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     followerID: int = Field(foreign_key="users.id")
     followeeID: int = Field(foreign_key="users.id")
 
 
 class LinksInDB(SQLModel, table = True):
     __tablename__ = "Links"
-    id: int = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     listingID: int = Field(foreign_key= "listings.id")
     postID: int = Field(foreign_key= "posts.id")
 
@@ -231,14 +228,14 @@ class LinksInDB(SQLModel, table = True):
 
 class ChatsInDB(SQLModel, table = True):
     __tablename__ = "Chats"
-    id: int = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     senderID: int = Field(foreign_key="users.id", index=True)
     senderID: int = Field(foreign_key="users.id", index=True)
 
 
 class MessagesInDB(SQLModel, table = True):
     __tablename__ = "Messages"
-    id: int = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     chatID: int = Field(default=None, foreign_key="Chats.id", index=True)
     author: int = Field(foreign_key="users.id", index=True)
     message: str
@@ -247,7 +244,7 @@ class MessagesInDB(SQLModel, table = True):
 
 class CartInDB(SQLModel, table = True):
     __tablename__ = "Cart"
-    id: int = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     userID: int = Field(foreign_key="users.id", index=True)
     listingID: int = Field(foreign_key= "listings.id")
     created_at: datetime = Field(default_factory=datetime.now)
@@ -255,7 +252,7 @@ class CartInDB(SQLModel, table = True):
 
 class SellerStatsInDB(SQLModel, table = True):
     __tablename__ = "SellerStats"
-    id: int = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     sellerID: int = Field(foreign_key="users.id", index=True)
     totalEarnings: Decimal = Field(default=0.00)
     itemsSold: int = Field(default=0)
