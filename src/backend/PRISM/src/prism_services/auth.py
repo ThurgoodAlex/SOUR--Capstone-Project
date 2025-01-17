@@ -133,9 +133,13 @@ def get_access_token(
 
 def auth_get_current_user(token: str = Depends(oauth2_scheme), session: Session = Depends(get_session)) -> UserInDB:
     """Getting the current authenticated user"""
-    print("in get current")
-    user = decode_access_token(token, session)
-    return user
+    try:
+        user = decode_access_token(token, session)
+        if not user:
+            raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+        return user
+    except Exception:
+        raise HTTPException(status_code=401, detail="Not authenticated")
 
 
 # old stuff uses formData in URL Parameter encoding: replaced below using JSON (Token Request BaseModel) for consistency

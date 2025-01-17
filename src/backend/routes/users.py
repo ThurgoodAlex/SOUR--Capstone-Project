@@ -40,9 +40,9 @@ def get_all_users(session :Annotated[Session, Depends(get_session)])-> list[User
     return session.exec(select(UserInDB)).all()
 
 @users_router.get('/{user_id}', response_model= UserInDB, status_code=201)
-def get_all_users_by_id(session :Annotated[Session, Depends(get_session)], user_id: int)-> UserInDB:
+def get_all_users_by_id(session :Annotated[Session, Depends(get_session)], current_user: UserInDB = Depends(auth_get_current_user))-> UserInDB:
     """Gets user by id"""
-    user = session.get(UserInDB, user_id)
+    user = session.get(UserInDB, current_user.id)
     if user:
         return user
     else:
