@@ -29,6 +29,6 @@ test-backend:
 clean-up: 
   stage: test
   script: 
-    - 'curl -X POST -H "Content-Type: application/json" -d "{"event_type": "cleanup"}" https://n23nsfwpcwicuwv7d6cdjtazxa0bazrt.lambda-url.us-west-1.on.aws '
+    - 'curl -X POST -H "Content-Type: application/json" -d "{\"event_type\": \"cleanup\"}" https://n23nsfwpcwicuwv7d6cdjtazxa0bazrt.lambda-url.us-west-1.on.aws '
   rules:
     - when: always  
