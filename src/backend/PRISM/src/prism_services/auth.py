@@ -120,7 +120,7 @@ def check_email(newUser, session):
 
 @auth_router.post("/token", response_model=AccessToken, status_code=200)
 def get_access_token(
-    token_request: TokenRequest, 
+    token_request: OAuth2PasswordRequestForm = Depends(), 
     session: Session = Depends(get_session)
 ):
     """Get access token for user."""
@@ -148,6 +148,7 @@ def auth_get_current_user(token: str = Depends(oauth2_scheme), session: Session 
 
 def get_authenticated_user(session: Session, token_request: TokenRequest) -> UserInDB:
     """Authenticating User"""
+    print("this is the token request", token_request)
     user = session.exec(
         select(UserInDB).where(UserInDB.username == token_request.username)
     ).first()
@@ -163,7 +164,7 @@ def build_access_token(user: UserInDB) -> AccessToken:
 
     return AccessToken(
         access_token=access_token,
-        token_type="Bearer",
+        token_type="bearer",
         expires_in=access_token_duration,
     )
 
