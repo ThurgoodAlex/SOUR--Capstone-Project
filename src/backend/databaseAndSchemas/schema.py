@@ -9,8 +9,19 @@ from decimal import Decimal
 class Metadata(BaseModel):
     count: int 
 
-#USer DB table
+class AccessToken(BaseModel):
+    """Response model for an access token"""
+    access_token: str
+    token_type: str
+    expires_in: int
 
+class Claims(BaseModel):
+    """Access token claims (aka payload)."""
+    sub: str  # id of user
+    exp: int  # unix timestamp
+
+
+### All schemas for users ###
 class UserInDB(SQLModel, table=True): 
     __tablename__ = "users"
     __table_args__ = {'extend_existing': True} 
@@ -26,8 +37,6 @@ class UserInDB(SQLModel, table=True):
     isSeller: bool = Field(default=False, nullable=False)
     created_at: Optional[datetime] = Field(default_factory=datetime.now)
 
-#All schemas for users
-
 class User(BaseModel):
     firstname: str
     lastname: str
@@ -37,8 +46,6 @@ class User(BaseModel):
     id: int
     isSeller:bool
  
-    
-
 class UserRegistration(BaseModel):
     firstname: str
     lastname: str
@@ -49,192 +56,182 @@ class UserRegistration(BaseModel):
 class UserLogin(BaseModel):
     username: str
     password: str
+###############################
 
 
-#All schemas for listings
-
-#I know these are basically the same... but for clarity sakes it might be nice to seperate them.
-
-#frontend sends this
-class createListing(BaseModel):
-    title: str 
-    description: str
-    brand: str
-    condition: str
-    size: str
-    gender: str
-    price: Decimal 
-    sellerID: int 
-    isSold: bool
-
-
-#backend sends this
-class Listing(BaseModel):
-    id: int
-    title: str 
-    description: str
-    brand: str
-    condition: str
-    size: str
-    gender: str
-    price: Decimal 
-    sellerID: int 
-    isSold: bool
-
-
-    # need this to convert decimal from scientific notation to normal.
-    class Config:
-        json_encoders = {
-            Decimal: lambda v: f"{v:.2f}"  \
-        }
-
-
-#cleaner way to hold a Listing
-class ListingResponse(BaseModel):
-    Listing: Listing
-
-
-#class ListingList(BaseModel):
-    #meta: Metadata
-    #listings: list[Listing]
-
-#TODO: Messed up the table creation. Will redo once JWT gets implemented
-class ListingInDB(SQLModel, table=True):
-    __tablename__ = "listings"
-    __table_args__ = {'extend_existing': True}
+### All Posts Schemas ###
+class PostInDB(SQLModel, table = True):
+    __tablename__ = "posts"
     id: Optional[int] = Field(default=None, primary_key=True)
+    sellerID: int = Field(default=None, foreign_key="users.id")
     title: str = Field(unique=False)
     description: Optional[str] = Field(sa_column=Text)
-    brand: str = Field()
-    condition: str = Field()
-    size: str = Field()
-    gender: str = Field()
-    coverImage: str = Field()
-    # Decimal(precision, scale)
-    price: Decimal = Field(sa_column=DECIMAL(10, 2))
+    brand: Optional[str]
+    condition: Optional[str]
+    size: Optional[str]
+    gender: Optional[str]
+    coverImage: Optional[str]
+    price: Optional[Decimal] = Field(sa_column=DECIMAL(10, 2))
+    isSold: Optional[bool] = Field(default=False, nullable=False)
     created_at: datetime = Field(default_factory=datetime.now)
-    # I think this creates the foreign key relationship
-    sellerID: int = Field(default=None, foreign_key="users.id")
-    isSold: bool = Field(default=False, nullable=False)
+    isListing: bool = Field(default=False, nullable=False)
 
+class createPost(BaseModel):
+    sellerID: int
+    title: str
+    description: Optional[str]
+    brand: Optional[str]
+    condition: Optional[str]
+    size: Optional[str]
+    gender: Optional[str]
+    coverImage: Optional[str]
+    price: Optional[Decimal]
+    created_at: datetime
+    isSold: bool
+    isListing: bool
 
-#Token Schemas
-    
-class AccessToken(BaseModel):
-    """Response model for an access token"""
-    access_token: str
-    token_type: str
-    expires_in: int
-
-
-class Claims(BaseModel):
-    """Access token claims (aka payload)."""
-    sub: str  # id of user
-    exp: int  # unix timestamp
-
-## Image Schemas
-
-
-class createMedia(BaseModel):
-    url: str
-    postID: Optional[int] = None
-    listingID: Optional[int] = None
-    isVideo: bool
-
-
-class Media(BaseModel):
-    url: str
-    id: int
-    postID: Optional[int] = None
-    listingID: Optional[int] = None
-    isVideo: bool
-    # This allows us to map from imageInDB to an image
+class Post(BaseModel):
+    sellerID: int
+    title: str
+    description: Optional[str]
+    brand: Optional[str]
+    condition: Optional[str]
+    size: Optional[str]
+    gender: Optional[str]
+    coverImage: Optional[str]
+    price: Optional[Decimal]
+    created_at: datetime
+    isSold: bool
+    isListing: bool
     model_config = ConfigDict(from_attributes=True)
+###############################
 
 
-class MediaResponse(BaseModel):
-    Media: Media
-
-
+### All Media Schemas ###
 class MediaInDB(SQLModel, table=True):
     __tablename__ = "media"
     id: Optional[int] = Field(default=None, primary_key=True)
     url: str = Field(unique=True) 
     isVideo: bool
-    postID: Optional[int]  = Field(default=None, foreign_key="posts.id", index=True)
-    listingID: Optional[int] = Field(default=None, foreign_key="listings.id", index=True)
+    postID: int  = Field(foreign_key="posts.id", index=True)
 
+class createMedia(BaseModel):
+    url: str
+    postID: int
+    isVideo: bool
 
-## Posts Schemas
-
-class createPost(BaseModel):
-    title: Optional[str]
-    caption: Optional[str]
-    sellerID: int
-
-
-class Post(BaseModel):
-    title: Optional[str]
-    caption: Optional[str]
-    sellerID: int
+class Media(BaseModel):
+    url: str
+    id: int
+    postID: int
+    isVideo: bool
+    # This allows us to map from imageInDB to an image
     model_config = ConfigDict(from_attributes=True)
+###############################
 
 
-class PostResponse(BaseModel):
-    Post: Post
-
-
-class PostInDB(SQLModel, table = True):
-    __tablename__ = "posts"
-    title: Optional[str]
-    id: Optional[int] = Field(default=None, primary_key=True)
-    caption: Optional[str]
-    sellerID: int = Field(foreign_key="users.id")  # Foreign key to UserInDB
-    created_at: datetime = Field(default_factory=datetime.now)
-    coverImage: str
-
-
-class LikesInDB(SQLModel, table = True):
+### All Likes Schemas ###
+class LikeInDB(SQLModel, table = True):
     __tablename__ = "Likes"
     id: Optional[int] = Field(default=None, primary_key=True)
     userID: int = Field(foreign_key="users.id")
-    postID: Optional[int] = Field(foreign_key= "posts.id")
-    listingID: Optional[int] = Field(foreign_key= "listings.id")
+    postID: int = Field(foreign_key= "posts.id")
+
+class Like(BaseModel):
+    id: int
+    userID: int
+    postID: int
+    model_config = ConfigDict(from_attributes=True)
+
+class LikeCreate(BaseModel):
+    userID: int
+    postID: int
+###############################
 
 
-class CommentsInDB(SQLModel, table = True):
+### All Comments Schemas ###
+class CommentInDB(SQLModel, table = True):
     __tablename__ = "Comments"
     id: Optional[int] = Field(default=None, primary_key=True)
     userID: int = Field(foreign_key="users.id")
-    postID: Optional[int] = Field(foreign_key= "posts.id")
-    listingID: Optional[int] = Field(foreign_key= "listings.id")
+    postID: int = Field(foreign_key= "posts.id")
     comment: str
     created_at: datetime = Field(default_factory=datetime.now)
-    
 
-class FollowingsInDB(SQLModel, table = True):
+class Comment(BaseModel):
+    id: int
+    userID: int
+    postID: int
+    comment: str
+    created_at: datetime
+    model_config = ConfigDict(from_attributes=True)
+
+class CommentCreate(BaseModel):
+    userID: int
+    postID: int
+    comment: str
+###############################
+
+
+### All Following Schemas
+class FollowingInDB(SQLModel, table = True):
     __tablename__ = "FollowingAndFolowees"
     id: Optional[int] = Field(default=None, primary_key=True)
     followerID: int = Field(foreign_key="users.id")
     followeeID: int = Field(foreign_key="users.id")
 
+class Following(BaseModel):
+    id: int
+    followerID: int
+    followeeID: int
+    model_config = ConfigDict(from_attributes=True)
 
-class LinksInDB(SQLModel, table = True):
+class FollowingCreate(BaseModel):
+    followerID: int
+    followeeID: int
+###############################
+
+
+### All Link Schemas ###
+class LinkInDB(SQLModel, table = True):
     __tablename__ = "Links"
     id: Optional[int] = Field(default=None, primary_key=True)
-    listingID: int = Field(foreign_key= "listings.id")
+    listingID: int = Field(foreign_key= "posts.id")
     postID: int = Field(foreign_key= "posts.id")
 
+class Link(BaseModel):
+    id: int
+    listingID: int
+    postID: int
+    model_config = ConfigDict(from_attributes=True)
+
+class LinkCreate(BaseModel):
+    listingID: int
+    postID: int
+###############################
 
 
-class ChatsInDB(SQLModel, table = True):
+### ALl Chat Schemas ###
+class ChatInDB(SQLModel, table = True):
     __tablename__ = "Chats"
     id: Optional[int] = Field(default=None, primary_key=True)
     senderID: int = Field(foreign_key="users.id", index=True)
-    senderID: int = Field(foreign_key="users.id", index=True)
+    recipientID: int = Field(foreign_key="users.id", index=True)
+
+class Chat(BaseModel):
+    id: int
+    senderID: int
+    recipientID: int
+    model_config = ConfigDict(from_attributes=True)
+
+class ChatCreate(BaseModel):
+    senderID: int
+    reciepientID: int
+###############################
 
 
-class MessagesInDB(SQLModel, table = True):
+### All Message Schemas ###
+class MessageInDB(SQLModel, table = True):
     __tablename__ = "Messages"
     id: Optional[int] = Field(default=None, primary_key=True)
     chatID: int = Field(default=None, foreign_key="Chats.id", index=True)
@@ -242,118 +239,59 @@ class MessagesInDB(SQLModel, table = True):
     message: str
     created_at: datetime = Field(default_factory=datetime.now)
 
+class Message(BaseModel):
+    id: int
+    chatID: int
+    author: int
+    message: str
+    created_at: datetime
+    model_config = ConfigDict(from_attributes=True)
 
+class MessageCreate(BaseModel):
+    chatID: int
+    author: int
+    message: str
+###############################
+
+
+### All Cart Schemas ###
 class CartInDB(SQLModel, table = True):
     __tablename__ = "Cart"
     id: Optional[int] = Field(default=None, primary_key=True)
     userID: int = Field(foreign_key="users.id", index=True)
-    listingID: int = Field(foreign_key= "listings.id")
+    listingID: int = Field(foreign_key= "posts.id")
     created_at: datetime = Field(default_factory=datetime.now)
 
+class Cart(BaseModel):
+    id: int
+    userID: int
+    listingID: int
+    created_at: datetime
+    model_config = ConfigDict(from_attributes=True)
 
-class SellerStatsInDB(SQLModel, table = True):
+class CartCreate(BaseModel):
+    userID: int
+    listingID: int
+###############################
+
+
+### All Seller Stat Schemas ###
+class SellerStatInDB(SQLModel, table = True):
     __tablename__ = "SellerStats"
     id: Optional[int] = Field(default=None, primary_key=True)
     sellerID: int = Field(foreign_key="users.id", index=True)
     totalEarnings: Decimal = Field(default=0.00)
     itemsSold: int = Field(default=0)
 
-
-
-class LikeResponse(BaseModel):
-    id: int
-    userID: int
-    postID: Optional[int]
-    listingID: Optional[int]
-    model_config = ConfigDict(from_attributes=True)
-
-class CommentResponse(BaseModel):
-    id: int
-    userID: int
-    postID: Optional[int]
-    listingID: Optional[int]
-    comment: str
-    created_at: datetime
-    model_config = ConfigDict(from_attributes=True)
-
-class FollowingResponse(BaseModel):
-    id: int
-    followerID: int
-    followeeID: int
-    model_config = ConfigDict(from_attributes=True)
-
-class LinkResponse(BaseModel):
-    id: int
-    listingID: int
-    postID: int
-    model_config = ConfigDict(from_attributes=True)
-
-class ChatResponse(BaseModel):
-    id: int
-    senderID: int
-    recipientID: int
-    model_config = ConfigDict(from_attributes=True)
-
-class MessageResponse(BaseModel):
-    id: int
-    chatID: int
-    author: int
-    message: str
-    created_at: datetime
-    model_config = ConfigDict(from_attributes=True)
-
-class CartResponse(BaseModel):
-    id: int
-    userID: int
-    listingID: int
-    created_at: datetime
-    model_config = ConfigDict(from_attributes=True)
-
-class SellerStatResponse(BaseModel):
+class SellerStat(BaseModel):
     id: int
     sellerID: int
     totalEarnings: Decimal
     itemsSold: int
     model_config = ConfigDict(from_attributes=True)
 
-
-
-
-
-
-class LikeCreate(BaseModel):
-    userID: int
-    postID: Optional[int]
-    listingID: Optional[int]
-
-class CommentCreate(BaseModel):
-    userID: int
-    postID: Optional[int]
-    listingID: Optional[int]
-    comment: str
-
-class FollowingCreate(BaseModel):
-    followerID: int
-    followeeID: int
-
-class LinkCreate(BaseModel):
-    listingID: int
-    postID: int
-
-class ChatCreate(BaseModel):
-    senderID: int
-    reciepientID: int
-
-class MessageCreate(BaseModel):
-    chatID: int
-    author: int
-    message: str
-
-class CartCreate(BaseModel):
-    userID: int
-    listingID: int
-
 class SellerStatCreate(BaseModel):
     sellerID: int
     totalEarnings: Decimal = 0.0
     itemsSold: int = 0
+###############################

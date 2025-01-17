@@ -28,7 +28,7 @@ export default function CreateListing() {
     
     var username = "";
     if(user){
-      username = user.name;
+      username = user.username;
     }
     else{
       logout();

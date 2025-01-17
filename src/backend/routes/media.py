@@ -10,7 +10,7 @@ from sqlalchemy.future import select
 from jose import JWTError, jwt
 from sqlmodel import Session, SQLModel, select
 from databaseAndSchemas.schema import (
-    Media, MediaInDB, createMedia, UserInDB, User, PostInDB, ListingInDB
+    Media, MediaInDB, createMedia, UserInDB, User, PostInDB
 )
 from databaseAndSchemas.test_db import get_session
 from PRISM.src.prism_services.auth import auth_get_current_user
@@ -77,13 +77,10 @@ def get_images_by_user(session : Annotated[Session, Depends(get_session)], user_
     user = session.get(UserInDB, user_id)
     if user:
         has_post_id = hasattr(MediaInDB, "postID")
-        has_listing_id = hasattr(MediaInDB, "listingID")
 
         query = select(MediaInDB)
         if has_post_id:
             query = query.join(PostInDB, PostInDB.id == MediaInDB.postID).where(PostInDB.user_id == user_id)
-        elif has_listing_id:
-            query = query.join(ListingInDB, ListingInDB.id == MediaInDB.listingID).where(ListingInDB.user_id == user_id)
         else:
             raise HTTPException(
                 status_code=400,

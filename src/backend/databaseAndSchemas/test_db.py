@@ -11,13 +11,9 @@ from contextlib import asynccontextmanager
 import warnings
 import os
 
-from .schema import(
-    UserInDB, ListingInDB
-)
-
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
-db_path = os.path.join(current_dir, "test_prism.db")
+db_path = os.path.join(current_dir, "test_sour.db")
 
 engine = create_engine(
     f"sqlite:///{db_path}",
@@ -38,23 +34,4 @@ class EntityNotFoundException(Exception):
     def __init__(self, entity_name: str, entity_id: str):
         self.entity_name = entity_name
         self.entity_id = entity_id
-
-
-def get_all_users(session: Session) -> list[UserInDB]:
-    """
-    Retrieve all users from the database.
-
-    :return: list of users
-    """
-
-    return session.exec(select(UserInDB)).all()
-
-def get_all_listings(session: Session) -> list[ListingInDB]:
-    """
-    Retrieve all listings from the database.
-
-    :return: list of listings
-
-    """
-    return session.exec(select(ListingInDB)).all()
 
