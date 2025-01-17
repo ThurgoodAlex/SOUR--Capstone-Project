@@ -117,41 +117,41 @@ export class BackendInfrastructureStack extends cdk.Stack {
 
 
       //upload image lambda
-    const uploadImageLambda = new lambda.Function(this, 'UploadImageLambda',{
+    const uploadMediaLambda = new lambda.Function(this, 'UploadMediaLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
-        handler: 'lambda.image_handlers.upload_image_lambda',
+        handler: 'lambda.media_handlers.upload_media_lambda',
         code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
-        functionName: 'upload_image_lambda',
+        functionName: 'upload_media_lambda',
         environment: {
         PYTHONPATH: '/var/task',
         },
       })
 
-      const getAllImageLambda = new lambda.Function(this, 'GetAllImageLambda',{
+      const getAllMediaLambda = new lambda.Function(this, 'GetAllMediaLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
-        handler: 'lambda.image_handlers.get_all_images_lambda',
+        handler: 'lambda.media_handlers.get_all_media_lambda',
         code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
-        functionName: 'get_all_images_lambda',
+        functionName: 'get_all_media_lambda',
         environment: {
         PYTHONPATH: '/var/task',
         },
       })
 
-      const getImageByIDLambda = new lambda.Function(this, 'GetImageByIDLambda',{
+      const getMediaByIDLambda = new lambda.Function(this, 'GetMediaByIDLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
-        handler: 'lambda.image_handlers.get_image_by_id_lambda',
+        handler: 'lambda.media_handlers.get_media_by_id_lambda',
         code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
-        functionName: 'get_image_by_id_lambda',
+        functionName: 'get_media_by_id_lambda',
         environment: {
         PYTHONPATH: '/var/task',
         },
       })
 
-      const getImageByUserLambda = new lambda.Function(this, 'GetImageByUserLambda',{
+      const getMediaByUserLambda = new lambda.Function(this, 'GetMediaByUserLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
-        handler: 'lambda.image_handlers.get_image_by_user_lambda',
+        handler: 'lambda.media_handlers.get_media_by_user_lambda',
         code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
-        functionName: 'get_image_by_user_lambda',
+        functionName: 'get_media_by_user_lambda',
         environment: {
         PYTHONPATH: '/var/task',
         },
@@ -176,10 +176,10 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getAllListingsIntergration = new apigateway.LambdaIntegration(getAllListingsLambda);
     const getListingsByUserIntergration = new apigateway.LambdaIntegration(getListingsByUserLambda);
     const getListingByIdIntergration = new apigateway.LambdaIntegration(getListingByIdLambda);
-    const uploadImageIntergration = new apigateway.LambdaIntegration(uploadImageLambda);
-    const getAllImageIntergration = new apigateway.LambdaIntegration(getAllImageLambda);
-    const getImageByIDIntergration = new apigateway.LambdaIntegration(getImageByIDLambda);
-    const getImageByUserIntergration = new apigateway.LambdaIntegration(getImageByUserLambda);
+    const uploadMediaIntergration = new apigateway.LambdaIntegration(uploadMediaLambda);
+    const getAllMediaIntergration = new apigateway.LambdaIntegration(getAllMediaLambda);
+    const getMediaByIDIntergration = new apigateway.LambdaIntegration(getMediaByIDLambda);
+    const getMediaByUserIntergration = new apigateway.LambdaIntegration(getMediaByUserLambda);
 
 
     api.root.addMethod('GET', starterPageIntegration);
@@ -215,17 +215,17 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getListingByIdResource = api.root.addResource('getListingById');
     getListingByIdResource.addMethod('GET', getListingByIdIntergration);
 
-    const uploadImageResource = api.root.addResource('uploadImage');
-    uploadImageResource.addMethod('POST', uploadImageIntergration)
+    const uploadMediaResource = api.root.addResource('uploadMedia');
+    uploadMediaResource.addMethod('POST', uploadMediaIntergration)
 
-    const getAllImageResource = api.root.addResource('getAllImages');
-    getAllImageResource.addMethod('GET', getAllImageIntergration)
+    const getAllMediaResource = api.root.addResource('getAllMedia');
+    getAllMediaResource.addMethod('GET', getAllMediaIntergration)
 
-    const getImageByIDResource = api.root.addResource('getImageByID');
-    getImageByIDResource.addMethod('GET', getImageByIDIntergration)
+    const getMediaByIDResource = api.root.addResource('getMediaByID');
+    getMediaByIDResource.addMethod('GET', getMediaByIDIntergration)
 
-    const getImageByUserResource = api.root.addResource('getImageByUser');
-    getImageByUserResource.addMethod('GET', getImageByUserIntergration)
+    const getMediaByUserResource = api.root.addResource('getMediaByUser');
+    getMediaByUserResource.addMethod('GET', getMediaByUserIntergration)
     // Add /health endpoint
     const healthResource = api.root.addResource('health');
     healthResource.addMethod('GET', new apigateway.MockIntegration({
