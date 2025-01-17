@@ -28,19 +28,19 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       
       try {
         const response = await api.get("/auth/me");
-        console.log("RESPONSE",response);
 
         if (response.ok) {
-          const responseData: { user: User } = await response.json();
-
+         
+          const responseData = await response.json();
+         
           const returnedUser: User = {
-            firstname: responseData.user.firstname, 
-            lastname: responseData.user.lastname,
-            username: responseData.user.username,
-            id: responseData.user.id,
-            profilePicture: responseData.user.profilePicture,
+            firstname: responseData.firstname, 
+            lastname: responseData.lastname,
+            username: responseData.username,
+            id: responseData.id,
+            profilePicture: responseData.profilePicture,
             isSeller: true,
-            email: responseData.user.email
+            email: responseData.email
           };
 
           setUser(returnedUser);

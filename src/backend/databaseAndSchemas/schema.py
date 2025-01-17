@@ -144,6 +144,7 @@ class createMedia(BaseModel):
 
 class Media(BaseModel):
     url: str
+    id: int
     postID: Optional[int] = None
     listingID: Optional[int] = None
     isVideo: bool

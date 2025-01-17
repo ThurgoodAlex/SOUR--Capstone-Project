@@ -210,5 +210,4 @@ def decode_access_token(token: str, session: Session) -> UserInDB:
 @auth_router.get("/me", response_model=User)
 def get_current_user(current_user: UserInDB = Depends(auth_get_current_user)):
     """Get current user."""
-    print(current_user)
     return map_user_db_to_response(current_user)
