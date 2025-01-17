@@ -22,10 +22,13 @@ export type Listing = {
 };
 
 export type User = {
-    name: string;
+    firstname: string;
+    lastname: string;
     username: string;
     id:number;
-    profilePicture?:string | '../assets/images/profile_pic.jpg'
+    profilePicture?:string | '../assets/images/profile_pic.jpg';
+    isSeller: boolean;
+    email: string;
 };
 
 
