@@ -29,6 +29,8 @@ test-backend:
 clean-up: 
   stage: test
   script: 
+  - | 
       curl -X POST -H "Content-Type: application/json" -d '{"event_type": "cleanup"}' "${EC2_RUNNER_URL_CONTROL_URL}"
+  - |
   rules:
     - when: always  
