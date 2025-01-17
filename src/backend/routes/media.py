@@ -72,30 +72,42 @@ def get_image_by_id(session : Annotated[Session, Depends(get_session)], media_id
             )
     
 @media_router.get('/{user_id}/images', response_model=list[Media], status_code=201)
-def get_images_by_user(session : Annotated[Session, Depends(get_session)], user_id : int) -> list[Media]:
-    """Getting all images for a specific user."""
-    user = session.get(UserInDB, user_id)
-    if user:
-        has_post_id = hasattr(MediaInDB, "postID")
-
-        query = select(MediaInDB)
-        if has_post_id:
-            query = query.join(PostInDB, PostInDB.id == MediaInDB.postID).where(PostInDB.user_id == user_id)
-        else:
-            raise HTTPException(
-                status_code=400,
-                detail="No valid columns found in the ImageInDB model.",
-            )
-        
-        media_in_db = session.exec(query).all()
-        return [Media.model_validate(media) for media in media_in_db]
+def get_images_by_user(
+    session: Annotated[Session, Depends(get_session)], 
+    user_id: int,
+    current_user: UserInDB = Depends(auth_get_current_user)
+) -> list[Media]:
+    """Getting all images for a specific user (accessible by any authenticated user)."""
     
+    # Get the user from the database based on the provided user_id
+    user = session.get(UserInDB, user_id)
+
+    # Check if the user exists in the database
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail={
+                "type": "entity_not_found",
+                "entity_name": "user",
+                "entity_id": user_id
+            }
+        )
+    
+    # Check if the MediaInDB model has the 'postID' attribute
+    has_post_id = hasattr(MediaInDB, "postID")
+
+    # Build the query to get images
+    query = select(MediaInDB)
+    if has_post_id:
+        query = query.join(PostInDB, PostInDB.id == MediaInDB.postID).where(PostInDB.sellerID == user_id)
     else:
         raise HTTPException(
-                status_code=404,
-                detail={
-                    "type":"entity_not_found",
-                    "entity_name":"user",
-                    "entity_id":user_id
-                }
-            )
+            status_code=400,
+            detail="No valid columns found in the MediaInDB model.",
+        )
+    
+    # Execute the query and retrieve the media
+    media_in_db = session.exec(query).all()
+
+    # Return the media as a list of Media objects
+    return [Media(**media.model_dump()) for media in media_in_db]
