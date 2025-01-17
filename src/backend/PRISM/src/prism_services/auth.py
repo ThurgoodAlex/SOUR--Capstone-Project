@@ -18,9 +18,14 @@ from fastapi.security import (
 from databaseAndSchemas.test_db import get_session
 
 SessionDep = Annotated[Session, Depends(get_session)]
+
 from databaseAndSchemas.schema import(
-    UserInDB, UserResponse, UserRegistration, User, UserLogin, AccessToken, Claims
+    UserInDB, UserRegistration, User, UserLogin, AccessToken, Claims
 )
+from databaseAndSchemas.mappings.mappings import *
+
+
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
 from .prism_exceptions import(
@@ -66,8 +71,8 @@ lambda_client = boto3.client('lambda', endpoint_url=localstack_endpoint,
 
 
 
-@auth_router.post("/createuser", response_model=UserResponse, status_code=201)
-def create_new_user(newUser: UserRegistration, session: Annotated[Session, Depends(get_session)]) -> UserResponse:
+@auth_router.post("/createuser", response_model=User, status_code=201)
+def create_new_user(newUser: UserRegistration, session: Annotated[Session, Depends(get_session)]) -> User:
     """Registering a new User"""
     try:
         hashed_pwd = pwd_context.hash(newUser.password)
@@ -76,28 +81,33 @@ def create_new_user(newUser: UserRegistration, session: Annotated[Session, Depen
         elif check_email(newUser, session):
             raise DuplicateUserRegistration("User", "email", newUser.email)
         else:
-            userDB = UserInDB(
-                **newUser.model_dump(),
+            user_db = UserInDB(
+                firstname=newUser.firstname,
+                lastname=newUser.lastname,
+                username=newUser.username,
+                email=newUser.email,
                 hashed_password=hashed_pwd
             )
-            session.add(userDB)
+            session.add(user_db)
             session.commit()
-            session.refresh(userDB)
-            user_data = User(username=userDB.username, email=userDB.email, id=userDB.id, isSeller=userDB.isSeller)
-            return UserResponse(user=user_data)
+            session.refresh(user_db)
+        
+            return map_user_db_to_response(user_db)
     
+    except DuplicateUserRegistration as e:
+        raise HTTPException(status_code=409, detail=str(e))
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail="An unexpected error occurred.")
 
-# logic for this is somehow incorrect, tested on swagger docs and does not work
-@auth_router.post("/login", response_model=UserResponse, status_code=200)
+
+@auth_router.post("/login", response_model=User, status_code=200)
 def login_user(user:UserLogin, session: Annotated[Session, Depends(get_session)]):
         """Logging a user in"""
         user_check = session.exec(select(UserInDB).filter(UserInDB.username == user.username)).first()
 
         if user_check is None or not pwd_context.verify(user.password, user_check.hashed_password):
             raise InvalidCredentials()
-        return UserResponse(user={"username": user.username, "email": user_check.email, "id":user_check.id, "isSeller": user_check.isSeller})
+        return map_user_db_to_response(user_check)
 
 def check_username(newUser, session):
     result = session.exec(select(UserInDB.username).where(UserInDB.username == newUser.username))
@@ -115,27 +125,17 @@ def get_access_token(
 ):
     """Get access token for user."""
     
-    logger.info("in the /token")
     # Authenticate the user with the provided credentials
     user = get_authenticated_user(session, token_request)
     return build_access_token(user)
 
-# def auth_get_current_user(session = Depends(get_session)) -> UserInDB:
-#     """Getting the current authenticated user"""
-#     logger.info("getting current user")
-#     token = session
-#     user = decode_access_token(session, token)
-    
-#     return user
 
 
 def auth_get_current_user(token: str = Depends(oauth2_scheme), session: Session = Depends(get_session)) -> UserInDB:
     """Getting the current authenticated user"""
-    # Decode the token to get the user data
+    print("in get current")
     user = decode_access_token(token, session)
-    
     return user
-
 
 
 # old stuff uses formData in URL Parameter encoding: replaced below using JSON (Token Request BaseModel) for consistency
@@ -207,10 +207,7 @@ def decode_access_token(token: str, session: Session) -> UserInDB:
 
 
 
-@auth_router.get("/me", response_model=UserResponse)
+@auth_router.get("/me", response_model=User)
 def get_current_user(current_user: UserInDB = Depends(auth_get_current_user)):
     """Get current user."""
-    logger.info("In the /me endpoint")
-    # Return user response without including the hashed password
-    user_response = User(**current_user.model_dump(exclude={"hashed_password"}))
-    return UserResponse(user=user_response)
+    return map_user_db_to_response(current_user)

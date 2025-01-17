@@ -2,21 +2,20 @@ import { createContext, ReactNode, useContext, useEffect, useState } from "react
 import { useAuth } from "./auth";
 import { useApi } from "@/context/api";
 import { router } from "expo-router";
+import { User } from "@/constants/Types";
 
-interface User {
-  name: string;
-  email: string;
-  id: number;
-  isSeller: boolean;
-}
+
 
 const UserContext = createContext<User | null>(null);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const { isLoggedIn, logout, token } = useAuth();
   
+  const { isLoggedIn, logout, token } = useAuth();
+  console.log("TOKEN", token);
   const [user, setUser] = useState<User | null>(null);
   const api = useApi();
+
+  
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -31,13 +30,17 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         const response = await api.get("/auth/me");
 
         if (response.ok) {
-          const responseData: { user: { username: string; email: string, id: number } } = await response.json();
-
+         
+          const responseData = await response.json();
+         
           const returnedUser: User = {
-            name: responseData.user.username, 
-            email: responseData.user.email, 
-            id: responseData.user.id,
-            isSeller: true
+            firstname: responseData.firstname, 
+            lastname: responseData.lastname,
+            username: responseData.username,
+            id: responseData.id,
+            profilePicture: responseData.profilePicture,
+            isSeller: true,
+            email: responseData.email
           };
 
           setUser(returnedUser);

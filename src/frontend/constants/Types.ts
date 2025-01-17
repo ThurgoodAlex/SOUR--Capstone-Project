@@ -4,13 +4,14 @@ export type Post = {
     id: number;
     data: ImageSourcePropType | undefined;
     type: string;
+    createdDate: Date;
 
     author:User;
 };
 
 export type Listing = {
     id:number;
-    createdDate: string;
+    createdDate: Date;
 
     title: string;
     price: string;
@@ -21,10 +22,13 @@ export type Listing = {
 };
 
 export type User = {
-    name: string;
+    firstname: string;
+    lastname: string;
     username: string;
     id:number;
-    profilePicture?:string | '../assets/images/profile_pic.jpg'
+    profilePicture?:string | '../assets/images/profile_pic.jpg';
+    isSeller: boolean;
+    email: string;
 };
 
 

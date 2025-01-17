@@ -13,13 +13,14 @@ import ProfileThumbnailSmall from '@/components/ProfileThumbnailSmall';
  */
 export function PostPreview({ post, size, thumbnailSize }: { post: Post, size: number, thumbnailSize: string }) {
     let icon;
-    if (post.type === 'video') {
+    let type = post.type;
+    if (type === 'video') {
         icon = <Ionicons size={20} name='videocam' />
     }
-    else if (post.type === 'post') {
+    else if (type === 'post') {
         icon = <Ionicons size={20} name='megaphone' />
     }
-    else {
+    else if (type === 'listing') {
         icon = <Ionicons size={20} name='pricetag' />
     }
 
@@ -32,13 +33,12 @@ export function PostPreview({ post, size, thumbnailSize }: { post: Post, size: n
     //     profilePicture: '../assets/images/profile_pic.jpg'
     // };
 
-  //extract poster information into a User object
-  const author: User = {
-    name: post.author.name,
-    username: post.author.username,
-    id: post.author.id,
-  }; 
-  
+    //extract author information into a User object
+    const author: User = {
+        name: post.author.name,
+        username: post.author.username,
+        id: post.author.id,
+    }; 
 
     return (
         <View key={post.id} style={[Styles.column, { marginBottom: 1 }]}>

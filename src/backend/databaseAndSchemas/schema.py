@@ -13,18 +13,18 @@ class Metadata(BaseModel):
 
 class UserInDB(SQLModel, table=True): 
     __tablename__ = "users"
-    __table_args__ = {'extend_existing': True}  
+    __table_args__ = {'extend_existing': True} 
+     
     profilePic: Optional[str] = Field(default=None, foreign_key="media.url")
     id: Optional[int] = Field(default=None, primary_key=True)
-    firstname: str = Field(unique= False, index = False)
-    lastname: str = Field(unique= False, index = False)
+    firstname: str = Field(index = False)
+    lastname: str = Field(index = False)
     username: str = Field(unique=True, index=True)
     email: str = Field(unique=True)
     bio: Optional[str]
     hashed_password: str
     isSeller: bool = Field(default=False, nullable=False)
     created_at: Optional[datetime] = Field(default_factory=datetime.now)
-
 
 #All schemas for users
 
@@ -36,12 +36,8 @@ class User(BaseModel):
     email: str
     id: int
     isSeller:bool
-    model_config = ConfigDict(from_attributes=True)
+ 
     
-
-
-class UserResponse(BaseModel):
-    user: User
 
 class UserRegistration(BaseModel):
     firstname: str
@@ -106,14 +102,14 @@ class ListingResponse(BaseModel):
 class ListingInDB(SQLModel, table=True):
     __tablename__ = "listings"
     __table_args__ = {'extend_existing': True}
-    id: int = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     title: str = Field(unique=False)
     description: Optional[str] = Field(sa_column=Text)
-    brand: str = Field(unique=False)
-    condition: str = Field(unique=False)
-    size: str = Field(unique=False)
-    gender: str = Field(unique=False)
-    coverImage: str = Field(unique=False)
+    brand: str = Field()
+    condition: str = Field()
+    size: str = Field()
+    gender: str = Field()
+    coverImage: str = Field()
     # Decimal(precision, scale)
     price: Decimal = Field(sa_column=DECIMAL(10, 2))
     created_at: datetime = Field(default_factory=datetime.now)
@@ -148,6 +144,7 @@ class createMedia(BaseModel):
 
 class Media(BaseModel):
     url: str
+    id: int
     postID: Optional[int] = None
     listingID: Optional[int] = None
     isVideo: bool
@@ -161,7 +158,7 @@ class MediaResponse(BaseModel):
 
 class MediaInDB(SQLModel, table=True):
     __tablename__ = "media"
-    id: int = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     url: str = Field(unique=True) 
     isVideo: bool
     postID: Optional[int]  = Field(default=None, foreign_key="posts.id", index=True)
@@ -189,17 +186,17 @@ class PostResponse(BaseModel):
 
 class PostInDB(SQLModel, table = True):
     __tablename__ = "posts"
-    title: Optional[str] = Field(unique = False)
-    id: int = Field(default=None, primary_key=True)
-    caption: Optional[str] = Field(unique = False)
+    title: Optional[str]
+    id: Optional[int] = Field(default=None, primary_key=True)
+    caption: Optional[str]
     sellerID: int = Field(foreign_key="users.id")  # Foreign key to UserInDB
     created_at: datetime = Field(default_factory=datetime.now)
-    coverImage: str = Field(unique=False)
+    coverImage: str
 
 
 class LikesInDB(SQLModel, table = True):
     __tablename__ = "Likes"
-    id: int = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     userID: int = Field(foreign_key="users.id")
     postID: Optional[int] = Field(foreign_key= "posts.id")
     listingID: Optional[int] = Field(foreign_key= "listings.id")
@@ -207,7 +204,7 @@ class LikesInDB(SQLModel, table = True):
 
 class CommentsInDB(SQLModel, table = True):
     __tablename__ = "Comments"
-    id: int = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     userID: int = Field(foreign_key="users.id")
     postID: Optional[int] = Field(foreign_key= "posts.id")
     listingID: Optional[int] = Field(foreign_key= "listings.id")
@@ -217,14 +214,14 @@ class CommentsInDB(SQLModel, table = True):
 
 class FollowingsInDB(SQLModel, table = True):
     __tablename__ = "FollowingAndFolowees"
-    id: int = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     followerID: int = Field(foreign_key="users.id")
     followeeID: int = Field(foreign_key="users.id")
 
 
 class LinksInDB(SQLModel, table = True):
     __tablename__ = "Links"
-    id: int = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     listingID: int = Field(foreign_key= "listings.id")
     postID: int = Field(foreign_key= "posts.id")
 
@@ -232,14 +229,14 @@ class LinksInDB(SQLModel, table = True):
 
 class ChatsInDB(SQLModel, table = True):
     __tablename__ = "Chats"
-    id: int = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     senderID: int = Field(foreign_key="users.id", index=True)
     senderID: int = Field(foreign_key="users.id", index=True)
 
 
 class MessagesInDB(SQLModel, table = True):
     __tablename__ = "Messages"
-    id: int = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     chatID: int = Field(default=None, foreign_key="Chats.id", index=True)
     author: int = Field(foreign_key="users.id", index=True)
     message: str
@@ -248,7 +245,7 @@ class MessagesInDB(SQLModel, table = True):
 
 class CartInDB(SQLModel, table = True):
     __tablename__ = "Cart"
-    id: int = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     userID: int = Field(foreign_key="users.id", index=True)
     listingID: int = Field(foreign_key= "listings.id")
     created_at: datetime = Field(default_factory=datetime.now)
@@ -256,9 +253,9 @@ class CartInDB(SQLModel, table = True):
 
 class SellerStatsInDB(SQLModel, table = True):
     __tablename__ = "SellerStats"
-    id: int = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     sellerID: int = Field(foreign_key="users.id", index=True)
-    totalEarnings: Decimal = Field(default=0.0)
+    totalEarnings: Decimal = Field(default=0.00)
     itemsSold: int = Field(default=0)
 
 
@@ -268,6 +265,7 @@ class LikeResponse(BaseModel):
     userID: int
     postID: Optional[int]
     listingID: Optional[int]
+    model_config = ConfigDict(from_attributes=True)
 
 class CommentResponse(BaseModel):
     id: int
@@ -276,21 +274,25 @@ class CommentResponse(BaseModel):
     listingID: Optional[int]
     comment: str
     created_at: datetime
+    model_config = ConfigDict(from_attributes=True)
 
 class FollowingResponse(BaseModel):
     id: int
     followerID: int
     followeeID: int
+    model_config = ConfigDict(from_attributes=True)
 
 class LinkResponse(BaseModel):
     id: int
     listingID: int
     postID: int
+    model_config = ConfigDict(from_attributes=True)
 
 class ChatResponse(BaseModel):
     id: int
     senderID: int
     recipientID: int
+    model_config = ConfigDict(from_attributes=True)
 
 class MessageResponse(BaseModel):
     id: int
@@ -298,18 +300,25 @@ class MessageResponse(BaseModel):
     author: int
     message: str
     created_at: datetime
+    model_config = ConfigDict(from_attributes=True)
 
 class CartResponse(BaseModel):
     id: int
     userID: int
     listingID: int
     created_at: datetime
+    model_config = ConfigDict(from_attributes=True)
 
 class SellerStatResponse(BaseModel):
     id: int
     sellerID: int
     totalEarnings: Decimal
     itemsSold: int
+    model_config = ConfigDict(from_attributes=True)
+
+
+
+
 
 
 class LikeCreate(BaseModel):

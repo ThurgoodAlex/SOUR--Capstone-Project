@@ -12,3 +12,4 @@ __pycache__/
 
 # ignore auth log
 *.log
+src/frontend/.expo/settings.json

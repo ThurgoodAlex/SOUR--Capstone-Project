@@ -13,7 +13,6 @@ import { Listing, User } from '@/constants/Types';
 export default function ListingInfoScreen()
  {
   const user = useUser(); // Fetch user details
-  const { logout } = useAuth();
   const api = useApi();
   
   const [liked, setLike] = useState(false);
@@ -28,7 +27,7 @@ export default function ListingInfoScreen()
     // Fetch the listing based on the dynamic id
     const fetchListing = async () => {
       try {
-        const response = await api.get(`/listing/listing/${id}`);
+        const response = await api.get(`/listing/${id}`);
         const data = await response.json();
        
         // Transform the data
@@ -76,7 +75,7 @@ export default function ListingInfoScreen()
     return (
       <>
         <View style={ScreenStyles.screen}>
-          <ScrollView>
+          <ScrollView contentContainerStyle={{ gap: 6 }}>
             <PhotoCarousel /> 
             <ProfileThumbnail user={seller} /> 
             <ListingInfo listing={listing} />
