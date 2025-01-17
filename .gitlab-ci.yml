@@ -22,20 +22,13 @@ test-backend:
         echo "Tests failed with exit code $exit_code"
         exit 1
       fi
+
     - echo "All tests passed"
+    
 
 clean-up: 
-  stage: deploy
+  stage: test
   script: 
-    # Prepare payload with pipeline information
-    - |
-      PAYLOAD=$(cat << EOF
-      {
-       "event_type": "cleanup"
-      }EOF)
-    - |
-      curl -X POST "${EC2_RUNNER_URL_CONTROL_URL}" \
-        -H "Content-Type: application/json" \
-        -d "$PAYLOAD"
+      curl -X POST -H "Content-Type: application/json" -d '{"event_type": "cleanup"}' "${EC2_RUNNER_URL_CONTROL_URL}"
   rules:
     - when: always  
