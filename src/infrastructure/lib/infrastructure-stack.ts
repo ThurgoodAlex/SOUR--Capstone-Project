@@ -115,6 +115,28 @@ export class BackendInfrastructureStack extends cdk.Stack {
         },
       })
 
+      // get all users lambda
+    const getAllUsersLambda = new lambda.Function(this, 'GetAllUsersLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.users_handlers.get_all_users_lambda',
+          code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'get_all_users_lambda',
+        environment: {
+          PYTHONPATH: '/var/task',
+        },
+      })
+
+      // get user by id lambda
+    const getUserByIdLambda = new lambda.Function(this, 'GetUserByIdLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.users_handlers.get_user_by_id_lambda',
+          code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'get_user_by_id_lambda',
+        environment: {
+          PYTHONPATH: '/var/task',
+        },
+      })
+
 
       //upload image lambda
     const uploadImageLambda = new lambda.Function(this, 'UploadImageLambda',{
@@ -176,6 +198,8 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getAllListingsIntergration = new apigateway.LambdaIntegration(getAllListingsLambda);
     const getListingsByUserIntergration = new apigateway.LambdaIntegration(getListingsByUserLambda);
     const getListingByIdIntergration = new apigateway.LambdaIntegration(getListingByIdLambda);
+    const getAllUsersIntergration = new apigateway.LambdaIntegration(getAllUsersLambda);
+    const getUserByIdIntergration = new apigateway.LambdaIntegration(getUserByIdLambda);
     const uploadImageIntergration = new apigateway.LambdaIntegration(uploadImageLambda);
     const getAllImageIntergration = new apigateway.LambdaIntegration(getAllImageLambda);
     const getImageByIDIntergration = new apigateway.LambdaIntegration(getImageByIDLambda);
@@ -197,7 +221,6 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getAccessTokenResource = api.root.addResource('getaccesstoken')
     getAccessTokenResource.addMethod('POST', getAcessTokenIntergration)
 
-
     // adding get current user route from auth
     const getCurrentUserResource = api.root.addResource('getcurrentuser')
     getCurrentUserResource.addMethod('GET', getCurrentUserIntergration)
@@ -214,6 +237,12 @@ export class BackendInfrastructureStack extends cdk.Stack {
 
     const getListingByIdResource = api.root.addResource('getListingById');
     getListingByIdResource.addMethod('GET', getListingByIdIntergration);
+
+    const getAllUsersResource = api.root.addResource('getAllUsers');
+    getAllUsersResource.addMethod('GET', getAllUsersIntergration);
+
+    const getUsersByIdResource = api.root.addResource('getUserById');
+    getUsersByIdResource.addMethod('GET', getUserByIdIntergration);
 
     const uploadImageResource = api.root.addResource('uploadImage');
     uploadImageResource.addMethod('POST', uploadImageIntergration)

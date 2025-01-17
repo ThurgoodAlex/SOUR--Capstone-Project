@@ -25,8 +25,6 @@ export default function PostCarousel() {
     ];
 
     
-
-    
     //TODO: this fetches all listings and keeps only newest 4. 
     // We need to change this to an actual db query (or long term use reccomendation alg to choose the 4).
     const fetchPosts = async () => {
@@ -101,18 +99,17 @@ export default function PostCarousel() {
 
       return (
         <View style={[Styles.row, {marginBottom:18}]}>
-            <ScrollView horizontal={true} >
-                {posts.map((post) => (
+            <ScrollView horizontal={true}>
                     <View style={Styles.column}>
+                    {posts.map((post) => (
                         <PostPreview
                             key={post.id}
                             post={post}
                             size={350}
                             thumbnailSize='big'
                         />
-                       
+                    ))}
                     </View>
-                ))}
             </ScrollView>
         </View>
       );
