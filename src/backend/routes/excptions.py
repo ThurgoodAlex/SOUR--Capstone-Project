@@ -23,12 +23,12 @@ class ValidationError(HTTPException):
         )
 
 class PermissionDenied(HTTPException):
-    def __init__(self, action: str, resource: str):
+    def __init__(self, action: str, resource: str, user_id):
         super().__init__(
             status_code=403,
             detail={
                 "error": "permission_denied",
-                "message": f"You do not have permission to {action} the {resource}.",
+                "message": f"You do not have permission to {action} the {resource} for user '{user_id}'.",
             }
         )
 
