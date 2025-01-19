@@ -28,7 +28,7 @@ class PermissionDenied(HTTPException):
             status_code=403,
             detail={
                 "error": "permission_denied",
-                "message": f"You do not have permission to {action} the {resource} for user '{user_id}'.",
+                "message": f"You do not have permission to {action} the {resource}'.",
             }
         )
 
