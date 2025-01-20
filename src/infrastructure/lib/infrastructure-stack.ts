@@ -115,6 +115,26 @@ export class BackendInfrastructureStack extends cdk.Stack {
         },
       })
 
+    const getLinksByPostIDLambda = new lambda.Function(this, 'GetLinksByPostID',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.listings_handlers.get_links_by_post_id_lambda',
+          code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'get_links_by_post_id_lambda',
+        environment: {
+          PYTHONPATH: '/var/task',
+        },
+    })
+
+    const createLinkLambda = new lambda.Function(this, 'CreateLink',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.listings_handlers.create_link_lambda',
+          code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'create_link_lambda',
+        environment: {
+          PYTHONPATH: '/var/task',
+        },
+    })
+
       // get all users lambda
     const getAllUsersLambda = new lambda.Function(this, 'GetAllUsersLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
@@ -198,6 +218,8 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getAllListingsIntergration = new apigateway.LambdaIntegration(getAllListingsLambda);
     const getListingsByUserIntergration = new apigateway.LambdaIntegration(getListingsByUserLambda);
     const getListingByIdIntergration = new apigateway.LambdaIntegration(getListingByIdLambda);
+    const getLinksByPostIdIntegration = new apigateway.LambdaIntegration(getLinksByPostIDLambda);
+    const createLinkIntegration = new apigateway.LambdaIntegration(createLinkLambda);
     const uploadMediaIntergration = new apigateway.LambdaIntegration(uploadMediaLambda);
     const getAllMediaIntergration = new apigateway.LambdaIntegration(getAllMediaLambda);
     const getMediaByIDIntergration = new apigateway.LambdaIntegration(getMediaByIDLambda);
@@ -239,8 +261,11 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getListingByIdResource = api.root.addResource('getListingById');
     getListingByIdResource.addMethod('GET', getListingByIdIntergration);
 
+    const getLinksByPostIdResouce = api.root.addResource('getLinksByPostId');
+    getLinksByPostIdResouce.addMethod('GET', getLinksByPostIdIntegration);
 
-
+    const createLinkResource = api.root.addResource('createLink');
+    createLinkResource.addMethod('POST', createLinkIntegration);
 
     const getAllUsersResource = api.root.addResource('getAllUsers');
     getAllUsersResource.addMethod('GET', getAllUsersIntergration);

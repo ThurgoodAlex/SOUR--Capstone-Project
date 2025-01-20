@@ -11,7 +11,7 @@ from databaseAndSchemas.schema import *
 from PRISM.src.prism_services.auth import auth_router
 
 from routes.media import media_router
-# from routes.images import images_router
+from routes.posts import posts_router
 from routes.users import users_router
 from fastapi.openapi.utils import get_openapi
 # Create logs directory if it doesn't exist
@@ -52,6 +52,7 @@ app.add_middleware(
 
 app.include_router(auth_router, prefix="/auth")
 app.include_router(media_router, prefix="/media")
+app.include_router(posts_router, prefix="/post")
 app.include_router(users_router, prefix="/users")
 
 

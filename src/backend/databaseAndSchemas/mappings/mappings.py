@@ -15,4 +15,9 @@ def map_user_db_to_response(user_db: UserInDB) -> User:
         profilePic=user_db.profilePic or ""
     )
     
-    
+def map_link_db_to_response(link_db: LinkInDB) -> Link:
+    return Link(
+        id= link_db.id,
+        listingID = link_db.listingID,
+        postID = link_db.postID
+    )
