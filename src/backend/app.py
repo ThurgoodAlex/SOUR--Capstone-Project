@@ -11,7 +11,7 @@ from databaseAndSchemas.schema import *
 from PRISM.src.prism_services.auth import auth_router
 
 from routes.media import media_router
-# from routes.images import images_router
+from routes.posts import posts_router
 from routes.users import users_router
 from fastapi.openapi.utils import get_openapi
 # Create logs directory if it doesn't exist
@@ -53,6 +53,7 @@ app.add_middleware(
 app.include_router(auth_router, prefix="/auth")
 app.include_router(media_router, prefix="/media")
 app.include_router(users_router, prefix="/users")
+app.include_router(posts_router, prefix="/posts")
 
 
 # Configure boto3 to use LocalStack
@@ -77,27 +78,6 @@ async def root():
 @app.get("/health")
 async def health():
     return {"status": "healthy"}
-
-
-# def custom_openapi():
-#     if app.openapi_schema:
-#         return app.openapi_schema
-#     openapi_schema = get_openapi(
-#         title="Sour API",
-#         version="1.0.0",
-#         description="Sours API",
-#         routes=app.routes,
-#     )
-#     openapi_schema["components"]["securitySchemes"] = {
-#         "BearerAuth": {
-#             "type": "http",
-#             "scheme": "bearer",
-#             "bearerFormat": "JWT",
-#         }
-#     }
-#     openapi_schema["security"] = [{"BearerAuth": []}]
-#     app.openapi_schema = openapi_schema
-#     return app.openapi_schema
 
 app.openapi = lambda: get_openapi(
     title="Sour API",

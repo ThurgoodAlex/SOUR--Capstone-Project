@@ -159,11 +159,9 @@ class CommentInDB(SQLModel, table = True):
     created_at: datetime = Field(default_factory=datetime.now)
 
 class Comment(BaseModel):
-    id: int
     userID: int
     postID: int
     comment: str
-    created_at: datetime
     model_config = ConfigDict(from_attributes=True)
 
 class CommentCreate(BaseModel):

@@ -22,7 +22,7 @@ SessionDep = Annotated[Session, Depends(get_session)]
 from databaseAndSchemas.schema import(
     UserInDB, UserRegistration, User, UserLogin, AccessToken, Claims
 )
-from databaseAndSchemas.mappings.mappings import *
+from databaseAndSchemas.mappings.mappings import map_user_db_to_response
 
 
 
@@ -71,7 +71,7 @@ lambda_client = boto3.client('lambda', endpoint_url=localstack_endpoint,
 
 
 
-@auth_router.post("/createuser", response_model=User, status_code=201)
+@auth_router.post("/createUser", response_model=User, status_code=201)
 def create_new_user(newUser: UserRegistration, session: Annotated[Session, Depends(get_session)]) -> User:
     """Registering a new User"""
     try:

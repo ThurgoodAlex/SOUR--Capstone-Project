@@ -179,8 +179,38 @@ export class BackendInfrastructureStack extends cdk.Stack {
         },
       })
 
+      const getCommentByIDLambda = new lambda.Function(this, 'getCommentByIDLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.media_handlers.get_comment_by_id_lambda',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'get_comment_by_id_lambda',
+        environment: {
+        PYTHONPATH: '/var/task',
+        },
+      })
 
-    //Here is the intergration to API gateway.
+      const getCommentsByPostIDLambda = new lambda.Function(this, 'GetCommentsByPostIDLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.media_handlers.get_all_comments_by_post_id_lambda',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'get_all_comments_by_post_id_lambda',
+        environment: {
+        PYTHONPATH: '/var/task',
+        },
+      })
+
+      const createCommentLambda = new lambda.Function(this, 'createCommentLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.media_handlers.create_new_comment_lambda',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'create_new_comment_lambda',
+        environment: {
+        PYTHONPATH: '/var/task',
+        },
+      })
+
+
+    //Here is the Integration to API gateway.
 
     // Create API Gateway
     const api = new apigateway.RestApi(this, 'StarterPageApi', {
@@ -190,20 +220,23 @@ export class BackendInfrastructureStack extends cdk.Stack {
 
     // Create Lambda integration
     const starterPageIntegration = new apigateway.LambdaIntegration(starterPageLambda);
-    const createUserIntergration = new apigateway.LambdaIntegration(createUserLambda);
-    const loginUserIntergration = new apigateway.LambdaIntegration(loginUserLambda);
-    const createListingIntergration = new apigateway.LambdaIntegration(createListingLambda);
-    const getAcessTokenIntergration = new apigateway.LambdaIntegration(getAccessTokenLambda);
-    const getCurrentUserIntergration = new apigateway.LambdaIntegration(getCurrentUserLambda);
-    const getAllListingsIntergration = new apigateway.LambdaIntegration(getAllListingsLambda);
-    const getListingsByUserIntergration = new apigateway.LambdaIntegration(getListingsByUserLambda);
-    const getListingByIdIntergration = new apigateway.LambdaIntegration(getListingByIdLambda);
-    const uploadMediaIntergration = new apigateway.LambdaIntegration(uploadMediaLambda);
-    const getAllMediaIntergration = new apigateway.LambdaIntegration(getAllMediaLambda);
-    const getMediaByIDIntergration = new apigateway.LambdaIntegration(getMediaByIDLambda);
-    const getMediaByUserIntergration = new apigateway.LambdaIntegration(getMediaByUserLambda);
-    const getAllUsersIntergration = new apigateway.LambdaIntegration(getAllUsersLambda);
-    const getUserByIdIntergration = new apigateway.LambdaIntegration(getUserByIdLambda);
+    const createUserIntegration = new apigateway.LambdaIntegration(createUserLambda);
+    const loginUserIntegration = new apigateway.LambdaIntegration(loginUserLambda);
+    const createListingIntegration = new apigateway.LambdaIntegration(createListingLambda);
+    const getAcessTokenIntegration = new apigateway.LambdaIntegration(getAccessTokenLambda);
+    const getCurrentUserIntegration = new apigateway.LambdaIntegration(getCurrentUserLambda);
+    const getAllListingsIntegration = new apigateway.LambdaIntegration(getAllListingsLambda);
+    const getListingsByUserIntegration = new apigateway.LambdaIntegration(getListingsByUserLambda);
+    const getListingByIdIntegration = new apigateway.LambdaIntegration(getListingByIdLambda);
+    const uploadMediaIntegration = new apigateway.LambdaIntegration(uploadMediaLambda);
+    const getAllMediaIntegration = new apigateway.LambdaIntegration(getAllMediaLambda);
+    const getMediaByIDIntegration = new apigateway.LambdaIntegration(getMediaByIDLambda);
+    const getMediaByUserIntegration = new apigateway.LambdaIntegration(getMediaByUserLambda);
+    const getAllUsersIntegration = new apigateway.LambdaIntegration(getAllUsersLambda);
+    const getUserByIdIntegration = new apigateway.LambdaIntegration(getUserByIdLambda);
+    const getCommentByIDIntegration = new apigateway.LambdaIntegration(getCommentByIDLambda);
+    const getCommentsByPostIDIntegration = new apigateway.LambdaIntegration(getCommentsByPostIDLambda);
+    const createCommentIntegration = new apigateway.LambdaIntegration(createCommentLambda);
 
 
 
@@ -212,54 +245,61 @@ export class BackendInfrastructureStack extends cdk.Stack {
 
     // Adding Create user route from Auth
     const createUserResource = api.root.addResource('createuser');
-    createUserResource.addMethod('POST', createUserIntergration);
+    createUserResource.addMethod('POST', createUserIntegration);
 
     // Adding login user route from Auth
     const loginUserResource = api.root.addResource('loginuser')
-    loginUserResource.addMethod('POST', loginUserIntergration)
+    loginUserResource.addMethod('POST', loginUserIntegration)
 
     // adding get access token route from auth
     const getAccessTokenResource = api.root.addResource('getaccesstoken')
-    getAccessTokenResource.addMethod('POST', getAcessTokenIntergration)
+    getAccessTokenResource.addMethod('POST', getAcessTokenIntegration)
 
     // adding get current user route from auth
     const getCurrentUserResource = api.root.addResource('getcurrentuser')
-    getCurrentUserResource.addMethod('GET', getCurrentUserIntergration)
+    getCurrentUserResource.addMethod('GET', getCurrentUserIntegration)
 
     //Adding Listing endpoints
     const createListingResource = api.root.addResource('createlisting');
-    createListingResource.addMethod('POST', createListingIntergration)
+    createListingResource.addMethod('POST', createListingIntegration)
 
     const getAllListingsResource = api.root.addResource('getAllListings');
-    getAllListingsResource.addMethod('GET', getAllListingsIntergration);
+    getAllListingsResource.addMethod('GET', getAllListingsIntegration);
 
     const getListingsByUserResource = api.root.addResource('getListingsByUser');
-    getListingsByUserResource.addMethod('GET', getListingsByUserIntergration);
+    getListingsByUserResource.addMethod('GET', getListingsByUserIntegration);
 
     const getListingByIdResource = api.root.addResource('getListingById');
-    getListingByIdResource.addMethod('GET', getListingByIdIntergration);
-
-
-
+    getListingByIdResource.addMethod('GET', getListingByIdIntegration);
 
     const getAllUsersResource = api.root.addResource('getAllUsers');
-    getAllUsersResource.addMethod('GET', getAllUsersIntergration);
+    getAllUsersResource.addMethod('GET', getAllUsersIntegration);
 
     const getUsersByIdResource = api.root.addResource('getUserById');
-    getUsersByIdResource.addMethod('GET', getUserByIdIntergration);
+    getUsersByIdResource.addMethod('GET', getUserByIdIntegration);
 
 
     const uploadMediaResource = api.root.addResource('uploadMedia');
-    uploadMediaResource.addMethod('POST', uploadMediaIntergration)
+    uploadMediaResource.addMethod('POST', uploadMediaIntegration)
 
     const getAllMediaResource = api.root.addResource('getAllMedia');
-    getAllMediaResource.addMethod('GET', getAllMediaIntergration)
+    getAllMediaResource.addMethod('GET', getAllMediaIntegration)
 
     const getMediaByIDResource = api.root.addResource('getMediaByID');
-    getMediaByIDResource.addMethod('GET', getMediaByIDIntergration)
+    getMediaByIDResource.addMethod('GET', getMediaByIDIntegration)
 
     const getMediaByUserResource = api.root.addResource('getMediaByUser');
-    getMediaByUserResource.addMethod('GET', getMediaByUserIntergration)
+    getMediaByUserResource.addMethod('GET', getMediaByUserIntegration)
+
+    const getCommentByIDResource = api.root.addResource('getCommentByID');
+    getCommentByIDResource.addMethod('GET', getCommentByIDIntegration)
+    
+    const getCommentsByPostIDResource = api.root.addResource('getCommentsByPostID');
+    getCommentsByPostIDResource.addMethod('GET', getCommentsByPostIDIntegration)
+
+    const createCommentResource = api.root.addResource('createComment');
+    createCommentResource.addMethod('GET', createCommentIntegration)
+
     // Add /health endpoint
     const healthResource = api.root.addResource('health');
     healthResource.addMethod('GET', new apigateway.MockIntegration({
