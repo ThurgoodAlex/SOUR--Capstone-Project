@@ -137,6 +137,36 @@ export class BackendInfrastructureStack extends cdk.Stack {
         },
       })
 
+    const followUserLambda = new lambda.Function(this, 'FollowUserLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.users_handlers.follow_user_lambda',
+            code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'follow_user_lambda',
+        environment: {
+            PYTHONPATH: '/var/task',
+        },
+    })
+
+    const getFollowersLambda = new lambda.Function(this, 'GetFollowersLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.users_handlers.get_followers_lambda',
+            code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'get_followers_lambda',
+        environment: {
+            PYTHONPATH: '/var/task',
+        },
+    })
+
+    const getFollowingLambda = new lambda.Function(this, 'GetFollowingLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.users_handlers.get_following_lambda',
+            code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'get_following_lambda',
+        environment: {
+            PYTHONPATH: '/var/task',
+        },
+    })
+
 
       //upload media lambda
     const uploadMediaLambda = new lambda.Function(this, 'UploadMediaLambda',{
@@ -204,6 +234,9 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getMediaByUserIntergration = new apigateway.LambdaIntegration(getMediaByUserLambda);
     const getAllUsersIntergration = new apigateway.LambdaIntegration(getAllUsersLambda);
     const getUserByIdIntergration = new apigateway.LambdaIntegration(getUserByIdLambda);
+    const followUserIntegration = new apigateway.LambdaIntegration(followUserLambda);
+    const getFollowersIntegration = new apigateway.LambdaIntegration(getFollowersLambda);
+    const getFollowingIntegration = new apigateway.LambdaIntegration(getFollowingLambda);
 
 
 
@@ -239,15 +272,20 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getListingByIdResource = api.root.addResource('getListingById');
     getListingByIdResource.addMethod('GET', getListingByIdIntergration);
 
-
-
-
     const getAllUsersResource = api.root.addResource('getAllUsers');
     getAllUsersResource.addMethod('GET', getAllUsersIntergration);
 
     const getUsersByIdResource = api.root.addResource('getUserById');
     getUsersByIdResource.addMethod('GET', getUserByIdIntergration);
 
+    const followUserResource = api.root.addResource('followUser');
+    followUserResource.addMethod('POST', followUserIntegration);
+
+    const getFollowersResource = api.root.addResource('getFollowers');
+    getFollowersResource.addMethod('GET', getFollowersIntegration);
+
+    const getFollowingResource = api.root.addResource('getFollowing');
+    getFollowingResource.addMethod('GET', getFollowingIntegration);
 
     const uploadMediaResource = api.root.addResource('uploadMedia');
     uploadMediaResource.addMethod('POST', uploadMediaIntergration)
