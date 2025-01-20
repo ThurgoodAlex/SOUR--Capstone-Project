@@ -225,7 +225,6 @@ class Chat(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 class ChatCreate(BaseModel):
-    senderID: int
     reciepientID: int
 ###############################
 
@@ -248,8 +247,6 @@ class Message(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 class MessageCreate(BaseModel):
-    chatID: int
-    author: int
     message: str
 ###############################
 

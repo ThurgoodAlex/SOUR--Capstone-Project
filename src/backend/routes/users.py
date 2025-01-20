@@ -1,5 +1,7 @@
+from sqlalchemy import or_
 import os
 import sys
+from routes.exceptions import DuplicateResource, EntityNotFound, PermissionDenied
 import boto3
 from fastapi import APIRouter, Depends, HTTPException
 from datetime import datetime, timezone
@@ -10,7 +12,7 @@ from sqlalchemy.future import select
 from jose import JWTError, jwt
 from sqlmodel import Session, SQLModel, select
 from databaseAndSchemas.schema import (
-    UserInDB, User
+    Chat, ChatCreate, ChatInDB, UserInDB, User
 )
 from databaseAndSchemas.test_db import get_session
 from PRISM.src.prism_services.auth import auth_get_current_user
@@ -34,6 +36,10 @@ lambda_client = boto3.client('lambda', endpoint_url=localstack_endpoint,
 
 users_router = APIRouter(tags=["Users"])
 
+
+
+# ------------------------ /users -------------------------- #
+
 @users_router.get('/', response_model= list[UserInDB], status_code=201)
 def get_all_users(session :Annotated[Session, Depends(get_session)])-> list[UserInDB]:
     """Gets all users"""
@@ -54,3 +60,37 @@ def get_all_users_by_id(session :Annotated[Session, Depends(get_session)], curre
                     "entity_id":user_id
                 }
             )
+
+
+# ------------------------ /users/chats -------------------------- #
+
+@users_router.get('/{user_id}/chats', response_model=list[Chat], status_code = 201)
+def get_all_chats(user_id: int,  
+                  session : Annotated[Session, Depends(get_session)],
+                  currentUser: UserInDB = Depends(auth_get_current_user)
+                  ) -> list[Chat]:
+    """Getting all chats for this user"""
+    
+    # check that user with id exists
+    user = session.get(UserInDB, user_id)
+    if not user:
+        raise EntityNotFound("user", user_id)
+    
+    # Authenticate that the currently logged-in user matches the URL parameter
+    if currentUser.id != user_id:
+        raise PermissionDenied("view", "chats")
+    
+    # Filter chats where the user is either the sender or the recipient
+    chats_db = session.exec(
+        select(ChatInDB).where(
+            or_(
+                ChatInDB.senderID == user_id,
+                ChatInDB.recipientID == user_id
+            )
+        )
+    ).all()
+    #TODO: update schema to order by last_updated
+    
+    return [Chat(**chat_db.model_dump()) for chat_db in chats_db]
+
+    

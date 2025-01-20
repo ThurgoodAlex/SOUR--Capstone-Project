@@ -180,6 +180,54 @@ export class BackendInfrastructureStack extends cdk.Stack {
       })
 
 
+
+    // Chats and Messages Lambdas
+
+    // creating a chat
+    const createChatLambda = new lambda.Function(this, 'CreateChatLambda',{
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.chats_handlers.upload_chat_lambda',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'upload_chat_lambda',
+      environment: {
+        PYTHONPATH: '/var/task',
+      },
+    })
+
+    // get all Chats of user lambda
+    const getChatsOfUserLambda = new lambda.Function(this, 'GetChatsOfUserLambda',{
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.chats_handlers.get_all_users_chats_lambda',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'get_all_users_chats_lambda',
+      environment: {
+        PYTHONPATH: '/var/task',
+      },
+    })
+
+
+    // creating a message
+    const createMessageLambda = new lambda.Function(this, 'CreateMessageLambda',{
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.chats_handlers.upload_message_lambda',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'upload_message_lambda',
+      environment: {
+        PYTHONPATH: '/var/task',
+      },
+    })
+
+    // get all messages of chat lambda
+    const getMessagesOfChatLambda = new lambda.Function(this, 'GetMessagesOfChatLambda',{
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.chats_handlers.get_messages_of_chat_lambda',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'get_messages_of_chat_lambda',
+      environment: {
+        PYTHONPATH: '/var/task',
+      },
+    })
+
     //Here is the intergration to API gateway.
 
     // Create API Gateway
@@ -190,21 +238,34 @@ export class BackendInfrastructureStack extends cdk.Stack {
 
     // Create Lambda integration
     const starterPageIntegration = new apigateway.LambdaIntegration(starterPageLambda);
+
+    // Auth
     const createUserIntergration = new apigateway.LambdaIntegration(createUserLambda);
     const loginUserIntergration = new apigateway.LambdaIntegration(loginUserLambda);
-    const createListingIntergration = new apigateway.LambdaIntegration(createListingLambda);
     const getAcessTokenIntergration = new apigateway.LambdaIntegration(getAccessTokenLambda);
     const getCurrentUserIntergration = new apigateway.LambdaIntegration(getCurrentUserLambda);
+
+    // Listings
+    const createListingIntergration = new apigateway.LambdaIntegration(createListingLambda);
     const getAllListingsIntergration = new apigateway.LambdaIntegration(getAllListingsLambda);
     const getListingsByUserIntergration = new apigateway.LambdaIntegration(getListingsByUserLambda);
     const getListingByIdIntergration = new apigateway.LambdaIntegration(getListingByIdLambda);
+
+    // Media
     const uploadMediaIntergration = new apigateway.LambdaIntegration(uploadMediaLambda);
     const getAllMediaIntergration = new apigateway.LambdaIntegration(getAllMediaLambda);
     const getMediaByIDIntergration = new apigateway.LambdaIntegration(getMediaByIDLambda);
     const getMediaByUserIntergration = new apigateway.LambdaIntegration(getMediaByUserLambda);
+
+    // Users
     const getAllUsersIntergration = new apigateway.LambdaIntegration(getAllUsersLambda);
     const getUserByIdIntergration = new apigateway.LambdaIntegration(getUserByIdLambda);
 
+    // Chats & Messages
+    const createChatIntegration = new apigateway.LambdaIntegration(createChatLambda);
+    const getChatsOfUserIntegration = new apigateway.LambdaIntegration(getChatsOfUserLambda);
+    const createMessageIntegration = new apigateway.LambdaIntegration(createMessageLambda);
+    const getMessagesOfChatIntegration = new apigateway.LambdaIntegration(getMessagesOfChatLambda);
 
 
     api.root.addMethod('GET', starterPageIntegration);
@@ -260,6 +321,22 @@ export class BackendInfrastructureStack extends cdk.Stack {
 
     const getMediaByUserResource = api.root.addResource('getMediaByUser');
     getMediaByUserResource.addMethod('GET', getMediaByUserIntergration)
+
+
+    const uploadChatResource = api.root.addResource('uploadChat');
+    uploadChatResource.addMethod('POST', createChatIntegration)
+
+    const uploadMessageResource = api.root.addResource('uploadMessage');
+    uploadMessageResource.addMethod('POST', createMessageIntegration)
+
+    
+    const getChatsOfUserResource = api.root.addResource('getChatsOfUser');
+    getChatsOfUserResource.addMethod('GET', getChatsOfUserIntegration)
+
+    const getMessagesOfChat = api.root.addResource('getMessagesOfChat');
+    getMessagesOfChat.addMethod('GET', getMessagesOfChatIntegration)
+
+
     // Add /health endpoint
     const healthResource = api.root.addResource('health');
     healthResource.addMethod('GET', new apigateway.MockIntegration({
