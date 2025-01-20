@@ -121,7 +121,6 @@ def get_followers(session: Annotated[Session, Depends(get_session)],
                 current_user: UserInDB = Depends(auth_get_current_user))-> list[FollowingInDB]:
     """Get Who Follows Current User"""
     return session.exec(select(FollowingInDB).filter(FollowingInDB.followeeID== user_id)).all()
->>>>>>> src/backend/routes/users.py
 
 
 
