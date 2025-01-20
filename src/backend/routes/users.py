@@ -41,7 +41,7 @@ def get_all_users(session :Annotated[Session, Depends(get_session)])-> list[User
     return session.exec(select(UserInDB)).all()
 
 @users_router.get('/{user_id}', response_model= UserInDB, status_code=201)
-def get_all_users_by_id(session: Annotated[Session, Depends(get_session)],
+def get_user_by_id(session: Annotated[Session, Depends(get_session)],
                         user_id: int,
                         current_user: UserInDB = Depends(auth_get_current_user))-> UserInDB:
     """Gets user by id"""
