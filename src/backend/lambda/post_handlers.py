@@ -2,13 +2,13 @@ import json
 
 def upload_post(event, context):
     try:
-        new_listing_data = json.loads(event['body'])  
+        new_post_data = json.loads(event['body'])  
 
         return {
             "statusCode": 200,
             "body": json.dumps({
-                "message": "User created successfully",
-                "user": new_listing_data
+                "message": "post sucessfully uploaded",
+                "post": new_post_data
             })
         }
 
@@ -26,8 +26,8 @@ def get_all_posts_lambda(event, context):
         return {
             "statusCode": 200,
             "body": json.dumps({
-                "message": "User created successfully",
-                "user": all_listings
+                "message": "posts succesfully retrieved",
+                "posts": all_listings
             })
         }
 
@@ -37,7 +37,7 @@ def get_all_posts_lambda(event, context):
             "body": json.dumps({"error": str(e)})
         }
 
-def get_listings_by_user_lambda(event, context):
+def get_posts_by_user_lambda(event, context):
     try:
         user_listings = json.loads(event['body'])  
 
@@ -45,7 +45,7 @@ def get_listings_by_user_lambda(event, context):
             "statusCode": 200,
             "body": json.dumps({
                 "message": "Listings Retrieved",
-                "user": user_listings
+                "posts": user_listings
             })
         }
 
@@ -55,15 +55,15 @@ def get_listings_by_user_lambda(event, context):
             "body": json.dumps({"error": str(e)})
         }
 
-def get_listing_by_id_lambda(event, context):
+def get_post_by_id_lambda(event, context):
     try:
-        listing= json.loads(event['body'])  
+        post= json.loads(event['body'])  
 
         return {
             "statusCode": 200,
             "body": json.dumps({
-                "message": "Listing Retrieved",
-                "user": listing
+                "message": "Post Retrieved",
+                "post": post
             })
         }
 

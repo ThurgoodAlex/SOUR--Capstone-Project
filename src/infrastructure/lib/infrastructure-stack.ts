@@ -74,7 +74,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
     // creating a listing
     const uploadPostLambda = new lambda.Function(this, 'uploadPostLambda',{
       runtime: lambda.Runtime.PYTHON_3_8,
-      handler: 'lambda.listings_handlers.upload_post',
+      handler: 'lambda.post_handlers.upload_post',
         code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
       functionName: 'upload_post_lambda',
       environment: {
@@ -85,7 +85,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
     // get all listings lambda
     const getAllPostsLambda = new lambda.Function(this, 'GetAllPostsLambda',{
       runtime: lambda.Runtime.PYTHON_3_8,
-      handler: 'lambda.listings_handlers.get_all_posts_lambda',
+      handler: 'lambda.post_handlers.get_all_posts_lambda',
         code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
       functionName: 'get_all_posts_lambda',
       environment: {
@@ -94,28 +94,28 @@ export class BackendInfrastructureStack extends cdk.Stack {
     })
 
     // get listings by users lambda
-    const getListingsByUserLambda = new lambda.Function(this, 'GetListingsByUserLambda',{
+    const getPostsByUserLambda = new lambda.Function(this, 'GetListingsByUserLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
-        handler: 'lambda.listings_handlers.get_listings_by_user_lambda',
+        handler: 'lambda.listings_handlers.get_posts_by_user_lambda',
           code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
-        functionName: 'get_listings_by_user_lambda',
+        functionName: 'get_posts_by_user_lambda',
         environment: {
           PYTHONPATH: '/var/task',
         },
       })
 
     // get listing by id lambda
-    const getListingByIdLambda = new lambda.Function(this, 'GetListingByIdLambda',{
+    const getPostingByIdLambda = new lambda.Function(this, 'GetPostingByIdLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
-        handler: 'lambda.listings_handlers.get_listing_by_id_lambda',
+        handler: 'lambda.post_handlers.get_post_by_id_lambda',
           code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
-        functionName: 'get_listing_by_id_lambda',
+        functionName: 'get_post_by_id_lambda',
         environment: {
           PYTHONPATH: '/var/task',
         },
       })
 
-      // get all users lambda
+      
     const getAllUsersLambda = new lambda.Function(this, 'GetAllUsersLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
         handler: 'lambda.users_handlers.get_all_users_lambda',
@@ -201,8 +201,8 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getAcessTokenIntergration = new apigateway.LambdaIntegration(getAccessTokenLambda);
     const getCurrentUserIntergration = new apigateway.LambdaIntegration(getCurrentUserLambda);
     const getAllPostsIntergration = new apigateway.LambdaIntegration(getAllPostsLambda);
-    const getListingsByUserIntergration = new apigateway.LambdaIntegration(getListingsByUserLambda);
-    const getListingByIdIntergration = new apigateway.LambdaIntegration(getListingByIdLambda);
+    const getPostsByUserIntergration = new apigateway.LambdaIntegration(getPostsByUserLambda);
+    const getPostByIdIntergration = new apigateway.LambdaIntegration(getPostingByIdLambda);
     const uploadMediaIntergration = new apigateway.LambdaIntegration(uploadMediaLambda);
     const getAllMediaIntergration = new apigateway.LambdaIntegration(getAllMediaLambda);
     const getMediaByIDIntergration = new apigateway.LambdaIntegration(getMediaByIDLambda);
@@ -238,11 +238,11 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getAllPostsResource = api.root.addResource('getAllPosts');
     getAllPostsResource.addMethod('GET', getAllPostsIntergration);
 
-    const getListingsByUserResource = api.root.addResource('getListingsByUser');
-    getListingsByUserResource.addMethod('GET', getListingsByUserIntergration);
+    const getPostsByUserResource = api.root.addResource('getPostsByUser');
+    getPostsByUserResource.addMethod('GET', getPostsByUserIntergration);
 
-    const getListingByIdResource = api.root.addResource('getListingById');
-    getListingByIdResource.addMethod('GET', getListingByIdIntergration);
+    const getPostByIdResource = api.root.addResource('getPostById');
+    getPostByIdResource.addMethod('GET', getPostByIdIntergration);
 
 
 
