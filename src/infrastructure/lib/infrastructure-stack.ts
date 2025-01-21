@@ -72,22 +72,22 @@ export class BackendInfrastructureStack extends cdk.Stack {
       });
 
     // creating a listing
-    const createListingLambda = new lambda.Function(this, 'CreateListingLambda',{
+    const uploadPostLambda = new lambda.Function(this, 'uploadPostLambda',{
       runtime: lambda.Runtime.PYTHON_3_8,
-      handler: 'lambda.listings_handlers.create_new_listing',
+      handler: 'lambda.listings_handlers.upload_post',
         code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
-      functionName: 'create_listing_lambda',
+      functionName: 'upload_post_lambda',
       environment: {
         PYTHONPATH: '/var/task',
       },
     })
 
     // get all listings lambda
-    const getAllListingsLambda = new lambda.Function(this, 'GetAllListingsLambda',{
+    const getAllPostsLambda = new lambda.Function(this, 'GetAllPostsLambda',{
       runtime: lambda.Runtime.PYTHON_3_8,
-      handler: 'lambda.listings_handlers.get_all_listings_lambda',
+      handler: 'lambda.listings_handlers.get_all_posts_lambda',
         code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
-      functionName: 'get_all_listings_lambda',
+      functionName: 'get_all_posts_lambda',
       environment: {
         PYTHONPATH: '/var/task',
       },
@@ -192,10 +192,15 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const starterPageIntegration = new apigateway.LambdaIntegration(starterPageLambda);
     const createUserIntergration = new apigateway.LambdaIntegration(createUserLambda);
     const loginUserIntergration = new apigateway.LambdaIntegration(loginUserLambda);
-    const createListingIntergration = new apigateway.LambdaIntegration(createListingLambda);
+
+
+
+    const uploadPostIntergration = new apigateway.LambdaIntegration(uploadPostLambda);
+
+
     const getAcessTokenIntergration = new apigateway.LambdaIntegration(getAccessTokenLambda);
     const getCurrentUserIntergration = new apigateway.LambdaIntegration(getCurrentUserLambda);
-    const getAllListingsIntergration = new apigateway.LambdaIntegration(getAllListingsLambda);
+    const getAllPostsIntergration = new apigateway.LambdaIntegration(getAllPostsLambda);
     const getListingsByUserIntergration = new apigateway.LambdaIntegration(getListingsByUserLambda);
     const getListingByIdIntergration = new apigateway.LambdaIntegration(getListingByIdLambda);
     const uploadMediaIntergration = new apigateway.LambdaIntegration(uploadMediaLambda);
@@ -227,11 +232,11 @@ export class BackendInfrastructureStack extends cdk.Stack {
     getCurrentUserResource.addMethod('GET', getCurrentUserIntergration)
 
     //Adding Listing endpoints
-    const createListingResource = api.root.addResource('createlisting');
-    createListingResource.addMethod('POST', createListingIntergration)
+    const uploadPostResource = api.root.addResource('uploadPost');
+    uploadPostResource.addMethod('POST', uploadPostIntergration)
 
-    const getAllListingsResource = api.root.addResource('getAllListings');
-    getAllListingsResource.addMethod('GET', getAllListingsIntergration);
+    const getAllPostsResource = api.root.addResource('getAllPosts');
+    getAllPostsResource.addMethod('GET', getAllPostsIntergration);
 
     const getListingsByUserResource = api.root.addResource('getListingsByUser');
     getListingsByUserResource.addMethod('GET', getListingsByUserIntergration);

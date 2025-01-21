@@ -9,7 +9,7 @@ from sqlalchemy.future import select
 from jose import JWTError, jwt
 from sqlmodel import Session, SQLModel, select
 from databaseAndSchemas.schema import (
-    PostInDB, Post, UserInDB
+    PostInDB, Post, UserInDB, createPost
 )
 from databaseAndSchemas.test_db import get_session
 from PRISM.src.prism_services.auth import auth_get_current_user
@@ -35,28 +35,23 @@ lambda_client = boto3.client('lambda', endpoint_url=localstack_endpoint,
 posts_router = APIRouter(tags=["Posts"])
 
 
-#TODO: add seller_id to the listing_data. First needs to implement JWT tokens.
-@posts_router.post('/createlisting', response_model= Post, status_code=201)
-def create_new_listing(newPost:createListing, session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)) -> Post:
-    """Creating a new listing"""
-    logger.info("testing create listing")
-    listingDB = PostInDB(
-        **newListing.model_dump(),
-        seller = currentUser.username,
-        seller_id = currentUser.id,
-        seller_user = currentUser,
+@posts_router.post('/users/{user_id}/posts', response_model= Post, status_code=201)
+def upload_post(newPost:createPost, session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)) -> Post:
+    """Creating a new posting"""
+    post = PostInDB(
+        **newPost.model_dump(),
     )
-    session.add(listingDB)
+    session.add(post)
     session.commit()
-    session.refresh(listingDB)
-    listing_data = Listing(title = listingDB.title, description=listingDB.description, price=listingDB.price, seller=listingDB.seller)
-    return ListingResponse(Listing=listing_data)
+    session.refresh(post)
+    return post
 
 
-# @posts_router.get('/', response_model= list[ListingInDB], status_code=201)
-# def get_all_listings(session :Annotated[Session, Depends(get_session)])-> list[ListingInDB]:
-#     """Getting all listings"""
-#     return session.exec(select(ListingInDB)).all()
+@posts_router.get('/posts/', response_model= list[Post], status_code=201)
+def get_all_posts(session :Annotated[Session, Depends(get_session)])-> list[Post]:
+    """Getting all posts"""
+    post_in_db = session.exec(select(PostInDB)).all()
+    return [Post(**post.model_dump()) for post in post_in_db]
 
 # @posts_router.get('/{user_id}/listings', response_model= list[ListingInDB], status_code=201)
 # def get_all_listings_by_user(session :Annotated[Session, Depends(get_session)], user_id: int)-> list[ListingInDB]:

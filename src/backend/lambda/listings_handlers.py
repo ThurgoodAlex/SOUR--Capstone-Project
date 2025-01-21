@@ -1,6 +1,6 @@
 import json
 
-def create_listing_lambda(event, context):
+def upload_post(event, context):
     try:
         new_listing_data = json.loads(event['body'])  
 
@@ -19,7 +19,7 @@ def create_listing_lambda(event, context):
         }
     
 
-def get_all_listings_lambda(event, context):
+def get_all_posts_lambda(event, context):
     try:
         all_listings= json.loads(event['body'])  
 
