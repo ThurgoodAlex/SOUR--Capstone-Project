@@ -51,7 +51,7 @@ app.add_middleware(
 
 
 app.include_router(auth_router, prefix="/auth")
-app.include_router(media_router, prefix="/media")
+app.include_router(media_router, prefix="")
 app.include_router(users_router, prefix="/users")
 app.include_router(posts_router)
 

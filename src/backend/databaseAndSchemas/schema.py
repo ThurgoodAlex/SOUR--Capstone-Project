@@ -121,7 +121,6 @@ class MediaInDB(SQLModel, table=True):
 
 class createMedia(BaseModel):
     url: str
-    postID: int
     isVideo: bool
 
 class Media(BaseModel):
