@@ -1,4 +1,5 @@
-from http.client import HTTPException
+from fastapi import HTTPException
+
 
 
 class EntityNotFound(HTTPException):
@@ -22,13 +23,15 @@ class ValidationError(HTTPException):
             }
         )
 
+
+        
 class PermissionDenied(HTTPException):
-    def __init__(self, action: str, resource: str, user_id):
+    def __init__(self, action: str, resource: str):
         super().__init__(
             status_code=403,
             detail={
                 "error": "permission_denied",
-                "message": f"You do not have permission to {action} the {resource}'.",
+                "message": f"You do not have permission to {action} the {resource}.",
             }
         )
 
@@ -40,6 +43,17 @@ class DuplicateResource(HTTPException):
             detail={
                 "error": "duplicate_resource",
                 "message": f"{entity_name} with {entity_field} '{entity_value}' already exists."
+            }
+        )
+        
+class MethodNotAllowed(HTTPException):
+    def __init__(self, operation: str, ):
+        super().__init__(
+            status_code=405,
+        
+            detail={
+                "error": "method_not_allowed",
+                "message": f'{operation} is not allowed'
             }
         )
 
