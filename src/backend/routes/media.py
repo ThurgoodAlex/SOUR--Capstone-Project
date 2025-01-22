@@ -42,13 +42,13 @@ def upload_media(post_ID: int,
     """Uploading new media to a post"""
     post = session.get(PostInDB, post_ID)
     if not post:
-        raise EntityNotFound()
+        raise EntityNotFound("Post", post_ID)
     mediaDb = MediaInDB(
         **new_media.model_dump(),
         postID=post_ID,
     )
     if currentUser.id != post.sellerID:
-       raise PermissionDenied()
+       raise PermissionDenied("upload", "media", currentUser.id)
     session.add(mediaDb)
     session.commit()
     session.refresh(mediaDb)
@@ -66,24 +66,16 @@ def get_all_images(session : Annotated[Session, Depends(get_session)],
     media_in_db = session.exec(select(MediaInDB)).all()
     return [Media(**media.model_dump()) for media in media_in_db]
 
-
 @media_router.get('/media/{media_id}', response_model= Media, status_code=201)
 def get_image_by_id(media_id : int,
                     session : Annotated[Session, Depends(get_session)],
                     current_user: UserInDB = Depends(auth_get_current_user)) -> Media:
     """Getting image by id"""
     media = session.get(MediaInDB, media_id)
-    if media:
-        return Media.model_validate(media)
-    else:
-        raise HTTPException(
-                status_code=404,
-                detail={
-                    "type":"entity_not_found",
-                    "entity_name":"Image",
-                    "entity_id":media_id
-                }
-            )
+    if not media:
+        raise EntityNotFound("Media", media_id)
+   
+    return Media(**media.model_dump())
     
 @media_router.get('/posts/{post_id}/media/', response_model=list[Media], status_code=200)
 def get_media_by_post(post_id: int,
@@ -94,7 +86,7 @@ def get_media_by_post(post_id: int,
 
     if not post:
         raise EntityNotFound("post", post_id) 
-       
+    
     query = select(MediaInDB).where(MediaInDB.postID == post_id)
     media_in_db = session.exec(query).all()
 
