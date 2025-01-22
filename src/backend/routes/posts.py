@@ -12,7 +12,7 @@ from databaseAndSchemas.schema import (
     PostInDB, Post, UserInDB, createPost, Delete, Link, LinkInDB
 )
 
-from .excptions import *
+from exceptions import *
 from databaseAndSchemas.test_db import get_session
 from PRISM.src.prism_services.auth import auth_get_current_user
 from databaseAndSchemas.mappings.mappings import *

@@ -9,7 +9,7 @@ import logging
 from sqlalchemy.future import select
 from jose import JWTError, jwt
 from sqlmodel import Session, SQLModel, select
-from .excptions import *
+from exceptions import *
 from databaseAndSchemas.schema import (
     Media, MediaInDB, createMedia, UserInDB, User, PostInDB, Delete
 )
@@ -49,8 +49,8 @@ def upload_media(post_ID: int,
         postID=post_ID,
     )
     if currentUser.id != post.sellerID:
-        #raise PermissionDenied("upload", "media", currentUser.id)
-        print("PermissionDenied")
+        raise PermissionDenied("upload", "media", currentUser.id)
+        # print("PermissionDenied")
     session.add(mediaDb)
     session.commit()
     session.refresh(mediaDb)
