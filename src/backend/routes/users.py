@@ -1,7 +1,7 @@
 from sqlalchemy import or_
 import os
 import sys
-from routes.exceptions import DuplicateResource, EntityNotFound, PermissionDenied
+from exceptions import DuplicateResource, EntityNotFound, PermissionDenied
 import boto3
 from fastapi import APIRouter, Depends, HTTPException
 from datetime import datetime, timezone
@@ -53,18 +53,11 @@ def get_user_by_id(session: Annotated[Session, Depends(get_session)],
                         user_id: int,
                         current_user: UserInDB = Depends(auth_get_current_user))-> UserInDB:
     """Gets user by id"""
-    user = session.get(UserInDB, current_user.id)
+    user = session.get(UserInDB, user_id)
     if user:
         return user
     else:
-        raise HTTPException(
-            status_code=404,
-            detail={
-                "type":"entity_not_found",
-                "entity_name":"user",
-                "entity_id":user_id
-            }
-        )
+        raise EntityNotFound("user", user_id)
 
 
 
@@ -89,38 +82,31 @@ def follow_user(session: Annotated[Session, Depends(get_session)],
 
             return map_following_db_to_response(following_db)
         else:
-            raise HTTPException(
-            status_code=404,
-            detail={
-                "type":"duplicate_follow",
-                "entity_name":"user",
-                "entity_id":user_id
-            }
-        )
-
+            raise DuplicateResource('following', 'users', str(user_id) + ' and ' + str(current_user.id))
     else:
-        raise HTTPException(
-            status_code=404,
-            detail={
-                "type":"entity_not_found",
-                "entity_name":"user",
-                "entity_id":user_id
-            }
-        )
+        raise EntityNotFound('user', user_id)
     
 @users_router.get('/{user_id}/following', response_model= list[FollowingInDB], status_code=201)
 def get_following(session: Annotated[Session, Depends(get_session)],
                   user_id: int,
                   current_user: UserInDB = Depends(auth_get_current_user))-> list[FollowingInDB]:
-    """Get Who Current User is Following"""
-    return session.exec(select(FollowingInDB).filter(FollowingInDB.followerID == user_id)).all()
+    """Get Who User is Following"""
+    user = session.get(UserInDB, user_id)
+    if user:
+        return session.exec(select(FollowingInDB).filter(FollowingInDB.followerID == user_id)).all()
+    else:
+        raise EntityNotFound('user', user_id)
     
 @users_router.post('/{user_id}/followers', response_model= list[FollowingInDB], status_code=201)
 def get_followers(session: Annotated[Session, Depends(get_session)],
                 user_id: int,
                 current_user: UserInDB = Depends(auth_get_current_user))-> list[FollowingInDB]:
-    """Get Who Follows Current User"""
-    return session.exec(select(FollowingInDB).filter(FollowingInDB.followeeID== user_id)).all()
+    """Get Who Follows User"""
+    user = session.get(UserInDB, user_id)
+    if user:
+        return session.exec(select(FollowingInDB).filter(FollowingInDB.followeeID== user_id)).all()
+    else:
+        raise EntityNotFound('user', user_id)
 
 
 

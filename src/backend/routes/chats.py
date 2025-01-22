@@ -1,6 +1,6 @@
 import os
 import sys
-from routes.exceptions import DuplicateResource, EntityNotFound, MethodNotAllowed, PermissionDenied
+from exceptions import DuplicateResource, EntityNotFound, MethodNotAllowed, PermissionDenied
 import boto3
 from fastapi import APIRouter, Depends, HTTPException
 from datetime import datetime, timezone

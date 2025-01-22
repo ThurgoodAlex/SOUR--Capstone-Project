@@ -14,6 +14,7 @@ from databaseAndSchemas.schema import (
 from databaseAndSchemas.test_db import get_session
 from PRISM.src.prism_services.auth import auth_get_current_user
 from databaseAndSchemas.mappings.mappings import *
+from exceptions import DuplicateResource, EntityNotFound
 
 
 SessionDep = Annotated[Session, Depends(get_session)]
@@ -112,23 +113,9 @@ def create_new_link(session: Annotated[Session, Depends(get_session)],
             session.refresh(linkDB)
             return map_link_db_to_response(linkDB)
         else:
-            raise HTTPException(
-            status_code=404,
-            detail={
-                "type":"entity_not_found",
-                "entity_name":"listing",
-                "entity_id":listing_id
-            }
-        )
+            raise EntityNotFound("listing", post_id)
     else:
-        raise HTTPException(
-            status_code=404,
-            detail={
-                "type":"entity_not_found",
-                "entity_name":"post",
-                "entity_id":post_id
-            }
-        )
+        raise EntityNotFound("post", post_id)
 
 @posts_router.get('/{post_id}/links', response_model= list[int], status_code=201)
 def get_all_links_by_post_id(session :Annotated[Session, Depends(get_session)],
@@ -138,11 +125,4 @@ def get_all_links_by_post_id(session :Annotated[Session, Depends(get_session)],
     if post:
         return session.exec(select(LinkInDB.listingID).where(LinkInDB.postID == post_id)).all()
     else:
-        raise HTTPException(
-            status_code=404,
-            detail={
-                "type":"entity_not_found",
-                "entity_name":"post",
-                "entity_id":post_id
-            }
-        )
+        raise EntityNotFound("post", post_id)
