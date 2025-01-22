@@ -11,7 +11,7 @@ from sqlmodel import Session, SQLModel, select
 from databaseAndSchemas.schema import (
     PostInDB, Post, UserInDB, createPost, Delete
 )
-from .users import get_all_users_by_id
+
 from .excptions import *
 from databaseAndSchemas.test_db import get_session
 from PRISM.src.prism_services.auth import auth_get_current_user

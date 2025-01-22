@@ -36,7 +36,9 @@ lambda_client = boto3.client('lambda', endpoint_url=localstack_endpoint,
 media_router = APIRouter(tags=["Media"])
 
 @media_router.post('/posts/{post_id}/media/', response_model=Media,status_code=201)
-def upload_media(post_ID: int, new_media : createMedia, session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)) -> Media:
+def upload_media(post_ID: int, 
+                 new_media : createMedia, 
+                 session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)) -> Media:
     """Uploading new media to a post"""
     post = session.get(PostInDB, post_ID)
     if not post:
@@ -58,14 +60,17 @@ def upload_media(post_ID: int, new_media : createMedia, session: Annotated[Sessi
 
 #route used to test out upload.
 @media_router.get('/media/', response_model=list[Media], status_code = 201)
-def get_all_images(session : Annotated[Session, Depends(get_session)]) -> list[Media]:
+def get_all_images(session : Annotated[Session, Depends(get_session)],
+                   current_user: UserInDB = Depends(auth_get_current_user)) -> list[Media]:
     """Getting all images"""
     media_in_db = session.exec(select(MediaInDB)).all()
     return [Media(**media.model_dump()) for media in media_in_db]
 
 
 @media_router.get('/media/{media_id}', response_model= Media, status_code=201)
-def get_image_by_id(session : Annotated[Session, Depends(get_session)], media_id : int) -> Media:
+def get_image_by_id(media_id : int,
+                    session : Annotated[Session, Depends(get_session)],
+                    current_user: UserInDB = Depends(auth_get_current_user)) -> Media:
     """Getting image by id"""
     media = session.get(MediaInDB, media_id)
     if media:
@@ -81,35 +86,39 @@ def get_image_by_id(session : Annotated[Session, Depends(get_session)], media_id
             )
     
 @media_router.get('/posts/{post_id}/media/', response_model=list[Media], status_code=200)
-def get_media_by_post(
-    session: Annotated[Session, Depends(get_session)], 
-    post_id: int,
-    current_user: UserInDB = Depends(auth_get_current_user)
+def get_media_by_post(post_id: int,
+                    session: Annotated[Session, Depends(get_session)], 
+                    current_user: UserInDB = Depends(auth_get_current_user)
 ) -> list[Media]:
     post = session.get(PostInDB, post_id)
 
     if not post:
-        #raise EntityNotFound("post", post_id)
-        print("error")
-    
+        raise EntityNotFound("post", post_id) 
+       
     query = select(MediaInDB).where(MediaInDB.postID == post_id)
-    
     media_in_db = session.exec(query).all()
 
     return [Media(**media.model_dump()) for media in media_in_db]
 
 
-# @media_router.delete('/media/{media_id}', response_model = Delete, status_code=200)
-# def del_post_by_id(mediaID : int, session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)):
-#     """Deleting media by id"""
-#     Media = session.get(MediaInDB, postId)
-#     if not post:
-#        #raise EntityNotFound(entity_name="Post", entity_id=postId)
-#        print("entity not found")
-#     if currentUser.id != post.sellerID:
-#         #raise PermissionDenied(action="delete", resource="post")
-#         print("Permission Denied")
+@media_router.delete('/media/{media_id}', response_model = Delete, status_code=200)
+def del_media_by_id(mediaID : int, session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)):
+    """Deleting media by id"""
+
+    media = session.get(MediaInDB, mediaID)
+    if not media:
+       #raise EntityNotFound("Media", mediaID)
+       print("entity not found")
+
+    post = session.exec(select(PostInDB).where(PostInDB.id == media.postID)).first()
+    if not post:
+        #raise EntityNotFound("Post", post.id)
+        print("EntityNotFound")
+
+    if currentUser.id != post.sellerID:
+        #raise PermissionDenied("delete", "post", currentUser.id)
+        print("Permission Denied")
     
-#     session.delete(post)
-#     session.commit()
-#     return Delete(message="Post deleted successfully.")
+    session.delete(media)
+    session.commit()
+    return Delete(message="Media deleted successfully.")
