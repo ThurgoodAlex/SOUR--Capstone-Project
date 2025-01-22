@@ -9,12 +9,13 @@ from sqlalchemy.future import select
 from jose import JWTError, jwt
 from sqlmodel import Session, SQLModel, select
 from databaseAndSchemas.schema import (
-    PostInDB, Post, UserInDB, createPost, Delete
+    PostInDB, Post, UserInDB, createPost, Delete, Link, LinkInDB
 )
 
 from .excptions import *
 from databaseAndSchemas.test_db import get_session
 from PRISM.src.prism_services.auth import auth_get_current_user
+from databaseAndSchemas.mappings.mappings import *
 
 
 SessionDep = Annotated[Session, Depends(get_session)]
@@ -94,3 +95,57 @@ def del_post_by_id(postId : int,
     session.commit()
     return Delete(message="Post deleted successfully.")
 
+
+@posts_router.post('/{post_id}/link/{listing_id}', response_model= Link, status_code=201)
+def create_new_link(session: Annotated[Session, Depends(get_session)],
+                       post_id: int,
+                       listing_id: int,
+                       currentUser: UserInDB = Depends(auth_get_current_user)) -> Link:
+    """Creating a new link between a post and a listing"""
+    listing = session.get(PostInDB, listing_id)
+    post = session.get(PostInDB, post_id)
+    if post:
+        if listing:
+            linkDB = LinkInDB(
+                listingID= listing_id,
+                post_id= post_id
+            )
+            session.add(linkDB)
+            session.commit()
+            session.refresh(linkDB)
+            return map_link_db_to_response(linkDB)
+        else:
+            raise HTTPException(
+            status_code=404,
+            detail={
+                "type":"entity_not_found",
+                "entity_name":"listing",
+                "entity_id":listing_id
+            }
+        )
+    else:
+        raise HTTPException(
+            status_code=404,
+            detail={
+                "type":"entity_not_found",
+                "entity_name":"post",
+                "entity_id":post_id
+            }
+        )
+
+@posts_router.get('/{post_id}/links', response_model= list[int], status_code=201)
+def get_all_links_by_post_id(session :Annotated[Session, Depends(get_session)],
+                             post_id: int,
+                             current_user: UserInDB = Depends(auth_get_current_user))-> list[int]:
+    post = session.get(PostInDB, post_id)
+    if post:
+        return session.exec(select(LinkInDB.listingID).where(LinkInDB.postID == post_id)).all()
+    else:
+        raise HTTPException(
+            status_code=404,
+            detail={
+                "type":"entity_not_found",
+                "entity_name":"post",
+                "entity_id":post_id
+            }
+        )

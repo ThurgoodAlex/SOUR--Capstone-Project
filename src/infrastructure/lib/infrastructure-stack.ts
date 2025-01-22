@@ -125,7 +125,26 @@ export class BackendInfrastructureStack extends cdk.Stack {
         },
       })
 
-      
+      const getLinksByPostIDLambda = new lambda.Function(this, 'GetLinksByPostID',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.listings_handlers.get_links_by_post_id_lambda',
+          code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'get_links_by_post_id_lambda',
+        environment: {
+          PYTHONPATH: '/var/task',
+        },
+    })
+
+    const createLinkLambda = new lambda.Function(this, 'CreateLink',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.listings_handlers.create_link_lambda',
+          code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'create_link_lambda',
+        environment: {
+          PYTHONPATH: '/var/task',
+        },
+    })
+
     const getAllUsersLambda = new lambda.Function(this, 'GetAllUsersLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
         handler: 'lambda.users_handlers.get_all_users_lambda',
@@ -146,6 +165,36 @@ export class BackendInfrastructureStack extends cdk.Stack {
           PYTHONPATH: '/var/task',
         },
       })
+
+    const followUserLambda = new lambda.Function(this, 'FollowUserLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.users_handlers.follow_user_lambda',
+            code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'follow_user_lambda',
+        environment: {
+            PYTHONPATH: '/var/task',
+        },
+    })
+
+    const getFollowersLambda = new lambda.Function(this, 'GetFollowersLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.users_handlers.get_followers_lambda',
+            code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'get_followers_lambda',
+        environment: {
+            PYTHONPATH: '/var/task',
+        },
+    })
+
+    const getFollowingLambda = new lambda.Function(this, 'GetFollowingLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.users_handlers.get_following_lambda',
+            code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'get_following_lambda',
+        environment: {
+            PYTHONPATH: '/var/task',
+        },
+    })
 
 
       //upload media lambda
@@ -200,6 +249,54 @@ export class BackendInfrastructureStack extends cdk.Stack {
       })
 
 
+
+    // Chats and Messages Lambdas
+
+    // creating a chat
+    const createChatLambda = new lambda.Function(this, 'CreateChatLambda',{
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.chats_handlers.upload_chat_lambda',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'upload_chat_lambda',
+      environment: {
+        PYTHONPATH: '/var/task',
+      },
+    })
+
+    // get all Chats of user lambda
+    const getChatsOfUserLambda = new lambda.Function(this, 'GetChatsOfUserLambda',{
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.chats_handlers.get_all_users_chats_lambda',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'get_all_users_chats_lambda',
+      environment: {
+        PYTHONPATH: '/var/task',
+      },
+    })
+
+
+    // creating a message
+    const createMessageLambda = new lambda.Function(this, 'CreateMessageLambda',{
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.chats_handlers.upload_message_lambda',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'upload_message_lambda',
+      environment: {
+        PYTHONPATH: '/var/task',
+      },
+    })
+
+    // get all messages of chat lambda
+    const getMessagesOfChatLambda = new lambda.Function(this, 'GetMessagesOfChatLambda',{
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.chats_handlers.get_messages_of_chat_lambda',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'get_messages_of_chat_lambda',
+      environment: {
+        PYTHONPATH: '/var/task',
+      },
+    })
+
     //Here is the intergration to API gateway.
 
     // Create API Gateway
@@ -210,9 +307,10 @@ export class BackendInfrastructureStack extends cdk.Stack {
 
     // Create Lambda integration
     const starterPageIntegration = new apigateway.LambdaIntegration(starterPageLambda);
+
+    // Auth
     const createUserIntergration = new apigateway.LambdaIntegration(createUserLambda);
     const loginUserIntergration = new apigateway.LambdaIntegration(loginUserLambda);
-
 
 
     const uploadPostIntergration = new apigateway.LambdaIntegration(uploadPostLambda);
@@ -230,10 +328,21 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getMediaByPostIntergration = new apigateway.LambdaIntegration(getMediaByPostLambda);
     const delMediaByIDIntergration = new apigateway.LambdaIntegration(delMediaByIDLambda)
 
+    const getLinksByPostIdIntegration = new apigateway.LambdaIntegration(getLinksByPostIDLambda);
+    const createLinkIntegration = new apigateway.LambdaIntegration(createLinkLambda);
 
+    // Users
     const getAllUsersIntergration = new apigateway.LambdaIntegration(getAllUsersLambda);
     const getUserByIdIntergration = new apigateway.LambdaIntegration(getUserByIdLambda);
+    const followUserIntegration = new apigateway.LambdaIntegration(followUserLambda);
+    const getFollowersIntegration = new apigateway.LambdaIntegration(getFollowersLambda);
+    const getFollowingIntegration = new apigateway.LambdaIntegration(getFollowingLambda);
 
+    // Chats & Messages
+    const createChatIntegration = new apigateway.LambdaIntegration(createChatLambda);
+    const getChatsOfUserIntegration = new apigateway.LambdaIntegration(getChatsOfUserLambda);
+    const createMessageIntegration = new apigateway.LambdaIntegration(createMessageLambda);
+    const getMessagesOfChatIntegration = new apigateway.LambdaIntegration(getMessagesOfChatLambda);
 
 
     api.root.addMethod('GET', starterPageIntegration);
@@ -272,7 +381,11 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const delPostByIdResource = api.root.addResource('delPostById');
     delPostByIdResource.addMethod('DELETE', delPostByIdIntergration);
 
+    const getLinksByPostIdResouce = api.root.addResource('getLinksByPostId');
+    getLinksByPostIdResouce.addMethod('GET', getLinksByPostIdIntegration);
 
+    const createLinkResource = api.root.addResource('createLink');
+    createLinkResource.addMethod('POST', createLinkIntegration);
 
     const getAllUsersResource = api.root.addResource('getAllUsers');
     getAllUsersResource.addMethod('GET', getAllUsersIntergration);
@@ -280,6 +393,14 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getUsersByIdResource = api.root.addResource('getUserById');
     getUsersByIdResource.addMethod('GET', getUserByIdIntergration);
 
+    const followUserResource = api.root.addResource('followUser');
+    followUserResource.addMethod('POST', followUserIntegration);
+
+    const getFollowersResource = api.root.addResource('getFollowers');
+    getFollowersResource.addMethod('GET', getFollowersIntegration);
+
+    const getFollowingResource = api.root.addResource('getFollowing');
+    getFollowingResource.addMethod('GET', getFollowingIntegration);
 
     //Media endpoints
     const uploadMediaResource = api.root.addResource('uploadMedia');
@@ -296,6 +417,18 @@ export class BackendInfrastructureStack extends cdk.Stack {
 
     const delMediaByIDResource = api.root.addResource('delMediaByID');
     delMediaByIDResource.addMethod('DELETE', delMediaByIDIntergration)
+
+    const uploadChatResource = api.root.addResource('uploadChat');
+    uploadChatResource.addMethod('POST', createChatIntegration)
+
+    const uploadMessageResource = api.root.addResource('uploadMessage');
+    uploadMessageResource.addMethod('POST', createMessageIntegration)
+
+    const getChatsOfUserResource = api.root.addResource('getChatsOfUser');
+    getChatsOfUserResource.addMethod('GET', getChatsOfUserIntegration)
+
+    const getMessagesOfChat = api.root.addResource('getMessagesOfChat');
+    getMessagesOfChat.addMethod('GET', getMessagesOfChatIntegration)
 
 
     // Add /health endpoint
