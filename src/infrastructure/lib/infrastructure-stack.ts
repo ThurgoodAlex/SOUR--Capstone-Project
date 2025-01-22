@@ -71,7 +71,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
         },
       });
 
-    // creating a listing
+    // upload a post
     const uploadPostLambda = new lambda.Function(this, 'uploadPostLambda',{
       runtime: lambda.Runtime.PYTHON_3_8,
       handler: 'lambda.post_handlers.upload_post',
@@ -82,7 +82,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
       },
     })
 
-    // get all listings lambda
+    // get all post lambda
     const getAllPostsLambda = new lambda.Function(this, 'GetAllPostsLambda',{
       runtime: lambda.Runtime.PYTHON_3_8,
       handler: 'lambda.post_handlers.get_all_posts_lambda',
@@ -93,7 +93,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
       },
     })
 
-    // get listings by users lambda
+    // get posts by users lambda
     const getPostsByUserLambda = new lambda.Function(this, 'GetListingsByUserLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
         handler: 'lambda.listings_handlers.get_posts_by_user_lambda',
@@ -104,12 +104,22 @@ export class BackendInfrastructureStack extends cdk.Stack {
         },
       })
 
-    // get listing by id lambda
+    // get post by id lambda
     const getPostingByIdLambda = new lambda.Function(this, 'GetPostingByIdLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
         handler: 'lambda.post_handlers.get_post_by_id_lambda',
           code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
         functionName: 'get_post_by_id_lambda',
+        environment: {
+          PYTHONPATH: '/var/task',
+        },
+      })
+
+      const delPostingByIdLambda = new lambda.Function(this, 'DelPostingByIdLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.post_handlers.del_post_by_id_lambda',
+          code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'del_post_by_id_lambda',
         environment: {
           PYTHONPATH: '/var/task',
         },
@@ -169,11 +179,21 @@ export class BackendInfrastructureStack extends cdk.Stack {
         },
       })
 
-      const getMediaByUserLambda = new lambda.Function(this, 'GetMediaByUserLambda',{
+      const getMediaByPostLambda = new lambda.Function(this, 'GetMediaByPostLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
-        handler: 'lambda.media_handlers.get_media_by_user_lambda',
+        handler: 'lambda.media_handlers.get_media_by_post_lambda',
         code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
-        functionName: 'get_media_by_user_lambda',
+        functionName: 'get_media_by_post_lambda',
+        environment: {
+        PYTHONPATH: '/var/task',
+        },
+      })
+
+      const delMediaByIDLambda = new lambda.Function(this, 'DelMediaByIDLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.media_handlers.del_media_by_id_lambda',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'del_media_by_id_lambda',
         environment: {
         PYTHONPATH: '/var/task',
         },
@@ -196,17 +216,21 @@ export class BackendInfrastructureStack extends cdk.Stack {
 
 
     const uploadPostIntergration = new apigateway.LambdaIntegration(uploadPostLambda);
-
-
-    const getAcessTokenIntergration = new apigateway.LambdaIntegration(getAccessTokenLambda);
-    const getCurrentUserIntergration = new apigateway.LambdaIntegration(getCurrentUserLambda);
     const getAllPostsIntergration = new apigateway.LambdaIntegration(getAllPostsLambda);
     const getPostsByUserIntergration = new apigateway.LambdaIntegration(getPostsByUserLambda);
     const getPostByIdIntergration = new apigateway.LambdaIntegration(getPostingByIdLambda);
+    const delPostByIdIntergration = new apigateway.LambdaIntegration(delPostingByIdLambda);
+
+    const getAcessTokenIntergration = new apigateway.LambdaIntegration(getAccessTokenLambda);
+    const getCurrentUserIntergration = new apigateway.LambdaIntegration(getCurrentUserLambda);
+ 
     const uploadMediaIntergration = new apigateway.LambdaIntegration(uploadMediaLambda);
     const getAllMediaIntergration = new apigateway.LambdaIntegration(getAllMediaLambda);
     const getMediaByIDIntergration = new apigateway.LambdaIntegration(getMediaByIDLambda);
-    const getMediaByUserIntergration = new apigateway.LambdaIntegration(getMediaByUserLambda);
+    const getMediaByPostIntergration = new apigateway.LambdaIntegration(getMediaByPostLambda);
+    const delMediaByIDIntergration = new apigateway.LambdaIntegration(delMediaByIDLambda)
+
+
     const getAllUsersIntergration = new apigateway.LambdaIntegration(getAllUsersLambda);
     const getUserByIdIntergration = new apigateway.LambdaIntegration(getUserByIdLambda);
 
@@ -231,7 +255,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getCurrentUserResource = api.root.addResource('getcurrentuser')
     getCurrentUserResource.addMethod('GET', getCurrentUserIntergration)
 
-    //Adding Listing endpoints
+   //post endpoints
     const uploadPostResource = api.root.addResource('uploadPost');
     uploadPostResource.addMethod('POST', uploadPostIntergration)
 
@@ -245,6 +269,9 @@ export class BackendInfrastructureStack extends cdk.Stack {
     getPostByIdResource.addMethod('GET', getPostByIdIntergration);
 
 
+    const delPostByIdResource = api.root.addResource('delPostById');
+    delPostByIdResource.addMethod('DELETE', delPostByIdIntergration);
+
 
 
     const getAllUsersResource = api.root.addResource('getAllUsers');
@@ -254,6 +281,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
     getUsersByIdResource.addMethod('GET', getUserByIdIntergration);
 
 
+    //Media endpoints
     const uploadMediaResource = api.root.addResource('uploadMedia');
     uploadMediaResource.addMethod('POST', uploadMediaIntergration)
 
@@ -263,8 +291,13 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getMediaByIDResource = api.root.addResource('getMediaByID');
     getMediaByIDResource.addMethod('GET', getMediaByIDIntergration)
 
-    const getMediaByUserResource = api.root.addResource('getMediaByUser');
-    getMediaByUserResource.addMethod('GET', getMediaByUserIntergration)
+    const getMediaByPostResource = api.root.addResource('getMediaByPost');
+    getMediaByPostResource.addMethod('GET', getMediaByPostIntergration)
+
+    const delMediaByIDResource = api.root.addResource('delMediaByID');
+    delMediaByIDResource.addMethod('DELETE', delMediaByIDIntergration)
+
+
     // Add /health endpoint
     const healthResource = api.root.addResource('health');
     healthResource.addMethod('GET', new apigateway.MockIntegration({

@@ -44,7 +44,8 @@ def upload_post(newPost:createPost,
     """Creating a new posting"""
     user = session.get(UserInDB, currentUser.id)
     if user != currentUser:
-        raise PermissionDenied("uploading post","post", currentUser.id)
+        #raise PermissionDenied("uploading post","post", currentUser.id)
+        print("PermissionDenied")
     post = PostInDB(
         **newPost.model_dump(),
         sellerID=currentUser.id,
@@ -83,11 +84,11 @@ def del_post_by_id(postId : int,
     """Deleting post by id"""
     post = session.get(PostInDB, postId)
     if not post:
-       raise EntityNotFound("Post", postId)
-       #print("entity not found")
+       #raise EntityNotFound("Post", postId)
+       print("entity not found")
     if currentUser.id != post.sellerID:
-        raise PermissionDenied("delete", "post", currentUser.id)
-        #print("Permission Denied")
+        #raise PermissionDenied("delete", "post", currentUser.id)
+        print("Permission Denied")
     
     session.delete(post)
     session.commit()

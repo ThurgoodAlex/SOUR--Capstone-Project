@@ -48,7 +48,8 @@ def upload_media(post_ID: int,
         postID=post_ID,
     )
     if currentUser.id != post.sellerID:
-       raise PermissionDenied("upload", "media", currentUser.id)
+        #raise PermissionDenied("upload", "media", currentUser.id)
+        print("PermissionDenied")
     session.add(mediaDb)
     session.commit()
     session.refresh(mediaDb)
@@ -60,20 +61,21 @@ def upload_media(post_ID: int,
 
 #route used to test out upload.
 @media_router.get('/media/', response_model=list[Media], status_code = 201)
-def get_all_images(session : Annotated[Session, Depends(get_session)],
+def get_all_media(session : Annotated[Session, Depends(get_session)],
                    current_user: UserInDB = Depends(auth_get_current_user)) -> list[Media]:
-    """Getting all images"""
+    """Getting all media"""
     media_in_db = session.exec(select(MediaInDB)).all()
     return [Media(**media.model_dump()) for media in media_in_db]
 
 @media_router.get('/media/{media_id}', response_model= Media, status_code=201)
-def get_image_by_id(media_id : int,
+def get_media_by_id(media_id : int,
                     session : Annotated[Session, Depends(get_session)],
                     current_user: UserInDB = Depends(auth_get_current_user)) -> Media:
-    """Getting image by id"""
+    """Getting media by id"""
     media = session.get(MediaInDB, media_id)
     if not media:
-        raise EntityNotFound("Media", media_id)
+        #raise EntityNotFound("Media", media_id)
+        print("EntityNotFound")
    
     return Media(**media.model_dump())
     
@@ -82,11 +84,12 @@ def get_media_by_post(post_id: int,
                     session: Annotated[Session, Depends(get_session)], 
                     current_user: UserInDB = Depends(auth_get_current_user)
 ) -> list[Media]:
+    """Getting all media for a post"""
     post = session.get(PostInDB, post_id)
 
     if not post:
-        raise EntityNotFound("post", post_id) 
-    
+        #raise EntityNotFound("post", post_id) 
+        print("EntityNotFound")
     query = select(MediaInDB).where(MediaInDB.postID == post_id)
     media_in_db = session.exec(query).all()
 
