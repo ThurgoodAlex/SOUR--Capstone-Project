@@ -11,12 +11,13 @@ export class BackendInfrastructureStack extends cdk.Stack {
 
 
     //here is a boiler code template for Lambda path code.
+    const basePath = path.join(__dirname, '../../backend')
 
     // Create Lambda function
     const starterPageLambda = new lambda.Function(this, 'StarterPageLambda', {
       runtime: lambda.Runtime.PYTHON_3_8,
       handler: 'lambda.starter_page.lambda_handler',
-      code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      code: lambda.Code.fromAsset(basePath),
       functionName: 'starter_page_lambda',
       environment: {
         PYTHONPATH: '/var/task',
@@ -30,7 +31,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const createUserLambda = new lambda.Function(this, 'CreateUserLambda', {
       runtime: lambda.Runtime.PYTHON_3_8,
       handler: 'lambda.auth_handlers.create_user_lambda',
-       code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+       code: lambda.Code.fromAsset(basePath),
       functionName: 'create_user_lambda',
       environment: {
         PYTHONPATH: '/var/task',
@@ -41,7 +42,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const loginUserLambda = new lambda.Function(this, 'LoginUserLambda', {
       runtime: lambda.Runtime.PYTHON_3_8,
       handler: 'lambda.auth_handlers.login_user_lambda',
-       code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+       code: lambda.Code.fromAsset(basePath),
       functionName: 'login_user_lambda',
       environment: {
         PYTHONPATH: '/var/task',
@@ -52,7 +53,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getAccessTokenLambda = new lambda.Function(this, 'getAccessTokenLambda', {
       runtime: lambda.Runtime.PYTHON_3_8,
       handler: 'lambda.auth_handlers.get_access_token_lambda',
-       code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+       code: lambda.Code.fromAsset(basePath),
       functionName: 'get_access_token_lambda',
       environment: {
         PYTHONPATH: '/var/task',
@@ -64,7 +65,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
       const getCurrentUserLambda = new lambda.Function(this, 'getCurrentUserLambda', {
         runtime: lambda.Runtime.PYTHON_3_8,
         handler: 'lambda.auth_handlers.get_current_user_lambda',
-         code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+         code: lambda.Code.fromAsset(basePath),
         functionName: 'get_current_user_lambda',
         environment: {
           PYTHONPATH: '/var/task',
@@ -75,7 +76,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const createListingLambda = new lambda.Function(this, 'CreateListingLambda',{
       runtime: lambda.Runtime.PYTHON_3_8,
       handler: 'lambda.listings_handlers.create_new_listing',
-        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        code: lambda.Code.fromAsset(basePath),
       functionName: 'create_listing_lambda',
       environment: {
         PYTHONPATH: '/var/task',
@@ -86,7 +87,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getAllListingsLambda = new lambda.Function(this, 'GetAllListingsLambda',{
       runtime: lambda.Runtime.PYTHON_3_8,
       handler: 'lambda.listings_handlers.get_all_listings_lambda',
-        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        code: lambda.Code.fromAsset(basePath),
       functionName: 'get_all_listings_lambda',
       environment: {
         PYTHONPATH: '/var/task',
@@ -97,7 +98,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getListingsByUserLambda = new lambda.Function(this, 'GetListingsByUserLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
         handler: 'lambda.listings_handlers.get_listings_by_user_lambda',
-          code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+          code: lambda.Code.fromAsset(basePath),
         functionName: 'get_listings_by_user_lambda',
         environment: {
           PYTHONPATH: '/var/task',
@@ -108,7 +109,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getListingByIdLambda = new lambda.Function(this, 'GetListingByIdLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
         handler: 'lambda.listings_handlers.get_listing_by_id_lambda',
-          code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+          code: lambda.Code.fromAsset(basePath),
         functionName: 'get_listing_by_id_lambda',
         environment: {
           PYTHONPATH: '/var/task',
@@ -119,7 +120,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getAllUsersLambda = new lambda.Function(this, 'GetAllUsersLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
         handler: 'lambda.users_handlers.get_all_users_lambda',
-          code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+          code: lambda.Code.fromAsset(basePath),
         functionName: 'get_all_users_lambda',
         environment: {
           PYTHONPATH: '/var/task',
@@ -130,7 +131,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getUserByIdLambda = new lambda.Function(this, 'GetUserByIdLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
         handler: 'lambda.users_handlers.get_user_by_id_lambda',
-          code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+          code: lambda.Code.fromAsset(basePath),
         functionName: 'get_user_by_id_lambda',
         environment: {
           PYTHONPATH: '/var/task',
@@ -142,7 +143,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const uploadMediaLambda = new lambda.Function(this, 'UploadMediaLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
         handler: 'lambda.media_handlers.upload_media_lambda',
-        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        code: lambda.Code.fromAsset(basePath),
         functionName: 'upload_media_lambda',
         environment: {
         PYTHONPATH: '/var/task',
@@ -152,7 +153,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
       const getAllMediaLambda = new lambda.Function(this, 'GetAllMediaLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
         handler: 'lambda.media_handlers.get_all_media_lambda',
-        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        code: lambda.Code.fromAsset(basePath),
         functionName: 'get_all_media_lambda',
         environment: {
         PYTHONPATH: '/var/task',
@@ -162,7 +163,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
       const getMediaByIDLambda = new lambda.Function(this, 'GetMediaByIDLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
         handler: 'lambda.media_handlers.get_media_by_id_lambda',
-        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        code: lambda.Code.fromAsset(basePath),
         functionName: 'get_media_by_id_lambda',
         environment: {
         PYTHONPATH: '/var/task',
@@ -172,7 +173,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
       const getMediaByUserLambda = new lambda.Function(this, 'GetMediaByUserLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
         handler: 'lambda.media_handlers.get_media_by_user_lambda',
-        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        code: lambda.Code.fromAsset(basePath),
         functionName: 'get_media_by_user_lambda',
         environment: {
         PYTHONPATH: '/var/task',
