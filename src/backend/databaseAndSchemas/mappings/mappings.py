@@ -24,4 +24,9 @@ def map_following_db_to_response(following_db: FollowingInDB) -> Following:
 
 
     
-    
+def map_link_db_to_response(link_db: LinkInDB) -> Link:
+    return Link(
+        id= link_db.id,
+        listingID = link_db.listingID,
+        postID = link_db.postID
+    )
