@@ -20,6 +20,8 @@ class Claims(BaseModel):
     sub: str  # id of user
     exp: int  # unix timestamp
 
+class Delete(BaseModel):
+    message: str
 
 ### All schemas for users ###
 class UserInDB(SQLModel, table=True): 
@@ -77,7 +79,6 @@ class PostInDB(SQLModel, table = True):
     isListing: bool = Field(default=False, nullable=False)
 
 class createPost(BaseModel):
-    sellerID: int
     title: str
     description: Optional[str]
     brand: Optional[str]
@@ -91,6 +92,7 @@ class createPost(BaseModel):
     isListing: bool
 
 class Post(BaseModel):
+    id: int
     sellerID: int
     title: str
     description: Optional[str]
@@ -104,6 +106,8 @@ class Post(BaseModel):
     isSold: bool
     isListing: bool
     model_config = ConfigDict(from_attributes=True)
+
+
 ###############################
 
 
@@ -117,7 +121,6 @@ class MediaInDB(SQLModel, table=True):
 
 class createMedia(BaseModel):
     url: str
-    postID: int
     isVideo: bool
 
 class Media(BaseModel):

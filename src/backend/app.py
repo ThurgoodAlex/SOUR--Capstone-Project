@@ -9,8 +9,8 @@ from fastapi.openapi.utils import get_openapi
 from contextlib import asynccontextmanager
 from databaseAndSchemas.test_db import create_db_and_tables
 from databaseAndSchemas.schema import * 
-
 from PRISM.src.prism_services.auth import auth_router
+from routes.posts import posts_router
 from routes.media import media_router
 
 from routes.posts import posts_router
