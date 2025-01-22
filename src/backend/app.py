@@ -55,11 +55,10 @@ app.add_middleware(
 
 
 app.include_router(auth_router, prefix="/auth")
-app.include_router(media_router, prefix="/media")
-app.include_router(posts_router, prefix="/posts")
 app.include_router(users_router, prefix="/users")
+app.include_router(posts_router, prefix="/posts")
+app.include_router(media_router, prefix="/media")
 app.include_router(chats_router, prefix="/chats")
-
 
 # Configure boto3 to use LocalStack
 localstack_endpoint = os.environ.get('LOCALSTACK_ENDPOINT', 'http://localstack:4566')
