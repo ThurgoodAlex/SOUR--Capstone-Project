@@ -134,4 +134,15 @@ def create_new_link(session: Annotated[Session, Depends(get_session)],
 def get_all_links_by_post_id(session :Annotated[Session, Depends(get_session)],
                              post_id: int,
                              current_user: UserInDB = Depends(auth_get_current_user))-> list[int]:
-    return session.exec(select(LinkInDB.listingID).where(LinkInDB.postID == post_id)).all()
+    post = session.get(PostInDB, post_id)
+    if post:
+        return session.exec(select(LinkInDB.listingID).where(LinkInDB.postID == post_id)).all()
+    else:
+        raise HTTPException(
+            status_code=404,
+            detail={
+                "type":"entity_not_found",
+                "entity_name":"post",
+                "entity_id":post_id
+            }
+        )
