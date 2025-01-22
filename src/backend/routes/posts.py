@@ -58,7 +58,7 @@ def upload_post(newPost:createPost,
     return post
 
 
-@posts_router.get('/posts/', response_model= list[Post], )
+@posts_router.get('/', response_model= list[Post], )
 def get_all_posts(session: Annotated[Session, Depends(get_session)], 
                   currentUser: UserInDB = Depends(auth_get_current_user))-> list[Post]:
     """Getting all posts"""
@@ -73,14 +73,14 @@ def get_posts_for_user(userId: int,
     posts_in_db = session.exec(select(PostInDB).where(PostInDB.sellerID == userId))
     return [Post(**post.model_dump()) for post in posts_in_db]
 
-@posts_router.get('/posts/{post_id}', response_model = list[Post], status_code=201)
+@posts_router.get('/{post_id}', response_model = list[Post], status_code=201)
 def get_post_by_id(postId: int, 
                    session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)):
     posts_in_db = session.exec(select(PostInDB).where(PostInDB.id == postId))
     return [Post(**post.model_dump()) for post in posts_in_db]
 
 
-@posts_router.delete('/posts/{post_id}', response_model = Delete, status_code=200)
+@posts_router.delete('/{post_id}', response_model = Delete, status_code=200)
 def del_post_by_id(postId : int, 
                    session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)):
     """Deleting post by id"""
