@@ -39,15 +39,15 @@ lambda_client = boto3.client('lambda', endpoint_url=localstack_endpoint,
 posts_router = APIRouter(tags=["Posts"])
 
 
-@posts_router.post('/users/{user_id}/posts', response_model= Post, status_code=201)
+@posts_router.post('/', response_model= Post, status_code=201)
 def upload_post(newPost:createPost,  
                 session: Annotated[Session, Depends(get_session)], 
                 currentUser: UserInDB = Depends(auth_get_current_user)) -> Post:
     """Creating a new posting"""
-    user = session.get(UserInDB, currentUser.id)
-    if user != currentUser:
-        #raise PermissionDenied("uploading post","post", currentUser.id)
-        print("PermissionDenied")
+    
+    if not currentUser.isSeller:
+        raise PermissionDenied("upload", "post")
+        
     post = PostInDB(
         **newPost.model_dump(),
         sellerID=currentUser.id,
@@ -66,14 +66,8 @@ def get_all_posts(session: Annotated[Session, Depends(get_session)],
     return [Post(**post.model_dump()) for post in post_in_db]
 
 
-@posts_router.get('/users/{user_id}/posts', response_model= list[Post], status_code=201)
-def get_posts_for_user(userId: int, 
-                       session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
-    """Getting all posts for a specific user"""
-    posts_in_db = session.exec(select(PostInDB).where(PostInDB.sellerID == userId))
-    return [Post(**post.model_dump()) for post in posts_in_db]
 
-@posts_router.get('/{post_id}', response_model = list[Post], status_code=201)
+@posts_router.get('/{post_id}', response_model = list[Post], status_code=200)
 def get_post_by_id(postId: int, 
                    session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)):
     posts_in_db = session.exec(select(PostInDB).where(PostInDB.id == postId))
@@ -120,7 +114,7 @@ def create_new_link(session: Annotated[Session, Depends(get_session)],
     else:
         raise EntityNotFound("post", post_id)
 
-@posts_router.get('/{post_id}/links', response_model= list[int], status_code=201)
+@posts_router.get('/{post_id}/links', response_model= list[int], status_code=200)
 def get_all_links_by_post_id(session :Annotated[Session, Depends(get_session)],
                              post_id: int,
                              current_user: UserInDB = Depends(auth_get_current_user))-> list[int]:

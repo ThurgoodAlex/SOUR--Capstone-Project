@@ -166,6 +166,16 @@ export class BackendInfrastructureStack extends cdk.Stack {
         },
       })
 
+      const becomeSellerLambda = new lambda.Function(this, 'BecomeSeller',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.users_handlers.become_seller_lambda',
+          code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'become_seller_lambda',
+        environment: {
+          PYTHONPATH: '/var/task',
+        },
+      })
+
     const followUserLambda = new lambda.Function(this, 'FollowUserLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
         handler: 'lambda.users_handlers.follow_user_lambda',
@@ -334,6 +344,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
     // Users
     const getAllUsersIntergration = new apigateway.LambdaIntegration(getAllUsersLambda);
     const getUserByIdIntergration = new apigateway.LambdaIntegration(getUserByIdLambda);
+    const becomeSellerIntegration = new apigateway.LambdaIntegration(becomeSellerLambda)
     const followUserIntegration = new apigateway.LambdaIntegration(followUserLambda);
     const getFollowersIntegration = new apigateway.LambdaIntegration(getFollowersLambda);
     const getFollowingIntegration = new apigateway.LambdaIntegration(getFollowingLambda);
@@ -363,6 +374,9 @@ export class BackendInfrastructureStack extends cdk.Stack {
     // adding get current user route from auth
     const getCurrentUserResource = api.root.addResource('getcurrentuser')
     getCurrentUserResource.addMethod('GET', getCurrentUserIntergration)
+
+    const becomeSellerResource = api.root.addResource('becomeseller')
+    getCurrentUserResource.addMethod('PUT', becomeSellerIntegration)
 
    //post endpoints
     const uploadPostResource = api.root.addResource('uploadPost');

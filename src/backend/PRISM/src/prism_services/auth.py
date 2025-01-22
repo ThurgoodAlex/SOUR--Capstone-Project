@@ -93,7 +93,7 @@ def create_new_user(newUser: UserRegistration, session: Annotated[Session, Depen
             session.commit()
             session.refresh(user_db)
         
-            return User(**user_db.model_dump())
+            return map_user_db_to_response(user_db)
     
     except DuplicateUserRegistration as e:
         raise HTTPException(status_code=409, detail=str(e))

@@ -43,22 +43,33 @@ users_router = APIRouter(tags=["Users"])
 
 # ------------------------ users -------------------------- #
 
-@users_router.get('/', response_model= list[UserInDB], status_code=201)
+@users_router.get('/', response_model= list[UserInDB], status_code=200)
 def get_all_users(session :Annotated[Session, Depends(get_session)])-> list[UserInDB]:
     """Gets all users"""
     return session.exec(select(UserInDB)).all()
 
-@users_router.get('/{user_id}', response_model= UserInDB, status_code=201)
+@users_router.get('/{user_id}', response_model= User, status_code=200)
 def get_user_by_id(session: Annotated[Session, Depends(get_session)],
                         user_id: int,
-                        current_user: UserInDB = Depends(auth_get_current_user))-> UserInDB:
+                        current_user: UserInDB = Depends(auth_get_current_user))-> User:
     """Gets user by id"""
     user = session.get(UserInDB, user_id)
     if user:
-        return user
+        return map_user_db_to_response(user)
     else:
         raise EntityNotFound("user", user_id)
 
+@users_router.put('/becomeseller', response_model= User, status_code=200)
+def become_a_seller(session: Annotated[Session, Depends(get_session)],
+                        current_user: UserInDB = Depends(auth_get_current_user))-> User:
+    """Update current;y logged in user to become a seller"""
+    
+    current_user.isSeller = True
+    session.add(current_user)
+    session.commit()
+    session.refresh(current_user)
+    return map_user_db_to_response(current_user)
+    
 
 
 # ------------------------ followings -------------------------- #
@@ -86,7 +97,7 @@ def follow_user(session: Annotated[Session, Depends(get_session)],
     else:
         raise EntityNotFound('user', user_id)
     
-@users_router.get('/{user_id}/following', response_model= list[FollowingInDB], status_code=201)
+@users_router.get('/{user_id}/following', response_model= list[FollowingInDB], status_code=200)
 def get_following(session: Annotated[Session, Depends(get_session)],
                   user_id: int,
                   current_user: UserInDB = Depends(auth_get_current_user))-> list[FollowingInDB]:
@@ -112,7 +123,7 @@ def get_followers(session: Annotated[Session, Depends(get_session)],
 
 # ------------------------ chats -------------------------- #
 
-@users_router.get('/{user_id}/chats', response_model=list[Chat], status_code = 201)
+@users_router.get('/{user_id}/chats', response_model=list[Chat], status_code = 200)
 def get_all_chats(user_id: int,  
                   session : Annotated[Session, Depends(get_session)],
                   currentUser: UserInDB = Depends(auth_get_current_user)
@@ -143,4 +154,10 @@ def get_all_chats(user_id: int,
 
     
 
-            
+# ------------------------ posts -------------------------- #
+@users_router.get('/{user_id}/posts', response_model= list[Post], status_code=200)
+def get_posts_for_user(userId: int, 
+                       session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
+    """Getting all posts for a specific user"""
+    posts_in_db = session.exec(select(PostInDB).where(PostInDB.sellerID == userId))
+    return [Post(**post.model_dump()) for post in posts_in_db]          

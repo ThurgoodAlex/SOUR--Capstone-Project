@@ -61,14 +61,14 @@ def upload_media(post_ID: int,
     )
 
 #route used to test out upload.
-@media_router.get('/media/', response_model=list[Media], status_code = 201)
+@media_router.get('/media/', response_model=list[Media], status_code = 200)
 def get_all_media(session : Annotated[Session, Depends(get_session)],
                    current_user: UserInDB = Depends(auth_get_current_user)) -> list[Media]:
     """Getting all media"""
     media_in_db = session.exec(select(MediaInDB)).all()
     return [Media(**media.model_dump()) for media in media_in_db]
 
-@media_router.get('/media/{media_id}', response_model= Media, status_code=201)
+@media_router.get('/media/{media_id}', response_model= Media, status_code=200)
 def get_media_by_id(media_id : int,
                     session : Annotated[Session, Depends(get_session)],
                     current_user: UserInDB = Depends(auth_get_current_user)) -> Media:
