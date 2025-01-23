@@ -76,3 +76,10 @@ class RateLimitExceeded(HTTPException):
                 "message": f"Rate limit exceeded. Try again after {retry_after_seconds} seconds.",
             }
         )
+
+class UnexceptedError(HTTPException):
+    def __init__(self):
+        super().__init__(
+            status_code=500,
+            detail="An unexpected error occurred."
+        )

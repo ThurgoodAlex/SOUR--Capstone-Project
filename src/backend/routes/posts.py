@@ -65,82 +65,71 @@ def get_all_posts(session: Annotated[Session, Depends(get_session)],
     return [Post(**post.model_dump()) for post in post_in_db]
 
 
-@posts_router.post("/{post_id}/comments", response_model=Comment, status_code=201)
-def create_new_comment(newComment: CommentCreate,
-                    session: Annotated[Session, Depends(get_session)],
+@posts_router.post("/{post_id}/comments/{comment}", response_model=Comment, status_code=201)
+def create_new_comment(session: Annotated[Session, Depends(get_session)],
                     post_id: int,
+                    comment: str,
                     current_user: UserInDB = Depends(auth_get_current_user)) -> Comment:
     """Create a new comment"""
     post = session.get(PostInDB, post_id)
-    if current_user.id == newComment.userID and post and post_id == newComment.postID:
+    if post:
         try:
             comment_db = CommentInDB(
-                userID=newComment.userID,
-                postID=newComment.postID,
-                comment=newComment.comment
+                userID=current_user.id,
+                postID=post_id,
+                comment=comment
             )
             session.add(comment_db)
             session.commit()
             session.refresh(comment_db)
         
-            return map_comment_db_to_comment(comment_db)
+            return Comment(**comment_db.model_dump())
         
         except Exception as e:
-            raise HTTPException(status_code=500, detail="An unexpected error occurred.")
+            raise UnexceptedError()
     else:
-        raise HTTPException(status_code=500, detail="An unexpected error occurred.")
+        raise MethodNotAllowed('Comment on post')
     
-@posts_router.get('/{post_id}/comments', response_model= CommentInDB, status_code=201)
+@posts_router.get('/{post_id}/comments', response_model= list[Comment], status_code=200)
 def get_comments_by_post(session: Annotated[Session, Depends(get_session)],
-                                post_id: int,
-                                current_user: UserInDB = Depends(auth_get_current_user))-> list[CommentInDB]:
+                        post_id: int,
+                        current_user: UserInDB = Depends(auth_get_current_user))-> list[Comment]:
     """Get all comments for a certain post"""
     post = session.get(PostInDB, post_id)
     if post:
-        return session.exec(select(CommentInDB).where(CommentInDB.postID == post_id)).all()
+        comments_db = session.exec(select(CommentInDB).where(CommentInDB.postID == post_id)).all()
+        return [Comment(**comment.model_dump()) for comment in comments_db]
     else:
-        raise HTTPException(
-            status_code=404,
-            detail={
-                "type":"entity_not_found",
-                "entity_name":"post",
-                "entity_id":post_id
-            }
-        )
+        raise EntityNotFound("post", post_id)
     
-@posts_router.get('/{post_id}/comments/{comment_id}', response_model= CommentInDB, status_code=201)
+@posts_router.get('/comments/{comment_id}', response_model= Comment, status_code=200)
 def get_comment_by_id(session: Annotated[Session, Depends(get_session)],
-                    post_id: int,
                     comment_id: int,
-                    current_user: UserInDB = Depends(auth_get_current_user))-> list[CommentInDB]:
+                    current_user: UserInDB = Depends(auth_get_current_user))-> Comment:
     """Get comment by id"""
-    post = session.get(PostInDB, post_id)
-    if post:
-        comment =  session.get(CommentInDB, comment_id)
-        if comment:
-            return comment
-        else:
-            raise HTTPException(
-                status_code=404,
-                detail={
-                    "type":"entity_not_found",
-                    "entity_name":"comment",
-                    "entity_id":comment_id
-                }
-            )
+    comment =  session.get(CommentInDB, comment_id)
+    if comment:
+        return Comment(**comment.model_dump())
     else:
-        raise HTTPException(
-            status_code=404,
-            detail={
-                "type":"entity_not_found",
-                "entity_name":"post",
-                "entity_id":post_id
-            }
-        )
+        raise EntityNotFound("comment", comment_id)
+    
+@posts_router.delete('/comments/{comment_id}', response_model= Delete, status_code=200)
+def delete_comment(session :Annotated[Session, Depends(get_session)],
+                    comment_id: int,
+                    current_user: UserInDB = Depends(auth_get_current_user)) -> Delete:
+    comment = session.get(CommentInDB, comment_id)
+    if comment:
+        comment = session.get(CommentInDB, comment_id)
+        session.delete(comment)
+        session.commit()
+        return Delete(message="Successfully deleted comment")            
+    else:
+        raise EntityNotFound("comment", comment_id)
 
 @posts_router.get('/{post_id}', response_model = list[Post], status_code=200)
-def get_post_by_id(postId: int, 
-                   session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)):
+def get_post_by_id(postId: int,
+                   session: Annotated[Session, Depends(get_session)],
+                   currentUser: UserInDB = Depends(auth_get_current_user)):
     posts_in_db = session.exec(select(PostInDB).where(PostInDB.id == postId))
     return [Post(**post.model_dump()) for post in posts_in_db]
 

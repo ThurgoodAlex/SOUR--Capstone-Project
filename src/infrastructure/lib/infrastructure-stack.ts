@@ -258,6 +258,36 @@ export class BackendInfrastructureStack extends cdk.Stack {
         },
     })
 
+    const getCommentsByPostIDLambda = new lambda.Function(this, 'GetCommentsByPostIDLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.media_handlers.get_all_comments_by_post_id_lambda',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'get_all_comments_by_post_id_lambda',
+        environment: {
+        PYTHONPATH: '/var/task',
+        },
+      })
+
+      const createCommentLambda = new lambda.Function(this, 'createCommentLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.media_handlers.create_new_comment_lambda',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'create_new_comment_lambda',
+        environment: {
+        PYTHONPATH: '/var/task',
+        },
+      })
+
+      const delCommentLambda = new lambda.Function(this, 'delCommentLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.media_handlers.del_comment_lambda',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'del_comment_lambda',
+        environment: {
+        PYTHONPATH: '/var/task',
+        },
+      })
+
       const delMediaByIDLambda = new lambda.Function(this, 'DelMediaByIDLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
         handler: 'lambda.media_handlers.del_media_by_id_lambda',
@@ -317,26 +347,6 @@ export class BackendInfrastructureStack extends cdk.Stack {
       },
     })
 
-      const getCommentsByPostIDLambda = new lambda.Function(this, 'GetCommentsByPostIDLambda',{
-        runtime: lambda.Runtime.PYTHON_3_8,
-        handler: 'lambda.media_handlers.get_all_comments_by_post_id_lambda',
-        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
-        functionName: 'get_all_comments_by_post_id_lambda',
-        environment: {
-        PYTHONPATH: '/var/task',
-        },
-      })
-
-      const createCommentLambda = new lambda.Function(this, 'createCommentLambda',{
-        runtime: lambda.Runtime.PYTHON_3_8,
-        handler: 'lambda.media_handlers.create_new_comment_lambda',
-        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
-        functionName: 'create_new_comment_lambda',
-        environment: {
-        PYTHONPATH: '/var/task',
-        },
-      })
-
 
     //Here is the Integration to API gateway.
 
@@ -362,6 +372,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getCommentByIDIntegration = new apigateway.LambdaIntegration(getCommentByIDLambda);
     const getCommentsByPostIDIntegration = new apigateway.LambdaIntegration(getCommentsByPostIDLambda);
     const createCommentIntegration = new apigateway.LambdaIntegration(createCommentLambda);
+    const delCommentIntegration = new apigateway.LambdaIntegration(delCommentLambda);
 
     const getAcessTokenIntegration = new apigateway.LambdaIntegration(getAccessTokenLambda);
     const getCurrentUserIntegration = new apigateway.LambdaIntegration(getCurrentUserLambda);
@@ -410,7 +421,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
     getCurrentUserResource.addMethod('GET', getCurrentUserIntegration)
 
     const becomeSellerResource = api.root.addResource('becomeseller')
-    getCurrentUserResource.addMethod('PUT', becomeSellerIntegration)
+    becomeSellerResource.addMethod('PUT', becomeSellerIntegration)
 
    //post endpoints
     const uploadPostResource = api.root.addResource('uploadPost');
@@ -425,6 +436,17 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getPostByIdResource = api.root.addResource('getPostById');
     getPostByIdResource.addMethod('GET', getPostByIdIntegration);
 
+    const getCommentByIdResource = api.root.addResource('getCommentById');
+    getCommentByIdResource.addMethod('GET', getCommentByIDIntegration);
+
+    const getCommentsByPostIdResource = api.root.addResource('getCommentsByPost');
+    getCommentsByPostIdResource.addMethod('GET', getCommentsByPostIDIntegration);
+
+    const createCommentResource = api.root.addResource('createComment');
+    createCommentResource.addMethod('POST', createCommentIntegration);
+
+    const delCommentResource = api.root.addResource('deleteResource');
+    delCommentResource.addMethod('DELETE', delCommentIntegration);
 
     const delPostByIdResource = api.root.addResource('delPostById');
     delPostByIdResource.addMethod('DELETE', delPostByIdIntegration);
