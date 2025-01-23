@@ -15,7 +15,7 @@ from databaseAndSchemas.schema import (
 from exceptions import *
 from databaseAndSchemas.test_db import get_session
 from PRISM.src.prism_services.auth import auth_get_current_user
-from databaseAndSchemas.mappings.mappings import *
+from databaseAndSchemas.mappings.userMapping import *
 from exceptions import DuplicateResource, EntityNotFound
 
 
@@ -62,8 +62,8 @@ def upload_post(newPost:createPost,
 def get_all_posts(session: Annotated[Session, Depends(get_session)], 
                   currentUser: UserInDB = Depends(auth_get_current_user))-> list[Post]:
     """Getting all posts"""
-    post_in_db = session.exec(select(PostInDB)).all()
-    return [Post(**post.model_dump()) for post in post_in_db]
+    posts_in_db = session.exec(select(PostInDB)).all()
+    return [Post(**post.model_dump()) for post in posts_in_db]
 
 
 
@@ -103,23 +103,27 @@ def create_new_link(session: Annotated[Session, Depends(get_session)],
         if listing:
             linkDB = LinkInDB(
                 listingID= listing_id,
-                post_id= post_id
+                postID= post_id
             )
             session.add(linkDB)
             session.commit()
             session.refresh(linkDB)
-            return map_link_db_to_response(linkDB)
+            return Link(**linkDB.model_dump())
         else:
             raise EntityNotFound("listing", post_id)
     else:
         raise EntityNotFound("post", post_id)
 
-@posts_router.get('/{post_id}/links', response_model= list[int], status_code=200)
+@posts_router.get('/{post_id}/links', response_model= list[Link], status_code=200)
 def get_all_links_by_post_id(session :Annotated[Session, Depends(get_session)],
                              post_id: int,
-                             current_user: UserInDB = Depends(auth_get_current_user))-> list[int]:
+                             current_user: UserInDB = Depends(auth_get_current_user))-> list[Link]:
     post = session.get(PostInDB, post_id)
     if post:
-        return session.exec(select(LinkInDB.listingID).where(LinkInDB.postID == post_id)).all()
+        if post.isListing:
+            links_in_db = session.exec(select(LinkInDB).where(LinkInDB.listingID == post_id)).all()
+        else:
+            links_in_db = session.exec(select(LinkInDB).where(LinkInDB.postID == post_id)).all()
+        return [Link(**link.model_dump()) for link in links_in_db]
     else:
         raise EntityNotFound("post", post_id)

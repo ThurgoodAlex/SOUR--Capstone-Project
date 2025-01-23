@@ -18,7 +18,7 @@ from databaseAndSchemas.schema import (
 )
 from databaseAndSchemas.test_db import get_session
 from PRISM.src.prism_services.auth import auth_get_current_user
-from databaseAndSchemas.mappings.mappings import *
+from databaseAndSchemas.mappings.userMapping import *
 
 
 SessionDep = Annotated[Session, Depends(get_session)]
@@ -81,7 +81,7 @@ def follow_user(session: Annotated[Session, Depends(get_session)],
     """Current User Follows a User with User ID"""
     user = session.get(UserInDB, user_id)
     if user:
-        currentFollow = len(session.exec(select(FollowingInDB).filter(FollowingInDB.followerID == current_user.id and FollowingInDB.followeeID == user_id)).all())
+        currentFollow = len(session.exec(select(FollowingInDB).where((FollowingInDB.followerID == current_user.id) & (FollowingInDB.followeeID == user_id))).all())
         if currentFollow < 1:
             following_db = FollowingInDB(
                 followerID=current_user.id,
@@ -91,20 +91,21 @@ def follow_user(session: Annotated[Session, Depends(get_session)],
             session.commit()
             session.refresh(following_db)
 
-            return map_following_db_to_response(following_db)
+            return Following(**following_db.model_dump())
         else:
             raise DuplicateResource('following', 'users', str(user_id) + ' and ' + str(current_user.id))
     else:
         raise EntityNotFound('user', user_id)
     
-@users_router.get('/{user_id}/following', response_model= list[FollowingInDB], status_code=200)
+@users_router.get('/{user_id}/following', response_model= list[Following], status_code=200)
 def get_following(session: Annotated[Session, Depends(get_session)],
                   user_id: int,
-                  current_user: UserInDB = Depends(auth_get_current_user))-> list[FollowingInDB]:
+                  current_user: UserInDB = Depends(auth_get_current_user))-> list[Following]:
     """Get Who User is Following"""
     user = session.get(UserInDB, user_id)
     if user:
-        return session.exec(select(FollowingInDB).filter(FollowingInDB.followerID == user_id)).all()
+        followings_in_db = session.exec(select(FollowingInDB).filter(FollowingInDB.followerID == user_id)).all()
+        return [Following(**following.model_dump()) for following in followings_in_db]
     else:
         raise EntityNotFound('user', user_id)
     
@@ -115,7 +116,8 @@ def get_followers(session: Annotated[Session, Depends(get_session)],
     """Get Who Follows User"""
     user = session.get(UserInDB, user_id)
     if user:
-        return session.exec(select(FollowingInDB).filter(FollowingInDB.followeeID== user_id)).all()
+        followings_in_db = session.exec(select(FollowingInDB).filter(FollowingInDB.followeeID == user_id)).all()
+        return [Following(**following.model_dump()) for following in followings_in_db]
     else:
         raise EntityNotFound('user', user_id)
 
