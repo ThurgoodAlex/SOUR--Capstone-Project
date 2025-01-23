@@ -166,7 +166,7 @@ class Comment(BaseModel):
     userID: int
     postID: int
     comment: str
-    created_at : datetime
+    created_at: datetime
     model_config = ConfigDict(from_attributes=True)
 
 class CommentCreate(BaseModel):
