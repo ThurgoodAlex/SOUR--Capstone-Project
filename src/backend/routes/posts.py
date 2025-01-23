@@ -120,6 +120,58 @@ def get_all_links_by_post_id(session :Annotated[Session, Depends(get_session)],
                              current_user: UserInDB = Depends(auth_get_current_user))-> list[int]:
     post = session.get(PostInDB, post_id)
     if post:
-        return session.exec(select(LinkInDB.listingID).where(LinkInDB.postID == post_id)).all()
+        return session.exec(select(LinkInDB.listingID).where(LinkInDB.postID == post_id)).first()
     else:
         raise EntityNotFound("post", post_id)
+
+@posts_router.post('/{post_id}/like', response_model= Like, status_code=201)
+def like_post(session :Annotated[Session, Depends(get_session)],
+                             post_id: int,
+                             current_user: UserInDB = Depends(auth_get_current_user))-> Like:
+    post = session.get(PostInDB, post_id)
+    if post:
+        like = LikeInDB(
+            postID=post_id,
+            userID = current_user.id
+        )
+        session.add(like)
+        session.commit()
+        session.refresh(like)
+        return Like(**like.model_dump())
+    else:
+        raise EntityNotFound("post", post_id)
+    
+@posts_router.delete('/{post_id}/unlike', response_model= Delete, status_code=200)
+def unlike_post(session :Annotated[Session, Depends(get_session)],
+                             post_id: int,
+                             current_user: UserInDB = Depends(auth_get_current_user)) -> Delete:
+    post = session.get(PostInDB, post_id)
+    if post:
+        like = session.exec(select(LikeInDB).where(LikeInDB.postID == post_id).where(LikeInDB.userID == current_user.id)).first()
+        if like:
+            session.delete(like)
+            session.commit()
+            return Delete(message="Successfully unliked post")
+            
+        else: 
+            raise EntityNotFound("like for post", post_id)
+            
+    else:
+        raise EntityNotFound("post", post_id)
+
+
+#Returns True if like between user and post exists, False otherwise
+@posts_router.get('/{post_id}/like', response_model= bool, status_code=200)
+def get_like_of_post(session :Annotated[Session, Depends(get_session)],
+                             post_id: int,
+                             current_user: UserInDB = Depends(auth_get_current_user))-> bool:
+    post = session.get(PostInDB, post_id)
+    if post:
+        like = session.exec(select(LikeInDB).where(LikeInDB.postID == post_id).where(LikeInDB.userID == current_user.id)).all()
+        if like:
+            return True
+        else:
+            return False
+    else:
+        raise EntityNotFound("post", post_id)
+
