@@ -9,7 +9,7 @@ from sqlalchemy.future import select
 from jose import JWTError, jwt
 from sqlmodel import Session, SQLModel, select
 from databaseAndSchemas.schema import (
-    PostInDB, Post, UserInDB, createPost, Delete, Link, LinkInDB
+    PostInDB, Post, UserInDB, createPost, Delete, Link, LinkInDB, SellerStatInDB
 )
 
 from exceptions import *
@@ -174,4 +174,31 @@ def get_like_of_post(session :Annotated[Session, Depends(get_session)],
             return False
     else:
         raise EntityNotFound("post", post_id)
+    
 
+
+#this is here to test the seller stats route. May or may not keep this depending on how we want to do transactions...
+@posts_router.put('/{post_id}/sold')
+def post_sold(post_id: int, session :Annotated[Session, Depends(get_session)]):
+    post = session.get(PostInDB, post_id)
+    if not post:
+        raise EntityNotFound("post", post_id)
+    if post.isSold:
+        return {"message": "Post is already marked as sold"}
+    
+    post.isSold = True
+    session.add(post)
+    seller_stat = session.exec(select(SellerStatInDB).where(SellerStatInDB.sellerID == post.sellerID)
+    ).first()
+
+    if seller_stat:
+        seller_stat.itemsSold += 1
+        seller_stat.totalEarnings += post.price
+    else:
+        seller_stat = SellerStatInDB(sellerID=post.sellerID, totalEarnings=post.price, itemsSold=1)
+
+    session.add(seller_stat)
+    session.commit()
+
+    return {"message": "Post marked as sold and stats updated"}
+        

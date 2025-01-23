@@ -13,7 +13,7 @@ from jose import JWTError, jwt
 from sqlmodel import Session, SQLModel, select
 from databaseAndSchemas.schema import (
 
-    Chat, ChatCreate, ChatInDB, Following, FollowingCreate, UserInDB, User
+    Chat, ChatCreate, ChatInDB, Following, FollowingCreate, UserInDB, User, SellerStat, SellerStatInDB, SellerStatCreate
 
 )
 from databaseAndSchemas.test_db import get_session
@@ -161,3 +161,28 @@ def get_posts_for_user(userId: int,
     """Getting all posts for a specific user"""
     posts_in_db = session.exec(select(PostInDB).where(PostInDB.sellerID == userId))
     return [Post(**post.model_dump()) for post in posts_in_db]          
+
+
+
+
+# ------------------------ Cart -------------------------- #
+
+
+
+# ------------------------ Stats -------------------------- #
+@users_router.get("/{user_id}/stats/", response_model=SellerStat, status_code=200)
+def get_stats_for_seller(userID: int, session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)):
+    user = get_user_by_id(session, userID, currentUser)
+    if not user.isSeller:
+        raise PermissionDenied("view", "stats")
+    
+    user_stats = session.exec(select(SellerStatInDB).where(SellerStatInDB.sellerID == user.id)).first()
+    if user_stats is None:
+        raise EntityNotFound("stats", user.id)
+    print(user_stats)
+    user_stats_response = SellerStat.from_orm(user_stats)
+    return user_stats_response
+
+
+
+    
