@@ -88,6 +88,7 @@ def create_new_user(newUser: UserRegistration, session: Annotated[Session, Depen
                 email=newUser.email,
                 hashed_password=hashed_pwd
             )
+            print(user_db)
             session.add(user_db)
             session.commit()
             session.refresh(user_db)

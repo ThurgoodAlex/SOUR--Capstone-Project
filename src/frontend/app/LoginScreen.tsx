@@ -5,6 +5,7 @@ import { Stack, router } from 'expo-router';
 import { useAuth } from '@/context/auth'; 
 import { useApi } from '@/context/api'; 
 
+
 export default function LoginScreen() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -14,31 +15,38 @@ export default function LoginScreen() {
     const api = useApi();
 
     const handleLogin = async () => {
-        // console.log("hello");
-        // const formData = new URLSearchParams();
-        // formData.append('username', username);
-        // formData.append('password', password);
-        // console.log(formData);
+        setLoading(true);
+        try {
+            // Format body as URLSearchParams
+            const body = new URLSearchParams({
+                grant_type: "password",
+                username: username,
+                password: password,
+                scope: "",
+                client_id: "",
+                client_secret: ""
+            });
+    
+            // Use api.post to send the request
+            const response = await api.login(body);
+            const result = await response.json();
+            console.log(result)
+            const access_token = result.access_token;
+            console.log("Token response: ", access_token);
 
+            if (response.status == 200 && access_token) {
+                login(access_token);
+                router.replace('/DiscoverScreen');
+            } else {
+                Alert.alert('Incorrect username or password. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error logging in:', error);
+            Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
+        } finally {
+            setLoading(false);
+        }
 
-        // try {
-        //     const response = await api.post('/auth/token', {username, password});
-        //     const result = await response.json();
-
-        //     if (response.ok) {
-        //         console.log("token response: ", result)
-        //         login(result.access_token); 
-        //         router.replace('/DiscoverScreen');
-        //     } else {
-        //         Alert.alert('Incorrect username or password. Please try again.');
-        //     }
-        // } catch (error) {
-        //     console.error('Error logging in:', error);
-        //     Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
-        // } finally {
-        //     setLoading(false);
-        // }
-        router.replace('/DiscoverScreen');
     };
 
     return (

@@ -71,51 +71,80 @@ export class BackendInfrastructureStack extends cdk.Stack {
         },
       });
 
-    // creating a listing
-    const createListingLambda = new lambda.Function(this, 'CreateListingLambda',{
+    // upload a post
+    const uploadPostLambda = new lambda.Function(this, 'uploadPostLambda',{
       runtime: lambda.Runtime.PYTHON_3_8,
-      handler: 'lambda.listings_handlers.create_new_listing',
+      handler: 'lambda.post_handlers.upload_post',
         code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
-      functionName: 'create_listing_lambda',
+      functionName: 'upload_post_lambda',
       environment: {
         PYTHONPATH: '/var/task',
       },
     })
 
-    // get all listings lambda
-    const getAllListingsLambda = new lambda.Function(this, 'GetAllListingsLambda',{
+    // get all post lambda
+    const getAllPostsLambda = new lambda.Function(this, 'GetAllPostsLambda',{
       runtime: lambda.Runtime.PYTHON_3_8,
-      handler: 'lambda.listings_handlers.get_all_listings_lambda',
+      handler: 'lambda.post_handlers.get_all_posts_lambda',
         code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
-      functionName: 'get_all_listings_lambda',
+      functionName: 'get_all_posts_lambda',
       environment: {
         PYTHONPATH: '/var/task',
       },
     })
 
-    // get listings by users lambda
-    const getListingsByUserLambda = new lambda.Function(this, 'GetListingsByUserLambda',{
+    // get posts by users lambda
+    const getPostsByUserLambda = new lambda.Function(this, 'GetListingsByUserLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
-        handler: 'lambda.listings_handlers.get_listings_by_user_lambda',
+        handler: 'lambda.listings_handlers.get_posts_by_user_lambda',
           code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
-        functionName: 'get_listings_by_user_lambda',
+        functionName: 'get_posts_by_user_lambda',
         environment: {
           PYTHONPATH: '/var/task',
         },
       })
 
-    // get listing by id lambda
-    const getListingByIdLambda = new lambda.Function(this, 'GetListingByIdLambda',{
+    // get post by id lambda
+    const getPostingByIdLambda = new lambda.Function(this, 'GetPostingByIdLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
-        handler: 'lambda.listings_handlers.get_listing_by_id_lambda',
+        handler: 'lambda.post_handlers.get_post_by_id_lambda',
           code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
-        functionName: 'get_listing_by_id_lambda',
+        functionName: 'get_post_by_id_lambda',
         environment: {
           PYTHONPATH: '/var/task',
         },
       })
 
-      // get all users lambda
+      const delPostingByIdLambda = new lambda.Function(this, 'DelPostingByIdLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.post_handlers.del_post_by_id_lambda',
+          code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'del_post_by_id_lambda',
+        environment: {
+          PYTHONPATH: '/var/task',
+        },
+      })
+
+      const getLinksByPostIDLambda = new lambda.Function(this, 'GetLinksByPostID',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.listings_handlers.get_links_by_post_id_lambda',
+          code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'get_links_by_post_id_lambda',
+        environment: {
+          PYTHONPATH: '/var/task',
+        },
+    })
+
+    const createLinkLambda = new lambda.Function(this, 'CreateLink',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.listings_handlers.create_link_lambda',
+          code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'create_link_lambda',
+        environment: {
+          PYTHONPATH: '/var/task',
+        },
+    })
+
     const getAllUsersLambda = new lambda.Function(this, 'GetAllUsersLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
         handler: 'lambda.users_handlers.get_all_users_lambda',
@@ -136,6 +165,46 @@ export class BackendInfrastructureStack extends cdk.Stack {
           PYTHONPATH: '/var/task',
         },
       })
+
+      const becomeSellerLambda = new lambda.Function(this, 'BecomeSeller',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.users_handlers.become_seller_lambda',
+          code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'become_seller_lambda',
+        environment: {
+          PYTHONPATH: '/var/task',
+        },
+      })
+
+    const followUserLambda = new lambda.Function(this, 'FollowUserLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.users_handlers.follow_user_lambda',
+            code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'follow_user_lambda',
+        environment: {
+            PYTHONPATH: '/var/task',
+        },
+    })
+
+    const getFollowersLambda = new lambda.Function(this, 'GetFollowersLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.users_handlers.get_followers_lambda',
+            code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'get_followers_lambda',
+        environment: {
+            PYTHONPATH: '/var/task',
+        },
+    })
+
+    const getFollowingLambda = new lambda.Function(this, 'GetFollowingLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.users_handlers.get_following_lambda',
+            code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'get_following_lambda',
+        environment: {
+            PYTHONPATH: '/var/task',
+        },
+    })
 
 
       //upload media lambda
@@ -169,11 +238,11 @@ export class BackendInfrastructureStack extends cdk.Stack {
         },
       })
 
-      const getMediaByUserLambda = new lambda.Function(this, 'GetMediaByUserLambda',{
+      const getMediaByPostLambda = new lambda.Function(this, 'GetMediaByPostLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
-        handler: 'lambda.media_handlers.get_media_by_user_lambda',
+        handler: 'lambda.media_handlers.get_media_by_post_lambda',
         code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
-        functionName: 'get_media_by_user_lambda',
+        functionName: 'get_media_by_post_lambda',
         environment: {
         PYTHONPATH: '/var/task',
         },
@@ -187,7 +256,66 @@ export class BackendInfrastructureStack extends cdk.Stack {
         environment: {
         PYTHONPATH: '/var/task',
         },
+    })
+
+      const delMediaByIDLambda = new lambda.Function(this, 'DelMediaByIDLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.media_handlers.del_media_by_id_lambda',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'del_media_by_id_lambda',
+        environment: {
+        PYTHONPATH: '/var/task',
+        },
       })
+
+
+
+    // Chats and Messages Lambdas
+
+    // creating a chat
+    const createChatLambda = new lambda.Function(this, 'CreateChatLambda',{
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.chats_handlers.upload_chat_lambda',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'upload_chat_lambda',
+      environment: {
+        PYTHONPATH: '/var/task',
+      },
+    })
+
+    // get all Chats of user lambda
+    const getChatsOfUserLambda = new lambda.Function(this, 'GetChatsOfUserLambda',{
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.chats_handlers.get_all_users_chats_lambda',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'get_all_users_chats_lambda',
+      environment: {
+        PYTHONPATH: '/var/task',
+      },
+    })
+
+
+    // creating a message
+    const createMessageLambda = new lambda.Function(this, 'CreateMessageLambda',{
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.chats_handlers.upload_message_lambda',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'upload_message_lambda',
+      environment: {
+        PYTHONPATH: '/var/task',
+      },
+    })
+
+    // get all messages of chat lambda
+    const getMessagesOfChatLambda = new lambda.Function(this, 'GetMessagesOfChatLambda',{
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.chats_handlers.get_messages_of_chat_lambda',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'get_messages_of_chat_lambda',
+      environment: {
+        PYTHONPATH: '/var/task',
+      },
+    })
 
       const getCommentsByPostIDLambda = new lambda.Function(this, 'GetCommentsByPostIDLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
@@ -220,24 +348,46 @@ export class BackendInfrastructureStack extends cdk.Stack {
 
     // Create Lambda integration
     const starterPageIntegration = new apigateway.LambdaIntegration(starterPageLambda);
+
+    // Auth
     const createUserIntegration = new apigateway.LambdaIntegration(createUserLambda);
     const loginUserIntegration = new apigateway.LambdaIntegration(loginUserLambda);
-    const createListingIntegration = new apigateway.LambdaIntegration(createListingLambda);
-    const getAcessTokenIntegration = new apigateway.LambdaIntegration(getAccessTokenLambda);
-    const getCurrentUserIntegration = new apigateway.LambdaIntegration(getCurrentUserLambda);
-    const getAllListingsIntegration = new apigateway.LambdaIntegration(getAllListingsLambda);
-    const getListingsByUserIntegration = new apigateway.LambdaIntegration(getListingsByUserLambda);
-    const getListingByIdIntegration = new apigateway.LambdaIntegration(getListingByIdLambda);
-    const uploadMediaIntegration = new apigateway.LambdaIntegration(uploadMediaLambda);
-    const getAllMediaIntegration = new apigateway.LambdaIntegration(getAllMediaLambda);
-    const getMediaByIDIntegration = new apigateway.LambdaIntegration(getMediaByIDLambda);
-    const getMediaByUserIntegration = new apigateway.LambdaIntegration(getMediaByUserLambda);
-    const getAllUsersIntegration = new apigateway.LambdaIntegration(getAllUsersLambda);
-    const getUserByIdIntegration = new apigateway.LambdaIntegration(getUserByIdLambda);
+
+
+    const uploadPostIntegration = new apigateway.LambdaIntegration(uploadPostLambda);
+    const getAllPostsIntegration = new apigateway.LambdaIntegration(getAllPostsLambda);
+    const getPostsByUserIntegration = new apigateway.LambdaIntegration(getPostsByUserLambda);
+    const getPostByIdIntegration = new apigateway.LambdaIntegration(getPostingByIdLambda);
+    const delPostByIdIntegration = new apigateway.LambdaIntegration(delPostingByIdLambda);
     const getCommentByIDIntegration = new apigateway.LambdaIntegration(getCommentByIDLambda);
     const getCommentsByPostIDIntegration = new apigateway.LambdaIntegration(getCommentsByPostIDLambda);
     const createCommentIntegration = new apigateway.LambdaIntegration(createCommentLambda);
 
+    const getAcessTokenIntegration = new apigateway.LambdaIntegration(getAccessTokenLambda);
+    const getCurrentUserIntegration = new apigateway.LambdaIntegration(getCurrentUserLambda);
+ 
+    const uploadMediaIntegration = new apigateway.LambdaIntegration(uploadMediaLambda);
+    const getAllMediaIntegration = new apigateway.LambdaIntegration(getAllMediaLambda);
+    const getMediaByIDIntegration = new apigateway.LambdaIntegration(getMediaByIDLambda);
+    const getMediaByPostIntegration = new apigateway.LambdaIntegration(getMediaByPostLambda);
+    const delMediaByIDIntegration = new apigateway.LambdaIntegration(delMediaByIDLambda)
+
+    const getLinksByPostIdIntegration = new apigateway.LambdaIntegration(getLinksByPostIDLambda);
+    const createLinkIntegration = new apigateway.LambdaIntegration(createLinkLambda);
+
+    // Users
+    const getAllUsersIntegration = new apigateway.LambdaIntegration(getAllUsersLambda);
+    const getUserByIdIntegration = new apigateway.LambdaIntegration(getUserByIdLambda);
+    const becomeSellerIntegration = new apigateway.LambdaIntegration(becomeSellerLambda)
+    const followUserIntegration = new apigateway.LambdaIntegration(followUserLambda);
+    const getFollowersIntegration = new apigateway.LambdaIntegration(getFollowersLambda);
+    const getFollowingIntegration = new apigateway.LambdaIntegration(getFollowingLambda);
+
+    // Chats & Messages
+    const createChatIntegration = new apigateway.LambdaIntegration(createChatLambda);
+    const getChatsOfUserIntegration = new apigateway.LambdaIntegration(getChatsOfUserLambda);
+    const createMessageIntegration = new apigateway.LambdaIntegration(createMessageLambda);
+    const getMessagesOfChatIntegration = new apigateway.LambdaIntegration(getMessagesOfChatLambda);
 
 
     api.root.addMethod('GET', starterPageIntegration);
@@ -259,18 +409,31 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getCurrentUserResource = api.root.addResource('getcurrentuser')
     getCurrentUserResource.addMethod('GET', getCurrentUserIntegration)
 
-    //Adding Listing endpoints
-    const createListingResource = api.root.addResource('createlisting');
-    createListingResource.addMethod('POST', createListingIntegration)
+    const becomeSellerResource = api.root.addResource('becomeseller')
+    getCurrentUserResource.addMethod('PUT', becomeSellerIntegration)
 
-    const getAllListingsResource = api.root.addResource('getAllListings');
-    getAllListingsResource.addMethod('GET', getAllListingsIntegration);
+   //post endpoints
+    const uploadPostResource = api.root.addResource('uploadPost');
+    uploadPostResource.addMethod('POST', uploadPostIntegration)
 
-    const getListingsByUserResource = api.root.addResource('getListingsByUser');
-    getListingsByUserResource.addMethod('GET', getListingsByUserIntegration);
+    const getAllPostsResource = api.root.addResource('getAllPosts');
+    getAllPostsResource.addMethod('GET', getAllPostsIntegration);
 
-    const getListingByIdResource = api.root.addResource('getListingById');
-    getListingByIdResource.addMethod('GET', getListingByIdIntegration);
+    const getPostsByUserResource = api.root.addResource('getPostsByUser');
+    getPostsByUserResource.addMethod('GET', getPostsByUserIntegration);
+
+    const getPostByIdResource = api.root.addResource('getPostById');
+    getPostByIdResource.addMethod('GET', getPostByIdIntegration);
+
+
+    const delPostByIdResource = api.root.addResource('delPostById');
+    delPostByIdResource.addMethod('DELETE', delPostByIdIntegration);
+
+    const getLinksByPostIdResouce = api.root.addResource('getLinksByPostId');
+    getLinksByPostIdResouce.addMethod('GET', getLinksByPostIdIntegration);
+
+    const createLinkResource = api.root.addResource('createLink');
+    createLinkResource.addMethod('POST', createLinkIntegration);
 
     const getAllUsersResource = api.root.addResource('getAllUsers');
     getAllUsersResource.addMethod('GET', getAllUsersIntegration);
@@ -278,7 +441,16 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getUsersByIdResource = api.root.addResource('getUserById');
     getUsersByIdResource.addMethod('GET', getUserByIdIntegration);
 
+    const followUserResource = api.root.addResource('followUser');
+    followUserResource.addMethod('POST', followUserIntegration);
 
+    const getFollowersResource = api.root.addResource('getFollowers');
+    getFollowersResource.addMethod('GET', getFollowersIntegration);
+
+    const getFollowingResource = api.root.addResource('getFollowing');
+    getFollowingResource.addMethod('GET', getFollowingIntegration);
+
+    //Media endpoints
     const uploadMediaResource = api.root.addResource('uploadMedia');
     uploadMediaResource.addMethod('POST', uploadMediaIntegration)
 
@@ -288,17 +460,24 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getMediaByIDResource = api.root.addResource('getMediaByID');
     getMediaByIDResource.addMethod('GET', getMediaByIDIntegration)
 
-    const getMediaByUserResource = api.root.addResource('getMediaByUser');
-    getMediaByUserResource.addMethod('GET', getMediaByUserIntegration)
+    const getMediaByPostResource = api.root.addResource('getMediaByPost');
+    getMediaByPostResource.addMethod('GET', getMediaByPostIntegration)
 
-    const getCommentByIDResource = api.root.addResource('getCommentByID');
-    getCommentByIDResource.addMethod('GET', getCommentByIDIntegration)
-    
-    const getCommentsByPostIDResource = api.root.addResource('getCommentsByPostID');
-    getCommentsByPostIDResource.addMethod('GET', getCommentsByPostIDIntegration)
+    const delMediaByIDResource = api.root.addResource('delMediaByID');
+    delMediaByIDResource.addMethod('DELETE', delMediaByIDIntegration)
 
-    const createCommentResource = api.root.addResource('createComment');
-    createCommentResource.addMethod('GET', createCommentIntegration)
+    const uploadChatResource = api.root.addResource('uploadChat');
+    uploadChatResource.addMethod('POST', createChatIntegration)
+
+    const uploadMessageResource = api.root.addResource('uploadMessage');
+    uploadMessageResource.addMethod('POST', createMessageIntegration)
+
+    const getChatsOfUserResource = api.root.addResource('getChatsOfUser');
+    getChatsOfUserResource.addMethod('GET', getChatsOfUserIntegration)
+
+    const getMessagesOfChat = api.root.addResource('getMessagesOfChat');
+    getMessagesOfChat.addMethod('GET', getMessagesOfChatIntegration)
+
 
     // Add /health endpoint
     const healthResource = api.root.addResource('health');
