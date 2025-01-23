@@ -135,6 +135,42 @@ export class BackendInfrastructureStack extends cdk.Stack {
         },
     })
 
+
+
+
+    const likePostLambda = new lambda.Function(this, 'LikePost',{
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.post_handlers.like_post',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'like_post',
+      environment: {
+        PYTHONPATH: '/var/task',
+      },
+    })
+
+    const unlikePostLambda = new lambda.Function(this, 'UnlikePost',{
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.post_handlers.unlike_post',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'unlike_post',
+      environment: {
+        PYTHONPATH: '/var/task',
+      },
+    })
+
+    const getLikeLambda = new lambda.Function(this, 'getLikeLambda',{
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.post_handlers.get_like_lambda',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'get_like_lambda',
+      environment: {
+        PYTHONPATH: '/var/task',
+      },
+    })
+
+
+
+
     const createLinkLambda = new lambda.Function(this, 'CreateLink',{
         runtime: lambda.Runtime.PYTHON_3_8,
         handler: 'lambda.listings_handlers.create_link_lambda',
@@ -329,6 +365,10 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getPostByIdIntergration = new apigateway.LambdaIntegration(getPostingByIdLambda);
     const delPostByIdIntergration = new apigateway.LambdaIntegration(delPostingByIdLambda);
 
+    const likePostIntegration = new apigateway.LambdaIntegration(likePostLambda);
+    const unlikePostIntegration = new apigateway.LambdaIntegration(unlikePostLambda);
+    const getLikeIntegration = new apigateway.LambdaIntegration(getLikeLambda);
+
     const getAcessTokenIntergration = new apigateway.LambdaIntegration(getAccessTokenLambda);
     const getCurrentUserIntergration = new apigateway.LambdaIntegration(getCurrentUserLambda);
  
@@ -376,7 +416,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
     getCurrentUserResource.addMethod('GET', getCurrentUserIntergration)
 
     const becomeSellerResource = api.root.addResource('becomeseller')
-    getCurrentUserResource.addMethod('PUT', becomeSellerIntegration)
+    becomeSellerResource.addMethod('PUT', becomeSellerIntegration)
 
    //post endpoints
     const uploadPostResource = api.root.addResource('uploadPost');
@@ -394,6 +434,21 @@ export class BackendInfrastructureStack extends cdk.Stack {
 
     const delPostByIdResource = api.root.addResource('delPostById');
     delPostByIdResource.addMethod('DELETE', delPostByIdIntergration);
+
+
+    const likePostResource = api.root.addResource('likePost');
+    likePostResource.addMethod('POST', likePostIntegration);
+
+    const unlikePostResource = api.root.addResource('unlikePost');
+    unlikePostResource.addMethod('DELETE', unlikePostIntegration);
+
+
+    const getLikeResource = api.root.addResource('getLike');
+    getLikeResource.addMethod('GET', getLikeIntegration);
+
+
+
+
 
     const getLinksByPostIdResouce = api.root.addResource('getLinksByPostId');
     getLinksByPostIdResouce.addMethod('GET', getLinksByPostIdIntegration);
