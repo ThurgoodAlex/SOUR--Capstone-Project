@@ -12,6 +12,12 @@ services:
       - localstack
     volumes:
       - ./src/backend:/app/
+    develop:
+      watch:
+        - action: sync
+          path: ./backend/
+          target: /app/
+        
   frontend:
     build: src/frontend/
     ports:

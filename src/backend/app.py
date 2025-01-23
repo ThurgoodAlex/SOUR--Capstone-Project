@@ -8,11 +8,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from databaseAndSchemas.test_db import create_db_and_tables
 from databaseAndSchemas.schema import * 
-from PRISM.src.prism_services.auth import auth_router
+from PRISM.auth import auth_router
 
 from routes.media import media_router
-# from routes.images import images_router
-from routes.users import users_router
+from PRISM.users import users_router
 from fastapi.openapi.utils import get_openapi
 # Create logs directory if it doesn't exist
 os.makedirs('logs', exist_ok=True)

@@ -13,7 +13,7 @@ from databaseAndSchemas.schema import (
     UserInDB, User
 )
 from databaseAndSchemas.test_db import get_session
-from PRISM.src.prism_services.auth import auth_get_current_user
+from .auth import auth_get_current_user
 
 
 SessionDep = Annotated[Session, Depends(get_session)]
