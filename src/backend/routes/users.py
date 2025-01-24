@@ -1,3 +1,4 @@
+from operator import and_
 from sqlalchemy import or_
 import os
 import sys
@@ -13,7 +14,9 @@ from jose import JWTError, jwt
 from sqlmodel import Session, SQLModel, select
 from databaseAndSchemas.schema import (
 
-    Chat, ChatCreate, ChatInDB, Following, FollowingCreate, UserInDB, User, SellerStat, SellerStatInDB, SellerStatCreate
+    Chat, ChatCreate, ChatInDB, Following, FollowingCreate, UserInDB, User, SellerStat, SellerStatInDB, SellerStatCreate,
+    Cart, CartCreate, CartInDB,
+    Post, PostInDB
 
 )
 from databaseAndSchemas.test_db import get_session
@@ -166,9 +169,56 @@ def get_posts_for_user(userId: int,
 
 
 # ------------------------ Cart -------------------------- #
+@users_router.get("/{user_id}/cart/", response_model=list[Cart], status_code=200)
+def get_user_cart(userID: int, session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)) -> list[Cart]:
+    user = get_user_by_id(session, userID, currentUser)
+    if user.id != currentUser.id:
+        raise PermissionDenied("view", "cart")
+    user_cart = session.exec(select(CartInDB).where(CartInDB.userID == user.id))
 
+    if not user_cart:
+        raise EntityNotFound("cart", user.id)
+    return [Cart(**item.model_dump()) for item in user_cart]
 
+@users_router.post("/{user_id}/cart/", response_model=Cart, status_code=200)
+def add_item_to_cart(listing_id: int, session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)) -> Cart:
+    user = get_user_by_id(session, currentUser.id, currentUser)
+    if user.id != currentUser.id:
+        raise PermissionDenied("update", "cart")
+    
+    listing = session.exec(
+    select(PostInDB).where(
+        and_(PostInDB.id == listing_id, PostInDB.isListing == True)
+    )
+    ).first()
 
+    if not listing:
+         raise EntityNotFound("listing", listing_id)
+    
+    user_cart = session.exec(select(CartInDB).where(CartInDB.userID == user.id)).first()
+    if not user_cart:
+           user_cart = CartInDB(
+            userID=user.id,
+            listingID=listing.id,
+            created_at=datetime.now()
+        )
+    else:
+        user_cart.listingID = listing.id
+        user_cart.created_at = datetime.now()
+
+    session.add(user_cart)
+    session.commit()
+
+    return Cart(    
+        id=user_cart.id,
+        userID=user_cart.userID,
+        listingID=user_cart.listingID,
+        created_at=user_cart.created_at
+    )
+
+@users_router.delete("/{user_id}/cart/", response_model=Cart, status_code=200)
+def get_user_cart(userID: int, session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)):
+    pass
 # ------------------------ Stats -------------------------- #
 @users_router.get("/{user_id}/stats/", response_model=SellerStat, status_code=200)
 def get_stats_for_seller(userID: int, session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)):

@@ -92,3 +92,22 @@ def del_post_by_id_lambda(event, context):
             "body": json.dumps({"error": str(e)})
         }
 
+
+def post_sold_lambda(event, context):
+    try:
+        post= json.loads(event['body'])  
+
+        return {
+            "statusCode": 200,
+            "body": json.dumps({
+                "message": "Post sold",
+                "post": post
+            })
+        }
+
+    except Exception as e:
+        return {
+            "statusCode": 500,
+            "body": json.dumps({"error": str(e)})
+        }
+

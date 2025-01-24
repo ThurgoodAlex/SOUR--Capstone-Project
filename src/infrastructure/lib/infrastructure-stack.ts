@@ -125,6 +125,16 @@ export class BackendInfrastructureStack extends cdk.Stack {
         },
       })
 
+      const postSoldLambda = new lambda.Function(this, 'PostSoldLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.post_handlers.post_sold_lambda',
+          code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'post_sold_lambda',
+        environment: {
+          PYTHONPATH: '/var/task',
+        },
+      })
+
       const getLinksByPostIDLambda = new lambda.Function(this, 'GetLinksByPostID',{
         runtime: lambda.Runtime.PYTHON_3_8,
         handler: 'lambda.listings_handlers.get_links_by_post_id_lambda',
@@ -220,6 +230,17 @@ export class BackendInfrastructureStack extends cdk.Stack {
         environment: {
             PYTHONPATH: '/var/task',
         },
+    })
+
+
+    const getUserStatsLambda = new lambda.Function(this, 'GetUserStatsLambda',{
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.users_handlers.get_user_stats_lambda',
+          code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'get_user_stats_lambda',
+      environment: {
+          PYTHONPATH: '/var/task',
+      },
     })
 
     const getFollowersLambda = new lambda.Function(this, 'GetFollowersLambda',{
@@ -364,6 +385,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getPostsByUserIntergration = new apigateway.LambdaIntegration(getPostsByUserLambda);
     const getPostByIdIntergration = new apigateway.LambdaIntegration(getPostingByIdLambda);
     const delPostByIdIntergration = new apigateway.LambdaIntegration(delPostingByIdLambda);
+    const postSoldIntergration = new apigateway.LambdaIntegration(postSoldLambda);
 
     const likePostIntegration = new apigateway.LambdaIntegration(likePostLambda);
     const unlikePostIntegration = new apigateway.LambdaIntegration(unlikePostLambda);
@@ -388,6 +410,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const followUserIntegration = new apigateway.LambdaIntegration(followUserLambda);
     const getFollowersIntegration = new apigateway.LambdaIntegration(getFollowersLambda);
     const getFollowingIntegration = new apigateway.LambdaIntegration(getFollowingLambda);
+    const getUserStatsIntergration = new apigateway.LambdaIntegration(getUserStatsLambda);
 
     // Chats & Messages
     const createChatIntegration = new apigateway.LambdaIntegration(createChatLambda);
@@ -434,6 +457,9 @@ export class BackendInfrastructureStack extends cdk.Stack {
 
     const delPostByIdResource = api.root.addResource('delPostById');
     delPostByIdResource.addMethod('DELETE', delPostByIdIntergration);
+
+    const postSoldResource = api.root.addResource('postSold');
+    postSoldResource.addMethod('PUT', postSoldIntergration);
 
 
     const likePostResource = api.root.addResource('likePost');

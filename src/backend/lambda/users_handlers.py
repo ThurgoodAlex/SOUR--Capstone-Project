@@ -35,3 +35,22 @@ def get_user_by_id_lambda(event, context):
             "statusCode": 500,
             "body": json.dumps({"error": str(e)})
         }
+    
+
+def get_user_stats_lambda(event, context):
+    try:
+        user= json.loads(event['body'])  
+
+        return {
+            "statusCode": 200,
+            "body": json.dumps({
+                "message": "User stats Retrieved",
+                "user": user
+            })
+        }
+
+    except Exception as e:
+        return {
+            "statusCode": 500,
+            "body": json.dumps({"error": str(e)})
+        }
