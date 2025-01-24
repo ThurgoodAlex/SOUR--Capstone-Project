@@ -1,3 +1,4 @@
+from operator import and_
 from sqlalchemy import or_
 import os
 import sys
@@ -12,7 +13,11 @@ from sqlalchemy.future import select
 from jose import JWTError, jwt
 from sqlmodel import Session, SQLModel, select
 from databaseAndSchemas.schema import (
-    Comment, CommentCreate, CommentInDB, UserInDB, User, Chat, ChatCreate, ChatInDB, Following, FollowingCreate
+
+
+    Chat, ChatCreate, ChatInDB, Following, FollowingCreate, UserInDB, User, SellerStat, SellerStatInDB, SellerStatCreate,
+    Cart, CartCreate, CartInDB,
+    Post, PostInDB, Comment, CommentCreate, CommentInDB
 )
 from databaseAndSchemas.test_db import get_session
 from PRISM.src.prism_services.auth import auth_get_current_user
@@ -159,3 +164,95 @@ def get_posts_for_user(userId: int,
     """Getting all posts for a specific user"""
     posts_in_db = session.exec(select(PostInDB).where(PostInDB.sellerID == userId))
     return [Post(**post.model_dump()) for post in posts_in_db]          
+
+
+
+
+# ------------------------ Cart -------------------------- #
+@users_router.get("/{user_id}/cart/", response_model=list[Cart], status_code=200)
+def get_user_cart(
+
+    session: Annotated[Session, Depends(get_session)],
+    currentUser: UserInDB = Depends(auth_get_current_user)
+) -> list[Cart]:
+    
+    #TODO: Exception if current user is not user_id?
+    
+    user_cart = session.exec(select(CartInDB).where(CartInDB.userID == currentUser.id)).all()
+
+    return [Cart(**item.model_dump()) for item in user_cart]
+
+@users_router.post("/{user_id}/cart/", response_model=Cart, status_code=200)
+def add_item_to_cart(
+    listing_id: int,
+    session: Annotated[Session, Depends(get_session)],
+    currentUser: UserInDB = Depends(auth_get_current_user)
+) -> Cart:
+   
+
+    listing = session.exec(
+        select(PostInDB).where(
+            and_(PostInDB.id == listing_id, PostInDB.isListing == True)
+        )
+    ).first()
+
+    if not listing:
+        raise EntityNotFound("listing", listing_id)
+
+    new_cart_item = CartInDB(
+        userID=currentUser.id,
+        listingID=listing.id,
+        created_at=datetime.now()
+    )
+
+    session.add(new_cart_item)
+    session.commit()
+    session.refresh(new_cart_item)
+
+    return Cart(
+        id=new_cart_item.id,
+        userID=new_cart_item.userID,
+        listingID=new_cart_item.listingID,
+        created_at=new_cart_item.created_at
+    )
+
+@users_router.delete("/users/{user_id}/cart/{cart_item_id}/", status_code=200)
+def del_item_from_cart(
+    cart_item_id: int,
+    session: Annotated[Session, Depends(get_session)],
+    currentUser: UserInDB = Depends(auth_get_current_user)
+):
+    
+    cart_item = session.exec(
+        select(CartInDB).where(
+            and_(CartInDB.userID == currentUser.id, CartInDB.id == cart_item_id)
+        )
+    ).first()
+
+    if not cart_item:
+        raise EntityNotFound("cart item", cart_item_id)
+
+    session.delete(cart_item)
+    session.commit()
+
+    return Delete(message="Item removed successfully from cart.")
+# ------------------------ Stats -------------------------- #
+@users_router.get("/{user_id}/stats/", response_model=SellerStat, status_code=200)
+def get_stats_for_seller(user_id: int, session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)):
+
+    user = session.get(UserInDB, user_id)
+
+    if not user:
+        raise EntityNotFound("user", user_id)
+    
+    user_stats = session.exec(select(SellerStatInDB).where(SellerStatInDB.sellerID == user.id)).first()
+
+    if user_stats is None:
+        raise EntityNotFound("stats", user.id)
+    
+    user_stats_response = SellerStat(**user_stats.model_dump())
+    return user_stats_response
+
+
+
+    

@@ -125,6 +125,16 @@ export class BackendInfrastructureStack extends cdk.Stack {
         },
       })
 
+      const postSoldLambda = new lambda.Function(this, 'PostSoldLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.post_handlers.post_sold_lambda',
+          code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'post_sold_lambda',
+        environment: {
+          PYTHONPATH: '/var/task',
+        },
+      })
+
       const getLinksByPostIDLambda = new lambda.Function(this, 'GetLinksByPostID',{
         runtime: lambda.Runtime.PYTHON_3_8,
         handler: 'lambda.listings_handlers.get_links_by_post_id_lambda',
@@ -220,6 +230,17 @@ export class BackendInfrastructureStack extends cdk.Stack {
         environment: {
             PYTHONPATH: '/var/task',
         },
+    })
+
+
+    const getUserStatsLambda = new lambda.Function(this, 'GetUserStatsLambda',{
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.users_handlers.get_user_stats_lambda',
+          code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'get_user_stats_lambda',
+      environment: {
+          PYTHONPATH: '/var/task',
+      },
     })
 
     const getFollowersLambda = new lambda.Function(this, 'GetFollowersLambda',{
@@ -335,7 +356,6 @@ export class BackendInfrastructureStack extends cdk.Stack {
       })
 
 
-
     // Chats and Messages Lambdas
 
     // creating a chat
@@ -384,7 +404,41 @@ export class BackendInfrastructureStack extends cdk.Stack {
     })
 
 
+<<<<<<< src/infrastructure/lib/infrastructure-stack.ts
+    const getUserCartLambda = new lambda.Function(this, 'GetUserCartLambda',{
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.user_handlers.get_user_cart_lambda',
+      code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'get_user_cart_lambda',
+      environment: {
+      PYTHONPATH: '/var/task',
+      },
+    })
+
+    const addItemToCartLambda = new lambda.Function(this, 'AddItemToCartLambda',{
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.user_handlers.add_item_to_cart_lambda',
+      code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'add_item_to_cart_lambda',
+      environment: {
+      PYTHONPATH: '/var/task',
+      },
+    })
+
+    const delItemFromCartLambda = new lambda.Function(this, 'DellItemFromCartLambda',{
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.user_handlers.del_item_from_cart_lambda',
+      code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'del_item_from_cart_lambda',
+      environment: {
+      PYTHONPATH: '/var/task',
+      },
+    })
+
+    //Here is the intergration to API gateway.
+=======
     //Here is the Integration to API gateway.
+>>>>>>> src/infrastructure/lib/infrastructure-stack.ts
 
     // Create API Gateway
     const api = new apigateway.RestApi(this, 'StarterPageApi', {
@@ -400,6 +454,8 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const loginUserIntegration = new apigateway.LambdaIntegration(loginUserLambda);
 
 
+    const postSoldIntergration = new apigateway.LambdaIntegration(postSoldLambda);
+
     const uploadPostIntegration = new apigateway.LambdaIntegration(uploadPostLambda);
     const getAllPostsIntegration = new apigateway.LambdaIntegration(getAllPostsLambda);
     const getPostsByUserIntegration = new apigateway.LambdaIntegration(getPostsByUserLambda);
@@ -413,6 +469,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
 
     const getAcessTokenIntegration = new apigateway.LambdaIntegration(getAccessTokenLambda);
     const getCurrentUserIntegration = new apigateway.LambdaIntegration(getCurrentUserLambda);
+>>>>>>> src/infrastructure/lib/infrastructure-stack.ts
 
     const likePostIntegration = new apigateway.LambdaIntegration(likePostLambda);
     const unlikePostIntegration = new apigateway.LambdaIntegration(unlikePostLambda);
@@ -434,6 +491,12 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const followUserIntegration = new apigateway.LambdaIntegration(followUserLambda);
     const getFollowersIntegration = new apigateway.LambdaIntegration(getFollowersLambda);
     const getFollowingIntegration = new apigateway.LambdaIntegration(getFollowingLambda);
+    const getUserStatsIntergration = new apigateway.LambdaIntegration(getUserStatsLambda);
+    const getUserCartIntergration = new apigateway.LambdaIntegration(getUserCartLambda);
+    const addItemToCartIntergration = new apigateway.LambdaIntegration(addItemToCartLambda);
+    const delItemFromCartIntergration = new apigateway.LambdaIntegration(delItemFromCartLambda);
+
+
 
     // Chats & Messages
     const createChatIntegration = new apigateway.LambdaIntegration(createChatLambda);
@@ -492,6 +555,17 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const delPostByIdResource = api.root.addResource('delPostById');
     delPostByIdResource.addMethod('DELETE', delPostByIdIntegration);
 
+    const postSoldResource = api.root.addResource('postSold');
+    postSoldResource.addMethod('PUT', postSoldIntergration);
+
+    const getUserCartResource = api.root.addResource('getUserCart');
+    getUserCartResource.addMethod('GET', getUserCartIntergration);
+    
+    const addItemToCartResource = api.root.addResource('addItemToCart');
+    addItemToCartResource.addMethod('POST', addItemToCartIntergration);
+
+    const delItemFromCartResource = api.root.addResource('delItemFromCart');
+    delItemFromCartResource.addMethod('DELETE', delItemFromCartIntergration);
 
     const likePostResource = api.root.addResource('likePost');
     likePostResource.addMethod('POST', likePostIntegration);
@@ -527,6 +601,9 @@ export class BackendInfrastructureStack extends cdk.Stack {
 
     const getFollowingResource = api.root.addResource('getFollowing');
     getFollowingResource.addMethod('GET', getFollowingIntegration);
+
+
+
 
     //Media endpoints
     const uploadMediaResource = api.root.addResource('uploadMedia');
