@@ -103,7 +103,7 @@ def follow_user(session: Annotated[Session, Depends(get_session)],
 @users_router.delete('/{user_id}/unfollow/', response_model= Delete, status_code=201)
 def unfollow_user(session: Annotated[Session, Depends(get_session)],
                 user_id: int,
-                current_user: UserInDB = Depends(auth_get_current_user))-> Following:
+                current_user: UserInDB = Depends(auth_get_current_user))-> Delete:
     """Current User Follows a User with User ID"""
     user = session.get(UserInDB, user_id)
     if user_id != current_user.id:
