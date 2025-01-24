@@ -175,11 +175,10 @@ def get_user_cart(
     session: Annotated[Session, Depends(get_session)],
     currentUser: UserInDB = Depends(auth_get_current_user)
 ) -> list[Cart]:
-  
+    
+    #TODO: Exception if current user is not user_id?
+    
     user_cart = session.exec(select(CartInDB).where(CartInDB.userID == currentUser.id)).all()
-
-    if not user_cart:
-        raise EntityNotFound("cart", currentUser.id)
 
     return [Cart(**item.model_dump()) for item in user_cart]
 
