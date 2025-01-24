@@ -65,31 +65,29 @@ def get_all_posts(session: Annotated[Session, Depends(get_session)],
     return [Post(**post.model_dump()) for post in post_in_db]
 
 
-@posts_router.post("/{post_id}/comments/{comment}", response_model=Comment, status_code=201)
-def create_new_comment(session: Annotated[Session, Depends(get_session)],
+
+@posts_router.post("/{post_id}/comments", response_model=Comment, status_code=201)
+def create_new_comment(newComment: CommentCreate,
+                    session: Annotated[Session, Depends(get_session)],
                     post_id: int,
-                    comment: str,
                     current_user: UserInDB = Depends(auth_get_current_user)) -> Comment:
     """Create a new comment"""
     post = session.get(PostInDB, post_id)
     if post:
-        try:
-            comment_db = CommentInDB(
-                userID=current_user.id,
-                postID=post_id,
-                comment=comment
-            )
-            session.add(comment_db)
-            session.commit()
-            session.refresh(comment_db)
-        
-            return Comment(**comment_db.model_dump())
-        
-        except Exception as e:
-            raise UnexceptedError()
-    else:
-        raise MethodNotAllowed('Comment on post')
+        comment_db = CommentInDB(
+            userID=current_user.id,
+            postID=post_id,
+            comment=newComment.comment
+        )
+        session.add(comment_db)
+        session.commit()
+        session.refresh(comment_db)
     
+        return Comment(**comment_db.model_dump())
+    else:
+        raise EntityNotFound("post", post_id)
+
+
 @posts_router.get('/{post_id}/comments', response_model= list[Comment], status_code=200)
 def get_comments_by_post(session: Annotated[Session, Depends(get_session)],
                         post_id: int,
@@ -101,7 +99,8 @@ def get_comments_by_post(session: Annotated[Session, Depends(get_session)],
         return [Comment(**comment.model_dump()) for comment in comments_db]
     else:
         raise EntityNotFound("post", post_id)
-    
+
+
 @posts_router.get('/comments/{comment_id}', response_model= Comment, status_code=200)
 def get_comment_by_id(session: Annotated[Session, Depends(get_session)],
                     comment_id: int,
@@ -112,7 +111,9 @@ def get_comment_by_id(session: Annotated[Session, Depends(get_session)],
         return Comment(**comment.model_dump())
     else:
         raise EntityNotFound("comment", comment_id)
-    
+
+
+
 @posts_router.delete('/comments/{comment_id}', response_model= Delete, status_code=200)
 def delete_comment(session :Annotated[Session, Depends(get_session)],
                     comment_id: int,
@@ -126,12 +127,16 @@ def delete_comment(session :Annotated[Session, Depends(get_session)],
     else:
         raise EntityNotFound("comment", comment_id)
 
+
+
+
 @posts_router.get('/{post_id}', response_model = list[Post], status_code=200)
 def get_post_by_id(postId: int,
                    session: Annotated[Session, Depends(get_session)],
                    currentUser: UserInDB = Depends(auth_get_current_user)):
     posts_in_db = session.exec(select(PostInDB).where(PostInDB.id == postId))
     return [Post(**post.model_dump()) for post in posts_in_db]
+
 
 
 @posts_router.delete('/{post_id}', response_model = Delete, status_code=200)
