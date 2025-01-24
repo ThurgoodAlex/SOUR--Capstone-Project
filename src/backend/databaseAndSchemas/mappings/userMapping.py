@@ -1,6 +1,3 @@
-
-
-
 from databaseAndSchemas.schema import *
 
 

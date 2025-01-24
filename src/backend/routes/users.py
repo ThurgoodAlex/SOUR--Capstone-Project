@@ -1,7 +1,7 @@
 from sqlalchemy import or_
 import os
 import sys
-from exceptions import DuplicateResource, EntityNotFound, PermissionDenied
+from exceptions import DuplicateResource, EntityNotFound, MethodNotAllowed, PermissionDenied
 import boto3
 from fastapi import APIRouter, Depends, HTTPException
 from datetime import datetime, timezone
@@ -48,10 +48,10 @@ def get_all_users(session :Annotated[Session, Depends(get_session)])-> list[User
     """Gets all users"""
     return session.exec(select(UserInDB)).all()
 
-@users_router.get('/{user_id}', response_model= User, status_code=200)
+@users_router.get('/{user_id}/', response_model= User, status_code=200)
 def get_user_by_id(session: Annotated[Session, Depends(get_session)],
-                        user_id: int,
-                        current_user: UserInDB = Depends(auth_get_current_user))-> User:
+                    user_id: int,
+                    current_user: UserInDB = Depends(auth_get_current_user))-> User:
     """Gets user by id"""
     user = session.get(UserInDB, user_id)
     if user:
@@ -59,7 +59,7 @@ def get_user_by_id(session: Annotated[Session, Depends(get_session)],
     else:
         raise EntityNotFound("user", user_id)
 
-@users_router.put('/becomeseller', response_model= User, status_code=200)
+@users_router.put('/becomeseller/', response_model= User, status_code=200)
 def become_a_seller(session: Annotated[Session, Depends(get_session)],
                         current_user: UserInDB = Depends(auth_get_current_user))-> User:
     """Update current;y logged in user to become a seller"""
@@ -74,30 +74,55 @@ def become_a_seller(session: Annotated[Session, Depends(get_session)],
 
 # ------------------------ followings -------------------------- #
 
-@users_router.post('/{user_id}/follow', response_model= Following, status_code=201)
+@users_router.post('/{user_id}/follow/', response_model= Following, status_code=201)
 def follow_user(session: Annotated[Session, Depends(get_session)],
                 user_id: int,
                 current_user: UserInDB = Depends(auth_get_current_user))-> Following:
     """Current User Follows a User with User ID"""
     user = session.get(UserInDB, user_id)
-    if user:
-        currentFollow = len(session.exec(select(FollowingInDB).where((FollowingInDB.followerID == current_user.id) & (FollowingInDB.followeeID == user_id))).all())
-        if currentFollow < 1:
-            following_db = FollowingInDB(
-                followerID=current_user.id,
-                followeeID=user_id
-            )
-            session.add(following_db)
-            session.commit()
-            session.refresh(following_db)
+    if user_id != current_user.id:
+        if user:
+            currentFollow = len(session.exec(select(FollowingInDB).where((FollowingInDB.followerID == current_user.id) & (FollowingInDB.followeeID == user_id))).all())
+            if currentFollow < 1:
+                following_db = FollowingInDB(
+                    followerID=current_user.id,
+                    followeeID=user_id
+                )
+                session.add(following_db)
+                session.commit()
+                session.refresh(following_db)
 
-            return Following(**following_db.model_dump())
+                return Following(**following_db.model_dump())
+            else:
+                raise DuplicateResource('following', 'users', str(user_id) + ' and ' + str(current_user.id))
         else:
-            raise DuplicateResource('following', 'users', str(user_id) + ' and ' + str(current_user.id))
+            raise EntityNotFound('user', user_id)
     else:
-        raise EntityNotFound('user', user_id)
+        raise MethodNotAllowed('following yourself')
     
-@users_router.get('/{user_id}/following', response_model= list[Following], status_code=200)
+@users_router.delete('/{user_id}/unfollow/', response_model= Delete, status_code=201)
+def unfollow_user(session: Annotated[Session, Depends(get_session)],
+                user_id: int,
+                current_user: UserInDB = Depends(auth_get_current_user))-> Following:
+    """Current User Follows a User with User ID"""
+    user = session.get(UserInDB, user_id)
+    if user_id != current_user.id:
+        if user:
+            currentFollow = session.exec(select(FollowingInDB).where((FollowingInDB.followerID == current_user.id) & (FollowingInDB.followeeID == user_id))).all()
+            if currentFollow:
+                session.delete(currentFollow)
+                session.commit()
+                session.refresh(currentFollow)
+
+                return Delete(message="User successfully unfollowed.")
+            else:
+                raise EntityNotFound('following', user_id + 'and' + current_user.id)
+        else:
+            raise EntityNotFound('user', user_id)
+    else:
+        raise MethodNotAllowed('unfollowing yourself')
+    
+@users_router.get('/{user_id}/following/', response_model= list[Following], status_code=200)
 def get_following(session: Annotated[Session, Depends(get_session)],
                   user_id: int,
                   current_user: UserInDB = Depends(auth_get_current_user))-> list[Following]:
@@ -109,7 +134,7 @@ def get_following(session: Annotated[Session, Depends(get_session)],
     else:
         raise EntityNotFound('user', user_id)
     
-@users_router.post('/{user_id}/followers', response_model= list[FollowingInDB], status_code=201)
+@users_router.post('/{user_id}/followers/', response_model= list[FollowingInDB], status_code=201)
 def get_followers(session: Annotated[Session, Depends(get_session)],
                 user_id: int,
                 current_user: UserInDB = Depends(auth_get_current_user))-> list[FollowingInDB]:
@@ -125,10 +150,10 @@ def get_followers(session: Annotated[Session, Depends(get_session)],
 
 # ------------------------ chats -------------------------- #
 
-@users_router.get('/{user_id}/chats', response_model=list[Chat], status_code = 200)
+@users_router.get('/{user_id}/chats/', response_model=list[Chat], status_code = 200)
 def get_all_chats(user_id: int,  
                   session : Annotated[Session, Depends(get_session)],
-                  currentUser: UserInDB = Depends(auth_get_current_user)
+                  current_user: UserInDB = Depends(auth_get_current_user)
                   ) -> list[Chat]:
     """Getting all chats for this user"""
     
@@ -138,7 +163,7 @@ def get_all_chats(user_id: int,
         raise EntityNotFound("user", user_id)
     
     # Authenticate that the currently logged-in user matches the URL parameter
-    if currentUser.id != user_id:
+    if current_user.id != user_id:
         raise PermissionDenied("view", "chats")
     
     # Filter chats where the user is either the sender or the recipient
@@ -157,9 +182,9 @@ def get_all_chats(user_id: int,
     
 
 # ------------------------ posts -------------------------- #
-@users_router.get('/{user_id}/posts', response_model= list[Post], status_code=200)
-def get_posts_for_user(userId: int, 
-                       session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
+@users_router.get('/{user_id}/posts/', response_model= list[Post], status_code=200)
+def get_posts_for_user(user_id: int, 
+                       session: Annotated[Session, Depends(get_session)], current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
     """Getting all posts for a specific user"""
-    posts_in_db = session.exec(select(PostInDB).where(PostInDB.sellerID == userId))
+    posts_in_db = session.exec(select(PostInDB).where(PostInDB.sellerID == user_id))
     return [Post(**post.model_dump()) for post in posts_in_db]          

@@ -186,6 +186,16 @@ export class BackendInfrastructureStack extends cdk.Stack {
         },
     })
 
+    const unfollowUserLambda = new lambda.Function(this, 'UnfollowUserLambda',{
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: 'lambda.users_handlers.unfollow_user_lambda',
+            code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+        functionName: 'unfollow_user_lambda',
+        environment: {
+            PYTHONPATH: '/var/task',
+        },
+    })
+
     const getFollowersLambda = new lambda.Function(this, 'GetFollowersLambda',{
         runtime: lambda.Runtime.PYTHON_3_8,
         handler: 'lambda.users_handlers.get_followers_lambda',
@@ -346,6 +356,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getUserByIdIntergration = new apigateway.LambdaIntegration(getUserByIdLambda);
     const becomeSellerIntegration = new apigateway.LambdaIntegration(becomeSellerLambda)
     const followUserIntegration = new apigateway.LambdaIntegration(followUserLambda);
+    const unfollowUserIntegration = new apigateway.LambdaIntegration(unfollowUserLambda);
     const getFollowersIntegration = new apigateway.LambdaIntegration(getFollowersLambda);
     const getFollowingIntegration = new apigateway.LambdaIntegration(getFollowingLambda);
 
@@ -376,7 +387,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
     getCurrentUserResource.addMethod('GET', getCurrentUserIntergration)
 
     const becomeSellerResource = api.root.addResource('becomeseller')
-    getCurrentUserResource.addMethod('PUT', becomeSellerIntegration)
+    becomeSellerResource.addMethod('PUT', becomeSellerIntegration)
 
    //post endpoints
     const uploadPostResource = api.root.addResource('uploadPost');
@@ -409,6 +420,9 @@ export class BackendInfrastructureStack extends cdk.Stack {
 
     const followUserResource = api.root.addResource('followUser');
     followUserResource.addMethod('POST', followUserIntegration);
+
+    const unfollowUserResource = api.root.addResource('unfollowUser');
+    unfollowUserResource.addMethod('DELETE', unfollowUserIntegration);
 
     const getFollowersResource = api.root.addResource('getFollowers');
     getFollowersResource.addMethod('GET', getFollowersIntegration);
