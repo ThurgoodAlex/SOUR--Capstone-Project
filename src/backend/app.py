@@ -79,7 +79,7 @@ async def root():
     except Exception as e:
         return {"error": str(e)}
 
-@app.get("/health")
+@app.get("/health/")
 async def health():
     return {"status": "healthy"}
 
