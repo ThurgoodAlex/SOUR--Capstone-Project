@@ -12,9 +12,7 @@ from sqlalchemy.future import select
 from jose import JWTError, jwt
 from sqlmodel import Session, SQLModel, select
 from databaseAndSchemas.schema import (
-
-    Chat, ChatCreate, ChatInDB, Following, FollowingCreate, UserInDB, User
-
+    Comment, CommentCreate, CommentInDB, UserInDB, User, Chat, ChatCreate, ChatInDB, Following, FollowingCreate
 )
 from databaseAndSchemas.test_db import get_session
 from PRISM.src.prism_services.auth import auth_get_current_user

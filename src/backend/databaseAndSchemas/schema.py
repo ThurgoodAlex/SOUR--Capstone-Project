@@ -170,8 +170,6 @@ class Comment(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 class CommentCreate(BaseModel):
-    userID: int
-    postID: int
     comment: str
 ###############################
 
