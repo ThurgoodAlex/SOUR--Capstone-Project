@@ -36,39 +36,15 @@ lambda_client = boto3.client('lambda', endpoint_url=localstack_endpoint,
 
 media_router = APIRouter(tags=["Media"])
 
-@media_router.post('/posts/{post_id}/media/', response_model=Media,status_code=201)
-def upload_media(post_ID: int, 
-                 new_media : createMedia, 
-                 session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)) -> Media:
-    """Uploading new media to a post"""
-    post = session.get(PostInDB, post_ID)
-    if not post:
-        raise EntityNotFound("Post", post_ID)
-    mediaDb = MediaInDB(
-        **new_media.model_dump(),
-        postID=post_ID,
-    )
-    if currentUser.id != post.sellerID:
-        raise PermissionDenied("upload", "media", currentUser.id)
-        # print("PermissionDenied")
-    session.add(mediaDb)
-    session.commit()
-    session.refresh(mediaDb)
-    return Media(
-        id=mediaDb.id,        
-        postID=mediaDb.postID,
-        **new_media.model_dump()
-    )
-
 #route used to test out upload.
-@media_router.get('/media/', response_model=list[Media], status_code = 200)
+@media_router.get('/', response_model=list[Media], status_code = 200)
 def get_all_media(session : Annotated[Session, Depends(get_session)],
                    current_user: UserInDB = Depends(auth_get_current_user)) -> list[Media]:
     """Getting all media"""
     media_in_db = session.exec(select(MediaInDB)).all()
     return [Media(**media.model_dump()) for media in media_in_db]
 
-@media_router.get('/media/{media_id}', response_model= Media, status_code=200)
+@media_router.get('/{media_id}/', response_model= Media, status_code=200)
 def get_media_by_id(media_id : int,
                     session : Annotated[Session, Depends(get_session)],
                     current_user: UserInDB = Depends(auth_get_current_user)) -> Media:
@@ -79,41 +55,24 @@ def get_media_by_id(media_id : int,
         print("EntityNotFound")
    
     return Media(**media.model_dump())
-    
-@media_router.get('/posts/{post_id}/media/', response_model=list[Media], status_code=200)
-def get_media_by_post(post_id: int,
-                    session: Annotated[Session, Depends(get_session)], 
-                    current_user: UserInDB = Depends(auth_get_current_user)
-) -> list[Media]:
-    """Getting all media for a post"""
-    post = session.get(PostInDB, post_id)
-
-    if not post:
-        #raise EntityNotFound("post", post_id) 
-        print("EntityNotFound")
-    query = select(MediaInDB).where(MediaInDB.postID == post_id)
-    media_in_db = session.exec(query).all()
-
-    return [Media(**media.model_dump()) for media in media_in_db]
 
 
-@media_router.delete('/media/{media_id}', response_model = Delete, status_code=200)
-def del_media_by_id(mediaID : int, session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)):
+@media_router.delete('/{media_id}/', response_model = Delete, status_code=200)
+def del_media_by_id(media_id : int,
+                    session: Annotated[Session, Depends(get_session)],
+                    current_user: UserInDB = Depends(auth_get_current_user)):
     """Deleting media by id"""
 
-    media = session.get(MediaInDB, mediaID)
+    media = session.get(MediaInDB, media_id)
     if not media:
-       #raise EntityNotFound("Media", mediaID)
-       print("entity not found")
+       raise EntityNotFound("media", media_id)
 
     post = session.exec(select(PostInDB).where(PostInDB.id == media.postID)).first()
     if not post:
-        #raise EntityNotFound("Post", post.id)
-        print("EntityNotFound")
+        raise EntityNotFound("post", post.id)
 
-    if currentUser.id != post.sellerID:
-        #raise PermissionDenied("delete", "post", currentUser.id)
-        print("Permission Denied")
+    if current_user.id != post.sellerID:
+        raise PermissionDenied("delete", "post", current_user.id)
     
     session.delete(media)
     session.commit()

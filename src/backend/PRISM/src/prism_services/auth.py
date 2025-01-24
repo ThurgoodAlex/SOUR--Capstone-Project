@@ -22,7 +22,7 @@ SessionDep = Annotated[Session, Depends(get_session)]
 from databaseAndSchemas.schema import(
     UserInDB, UserRegistration, User, UserLogin, AccessToken, Claims
 )
-from databaseAndSchemas.mappings.mappings import map_user_db_to_response
+from databaseAndSchemas.mappings.userMapping import *
 
 
 
@@ -71,21 +71,22 @@ lambda_client = boto3.client('lambda', endpoint_url=localstack_endpoint,
 
 
 
-@auth_router.post("/createuser", response_model=User, status_code=201)
-def create_new_user(newUser: UserRegistration, session: Annotated[Session, Depends(get_session)]) -> User:
+@auth_router.post("/createuser/", response_model=User, status_code=201)
+def create_new_user(new_user: UserRegistration,
+                    session: Annotated[Session, Depends(get_session)]) -> User:
     """Registering a new User"""
     try:
-        hashed_pwd = pwd_context.hash(newUser.password)
-        if check_username(newUser, session):
-            raise DuplicateUserRegistration("User", "username", newUser.username)
-        elif check_email(newUser, session):
-            raise DuplicateUserRegistration("User", "email", newUser.email)
+        hashed_pwd = pwd_context.hash(new_user.password)
+        if check_username(new_user, session):
+            raise DuplicateUserRegistration("User", "username", new_user.username)
+        elif check_email(new_user, session):
+            raise DuplicateUserRegistration("User", "email", new_user.email)
         else:
             user_db = UserInDB(
-                firstname=newUser.firstname,
-                lastname=newUser.lastname,
-                username=newUser.username,
-                email=newUser.email,
+                firstname=new_user.firstname,
+                lastname=new_user.lastname,
+                username=new_user.username,
+                email=new_user.email,
                 hashed_password=hashed_pwd
             )
             print(user_db)
@@ -101,8 +102,9 @@ def create_new_user(newUser: UserRegistration, session: Annotated[Session, Depen
         raise HTTPException(status_code=500, detail="An unexpected error occurred.")
 
 
-@auth_router.post("/login", response_model=User, status_code=200)
-def login_user(user:UserLogin, session: Annotated[Session, Depends(get_session)]):
+@auth_router.post("/login/", response_model=User, status_code=200)
+def login_user(user:UserLogin,
+               session: Annotated[Session, Depends(get_session)]):
         """Logging a user in"""
         user_check = session.exec(select(UserInDB).filter(UserInDB.username == user.username)).first()
 
@@ -119,7 +121,7 @@ def check_email(newUser, session):
     return result.first() is not None
 
 
-@auth_router.post("/token", response_model=AccessToken, status_code=200)
+@auth_router.post("/token/", response_model=AccessToken, status_code=200)
 def get_access_token(
     token_request: OAuth2PasswordRequestForm = Depends(), 
     session: Session = Depends(get_session)
@@ -131,8 +133,8 @@ def get_access_token(
     return build_access_token(user)
 
 
-
-def auth_get_current_user(token: str = Depends(oauth2_scheme), session: Session = Depends(get_session)) -> UserInDB:
+def auth_get_current_user(token: str = Depends(oauth2_scheme),
+                          session: Session = Depends(get_session)) -> UserInDB:
     """Getting the current authenticated user"""
     try:
         user = decode_access_token(token, session)
@@ -143,15 +145,8 @@ def auth_get_current_user(token: str = Depends(oauth2_scheme), session: Session 
         raise HTTPException(status_code=401, detail="Not authenticated")
 
 
-# old stuff uses formData in URL Parameter encoding: replaced below using JSON (Token Request BaseModel) for consistency
-# def get_authenticated_user(session: Session,form: OAuth2PasswordRequestForm,) -> UserInDB:
-#     """Authenticating User"""
-#     user = session.exec(select(UserInDB).where(UserInDB.username == form.username)).first()
-#     if user is None or not pwd_context.verify(form.password, user.hashed_password):
-#         raise InvalidCredentials()
-#     return user
-
-def get_authenticated_user(session: Session, token_request: TokenRequest) -> UserInDB:
+def get_authenticated_user(session: Session,
+                           token_request: TokenRequest) -> UserInDB:
     """Authenticating User"""
     print("this is the token request", token_request)
     user = session.exec(
@@ -213,7 +208,7 @@ def decode_access_token(token: str, session: Session) -> UserInDB:
 
 
 
-@auth_router.get("/me", response_model=User)
+@auth_router.get("/me/", response_model=User)
 def get_current_user(current_user: UserInDB = Depends(auth_get_current_user)):
     """Get current user."""
     return map_user_db_to_response(current_user)
