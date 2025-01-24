@@ -22,7 +22,7 @@ SessionDep = Annotated[Session, Depends(get_session)]
 from databaseAndSchemas.schema import(
     UserInDB, UserRegistration, User, UserLogin, AccessToken, Claims
 )
-from databaseAndSchemas.mappings.mappings import *
+from databaseAndSchemas.mappings.mappings import map_user_db_to_response
 
 
 

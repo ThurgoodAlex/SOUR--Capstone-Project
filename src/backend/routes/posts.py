@@ -7,16 +7,17 @@ from typing import Annotated
 import logging
 from sqlalchemy.future import select
 from jose import JWTError, jwt
-from sqlmodel import Session, SQLModel, select
+from sqlmodel import Session, select
 from databaseAndSchemas.schema import (
-    PostInDB, Post, UserInDB, createPost, Delete, Link, LinkInDB, SellerStatInDB
+    PostInDB, Post, UserInDB, createPost, Delete, Link, LinkInDB, SellerStatInDB,
+    Comment, CommentCreate, CommentInDB
+
 )
 
 from exceptions import *
 from databaseAndSchemas.test_db import get_session
 from PRISM.src.prism_services.auth import auth_get_current_user
 from databaseAndSchemas.mappings.mappings import *
-from exceptions import DuplicateResource, EntityNotFound
 
 
 SessionDep = Annotated[Session, Depends(get_session)]
@@ -67,11 +68,77 @@ def get_all_posts(session: Annotated[Session, Depends(get_session)],
 
 
 
+@posts_router.post("/{post_id}/comments", response_model=Comment, status_code=201)
+def create_new_comment(newComment: CommentCreate,
+                    session: Annotated[Session, Depends(get_session)],
+                    post_id: int,
+                    current_user: UserInDB = Depends(auth_get_current_user)) -> Comment:
+    """Create a new comment"""
+    post = session.get(PostInDB, post_id)
+    if post:
+        comment_db = CommentInDB(
+            userID=current_user.id,
+            postID=post_id,
+            comment=newComment.comment
+        )
+        session.add(comment_db)
+        session.commit()
+        session.refresh(comment_db)
+    
+        return Comment(**comment_db.model_dump())
+    else:
+        raise EntityNotFound("post", post_id)
+
+
+@posts_router.get('/{post_id}/comments', response_model= list[Comment], status_code=200)
+def get_comments_by_post(session: Annotated[Session, Depends(get_session)],
+                        post_id: int,
+                        current_user: UserInDB = Depends(auth_get_current_user))-> list[Comment]:
+    """Get all comments for a certain post"""
+    post = session.get(PostInDB, post_id)
+    if post:
+        comments_db = session.exec(select(CommentInDB).where(CommentInDB.postID == post_id)).all()
+        return [Comment(**comment.model_dump()) for comment in comments_db]
+    else:
+        raise EntityNotFound("post", post_id)
+
+
+@posts_router.get('/comments/{comment_id}', response_model= Comment, status_code=200)
+def get_comment_by_id(session: Annotated[Session, Depends(get_session)],
+                    comment_id: int,
+                    current_user: UserInDB = Depends(auth_get_current_user))-> Comment:
+    """Get comment by id"""
+    comment =  session.get(CommentInDB, comment_id)
+    if comment:
+        return Comment(**comment.model_dump())
+    else:
+        raise EntityNotFound("comment", comment_id)
+
+
+
+@posts_router.delete('/comments/{comment_id}', response_model= Delete, status_code=200)
+def delete_comment(session :Annotated[Session, Depends(get_session)],
+                    comment_id: int,
+                    current_user: UserInDB = Depends(auth_get_current_user)) -> Delete:
+    comment = session.get(CommentInDB, comment_id)
+    if comment:
+        comment = session.get(CommentInDB, comment_id)
+        session.delete(comment)
+        session.commit()
+        return Delete(message="Successfully deleted comment")            
+    else:
+        raise EntityNotFound("comment", comment_id)
+
+
+
+
 @posts_router.get('/{post_id}', response_model = list[Post], status_code=200)
-def get_post_by_id(postId: int, 
-                   session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)):
+def get_post_by_id(postId: int,
+                   session: Annotated[Session, Depends(get_session)],
+                   currentUser: UserInDB = Depends(auth_get_current_user)):
     posts_in_db = session.exec(select(PostInDB).where(PostInDB.id == postId))
     return [Post(**post.model_dump()) for post in posts_in_db]
+
 
 
 @posts_router.delete('/{post_id}', response_model = Delete, status_code=200)
@@ -91,28 +158,28 @@ def del_post_by_id(postId : int,
     return Delete(message="Post deleted successfully.")
 
 
-@posts_router.post('/{post_id}/link/{listing_id}', response_model= Link, status_code=201)
-def create_new_link(session: Annotated[Session, Depends(get_session)],
-                       post_id: int,
-                       listing_id: int,
-                       currentUser: UserInDB = Depends(auth_get_current_user)) -> Link:
-    """Creating a new link between a post and a listing"""
-    listing = session.get(PostInDB, listing_id)
-    post = session.get(PostInDB, post_id)
-    if post:
-        if listing:
-            linkDB = LinkInDB(
-                listingID= listing_id,
-                post_id= post_id
-            )
-            session.add(linkDB)
-            session.commit()
-            session.refresh(linkDB)
-            return map_link_db_to_response(linkDB)
-        else:
-            raise EntityNotFound("listing", post_id)
-    else:
-        raise EntityNotFound("post", post_id)
+# @posts_router.post('/{post_id}/link/{listing_id}', response_model= Link, status_code=201)
+# def create_new_link(session: Annotated[Session, Depends(get_session)],
+#                        post_id: int,
+#                        listing_id: int,
+#                        currentUser: UserInDB = Depends(auth_get_current_user)) -> Link:
+#     """Creating a new link between a post and a listing"""
+#     listing = session.get(PostInDB, listing_id)
+#     post = session.get(PostInDB, post_id)
+#     if post:
+#         if listing:
+#             linkDB = LinkInDB(
+#                 listingID= listing_id,
+#                 post_id= post_id
+#             )
+#             session.add(linkDB)
+#             session.commit()
+#             session.refresh(linkDB)
+#             return map_link_db_to_response(linkDB)
+#         else:
+#             raise EntityNotFound("listing", post_id)
+#     else:
+#         raise EntityNotFound("post", post_id)
 
 @posts_router.get('/{post_id}/links', response_model= list[int], status_code=200)
 def get_all_links_by_post_id(session :Annotated[Session, Depends(get_session)],
