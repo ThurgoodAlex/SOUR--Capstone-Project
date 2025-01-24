@@ -239,15 +239,18 @@ def del_item_from_cart(
 # ------------------------ Stats -------------------------- #
 @users_router.get("/{user_id}/stats/", response_model=SellerStat, status_code=200)
 def get_stats_for_seller(user_id: int, session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)):
-    user = get_user_by_id(session, user_id, currentUser)
-    if not user.isSeller:
-        raise PermissionDenied("view", "stats")
+
+    user = session.get(UserInDB, user_id)
+
+    if not user:
+        raise EntityNotFound("user", user_id)
     
     user_stats = session.exec(select(SellerStatInDB).where(SellerStatInDB.sellerID == user.id)).first()
+
     if user_stats is None:
         raise EntityNotFound("stats", user.id)
-    print(user_stats)
-    user_stats_response = SellerStat.from_orm(user_stats)
+    
+    user_stats_response = SellerStat(**user_stats.model_dump())
     return user_stats_response
 
 
