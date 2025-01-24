@@ -316,7 +316,6 @@ export class BackendInfrastructureStack extends cdk.Stack {
       })
 
 
-
     // Chats and Messages Lambdas
 
     // creating a chat
@@ -361,6 +360,37 @@ export class BackendInfrastructureStack extends cdk.Stack {
       functionName: 'get_messages_of_chat_lambda',
       environment: {
         PYTHONPATH: '/var/task',
+      },
+    })
+
+
+    const getUserCartLambda = new lambda.Function(this, 'GetUserCartLambda',{
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.user_handlers.get_user_cart_lambda',
+      code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'get_user_cart_lambda',
+      environment: {
+      PYTHONPATH: '/var/task',
+      },
+    })
+
+    const addItemToCartLambda = new lambda.Function(this, 'AddItemToCartLambda',{
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.user_handlers.add_item_to_cart_lambda',
+      code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'add_item_to_cart_lambda',
+      environment: {
+      PYTHONPATH: '/var/task',
+      },
+    })
+
+    const delItemFromCartLambda = new lambda.Function(this, 'DellItemFromCartLambda',{
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.user_handlers.del_item_from_cart_lambda',
+      code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'del_item_from_cart_lambda',
+      environment: {
+      PYTHONPATH: '/var/task',
       },
     })
 
@@ -411,6 +441,11 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const getFollowersIntegration = new apigateway.LambdaIntegration(getFollowersLambda);
     const getFollowingIntegration = new apigateway.LambdaIntegration(getFollowingLambda);
     const getUserStatsIntergration = new apigateway.LambdaIntegration(getUserStatsLambda);
+    const getUserCartIntergration = new apigateway.LambdaIntegration(getUserCartLambda);
+    const addItemToCartIntergration = new apigateway.LambdaIntegration(addItemToCartLambda);
+    const delItemFromCartIntergration = new apigateway.LambdaIntegration(delItemFromCartLambda);
+
+
 
     // Chats & Messages
     const createChatIntegration = new apigateway.LambdaIntegration(createChatLambda);
@@ -461,6 +496,14 @@ export class BackendInfrastructureStack extends cdk.Stack {
     const postSoldResource = api.root.addResource('postSold');
     postSoldResource.addMethod('PUT', postSoldIntergration);
 
+    const getUserCartResource = api.root.addResource('getUserCart');
+    getUserCartResource.addMethod('GET', getUserCartIntergration);
+    
+    const addItemToCartResource = api.root.addResource('addItemToCart');
+    addItemToCartResource.addMethod('POST', addItemToCartIntergration);
+
+    const delItemFromCartResource = api.root.addResource('delItemFromCart');
+    delItemFromCartResource.addMethod('DELETE', delItemFromCartIntergration);
 
     const likePostResource = api.root.addResource('likePost');
     likePostResource.addMethod('POST', likePostIntegration);
@@ -496,6 +539,9 @@ export class BackendInfrastructureStack extends cdk.Stack {
 
     const getFollowingResource = api.root.addResource('getFollowing');
     getFollowingResource.addMethod('GET', getFollowingIntegration);
+
+
+
 
     //Media endpoints
     const uploadMediaResource = api.root.addResource('uploadMedia');

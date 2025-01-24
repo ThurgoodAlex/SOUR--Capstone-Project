@@ -171,29 +171,25 @@ def get_posts_for_user(userId: int,
 # ------------------------ Cart -------------------------- #
 @users_router.get("/{user_id}/cart/", response_model=list[Cart], status_code=200)
 def get_user_cart(
-    user_id: int,
+
     session: Annotated[Session, Depends(get_session)],
     currentUser: UserInDB = Depends(auth_get_current_user)
 ) -> list[Cart]:
-    if user_id != currentUser.id:
-        raise PermissionDenied("view", "cart")
-
-    user_cart = session.exec(select(CartInDB).where(CartInDB.userID == user_id)).all()
+  
+    user_cart = session.exec(select(CartInDB).where(CartInDB.userID == currentUser.id)).all()
 
     if not user_cart:
-        raise EntityNotFound("cart", user_id)
+        raise EntityNotFound("cart", currentUser.id)
 
     return [Cart(**item.model_dump()) for item in user_cart]
 
 @users_router.post("/{user_id}/cart/", response_model=Cart, status_code=200)
 def add_item_to_cart(
-    user_id: int,
     listing_id: int,
     session: Annotated[Session, Depends(get_session)],
     currentUser: UserInDB = Depends(auth_get_current_user)
 ) -> Cart:
-    if user_id != currentUser.id:
-        raise PermissionDenied("update", "cart")
+   
 
     listing = session.exec(
         select(PostInDB).where(
@@ -205,7 +201,7 @@ def add_item_to_cart(
         raise EntityNotFound("listing", listing_id)
 
     new_cart_item = CartInDB(
-        userID=user_id,
+        userID=currentUser.id,
         listingID=listing.id,
         created_at=datetime.now()
     )
@@ -221,13 +217,30 @@ def add_item_to_cart(
         created_at=new_cart_item.created_at
     )
 
-@users_router.delete("/{user_id}/cart/", response_model=Cart, status_code=200)
-def get_user_cart(userID: int, session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)):
-    pass
+@users_router.delete("/users/{user_id}/cart/{cart_item_id}/", status_code=200)
+def del_item_from_cart(
+    cart_item_id: int,
+    session: Annotated[Session, Depends(get_session)],
+    currentUser: UserInDB = Depends(auth_get_current_user)
+):
+    
+    cart_item = session.exec(
+        select(CartInDB).where(
+            and_(CartInDB.userID == currentUser.id, CartInDB.id == cart_item_id)
+        )
+    ).first()
+
+    if not cart_item:
+        raise EntityNotFound("cart item", cart_item_id)
+
+    session.delete(cart_item)
+    session.commit()
+
+    return Delete(message="Item removed successfully from cart.")
 # ------------------------ Stats -------------------------- #
 @users_router.get("/{user_id}/stats/", response_model=SellerStat, status_code=200)
-def get_stats_for_seller(userID: int, session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)):
-    user = get_user_by_id(session, userID, currentUser)
+def get_stats_for_seller(user_id: int, session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)):
+    user = get_user_by_id(session, user_id, currentUser)
     if not user.isSeller:
         raise PermissionDenied("view", "stats")
     
