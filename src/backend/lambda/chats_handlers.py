@@ -1,33 +1,15 @@
 import json
 
-def create_listing_lambda(event, context):
+
+def upload_chat_lambda(event, context):
     try:
-        new_listing_data = json.loads(event['body'])  
+        new_chat_data = json.loads(event['body'])  
 
         return {
-            "statusCode": 200,
+            "statusCode": 201,
             "body": json.dumps({
-                "message": "User created successfully",
-                "user": new_listing_data
-            })
-        }
-
-    except Exception as e:
-        return {
-            "statusCode": 500,
-            "body": json.dumps({"error": str(e)})
-        }
-    
-
-def get_all_listings_lambda(event, context):
-    try:
-        all_listings= json.loads(event['body'])  
-
-        return {
-            "statusCode": 200,
-            "body": json.dumps({
-                "message": "User created successfully",
-                "user": all_listings
+                "message": "Chat created successfully",
+                "chat": new_chat_data
             })
         }
 
@@ -37,15 +19,16 @@ def get_all_listings_lambda(event, context):
             "body": json.dumps({"error": str(e)})
         }
 
-def get_listings_by_user_lambda(event, context):
+
+def get_all_users_chats_lambda(event, context):
     try:
-        user_listings = json.loads(event['body'])  
+        all_chats= json.loads(event['body'])  
 
         return {
             "statusCode": 200,
             "body": json.dumps({
-                "message": "Listings Retrieved",
-                "user": user_listings
+                "message": "chats retrived successfully",
+                "chats": all_chats
             })
         }
 
@@ -55,15 +38,16 @@ def get_listings_by_user_lambda(event, context):
             "body": json.dumps({"error": str(e)})
         }
 
-def get_listing_by_id_lambda(event, context):
+
+def upload_message_lambda(event, context):
     try:
-        listing= json.loads(event['body'])  
+        new_message_data = json.loads(event['body'])  
 
         return {
-            "statusCode": 200,
+            "statusCode": 201,
             "body": json.dumps({
-                "message": "Listing Retrieved",
-                "user": listing
+                "message": "Chat created successfully",
+                "uploaded_message": new_message_data
             })
         }
 
@@ -72,3 +56,24 @@ def get_listing_by_id_lambda(event, context):
             "statusCode": 500,
             "body": json.dumps({"error": str(e)})
         }
+
+
+
+def get_messages_of_chat_lambda(event, context):
+    try:
+        all_messages= json.loads(event['body'])  
+
+        return {
+            "statusCode": 200,
+            "body": json.dumps({
+                "message": "messages retrieved",
+                "messages": all_messages
+            })
+        }
+
+    except Exception as e:
+        return {
+            "statusCode": 500,
+            "body": json.dumps({"error": str(e)})
+        }
+

@@ -20,6 +20,8 @@ class Claims(BaseModel):
     sub: str  # id of user
     exp: int  # unix timestamp
 
+class Delete(BaseModel):
+    message: str
 
 ### All schemas for users ###
 class UserInDB(SQLModel, table=True): 
@@ -70,27 +72,29 @@ class PostInDB(SQLModel, table = True):
     condition: Optional[str]
     size: Optional[str]
     gender: Optional[str]
-    coverImage: Optional[str]
+    coverImage: Optional[str] = Field(default=None)
     price: Optional[Decimal] = Field(sa_column=DECIMAL(10, 2))
     isSold: Optional[bool] = Field(default=False, nullable=False)
     created_at: datetime = Field(default_factory=datetime.now)
     isListing: bool = Field(default=False, nullable=False)
 
 class createPost(BaseModel):
-    sellerID: int
     title: str
     description: Optional[str]
+    
+class createListing(BaseModel):
+    title: str
+    description: str
     brand: Optional[str]
     condition: Optional[str]
     size: Optional[str]
     gender: Optional[str]
     coverImage: Optional[str]
     price: Optional[Decimal]
-    created_at: datetime
-    isSold: bool
     isListing: bool
 
 class Post(BaseModel):
+    id: int
     sellerID: int
     title: str
     description: Optional[str]
@@ -104,6 +108,8 @@ class Post(BaseModel):
     isSold: bool
     isListing: bool
     model_config = ConfigDict(from_attributes=True)
+
+
 ###############################
 
 
@@ -117,7 +123,6 @@ class MediaInDB(SQLModel, table=True):
 
 class createMedia(BaseModel):
     url: str
-    postID: int
     isVideo: bool
 
 class Media(BaseModel):
@@ -167,8 +172,6 @@ class Comment(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 class CommentCreate(BaseModel):
-    userID: int
-    postID: int
     comment: str
 ###############################
 
@@ -225,7 +228,6 @@ class Chat(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 class ChatCreate(BaseModel):
-    senderID: int
     reciepientID: int
 ###############################
 
@@ -248,8 +250,6 @@ class Message(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 class MessageCreate(BaseModel):
-    chatID: int
-    author: int
     message: str
 ###############################
 

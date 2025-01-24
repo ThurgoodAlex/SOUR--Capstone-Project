@@ -38,48 +38,48 @@ export default function SelfProfileScreen() {
     const [posts, setPosts] = useState<Post[]>([]);
 
     // Fetch listings from the API
-    const fetchListings = async () => {
-        try {
-            const response = await api.get(`/listing/${user?.id}`);
-            const result = await response.json();
+    // const fetchListings = async () => {
+    //     try {
+    //         const response = await api.get(`/listing/${user?.id}`);
+    //         const result = await response.json();
 
-            // Function to get a random image
-            const getRandomImage = () => dummyImages[Math.floor(Math.random() * dummyImages.length)];
+    //         // Function to get a random image
+    //         const getRandomImage = () => dummyImages[Math.floor(Math.random() * dummyImages.length)];
 
-            if (response.ok) {
-                console.log("Received all listings: ", result);
+    //         if (response.ok) {
+    //             console.log("Received all listings: ", result);
                 
-                 // Transform the listings data to match the Post type
-                const transformedPosts: Post[] = result.map((item: any, index: number) => ({
-                id: item.id,
-                createdDate: item.created_at || new Date().toISOString(), 
-                data: getRandomImage(),
+    //              // Transform the listings data to match the Post type
+    //             const transformedPosts: Post[] = result.map((item: any, index: number) => ({
+    //             id: item.id,
+    //             createdDate: item.created_at || new Date().toISOString(), 
+    //             data: getRandomImage(),
                 
-                author: {
-                    name: item.seller|| "Unknown poster", // Fallback to a default value
-                    username: item.seller || "unknown", // Fallback to a default value
-                    id: item.seller_id,
-                },
-                }));
+    //             author: {
+    //                 name: item.seller|| "Unknown poster", // Fallback to a default value
+    //                 username: item.seller || "unknown", // Fallback to a default value
+    //                 id: item.seller_id,
+    //             },
+    //             }));
 
-                setPosts(transformedPosts); // Update state with fetched posts
+    //             setPosts(transformedPosts); // Update state with fetched posts
 
-            } else {
-                console.log(response);
-                Alert.alert('Error', 'Could not fetch listings.');
-            }
-        } catch (error) {
-            console.error('Error fetching listings:', error);
-            Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
-        }
-    };
+    //         } else {
+    //             console.log(response);
+    //             Alert.alert('Error', 'Could not fetch listings.');
+    //         }
+    //     } catch (error) {
+    //         console.error('Error fetching listings:', error);
+    //         Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
+    //     }
+    // };
 
-    // Fetch listings on page load
-    useEffect(() => {
-        if (activeTab === 'Posts') {
-            fetchListings();
-        }
-    }, [activeTab]);
+    // // Fetch listings on page load
+    // useEffect(() => {
+    //     if (activeTab === 'Posts') {
+    //         fetchListings();
+    //     }
+    // }, [activeTab]);
 
     const handleTabSwitch = (tab: string) => {
         setActiveTab(tab);
@@ -117,7 +117,8 @@ function ProfileInfo({ user }: { user: any }) {
                 source={require('../assets/images/profile_pic.jpg')}
                 style={ProfileStyles.profileImage}
             />
-            <Text style={TextStyles.h1}>{user?.name || "No User"}</Text>
+            <Text style={TextStyles.h1}>{user?.firstname + " " + user?.lastname|| "ERROR: can't find name"}</Text>
+            <Text style={TextStyles.h3}>{user?.username || "ERROR: can't find username"}</Text>
         </View>
     );
 }

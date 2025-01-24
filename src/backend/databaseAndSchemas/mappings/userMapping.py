@@ -1,6 +1,3 @@
-
-
-
 from databaseAndSchemas.schema import *
 
 
@@ -14,5 +11,3 @@ def map_user_db_to_response(user_db: UserInDB) -> User:
         isSeller=user_db.isSeller,
         profilePic=user_db.profilePic or ""
     )
-    
-    
