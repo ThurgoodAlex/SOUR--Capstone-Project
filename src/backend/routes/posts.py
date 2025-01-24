@@ -57,6 +57,25 @@ def upload_post(newPost:createPost,
     return post
 
 
+@posts_router.post('/listings/', response_model= Post, status_code=201)
+def upload_listing(newListing:createListing,  
+                session: Annotated[Session, Depends(get_session)], 
+                currentUser: UserInDB = Depends(auth_get_current_user)) -> Post:
+    """Creating a new posting"""
+    
+    if not currentUser.isSeller:
+        raise PermissionDenied("upload", "listing")
+        
+    listing = PostInDB(
+        **newListing.model_dump(),
+        sellerID=currentUser.id,
+    )
+    session.add(listing)
+    session.commit()
+    session.refresh(listing)
+    return listing
+
+
 @posts_router.get('/', response_model= list[Post], )
 def get_all_posts(session: Annotated[Session, Depends(get_session)], 
                   currentUser: UserInDB = Depends(auth_get_current_user))-> list[Post]:

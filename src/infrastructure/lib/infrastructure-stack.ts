@@ -82,6 +82,17 @@ export class BackendInfrastructureStack extends cdk.Stack {
       },
     })
 
+    // upload a post
+    const uploadListingLambda = new lambda.Function(this, 'uploadListingLambda',{
+      runtime: lambda.Runtime.PYTHON_3_8,
+      handler: 'lambda.post_handlers.upload_listing',
+        code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+      functionName: 'upload_listing',
+      environment: {
+        PYTHONPATH: '/var/task',
+      },
+    })
+
     // get all post lambda
     const getAllPostsLambda = new lambda.Function(this, 'GetAllPostsLambda',{
       runtime: lambda.Runtime.PYTHON_3_8,
@@ -401,6 +412,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
 
 
     const uploadPostIntegration = new apigateway.LambdaIntegration(uploadPostLambda);
+    const uploadListingIntegration = new apigateway.LambdaIntegration(uploadListingLambda);
     const getAllPostsIntegration = new apigateway.LambdaIntegration(getAllPostsLambda);
     const getPostsByUserIntegration = new apigateway.LambdaIntegration(getPostsByUserLambda);
     const getPostByIdIntegration = new apigateway.LambdaIntegration(getPostingByIdLambda);
@@ -467,6 +479,9 @@ export class BackendInfrastructureStack extends cdk.Stack {
    //post endpoints
     const uploadPostResource = api.root.addResource('uploadPost');
     uploadPostResource.addMethod('POST', uploadPostIntegration)
+
+    const uploadListingResource = api.root.addResource('uploadListing');
+    uploadListingResource.addMethod('POST', uploadListingIntegration)
 
     const getAllPostsResource = api.root.addResource('getAllPosts');
     getAllPostsResource.addMethod('GET', getAllPostsIntegration);

@@ -72,7 +72,7 @@ class PostInDB(SQLModel, table = True):
     condition: Optional[str]
     size: Optional[str]
     gender: Optional[str]
-    coverImage: Optional[str]
+    coverImage: Optional[str] = Field(default=None)
     price: Optional[Decimal] = Field(sa_column=DECIMAL(10, 2))
     isSold: Optional[bool] = Field(default=False, nullable=False)
     created_at: datetime = Field(default_factory=datetime.now)
@@ -81,14 +81,16 @@ class PostInDB(SQLModel, table = True):
 class createPost(BaseModel):
     title: str
     description: Optional[str]
+    
+class createListing(BaseModel):
+    title: str
+    description: str
     brand: Optional[str]
     condition: Optional[str]
     size: Optional[str]
     gender: Optional[str]
     coverImage: Optional[str]
     price: Optional[Decimal]
-    created_at: datetime
-    isSold: bool
     isListing: bool
 
 class Post(BaseModel):
