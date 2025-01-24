@@ -170,50 +170,55 @@ def get_posts_for_user(userId: int,
 
 # ------------------------ Cart -------------------------- #
 @users_router.get("/{user_id}/cart/", response_model=list[Cart], status_code=200)
-def get_user_cart(userID: int, session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)) -> list[Cart]:
-    user = get_user_by_id(session, userID, currentUser)
-    if user.id != currentUser.id:
+def get_user_cart(
+    user_id: int,
+    session: Annotated[Session, Depends(get_session)],
+    currentUser: UserInDB = Depends(auth_get_current_user)
+) -> list[Cart]:
+    if user_id != currentUser.id:
         raise PermissionDenied("view", "cart")
-    user_cart = session.exec(select(CartInDB).where(CartInDB.userID == user.id))
+
+    user_cart = session.exec(select(CartInDB).where(CartInDB.userID == user_id)).all()
 
     if not user_cart:
-        raise EntityNotFound("cart", user.id)
+        raise EntityNotFound("cart", user_id)
+
     return [Cart(**item.model_dump()) for item in user_cart]
 
 @users_router.post("/{user_id}/cart/", response_model=Cart, status_code=200)
-def add_item_to_cart(listing_id: int, session: Annotated[Session, Depends(get_session)], currentUser: UserInDB = Depends(auth_get_current_user)) -> Cart:
-    user = get_user_by_id(session, currentUser.id, currentUser)
-    if user.id != currentUser.id:
+def add_item_to_cart(
+    user_id: int,
+    listing_id: int,
+    session: Annotated[Session, Depends(get_session)],
+    currentUser: UserInDB = Depends(auth_get_current_user)
+) -> Cart:
+    if user_id != currentUser.id:
         raise PermissionDenied("update", "cart")
-    
+
     listing = session.exec(
-    select(PostInDB).where(
-        and_(PostInDB.id == listing_id, PostInDB.isListing == True)
-    )
+        select(PostInDB).where(
+            and_(PostInDB.id == listing_id, PostInDB.isListing == True)
+        )
     ).first()
 
     if not listing:
-         raise EntityNotFound("listing", listing_id)
-    
-    user_cart = session.exec(select(CartInDB).where(CartInDB.userID == user.id)).first()
-    if not user_cart:
-           user_cart = CartInDB(
-            userID=user.id,
-            listingID=listing.id,
-            created_at=datetime.now()
-        )
-    else:
-        user_cart.listingID = listing.id
-        user_cart.created_at = datetime.now()
+        raise EntityNotFound("listing", listing_id)
 
-    session.add(user_cart)
+    new_cart_item = CartInDB(
+        userID=user_id,
+        listingID=listing.id,
+        created_at=datetime.now()
+    )
+
+    session.add(new_cart_item)
     session.commit()
+    session.refresh(new_cart_item)
 
-    return Cart(    
-        id=user_cart.id,
-        userID=user_cart.userID,
-        listingID=user_cart.listingID,
-        created_at=user_cart.created_at
+    return Cart(
+        id=new_cart_item.id,
+        userID=new_cart_item.userID,
+        listingID=new_cart_item.listingID,
+        created_at=new_cart_item.created_at
     )
 
 @users_router.delete("/{user_id}/cart/", response_model=Cart, status_code=200)
