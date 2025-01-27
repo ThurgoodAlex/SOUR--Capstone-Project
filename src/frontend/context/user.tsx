@@ -30,13 +30,14 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         if (response.ok) {
           const data = await response.json();
           const returnedUser: User = {
-            firstname: data.firstname,
-            lastname: data.lastname,
-            username: data.username,
-            id: data.id,
-            profilePicture: data.profilePicture,
-            isSeller: data.isSeller,
-            email: data.email,
+            firstname: responseData.firstname, 
+            lastname: responseData.lastname,
+            username: responseData.username,
+            id: responseData.id,
+            profilePicture: responseData.profilePicture,
+            isSeller: true,
+            bio: responseData.bio,
+            email: responseData.email
           };
           setUser(returnedUser);
         } else {
