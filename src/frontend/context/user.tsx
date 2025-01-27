@@ -40,6 +40,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
             id: responseData.id,
             profilePicture: responseData.profilePicture,
             isSeller: true,
+            bio: responseData.bio,
             email: responseData.email
           };
 

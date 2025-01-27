@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, Image, Alert, StyleSheet, FlatList, ScrollView, ImageBackground } from 'react-native';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 
@@ -13,9 +13,19 @@ import PostCarousel from '@/components/PostCarousel';
 import { Post } from '@/constants/Types';
 import { Ionicons } from '@expo/vector-icons';
 
+
 export default function SelfProfileScreen() {
 
-    // Define dummy images
+    const user = useUser(); // Fetch user details
+    const { logout } = useAuth();
+    const api = useApi();
+    const [posts, setPosts] = useState<Post[]>([]);
+    const [activeTab, setActiveTab] = useState('Posts');
+    const handleTabSwitch = (tab: string) => {
+        setActiveTab(tab);
+    };
+
+
     const dummyImages = [
         require('../assets/images/video.png'),
         require('../assets/images/post.png'),
@@ -29,62 +39,54 @@ export default function SelfProfileScreen() {
         require('../assets/images/random5.png'),
     ];
     
+    const fetchPosts = async () =>
+    {
+    try {
+        let endpoint = `users/posts/${user?.id}`;
+        const response = await api.get(endpoint);
+        const result = await response.json();
+    
+        if (response.ok) {
+    
+        const getRandomImage = () =>
+            dummyImages[Math.floor(Math.random() * dummyImages.length)];
+    
+        
+    
+        const transformedPosts: Post[] = await Promise.all(
+            result.map(async (item: any) => {
+            return {
+                id: item.id,
+                createdDate: item.created_at || new Date().toISOString(),
+                coverImage: getRandomImage(),
+                title: item.title,
+                description: item.description,
+                brand: item.brand,
+                condition: item.condition,
+                size: item.size,
+                gender: item.gender,
+                price: item.price,
+                isSold: item.isSold,
+                isListing: item.isListing,
+                seller: user
+            };
+            })
+        );
+    
+        console.log(`Received posts from ${endpoint}:`, transformedPosts);
+        setPosts(transformedPosts);
+        } else {
+        console.log(response);
+        throw new Error('Could not fetch posts.');
+        }
+    } catch (error) {
+        console.error('Error fetching posts:', error);
+        throw new Error('Failed to connect to the server.');
+    }
+    }
 
-    const user = useUser(); // Fetch user details
-    const { logout } = useAuth();
-    const api = useApi();
-
-    const [activeTab, setActiveTab] = useState('Posts');
-    const [posts, setPosts] = useState<Post[]>([]);
-
-    // Fetch listings from the API
-    // const fetchListings = async () => {
-    //     try {
-    //         const response = await api.get(`/listing/${user?.id}`);
-    //         const result = await response.json();
-
-    //         // Function to get a random image
-    //         const getRandomImage = () => dummyImages[Math.floor(Math.random() * dummyImages.length)];
-
-    //         if (response.ok) {
-    //             console.log("Received all listings: ", result);
-                
-    //              // Transform the listings data to match the Post type
-    //             const transformedPosts: Post[] = result.map((item: any, index: number) => ({
-    //             id: item.id,
-    //             createdDate: item.created_at || new Date().toISOString(), 
-    //             data: getRandomImage(),
-                
-    //             author: {
-    //                 name: item.seller|| "Unknown poster", // Fallback to a default value
-    //                 username: item.seller || "unknown", // Fallback to a default value
-    //                 id: item.seller_id,
-    //             },
-    //             }));
-
-    //             setPosts(transformedPosts); // Update state with fetched posts
-
-    //         } else {
-    //             console.log(response);
-    //             Alert.alert('Error', 'Could not fetch listings.');
-    //         }
-    //     } catch (error) {
-    //         console.error('Error fetching listings:', error);
-    //         Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
-    //     }
-    // };
-
-    // // Fetch listings on page load
-    // useEffect(() => {
-    //     if (activeTab === 'Posts') {
-    //         fetchListings();
-    //     }
-    // }, [activeTab]);
-
-    const handleTabSwitch = (tab: string) => {
-        setActiveTab(tab);
-    };
-
+    // Fetch listings on page load
+    useEffect(() => {fetchPosts(); }, []);
     return (
         <>
             <Stack.Screen options={{ title: 'SelfProfileScreen' }} />
@@ -127,11 +129,12 @@ function ProfileInfo({ user }: { user: any }) {
 //made this separate from the component for now, maybe make it into a different component?
 function PostPreview({ post}: { post: Post }){
     let icon;
-    let type = post.type;
-    if (type === 'video') {
-        icon = <Ionicons size={20} name='videocam' />
-    }
-    else if (type === 'post') {
+    let type = post.isListing ? "listing" : "post";
+
+    // if (type === 'listing') {
+    //     icon = <Ionicons size={20} name='videocam' />
+    // }
+    if (type === 'post') {
         icon = <Ionicons size={20} name='megaphone' />
     }
     else if (type === 'listing') {
@@ -144,7 +147,7 @@ function PostPreview({ post}: { post: Post }){
                 onPress={() => router.push(`/ListingInfoScreen/${post.id}`)} // Navigate on press
                 style={{ flex: 1, margin: 5 }} // Add styles for spacing
             >
-                <ImageBackground source={post.data} style={{ height: 150, width: 150 }}>
+                <ImageBackground source={post.coverImage} style={{ height: 150, width: 150 }}>
                     {icon}
                 </ImageBackground>
 
