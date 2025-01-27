@@ -15,7 +15,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
         // Create Lambda function
         const starterPageLambda = new lambda.Function(this, 'StarterPageLambda', {
             runtime: lambda.Runtime.PYTHON_3_8,
-            handler: 'lambda.starter_page.lambda_handler',
+            handler: 'lambda.starter_page.starter_page_lambda',
             code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
             functionName: 'starter_page_lambda',
             environment: {
@@ -105,7 +105,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
         });
 
         // get posts by users lambda
-        const getPostsByUserLambda = new lambda.Function(this, 'GetListingsByUserLambda', {
+        const getPostsByUserLambda = new lambda.Function(this, 'GetPostsByUserLambda', {
             runtime: lambda.Runtime.PYTHON_3_8,
             handler: 'lambda.listings_handlers.get_posts_by_user_lambda',
             code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),

@@ -59,7 +59,7 @@ function ProfileInfo({ user }: { user: User | null }) {
                 source={require('../assets/images/profile_pic.jpg')}
                 style={UserProfileStyles.profileImage}
             />
-            <Text style={TextStyles.h1}>{user?.name || "No User"}</Text>
+            <Text style={TextStyles.h1}>{user?.username || "No User"}</Text>
         </View>
     );
 }

@@ -1,11 +1,48 @@
-import { TextStyles } from '@/constants/Styles';
-import { Text } from 'react-native';
+import { Styles, TextStyles } from '@/constants/Styles';
+import { api, useApi } from '@/context/api';
+import { router } from 'expo-router';
+import { useState } from 'react';
+import { ActivityIndicator, Alert, Text, TouchableOpacity } from 'react-native';
 
 export function UnregisteredSeller() {
+    const [loading, setLoading] = useState(false);
+    const api = useApi();
+    
+    const becomeSeller = async () => {
+        setLoading(true);
+        try {
+            const response = await api.put('/becomeseller/');
+            
+            if (response.status === 200) {
+                const result = await response.json();
+                console.log("User updated to seller:", result);
+            } else {
+                console.error("Unexpected response:", response);
+                Alert.alert('Error', 'Failed to update user to seller.');
+            }
+        } catch (error) {
+            console.error('Error becoming seller:', error);
+            Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
+        } finally {
+            setLoading(false);
+        }
+
+    };
     return (
         <>
             <Text style={TextStyles.h1}>Start Selling on SOUR</Text>
             <Text style={TextStyles.p}>Your style, your community, your impact</Text>
+            <TouchableOpacity
+                style={Styles.buttonDark}
+                onPress={becomeSeller}
+                disabled={loading}
+            >
+                {loading ? (
+                    <ActivityIndicator color="#ffffff" />
+                ) : (
+                    <Text style={TextStyles.light}>Sign Up</Text>
+                )}
+            </TouchableOpacity>
         </>
         
     );
