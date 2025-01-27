@@ -30,12 +30,33 @@ def get_all_posts_lambda(event, context):
                 "posts": all_listings
             })
         }
-
+    
     except Exception as e:
         return {
             "statusCode": 500,
             "body": json.dumps({"error": str(e)})
         }
+    
+
+def get_newest_posts_lambda(event, context):
+    try:
+        newest_listings= json.loads(event['body'])  
+
+        return {
+            "statusCode": 200,
+            "body": json.dumps({
+                "message": "posts succesfully retrieved",
+                "posts": newest_listings
+            })
+        }
+    
+    except Exception as e:
+        return {
+            "statusCode": 500,
+            "body": json.dumps({"error": str(e)})
+        }
+
+
 
 def get_posts_by_user_lambda(event, context):
     try:
