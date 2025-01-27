@@ -37,7 +37,7 @@ export type User = {
     lastname: string;
     username: string;
     id:number;
-    profilePicture?:string | '../assets/images/profile_pic.jpg';
+    profilePic?:string | '../assets/images/profile_pic.jpg';
     isSeller: boolean;
     email: string;
     bio: string;

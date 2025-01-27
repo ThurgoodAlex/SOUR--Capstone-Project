@@ -5,7 +5,7 @@ import { NavBar } from '@/components/NavBar';
 import { FlatList, Text } from 'react-native';
 import PostCarousel from '@/components/PostCarousel';
 import { User, Post } from '@/constants/Types';
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useUser } from '@/context/user';
 import { useAuth } from '@/context/auth';
 

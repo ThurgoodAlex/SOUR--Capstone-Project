@@ -8,105 +8,122 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useUser } from '@/context/user';
 import { useAuth } from '@/context/auth';
 import { useApi } from '@/context/api';
-import { Listing, User } from '@/constants/Types';
+import { Post, User } from '@/constants/Types';
+import { Ionicons } from '@expo/vector-icons';
 
-export default function ListingInfoScreen()
- {
-  const user = useUser(); // Fetch user details
-  const api = useApi();
-  
-  const [liked, setLike] = useState(false);
-  const [listing, setListing] = useState<Listing | null>(null); 
+export default function PostInfoScreen() {
+    const {user} = useUser(); // Fetch user details
+    const api = useApi();
 
-
-  const { id } = useLocalSearchParams(); // Get the dynamic `id` from the route
-  const images = ["sweater1.png", "sweater2.png","sweater3.png","sweater4.png"]
+    const [liked, setLike] = useState(false);
+    const [post, setPost] = useState<Post | null>(null);
 
 
-  useEffect(() => {
-    // Fetch the listing based on the dynamic id
-    const fetchListing = async () => {
-      try {
-        const response = await api.get(`/listing/${id}`);
-        const data = await response.json();
-       
-        // Transform the data
-        const transformedListing: Listing = {
-          title: data.title,
-          price: data.price,
-          description: data.description,
-          size: "Medium", // Set default size
+    const { id } = useLocalSearchParams(); // Get the dynamic `id` from the route
+    const images = ["sweater1.png", "sweater2.png", "sweater3.png", "sweater4.png"]
 
-          seller: {
-            name: data.seller || "Unknown poster", // Fallback to a default value
-            username: data.seller || "unknown", // Fallback to a default value
-            id: data.seller_id,
-        
-          },
-         
-          id: data.id,
-          createdDate: data.created_at, // Assuming created_at is the correct field
+
+    useEffect(() => {
+        // Fetch the Post based on the dynamic id
+        const fetchPost = async () => {
+            try {
+                const response = await api.get(`/posts/${id}`);
+                const data = await response.json();
+                const userResponse = await api.get(`/users/${data.sellerID}/`);
+                const userData = await userResponse.json();
+
+                // Transform the data
+                const transformedPost: Post = {
+                    id: data.id,
+                    createdDate: data.created_at,
+                    seller: {
+                        id: userData.seller_id,
+                        firstname: userData.firstname,
+                        lastname: userData.lastname,
+                        username: userData.username,
+                        profilePic: userData.profilePic,
+                        email: userData.email,
+                        isSeller: userData.isSeller,
+                        bio: userData.bio
+                    },
+                    title: data.title,
+                    description: data.description,
+                    brand: data.brand,
+                    condition: data.condition,
+                    size: "Medium", // Set default size
+                    gender: data.gender,
+                    coverImage: data.coverImage,
+                    price: data.price,
+                    isSold: data.isSold,
+                    isListing: data.isListing
+                };
+
+                setPost(transformedPost); // Set the transformed data
+
+            } catch (error) {
+                console.error('Error fetching Post:', error);
+            }
         };
 
-        setListing(transformedListing); // Set the transformed data
+        const fetchLike = async () => {
+            const response = await api.get(`/posts/${post?.id}/like/`);
+            const data = await response.json();
+            setLike(data)
+        }
 
-      } catch (error) {
-        console.error('Error fetching listing:', error);
-      }
-    };
+        if (id) {
+            fetchPost(); // Fetch data when 'id' is available
+            fetchLike();
+        }
+    }, [id]);
 
-    if (id) {
-      fetchListing(); // Fetch data when 'id' is available
+
+
+    if (post) {
+        //extract seller information into a User object
+        const seller: User = post.seller;
+        return (
+            <>
+                <View style={ScreenStyles.screen}>
+                    <ScrollView contentContainerStyle={{ gap: 6 }}>
+                        <PhotoCarousel />
+                        <View style={[Styles.row, {justifyContent:'space-between'}]}>
+                            <ProfileThumbnail user={seller} />
+                            {liked ? (
+                                <Ionicons size={20} name='heart' />
+                            ) : (
+                                <Ionicons size={20} name='heart-outline' />
+                            )}
+                        </View>
+                        <PostInfo Post={post} />
+                    </ScrollView>
+                </View>
+                <NavBar />
+            </>
+        );
     }
-  }, [id]);
 
+    else {
+        return (
+            <>
+                <View style={ScreenStyles.screen}>
+                    <Text>Post information not available.</Text>
+                </View>
+                <NavBar />
+            </>
+        );
+    }
 
-  
-  if(listing){
-    //extract seller information into a User object
-    const seller: User = {
-      name: listing.seller.name,
-      username: listing.seller.username,
-      id: listing.seller.id,
-  
-    }; 
-
-    
-    return (
-      <>
-        <View style={ScreenStyles.screen}>
-          <ScrollView contentContainerStyle={{ gap: 6 }}>
-            <PhotoCarousel /> 
-            <ProfileThumbnail user={seller} /> 
-            <ListingInfo listing={listing} />
-          </ScrollView>
-        </View>
-        <NavBar /> 
-      </>
-    );
-  }
-
-  else{
-    return (
-      <>
-        <View style={ScreenStyles.screen}>
-          <Text>Listing information not available.</Text>
-        </View>
-        <NavBar /> 
-      </>
-    );
-  }
-  
 }
 
-// Component to display listing details
-function ListingInfo({ listing }: { listing: Listing}) {
-  return (
-    <View style={[Styles.row, { justifyContent: 'space-between', flexWrap: 'wrap' }]}>
-      <Text style={[TextStyles.h1, TextStyles.uppercase]}>{listing.title}</Text>
-      <Text style={TextStyles.h2}>{listing.price}</Text>
-      <Text style={TextStyles.h3}>Size: {listing.size}</Text>
-      <Text style={TextStyles.p}>{listing.description}</Text>
-    </View>
-  );
+// Component to display Post details
+function PostInfo({ Post }: { Post: Post }) {
+    return (
+        <View style={[Styles.row, { justifyContent: 'space-between', flexWrap: 'wrap' }]}>
+            <Text style={[TextStyles.h1, TextStyles.uppercase]}>{Post.title}</Text>
+            <Text style={TextStyles.h2}>{Post.price}</Text>
+            <Text style={TextStyles.h3}>Size: {Post.size}</Text>
+            <Text style={TextStyles.p}>{Post.description}</Text>
+        </View>
+    );
 }

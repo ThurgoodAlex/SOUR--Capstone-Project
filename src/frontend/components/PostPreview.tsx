@@ -33,7 +33,7 @@ export function PostPreview({ post, size, thumbnailSize }: { post: Post, size: n
         username: post.seller.username,
         bio: post.seller.bio,
         email: post.seller.email,
-        profilePicture: post.seller.profilePicture,
+        profilePic: post.seller.profilePic,
         isSeller: post.seller.isSeller,
         id: post.seller.id,
     }; 
