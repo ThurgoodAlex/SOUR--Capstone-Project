@@ -24,7 +24,7 @@ export default function ProfileThumbnailSmall({ user }: { user: User}) {
         }
         style={ProfileStyles.thumbnailImage}
       />
-      <Text style={TextStyles.small}>@{user.name}</Text>
+      <Text style={TextStyles.small}>@{user.username}</Text>
     </View>
   );
 }

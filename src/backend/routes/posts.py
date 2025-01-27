@@ -103,6 +103,59 @@ def get_newest_posts(session: Annotated[Session, Depends(get_session)],
     return [Post(**post.model_dump()) for post in post_in_db]
 
 
+@posts_router.delete('/comments/{comment_id}/', response_model= Delete, status_code=200)
+def delete_comment(session :Annotated[Session, Depends(get_session)],
+                    comment_id: int,
+                    current_user: UserInDB = Depends(auth_get_current_user)) -> Delete:
+    comment = session.get(CommentInDB, comment_id)
+    if comment:
+        comment = session.get(CommentInDB, comment_id)
+        session.delete(comment)
+        session.commit()
+        return Delete(message="Successfully deleted comment")            
+    else:
+        raise EntityNotFound("comment", comment_id)
+
+
+@posts_router.get('/{user_id}/issold={is_sold}/', response_model = list[Post], status_code=200)
+def get_posts_by_user(user_id: int,
+                      is_sold: bool,
+                      session: Annotated[Session, Depends(get_session)],
+                      currentUser: UserInDB = Depends(auth_get_current_user)):
+    user = session.get(UserInDB, user_id)
+    if user:
+        posts_in_db = session.exec(select(PostInDB).where(PostInDB.sellerID == user_id and PostInDB.isSold == is_sold)).all()
+        return [Post(**post.model_dump()) for post in posts_in_db]
+    else:
+        raise EntityNotFound("user", user_id)
+
+
+@posts_router.get('/{post_id}/', response_model = Post, status_code=200)
+def get_post_by_id(post_id: int, 
+                   session: Annotated[Session, Depends(get_session)],
+                   current_user: UserInDB = Depends(auth_get_current_user)) -> Post:
+    post = session.get(PostInDB, post_id)
+    if post:
+        return Post(**post.model_dump())
+    else:
+        raise EntityNotFound("post", post_id)
+
+
+@posts_router.delete('/{post_id}/', response_model = Delete, status_code=200)
+def del_post_by_id(post_id : int, 
+                   session: Annotated[Session, Depends(get_session)],
+                   current_user: UserInDB = Depends(auth_get_current_user)) -> Delete:
+    """Deleting post by id"""
+    post = session.get(PostInDB, post_id)
+    if not post:
+       raise EntityNotFound("Post", post_id)
+    if current_user.id != post.sellerID:
+        raise PermissionDenied("delete", "post")
+    
+    session.delete(post)
+    session.commit()
+    return Delete(message="Post deleted successfully.")
+
 
 @posts_router.post("/{post_id}/comments/", response_model=Comment, status_code=201)
 def create_new_comment(newComment: CommentCreate,
@@ -149,59 +202,6 @@ def get_comment_by_id(session: Annotated[Session, Depends(get_session)],
         return Comment(**comment.model_dump())
     else:
         raise EntityNotFound("comment", comment_id)
-
-
-
-@posts_router.delete('/comments/{comment_id}/', response_model= Delete, status_code=200)
-def delete_comment(session :Annotated[Session, Depends(get_session)],
-                    comment_id: int,
-                    current_user: UserInDB = Depends(auth_get_current_user)) -> Delete:
-    comment = session.get(CommentInDB, comment_id)
-    if comment:
-        comment = session.get(CommentInDB, comment_id)
-        session.delete(comment)
-        session.commit()
-        return Delete(message="Successfully deleted comment")            
-    else:
-        raise EntityNotFound("comment", comment_id)
-
-
-
-
-@posts_router.get('/{post_id}/', response_model = list[Post], status_code=200)
-def get_post_by_id(postId: int,
-                   session: Annotated[Session, Depends(get_session)],
-                   currentUser: UserInDB = Depends(auth_get_current_user)):
-    posts_in_db = session.exec(select(PostInDB).where(PostInDB.id == postId))
-    return [Post(**post.model_dump()) for post in posts_in_db]
-
-
-
-@posts_router.get('/{post_id}/', response_model = Post, status_code=200)
-def get_post_by_id(post_id: int, 
-                   session: Annotated[Session, Depends(get_session)],
-                   current_user: UserInDB = Depends(auth_get_current_user)) -> Post:
-    post = session.get(PostInDB, post_id)
-    if post:
-        return Post(**post.model_dump())
-    else:
-        raise EntityNotFound("post", post_id)
-
-
-@posts_router.delete('/{post_id}/', response_model = Delete, status_code=200)
-def del_post_by_id(post_id : int, 
-                   session: Annotated[Session, Depends(get_session)],
-                   current_user: UserInDB = Depends(auth_get_current_user)) -> Delete:
-    """Deleting post by id"""
-    post = session.get(PostInDB, post_id)
-    if not post:
-       raise EntityNotFound("Post", post_id)
-    if current_user.id != post.sellerID:
-        raise PermissionDenied("delete", "post")
-    
-    session.delete(post)
-    session.commit()
-    return Delete(message="Post deleted successfully.")
 
 
 @posts_router.post('/{post_id}/link/{listing_id}/', response_model= Link, status_code=201)
