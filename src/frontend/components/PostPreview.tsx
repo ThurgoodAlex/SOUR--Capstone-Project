@@ -47,6 +47,8 @@ export function PostPreview({ post, size, thumbnailSize }: { post: Post, size: n
                 <ImageBackground source={post.coverImage} style={{ height: size, width: size }}>
                     {icon}
                 </ImageBackground>
+                
+
             </TouchableOpacity>
             <TouchableOpacity
                 onPress={() =>
