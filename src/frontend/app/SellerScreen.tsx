@@ -10,15 +10,14 @@ import { RegisteredSeller } from '@/components/ResgisteredSeller';
 import { UnregisteredSeller } from '@/components/UnregisteredSeller';
 
 export default function SellerScreen() {
-    const user = useUser(); // Fetch user details
-    const { logout } = useAuth();
+    const { user } = useUser(); // Fetch user details
     if (user){
         return (
             <>
                 <Stack.Screen options={{ title: 'SellerScreen' }} />
                 <View style={ScreenStyles.screen}>
                     {user.isSeller ? (
-                        <RegisteredSeller user={user}/>
+                        <RegisteredSeller/>
                     ) : (
                         <UnregisteredSeller />
                     )}

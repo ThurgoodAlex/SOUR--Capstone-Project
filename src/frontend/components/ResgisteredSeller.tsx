@@ -6,9 +6,11 @@ import { useApi } from '@/context/api';
 import { Post, Stats, User } from '@/constants/Types';
 import { router } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useUser } from '@/context/user';
 
-export function RegisteredSeller({ user }: { user: User }) {
+export function RegisteredSeller() {
     const api = useApi();
+    const { user, setUser } = useUser();
     const [activeTab, setActiveTab] = useState('Active');
     const [posts, setPosts] = useState<Post[]>([]);
     const [earnings, setEarnings] = useState(0.00);
@@ -16,7 +18,7 @@ export function RegisteredSeller({ user }: { user: User }) {
 
     const fetchStats = async () => {
         try {
-            const response = await api.get(`/users/${user.id}/stats/`);
+            const response = await api.get(`/users/${user?.id}/stats/`);
             const result = await response.json();
 
             if (response.ok) {
@@ -50,7 +52,7 @@ export function RegisteredSeller({ user }: { user: User }) {
 
     const fetchPosts = async (isSold : boolean) => {
         try {
-            const response = await api.get(`/posts/${user.id}/issold=${isSold}/`);
+            const response = await api.get(`/posts/${user?.id}/issold=${isSold}/`);
             const result = await response.json();
 
             if (response.ok) {
