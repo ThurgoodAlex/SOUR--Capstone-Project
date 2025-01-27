@@ -104,6 +104,17 @@ export class BackendInfrastructureStack extends cdk.Stack {
             },
         });
 
+        // get newest post lambda
+        const getNewestPostsLambda = new lambda.Function(this, 'GetNewestPostsLambda', {
+            runtime: lambda.Runtime.PYTHON_3_8,
+            handler: 'lambda.post_handlers.get_newest_posts_lambda',
+            code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+            functionName: 'get_newest_posts_lambda',
+            environment: {
+                PYTHONPATH: '/var/task',
+            },
+        });
+
         // get posts by users lambda
         const getPostsByUserLambda = new lambda.Function(this, 'GetListingsByUserLambda', {
             runtime: lambda.Runtime.PYTHON_3_8,
@@ -468,6 +479,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
         const uploadPostIntegration = new apigateway.LambdaIntegration(uploadPostLambda);
         const uploadListingIntegration = new apigateway.LambdaIntegration(uploadListingLambda);
         const getAllPostsIntegration = new apigateway.LambdaIntegration(getAllPostsLambda);
+        const getNewestPostsIntegration = new apigateway.LambdaIntegration(getNewestPostsLambda);
         const getPostsByUserIntegration = new apigateway.LambdaIntegration(getPostsByUserLambda);
         const getPostByIdIntegration = new apigateway.LambdaIntegration(getPostingByIdLambda);
         const delPostByIdIntegration = new apigateway.LambdaIntegration(delPostingByIdLambda);
@@ -540,6 +552,9 @@ export class BackendInfrastructureStack extends cdk.Stack {
 
         const getAllPostsResource = api.root.addResource('getAllPosts');
         getAllPostsResource.addMethod('GET', getAllPostsIntegration);
+
+        const getNewestPostsResource = api.root.addResource('getNewestPosts');
+        getNewestPostsResource.addMethod('GET', getNewestPostsIntegration);
 
         const getPostsByUserResource = api.root.addResource('getPostsByUser');
         getPostsByUserResource.addMethod('GET', getPostsByUserIntegration);
