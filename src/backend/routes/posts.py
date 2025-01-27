@@ -113,7 +113,7 @@ def get_posts_by_user(user_id: int,
                       currentUser: UserInDB = Depends(auth_get_current_user)):
     user = session.get(UserInDB, user_id)
     if user:
-        posts_in_db = session.exec(select(PostInDB).where(PostInDB.userID == user_id and PostInDB.isSold == is_sold)).all()
+        posts_in_db = session.exec(select(PostInDB).where(PostInDB.sellerID == user_id and PostInDB.isSold == is_sold)).all()
         return [Post(**post.model_dump()) for post in posts_in_db]
     else:
         raise EntityNotFound("user", user_id)
