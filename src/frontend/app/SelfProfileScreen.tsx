@@ -148,6 +148,7 @@ function PostPreview({ post}: { post: Post }){
                 <ImageBackground source={post.coverImage} style={{ height: 150, width: 150 }}>
                     {icon}
                 </ImageBackground>
+                <Text style={[TextStyles.h3, {textAlign:'left'}]}>{post.title}</Text>
 
             </TouchableOpacity>
         </View>
