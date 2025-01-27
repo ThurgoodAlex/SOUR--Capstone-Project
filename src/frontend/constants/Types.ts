@@ -1,4 +1,5 @@
 import { ImageSourcePropType, TextProps, ViewProps } from "react-native";
+import { Float } from "react-native/Libraries/Types/CodegenTypes";
 
 export type Post = {
     id: number;
@@ -42,6 +43,10 @@ export type User = {
     bio: string;
 };
 
+export type Stats = {
+    totalEarnings: Float;
+    itemsSold: number;
+}
 
 
 export type GridPostsProps = {

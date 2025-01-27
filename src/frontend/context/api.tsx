@@ -10,9 +10,9 @@ import { useAuth } from "@/context/auth";
 // API utility function
 const api = (token: string | null = null) => {
     // local host url
-     const baseUrl = "http://127.0.0.1:8000";
+    //  const baseUrl = "http://127.0.0.1:8000";
     // emma's url
-    // const baseUrl = 'http://10.18.50.27:8000';
+    const baseUrl = 'http://10.0.0.117:8000';
 
     const getAuthHeaders = () => {
 
@@ -52,6 +52,18 @@ const api = (token: string | null = null) => {
         });
     };
 
+    // PUT request method
+    const put = async (url: string) => {
+        const headers = getAuthHeaders();
+        console.log("PUT Request URL:", baseUrl + url);
+        console.log("PUT Headers:", headers);
+
+        return fetch(baseUrl + url, {
+            method: 'PUT',
+            headers,
+        });
+    };
+
      // login needs separate logic because it uses Form Encoded URL params (with the new swagger fix)
      const login = async (body: URLSearchParams) => {
         const headers = {"Content-Type": "application/x-www-form-urlencoded", 'accept': 'application/json',};
@@ -67,7 +79,7 @@ const api = (token: string | null = null) => {
         });
     };
 
-    return { get, post, login };
+    return { get, post, put, login };
 };
 
 // Custom hook to provide the API instance with the current token

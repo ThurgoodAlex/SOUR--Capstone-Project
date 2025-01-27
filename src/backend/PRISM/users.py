@@ -46,10 +46,11 @@ users_router = APIRouter(tags=["Users"])
 
 # ------------------------ users -------------------------- #
 
-@users_router.get('/', response_model= list[UserInDB], status_code=200)
-def get_all_users(session :Annotated[Session, Depends(get_session)])-> list[UserInDB]:
+@users_router.get('/', response_model= list[User], status_code=200)
+def get_all_users(session :Annotated[Session, Depends(get_session)])-> list[User]:
     """Gets all users"""
-    return session.exec(select(UserInDB)).all()
+    user_in_db = session.exec(select(UserInDB)).all()
+    return [map_user_db_to_response(user) for user in user_in_db]
 
 @users_router.get('/{user_id}/', response_model= User, status_code=200)
 def get_user_by_id(session: Annotated[Session, Depends(get_session)],
