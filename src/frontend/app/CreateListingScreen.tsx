@@ -15,6 +15,7 @@ export default function CreateListing() {
     const [brand, setBrand] = useState('');
     const [condition, setCondition] = useState('');
     const [color, setColor] = useState('');
+    const [gender, setGender] = useState('');
     const [price, setPrice] = useState('');
     const PlaceholderImage = require('@/assets/images/icon.png');
 
@@ -77,18 +78,26 @@ export default function CreateListing() {
             size,
             description,
             brand,
+            gender,
             condition,
             color,
             price,
         });
 
         try {
-          const response = await api.post("/listing/createlisting",
-                {
-                  "title":name,
-                  "description":description,
-                  "price": parseFloat(price),
-                }
+          const response = await api.post("/posts/",
+            {
+              "title": name,
+              "description": description,
+              "brand": brand,
+              "condition": condition,
+              "size": size,
+              "gender": gender,
+              "price": price,
+              "isSold": true,
+              "isListing": true,
+              "coverImage": ""
+            }
           );
           const result = await response.json();
 
@@ -123,6 +132,7 @@ export default function CreateListing() {
           <FormGroup labelText="Price" placeholderText="Enter price" value={price} setter={setPrice} keyboardType="numeric"/>
           <FormGroup labelText="Description" placeholderText="Enter item description" value={description} setter={setDescription} multiline/>
           <FormGroup labelText="Brand" placeholderText="Enter brand" value={brand} setter={setBrand}/>
+          <FormGroup labelText="Gender" placeholderText="Enter gender" value={gender} setter={setGender}/>
           <FormGroup labelText="Condition" placeholderText="Enter condition" value={condition} setter={setCondition}/>
           <FormGroup labelText="Color" placeholderText="Select a color" value={color} setter={setColor}/>
           

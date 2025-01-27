@@ -5,14 +5,19 @@ import boto3
 import logging 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.utils import get_openapi
 from contextlib import asynccontextmanager
 from databaseAndSchemas.test_db import create_db_and_tables
 from databaseAndSchemas.schema import * 
 from PRISM.auth import auth_router
+from fastapi.openapi.utils import get_openapi
 
 from routes.media import media_router
-from PRISM.users import users_router
-from fastapi.openapi.utils import get_openapi
+from routes.posts import posts_router
+from routes.chats import chats_router
+from routes.users import users_router
+
+
 # Create logs directory if it doesn't exist
 os.makedirs('logs', exist_ok=True)
 
@@ -50,9 +55,10 @@ app.add_middleware(
 
 
 app.include_router(auth_router, prefix="/auth")
-app.include_router(media_router, prefix="/media")
 app.include_router(users_router, prefix="/users")
-
+app.include_router(posts_router, prefix="/posts")
+app.include_router(media_router, prefix="/media")
+app.include_router(chats_router, prefix="/chats")
 
 # Configure boto3 to use LocalStack
 localstack_endpoint = os.environ.get('LOCALSTACK_ENDPOINT', 'http://localstack:4566')
@@ -73,30 +79,9 @@ async def root():
     except Exception as e:
         return {"error": str(e)}
 
-@app.get("/health")
+@app.get("/health/")
 async def health():
     return {"status": "healthy"}
-
-
-# def custom_openapi():
-#     if app.openapi_schema:
-#         return app.openapi_schema
-#     openapi_schema = get_openapi(
-#         title="Sour API",
-#         version="1.0.0",
-#         description="Sours API",
-#         routes=app.routes,
-#     )
-#     openapi_schema["components"]["securitySchemes"] = {
-#         "BearerAuth": {
-#             "type": "http",
-#             "scheme": "bearer",
-#             "bearerFormat": "JWT",
-#         }
-#     }
-#     openapi_schema["security"] = [{"BearerAuth": []}]
-#     app.openapi_schema = openapi_schema
-#     return app.openapi_schema
 
 app.openapi = lambda: get_openapi(
     title="Sour API",

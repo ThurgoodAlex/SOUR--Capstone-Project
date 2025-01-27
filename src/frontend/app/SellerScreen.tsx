@@ -13,7 +13,7 @@ export default function SellerScreen() {
     const user = useUser(); // Fetch user details
     const { logout } = useAuth();
     if (user) {
-        console.log("user: " + user?.name);
+        console.log("user: " + user?.username);
         console.log("isSeller: " + user?.isSeller);
     }
     else{

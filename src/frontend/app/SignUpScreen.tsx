@@ -26,7 +26,7 @@ export default function SignUpScreen() {
 
         try {
             // Use the `post` method from the API abstraction
-            const response = await post('/auth/createuser', {
+            const response = await post('/auth/createuser/', {
                 username: username,
                 firstname: firstName,
                 lastname: lastName,

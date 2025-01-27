@@ -51,7 +51,22 @@ const api = (token: string | null = null) => {
         });
     };
 
-    return { get, post };
+     // login needs separate logic because it uses Form Encoded URL params (with the new swagger fix)
+     const login = async (body: URLSearchParams) => {
+        const headers = {"Content-Type": "application/x-www-form-urlencoded", 'accept': 'application/json',};
+    
+        console.log("POST Request URL:", baseUrl + "/auth/token/");
+        console.log("POST Body:", body.toString());
+        console.log("POST Headers:", headers);
+
+        return fetch(baseUrl + "/auth/token/", {
+            method: "POST",
+            body: body.toString(),
+            headers,
+        });
+    };
+
+    return { get, post, login };
 };
 
 // Custom hook to provide the API instance with the current token
