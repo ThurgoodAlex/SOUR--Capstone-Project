@@ -1,0 +1,27 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "PRISM"
+version = "0.1.0"
+description = "PRISM Services"
+requires-python = ">=3.10"
+authors = [
+    { name = "Ricardo Baeza" }
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = [
+    "PRISM/tests"
+]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+markers = [
+    "auth: authentication related tests",
+]
+

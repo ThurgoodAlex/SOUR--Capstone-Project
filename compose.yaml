@@ -43,7 +43,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
     privileged: true
   infrastructure: 
-      build: src/infrastructure/    
+      image: ricardobaeza/sour-infrastructure:latest
       environment:
         - AWS_ACCESS_KEY_ID=test
         - AWS_SECRET_ACCESS_KEY=test
