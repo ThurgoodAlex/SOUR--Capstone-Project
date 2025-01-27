@@ -13,7 +13,7 @@ import { useApi } from '@/context/api';
 
 export default function DiscoverScreen() {
 
-  const user = useUser(); // Fetch user details
+  const {user} = useUser(); // Fetch user details
   const { logout } = useAuth();
   const api = useApi();
   const [posts, setPosts] = useState<Post[]>([]);

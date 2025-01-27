@@ -23,7 +23,7 @@ export default function UserProfileScreen() {
             <Stack.Screen options={{ title: 'UserProfileScreen' }} />
             <View style={ScreenStyles.screen}>
                 <ProfileInfo user={user} />
-                <StatsBar />
+                <StatsBar user={user} />
                 <PostsGrid listings={listings} />
             </View>
             <NavBar />

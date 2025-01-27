@@ -28,14 +28,14 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       try {
         const response = await api.get("/auth/me/");
         if (response.ok) {
-          const data = await response.json();
+          const responseData = await response.json();
           const returnedUser: User = {
             firstname: responseData.firstname, 
             lastname: responseData.lastname,
             username: responseData.username,
             id: responseData.id,
             profilePicture: responseData.profilePicture,
-            isSeller: true,
+            isSeller: responseData.isSeller,
             bio: responseData.bio,
             email: responseData.email
           };
@@ -60,17 +60,10 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// export const useUser = () => {
-//   const context = useContext(UserContext);
-//   if (context === undefined) {
-//     throw new Error("useUser must be used within a UserProvider");
-//   }
-//   return context;
-// };
 export const useUser = () => {
     const context = useContext(UserContext);
     if (!context) {
       throw new Error("useUser must be used within a UserProvider");
     }
-    return context; // Now includes { user, setUser }
+    return context;
   };
