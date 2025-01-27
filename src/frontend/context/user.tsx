@@ -28,7 +28,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       try {
         const response = await api.get("/auth/me/");
         if (response.ok) {
-          const data = await response.json();
+          const responseData = await response.json();
           const returnedUser: User = {
             firstname: responseData.firstname, 
             lastname: responseData.lastname,
