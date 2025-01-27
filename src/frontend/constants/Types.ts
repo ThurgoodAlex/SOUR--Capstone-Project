@@ -2,24 +2,34 @@ import { ImageSourcePropType, TextProps, ViewProps } from "react-native";
 
 export type Post = {
     id: number;
-    data: ImageSourcePropType | undefined;
-    type: string;
     createdDate: Date;
-
-    author:User;
-};
-
-export type Listing = {
-    id:number;
-    createdDate: Date;
-
-    title: string;
-    price: string;
-    description: string;
-    size: string;
 
     seller: User;
+    title: string;
+    description: string;
+    brand: string;
+    condition: string;
+    size: string;
+    gender: string;
+    coverImage: ImageSourcePropType | undefined;
+    price: string;
+
+    isSold: boolean;
+    isListing: boolean;
+  
 };
+
+// export type Listing = {
+//     id:number;
+//     createdDate: Date;
+
+//     title: string;
+//     price: string;
+//     description: string;
+//     size: string;
+
+//     seller: User;
+// };
 
 export type User = {
     firstname: string;
@@ -29,6 +39,7 @@ export type User = {
     profilePicture?:string | '../assets/images/profile_pic.jpg';
     isSeller: boolean;
     email: string;
+    bio: string;
 };
 
 

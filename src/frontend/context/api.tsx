@@ -18,6 +18,7 @@ const api = (token: string | null = null) => {
 
         const headers: Record<string, string> = {
             "Content-Type": "application/json",
+            "Accept": "application/json"
         };
         if (token) {
             headers["Authorization"] = `Bearer ${token}`;

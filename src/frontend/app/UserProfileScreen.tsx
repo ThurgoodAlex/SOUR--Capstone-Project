@@ -16,28 +16,7 @@ export default function UserProfileScreen() {
     const user: User | null = userParam ? JSON.parse(userParam) : null; 
     const [listings, setListings] = useState([]);
 
-    // Fetch listings from the API
-    const fetchListings = async () => {
-        try {
-            const response = await api.get(`/listing/${user?.id}`);
-            const result = await response.json();
-
-            if (response.ok) {
-                console.log("Received all listings: ", result);
-                setListings(result); // Update state with fetched listings
-            } else {
-                console.log(response);
-                Alert.alert('Error', 'Could not fetch listings.');
-            }
-        } catch (error) {
-            console.error('Error fetching listings:', error);
-            Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
-        }
-    };
-
-    useEffect(() => {
-        fetchListings();
-    });
+    
 
     return (
         <>
@@ -59,7 +38,8 @@ function ProfileInfo({ user }: { user: User | null }) {
                 source={require('../assets/images/profile_pic.jpg')}
                 style={UserProfileStyles.profileImage}
             />
-            <Text style={TextStyles.h1}>{user?.name || "No User"}</Text>
+            <Text style={TextStyles.h1}>{user?.firstname + " " + user?.lastname|| "ERROR: can't find name"}</Text>
+            <Text style={TextStyles.h3}>{user?.username || "ERROR: can't find username"}</Text>
         </View>
     );
 }
