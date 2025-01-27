@@ -42,39 +42,37 @@ export default function SelfProfileScreen() {
     const fetchPosts = async () =>
     {
     try {
-        let endpoint = `users/posts/${user?.id}`;
+        let endpoint = `/users/${user?.id}/posts/`;
         const response = await api.get(endpoint);
         const result = await response.json();
+        console.log(result)
     
         if (response.ok) {
-    
-        const getRandomImage = () =>
-            dummyImages[Math.floor(Math.random() * dummyImages.length)];
-    
+            const getRandomImage = () =>
+                dummyImages[Math.floor(Math.random() * dummyImages.length)];
         
-    
-        const transformedPosts: Post[] = await Promise.all(
-            result.map(async (item: any) => {
-            return {
-                id: item.id,
-                createdDate: item.created_at || new Date().toISOString(),
-                coverImage: getRandomImage(),
-                title: item.title,
-                description: item.description,
-                brand: item.brand,
-                condition: item.condition,
-                size: item.size,
-                gender: item.gender,
-                price: item.price,
-                isSold: item.isSold,
-                isListing: item.isListing,
-                seller: user
-            };
-            })
-        );
-    
-        console.log(`Received posts from ${endpoint}:`, transformedPosts);
-        setPosts(transformedPosts);
+            const transformedPosts: Post[] = await Promise.all(
+                result.map(async (item: any) => {
+                return {
+                    id: item.id,
+                    createdDate: item.created_at || new Date().toISOString(),
+                    coverImage: getRandomImage(),
+                    title: item.title,
+                    description: item.description,
+                    brand: item.brand,
+                    condition: item.condition,
+                    size: item.size,
+                    gender: item.gender,
+                    price: item.price,
+                    isSold: item.isSold,
+                    isListing: item.isListing,
+                    seller: user
+                };
+                })
+            );
+        
+            console.log(`Received posts from ${endpoint}:`, transformedPosts);
+            setPosts(transformedPosts);
         } else {
         console.log(response);
         throw new Error('Could not fetch posts.');
