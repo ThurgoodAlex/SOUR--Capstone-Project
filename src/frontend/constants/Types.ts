@@ -65,6 +65,9 @@ export type ThemedTextProps = TextProps & {
 };
 
 
+export type CartItemProps = {
+    item: Post;
 
+};
 
   
