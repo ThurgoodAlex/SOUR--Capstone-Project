@@ -103,7 +103,6 @@ export function RegisteredSeller() {
 
     return (
         <>
-            <View style={ScreenStyles.screen}>
                 <View style={SellerStyles.earningsBox}>
                     <Text style={[Styles.column, TextStyles.h2]}>Total Earnings:</Text>
                     <View style={[Styles.column, { justifyContent: 'flex-end' }]}>
@@ -137,7 +136,6 @@ export function RegisteredSeller() {
                 ) : (
                     <PostsGrid posts={posts} />
                 )}
-            </View>
         </>
     );
 }
