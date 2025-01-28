@@ -5,6 +5,7 @@ import { Post, User } from '@/constants/Types';
 import ProfileThumbnail from '@/components/ProfileThumbnail';
 import { router } from 'expo-router';
 import ProfileThumbnailSmall from '@/components/ProfileThumbnailSmall';
+import { useUser } from '@/context/user';
 
 /**
  * The visualization of how a campus post looks like.
@@ -12,6 +13,8 @@ import ProfileThumbnailSmall from '@/components/ProfileThumbnailSmall';
  * @returns A post view component.
  */
 export function PostPreview({ post, size, thumbnailSize }: { post: Post, size: number, thumbnailSize: string }) {
+    
+
     let icon;
     let type = post.isListing ? "listing" : "post";
 
@@ -50,19 +53,11 @@ export function PostPreview({ post, size, thumbnailSize }: { post: Post, size: n
                 
 
             </TouchableOpacity>
-            <TouchableOpacity
-                onPress={() =>
-                    router.push({
-                        pathname: '/UserProfileScreen',
-                        params: { user: JSON.stringify(seller) },
-                    })
-                }
-                style={{ marginLeft: 6 }}
-            >
+            
                 {thumbnailSize === 'big' ? (<ProfileThumbnail user={seller} />)
                     : seller ? (<ProfileThumbnailSmall user={seller} />) : (<Text>No seller information available</Text>)
                 }
-            </TouchableOpacity>
+        
         </View>
 
     );

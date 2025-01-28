@@ -1,10 +1,14 @@
 import { Styles, TextStyles } from '@/constants/Styles';
 import { User } from '@/constants/Types';
-import React, { useState } from 'react';
+import { useUser } from '@/context/user';
+import { router } from 'expo-router';
+import { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 
 export default function ProfileThumbnail({ user }: {user: User}) {
 
+  const current_user = useUser().user;
+  
   const ProfileStyles = StyleSheet.create({
     thumbnailImage: {
       width: 40,
@@ -15,11 +19,29 @@ export default function ProfileThumbnail({ user }: {user: User}) {
 
   return (
     <>
-        <TouchableOpacity style={Styles.row}>
-            <Image
+      <TouchableOpacity
+        onPress={() =>
+            {
+                if(user.id == current_user?.id){
+                    router.push({
+                        pathname: '/SelfProfileScreen',
+                    })
+                }
+                else{
+                    router.push({
+                        pathname: '/UserProfileScreen',
+                        params: { user: JSON.stringify(user) },
+                    })
+                }
+            }
+        }
+        style={Styles.row}
+      >
+        
+        <Image
             source={
-                user.profilePicture
-                ? user.profilePicture
+                user.profilePic
+                ? user.profilePic
                 : require('../assets/images/profile_pic.jpg') // Default fallback
             }
             style={ProfileStyles.thumbnailImage}
@@ -28,7 +50,7 @@ export default function ProfileThumbnail({ user }: {user: User}) {
             <Text style={[TextStyles.h3, {marginBottom:0}]}>{user.firstname} {user.lastname}</Text>
             <Text style={[TextStyles.small, {marginTop:1}]}>@{user.username}</Text>
             </View>
-        </TouchableOpacity>
+      </TouchableOpacity>
     </> 
   );
 };
