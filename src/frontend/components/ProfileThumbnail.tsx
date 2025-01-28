@@ -35,7 +35,7 @@ export default function ProfileThumbnail({ user }: {user: User}) {
                 }
             }
         }
-        style={Styles.row}
+        style={[Styles.row, {marginLeft:6}]}
       >
         
         <Image
@@ -46,7 +46,7 @@ export default function ProfileThumbnail({ user }: {user: User}) {
             }
             style={ProfileStyles.thumbnailImage}
             />
-            <View style={[Styles.column, Styles.alignLeft, {marginLeft:2}]}>
+            <View style={[Styles.column, Styles.alignLeft, {marginLeft:5}]}>
             <Text style={[TextStyles.h3, {marginBottom:0}]}>{user.firstname} {user.lastname}</Text>
             <Text style={[TextStyles.small, {marginTop:1}]}>@{user.username}</Text>
             </View>
