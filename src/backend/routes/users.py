@@ -194,10 +194,10 @@ def get_posts_for_user(user_id: int,
     return [Post(**post.model_dump()) for post in posts_in_db]          
 
 
-@users_router.get('/{user_id}/likes/', response_model= list[Like], status_code=200)
+@users_router.get('/{user_id}/likes/', response_model= list[Post], status_code=200)
 def get_liked_posts(user_id: int, 
                     session :Annotated[Session, Depends(get_session)],
-                    current_user: UserInDB = Depends(auth_get_current_user))-> list[Like]:
+                    current_user: UserInDB = Depends(auth_get_current_user))-> list[Post]:
     
      #fyi, even though I would prefer this route to not have the user_id part, 
      # it has to in order to resolve the url, otherwise it tries to parse "likes" as a user_id
@@ -210,8 +210,15 @@ def get_liked_posts(user_id: int,
     if user.id != current_user.id:
         raise PermissionDenied("view", "likes of another user")
     
-    liked_posts = session.exec(select(LikeInDB).where(LikeInDB.userID == current_user.id)).all()
-    return [Like(**like.model_dump()) for like in liked_posts]
+    # Query the liked posts, joining with the Post table
+    liked_posts = session.exec(
+        select(PostInDB)
+        .join(LikeInDB, PostInDB.id == LikeInDB.postID)
+        .where(LikeInDB.userID == current_user.id)
+        
+    ).all()
+    
+    return [Post(**post.model_dump()) for post in liked_posts]
    
     
 # ------------------------ Cart -------------------------- #
