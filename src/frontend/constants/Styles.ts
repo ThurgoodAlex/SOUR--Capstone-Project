@@ -139,12 +139,11 @@ export const Styles = StyleSheet.create({
 
 
 
-
 export const cartStyle = StyleSheet.create({
   container: {
     flexDirection: "row",
     padding: 10,
-    backgroundColor: "white",
+    backgroundColor: "#fff",
     borderRadius: 10,
     marginVertical: 5,
     alignItems: "center",
@@ -157,6 +156,7 @@ export const cartStyle = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 10,
+    marginRight: 10,
   },
   details: {
     marginLeft: 10,
@@ -165,19 +165,18 @@ export const cartStyle = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: "bold",
+    color: "#333",
   },
   brand: {
     fontSize: 14,
-    color: "gray",
+    color: "#777",
   },
   price: {
     fontSize: 16,
     fontWeight: "bold",
     color: "#ff4d4d",
   },
-
 });
-
 
 export const cartPageStyle = StyleSheet.create({
   container: {
@@ -200,7 +199,8 @@ export const cartPageStyle = StyleSheet.create({
   },
   emptyText: {
     fontSize: 18,
-    color: 'gray',
+    color: '#666',
+    fontWeight: 'bold',
   },
 });
 
