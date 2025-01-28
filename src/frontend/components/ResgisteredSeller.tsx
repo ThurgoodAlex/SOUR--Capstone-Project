@@ -28,8 +28,8 @@ export function RegisteredSeller() {
                 setSoldItems(result.itemsSold);
 
             } else {
-                console.log(response);
-                Alert.alert('Error', 'Could not fetch stats.');
+                setEarnings(0.00)
+                setSoldItems(0)
             }
         } catch (error) {
             console.error('Error fetching stats:', error);

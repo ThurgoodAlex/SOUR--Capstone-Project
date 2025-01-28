@@ -138,7 +138,7 @@ def get_following(session: Annotated[Session, Depends(get_session)],
     else:
         raise EntityNotFound('user', user_id)
     
-@users_router.post('/{user_id}/followers/', response_model= list[FollowingInDB], status_code=201)
+@users_router.get('/{user_id}/followers/', response_model= list[FollowingInDB], status_code=201)
 def get_followers(session: Annotated[Session, Depends(get_session)],
                 user_id: int,
                 current_user: UserInDB = Depends(auth_get_current_user))-> list[FollowingInDB]:
@@ -276,7 +276,7 @@ def get_stats_for_seller(user_id: int, session: Annotated[Session, Depends(get_s
     user_stats = session.exec(select(SellerStatInDB).where(SellerStatInDB.sellerID == user.id)).first()
 
     if user_stats is None:
-        raise EntityNotFound("stats", user.id)
+        raise EntityNotFound("stats for user", user.id)
     
     user_stats_response = SellerStat(**user_stats.model_dump())
     return user_stats_response
