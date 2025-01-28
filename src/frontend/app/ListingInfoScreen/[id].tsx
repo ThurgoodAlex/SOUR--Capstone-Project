@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Image, FlatList, ScrollView } from 'react-native';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 import ProfileThumbnail from '@/components/ProfileThumbnail';
@@ -27,35 +27,36 @@ export default function PostInfoScreen() {
         // Fetch the Post based on the dynamic id
         const fetchPost = async () => {
             try {
-                const response = await api.get(`/posts/${id}`);
-                const data = await response.json();
-                const userResponse = await api.get(`/users/${data.sellerID}/`);
-                const userData = await userResponse.json();
+                const response = await api.get(`/posts/${id}/`);
+                const result = await response.json();
+
+                const sellerResponse = await api.get(`/users/${result.sellerID}/`);
+                const sellerData = await sellerResponse.json();
 
                 // Transform the data
                 const transformedPost: Post = {
-                    id: data.id,
-                    createdDate: data.created_at,
+                    id: result.id,
+                    createdDate: result.created_at,
                     seller: {
-                        id: userData.seller_id,
-                        firstname: userData.firstname,
-                        lastname: userData.lastname,
-                        username: userData.username,
-                        profilePic: userData.profilePic,
-                        email: userData.email,
-                        isSeller: userData.isSeller,
-                        bio: userData.bio
+                        id: sellerData.seller_id,
+                        firstname: sellerData.firstname,
+                        lastname: sellerData.lastname,
+                        username: sellerData.username,
+                        profilePic: sellerData.profilePic,
+                        email: sellerData.email,
+                        isSeller: sellerData.isSeller,
+                        bio: sellerData.bio
                     },
-                    title: data.title,
-                    description: data.description,
-                    brand: data.brand,
-                    condition: data.condition,
+                    title: result.title,
+                    description: result.description,
+                    brand: result.brand,
+                    condition: result.condition,
                     size: "Medium", // Set default size
-                    gender: data.gender,
-                    coverImage: data.coverImage,
-                    price: data.price,
-                    isSold: data.isSold,
-                    isListing: data.isListing
+                    gender: result.gender,
+                    coverImage: result.coverImage,
+                    price: result.price,
+                    isSold: result.isSold,
+                    isListing: result.isListing
                 };
 
                 setPost(transformedPost); // Set the transformed data
@@ -95,7 +96,7 @@ export default function PostInfoScreen() {
                                 <Ionicons size={20} name='heart-outline' />
                             )}
                         </View>
-                        <PostInfo Post={post} />
+                        <PostInfo post={post} />
                     </ScrollView>
                 </View>
                 <NavBar />
@@ -117,13 +118,21 @@ export default function PostInfoScreen() {
 }
 
 // Component to display Post details
-function PostInfo({ Post }: { Post: Post }) {
+function PostInfo({ post }: { post: Post }) {
+
+    const formattedPrice = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      }).format(parseFloat(post.price));
+
     return (
-        <View style={[Styles.row, { justifyContent: 'space-between', flexWrap: 'wrap' }]}>
-            <Text style={[TextStyles.h1, TextStyles.uppercase]}>{Post.title}</Text>
-            <Text style={TextStyles.h2}>{Post.price}</Text>
-            <Text style={TextStyles.h3}>Size: {Post.size}</Text>
-            <Text style={TextStyles.p}>{Post.description}</Text>
+        <View style={Styles.column}>
+            <View style={[Styles.row, {justifyContent:'space-between'}]}>
+                <Text style={[TextStyles.h1, TextStyles.uppercase]}>{post.title}</Text>
+                <Text style={[TextStyles.h2, {textAlign:'right'}]}>{formattedPrice}</Text>
+            </View>
+            <Text style={[TextStyles.h3, {textAlign:'left'}]}>Size: {post.size}</Text>
+            <Text style={TextStyles.p}>{post.description}</Text>
         </View>
     );
 }

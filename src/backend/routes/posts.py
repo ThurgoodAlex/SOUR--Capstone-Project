@@ -75,7 +75,8 @@ def upload_listing(newListing:createListing,
         raise PermissionDenied("upload", "listing")
         
     listing = PostInDB(
-        **newListing.model_dump(),
+        **newListing.model_dump(exclude={'price'}),
+        price=round(float(newListing.price), 2), 
         sellerID=currentUser.id,
     )
     session.add(listing)
