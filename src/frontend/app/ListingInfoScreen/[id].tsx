@@ -66,35 +66,52 @@ export default function PostInfoScreen() {
             }
         };
 
-        const fetchLike = async () => {
-            const response = await api.get(`/posts/${post?.id}/like/`);
-            const data = await response.json();
-            setLike(data)
-        }
-
+        
         if (id) {
             fetchPost(); // Fetch data when 'id' is available
-            fetchLike();
+            
         }
     }, [id]);
 
 
 
     if (post) {
-        //extract seller information into a User object
-        const seller: User = post.seller;
+
+        const fetchLike = async () => {
+            const response = await api.get(`/posts/${post.id}/like/`);
+            const data = await response.json();
+            setLike(data)
+        }
+
+        fetchLike();
+        
+        const toggleLike = async () => {
+            try {
+                if (liked) {
+                    await api.remove(`/posts/${post.id}/unlike/`,{});
+                } else {
+                    await api.post(`/posts/${post.id}/like/`);
+                }
+                setLike(!liked); // Update local state
+            } catch (error) {
+                console.error('Error toggling like:', error);
+            }
+        };
+
         return (
             <>
                 <View style={ScreenStyles.screen}>
                     <ScrollView contentContainerStyle={{ gap: 6 }}>
                         <PhotoCarousel />
-                        <View style={[Styles.row, {justifyContent:'space-between'}]}>
-                            <ProfileThumbnail user={seller} />
-                            {liked ? (
-                                <Ionicons size={20} name='heart' />
-                            ) : (
-                                <Ionicons size={20} name='heart-outline' />
-                            )}
+                        <View style={[Styles.row, { justifyContent: 'space-between' }]}>
+                            <ProfileThumbnail user={post.seller} />
+                            <TouchableOpacity onPress={toggleLike}>
+                                {liked ? (
+                                    <Ionicons size={20} name='heart' color='red' />
+                                ) : (
+                                    <Ionicons size={20} name='heart-outline' color='gray' />
+                                )}
+                            </TouchableOpacity>
                         </View>
                         <PostInfo post={post} />
                     </ScrollView>
