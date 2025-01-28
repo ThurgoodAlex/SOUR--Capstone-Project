@@ -122,13 +122,13 @@ export function RegisteredSeller() {
                         style={[Styles.buttonDark, {color: '#FFF'}]}
                         size={32}
                         name="camera"
-                        onPress={() => router.push('/CreateListingScreen')}
+                        onPress={() => router.push('/CreatePostScreen')}
                     />
                     <Ionicons
                         style={[Styles.buttonDark, {color: '#FFF'}]}
                         size={32}
                         name="videocam"
-                        onPress={() => router.push('/CreateListingScreen')}
+                        onPress={() => router.push('/CreatePostScreen')}
                     />
                 </View>
                 <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} tab1={'Active'} tab2={'Inactive'} />
