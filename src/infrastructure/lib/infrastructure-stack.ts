@@ -115,6 +115,17 @@ export class BackendInfrastructureStack extends cdk.Stack {
             },
         });
 
+        // get all liked posts lambda
+        const getLikedPostsLambda = new lambda.Function(this, 'GetLikedPosts', {
+            runtime: lambda.Runtime.PYTHON_3_8,
+            handler: 'lambda.post_handlers.get_liked_posts',
+            code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+            functionName: 'get_liked_posts',
+            environment: {
+                PYTHONPATH: '/var/task',
+            },
+        });
+
         // get post by id lambda
         const getPostingByIdLambda = new lambda.Function(this, 'GetPostingByIdLambda', {
             runtime: lambda.Runtime.PYTHON_3_8,
@@ -489,6 +500,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
         // Users
         const getAllUsersIntegration = new apigateway.LambdaIntegration(getAllUsersLambda);
         const getUserByIdIntegration = new apigateway.LambdaIntegration(getUserByIdLambda);
+        const getLikedPostsIntegration = new apigateway.LambdaIntegration(getLikedPostsLambda);
         const becomeSellerIntegration = new apigateway.LambdaIntegration(becomeSellerLambda)
         const followUserIntegration = new apigateway.LambdaIntegration(followUserLambda);
         const unfollowUserIntegration = new apigateway.LambdaIntegration(unfollowUserLambda);
@@ -543,6 +555,9 @@ export class BackendInfrastructureStack extends cdk.Stack {
 
         const getPostsByUserResource = api.root.addResource('getPostsByUser');
         getPostsByUserResource.addMethod('GET', getPostsByUserIntegration);
+
+        const getLikedPostsResource = api.root.addResource('getLikedPosts');
+        getLikedPostsResource.addMethod('GET', getLikedPostsIntegration);
 
         const getPostByIdResource = api.root.addResource('getPostById');
         getPostByIdResource.addMethod('GET', getPostByIdIntegration);

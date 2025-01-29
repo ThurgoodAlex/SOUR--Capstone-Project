@@ -126,6 +126,7 @@ export default function DiscoverScreen() {
         numColumns={2} // Grid layout with 2 columns
         columnWrapperStyle={Styles.grid} // Style for the row container
         showsVerticalScrollIndicator={false}
+        ListFooterComponent={<Text style={[TextStyles.p, {textAlign:'center'}, {color:"#888"}, {fontStyle:"italic"}]}>You're all caught up!</Text>} 
       />
       
     </View>

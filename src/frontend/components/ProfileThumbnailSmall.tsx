@@ -36,7 +36,7 @@ export default function ProfileThumbnailSmall({ user }: { user: User}) {
         style={{ marginLeft: 6 }}
     >
           
-      <View style={Styles.row}>
+      <View style={[Styles.row, {marginBottom: 10}]}>
         <Image
           source={
               user.profilePic
@@ -45,7 +45,7 @@ export default function ProfileThumbnailSmall({ user }: { user: User}) {
           }
           style={ProfileStyles.thumbnailImage}
         />
-        <Text style={TextStyles.small}>@{user.username}</Text>
+        <Text style={[TextStyles.small, {marginBottom:8}]}>@{user.username}</Text>
       </View>
     </TouchableOpacity>
   );

@@ -20,6 +20,7 @@ export default function SelfProfileScreen() {
     const { logout } = useAuth();
     const api = useApi();
     const [posts, setPosts] = useState<Post[]>([]);
+    const [likedPosts, setLikedPosts] = useState<Post[]>([]);
     const [activeTab, setActiveTab] = useState('Posts');
     const handleTabSwitch = (tab: string) => {
         setActiveTab(tab);
@@ -83,8 +84,80 @@ export default function SelfProfileScreen() {
     }
     }
 
-    // Fetch listings on page load
+
+    const fetchLikedPosts = async () =>
+        {
+        try {
+            let endpoint = `/users/${user?.id}/likes/`;
+            const response = await api.get(endpoint);
+            const result = await response.json();
+            console.log(result)
+        
+            if (response.ok) {
+                const fetchSeller = async (sellerId: string) => {
+                    try {
+                      const sellerResponse = await api.get(`/users/${sellerId}/`);
+                      const sellerData = await sellerResponse.json();
+            
+                      if (sellerResponse.ok) {
+                        return {
+                          firstname: sellerData.firstname,
+                          lastname: sellerData.lastname,
+                          username: sellerData.username,
+                          bio: sellerData.bio,
+                          profilePicture: sellerData.profilePicture,
+                          isSeller: sellerData.isSeller,
+                          email: sellerData.email,
+                          id: sellerData.id,
+                        };
+                      }
+                    } catch (error) {
+                      console.error(`Error fetching seller with id ${sellerId}:`, error);
+                    }
+                  };
+
+
+                const getRandomImage = () =>
+                    dummyImages[Math.floor(Math.random() * dummyImages.length)];
+            
+                const transformedPosts: Post[] = await Promise.all(
+                    result.map(async (item: any) => {
+                    const seller = await fetchSeller(item.sellerID);
+                    return {
+                        id: item.id,
+                        createdDate: item.created_at || new Date().toISOString(),
+                        coverImage: getRandomImage(),
+                        title: item.title,
+                        description: item.description,
+                        brand: item.brand,
+                        condition: item.condition,
+                        size: item.size,
+                        gender: item.gender,
+                        price: item.price,
+                        isSold: item.isSold,
+                        isListing: item.isListing,
+                        seller: seller
+                    };
+                    })
+                );
+            
+                console.log(`Received liked posts from ${endpoint}:`, transformedPosts);
+                setLikedPosts(transformedPosts);
+            } else {
+            console.log(response);
+            throw new Error('Could not fetch liked posts.');
+            }
+        } catch (error) {
+            console.error('Error fetching liked posts:', error);
+            throw new Error('Failed to connect to the server.');
+        }
+        }
+
+    // Fetch posts and likes on page load
     useEffect(() => {fetchPosts(); }, []);
+    useEffect(() => {fetchLikedPosts(); }, []);
+
+
     return (
         <>
             <Stack.Screen options={{ title: 'SelfProfileScreen' }} />
@@ -102,7 +175,7 @@ export default function SelfProfileScreen() {
                 {activeTab === 'Posts' ? (
                     <PostsGrid posts={posts} />
                 ) : (
-                    <LikesGrid />
+                    <LikesGrid posts={likedPosts}/>
                 )}
             </View>
             <NavBar/>
@@ -156,8 +229,6 @@ function PostPreview({ post}: { post: Post }){
 }
 
 function PostsGrid({ posts }: { posts: Post[] }) {
-    
-    
     const renderPost = ({ item }: {item: Post}) => (
         <PostPreview
           post={item}
@@ -176,12 +247,23 @@ function PostsGrid({ posts }: { posts: Post[] }) {
     )
 }
 
-function LikesGrid() {
-    return (
-        <View>
-            <Text>No likes yet!</Text>
-        </View>
+function LikesGrid({ posts }: { posts: Post[] }) {
+    const renderPost = ({ item }: {item: Post}) => (
+        <PostPreview
+          post={item}
+        />
     );
+
+   return ( 
+        <FlatList
+            data={posts} // Data for FlatList
+            keyExtractor={(item) => item.id.toString()} // Unique key for each item
+            renderItem={renderPost} // Function to render each item
+            numColumns={2} // Grid layout with 2 columns
+            columnWrapperStyle={Styles.grid} // Style for the row container
+            showsVerticalScrollIndicator={false}
+        />
+    )
 }
 
 const ProfileStyles = StyleSheet.create({
