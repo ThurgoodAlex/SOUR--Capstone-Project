@@ -10,11 +10,18 @@ import { ScreenStyles } from '@/constants/Styles';
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const videos = [
-    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+    require('../assets/vids/testFashion.mp4'),
+    require('../assets/vids/testFashion(1).mp4'),
+    require('../assets/vids/testFashion(2).mp4'),
+    require('../assets/vids/testFashion(3).mp4'),
+    require('../assets/vids/testFashion(4).mp4'),
+    require('../assets/vids/testFashion(5).mp4'),
+    require('../assets/vids/testFashion(6).mp4'),
+    // "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+    // "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+    // "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+    // "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+    // "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
 ];
 
 export default function VideoScreen() {
@@ -33,13 +40,13 @@ export default function VideoScreen() {
                 <FlatList
                     data={videos}
                     renderItem={({ item, index }) => (
-                        <Item item={item} shouldPlay={index === currentViewableItemIndex} />
+                        <Item assetId={item} shouldPlay={index === currentViewableItemIndex} />
                     )}
                     keyExtractor={item => item}
                     pagingEnabled
                     snapToAlignment="start"
                     snapToInterval={SCREEN_HEIGHT}
-                    horizontal={false}
+                    decelerationRate="fast"
                     showsVerticalScrollIndicator={false}
                     viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
                 />
@@ -50,8 +57,8 @@ export default function VideoScreen() {
     );
 }
 
-const Item = ({ item, shouldPlay }: { item: string; shouldPlay: boolean }) => {
-    const videoSource: VideoSource = { uri: item };
+const Item = ({ assetId, shouldPlay }: { assetId: any; shouldPlay: boolean }) => {
+    const videoSource: VideoSource = {assetId};
     const player = useVideoPlayer(videoSource, player => {
         player.loop = true;
     });

@@ -16,7 +16,7 @@ from databaseAndSchemas.schema import (
     Chat, ChatCreate, ChatInDB, Message, MessageCreate, MessageInDB, UserInDB
 )
 from databaseAndSchemas.test_db import get_session
-from PRISM.src.prism_services.auth import auth_get_current_user
+from PRISM.auth import auth_get_current_user
 
 
 SessionDep = Annotated[Session, Depends(get_session)]
