@@ -12,11 +12,11 @@ services:
       - localstack
     volumes:
       - ./src/backend:/app/
-    develop:
-      watch:
-        - action: sync
-          path: ./backend/
-          target: /app/
+    # develop:
+    #   watch:
+    #     - action: sync
+    #       path: ./backend/
+    #       target: /app/
         
   frontend:
     build: src/frontend/
@@ -43,7 +43,8 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
     privileged: true
   infrastructure: 
-      image: ricardobaeza/sour-infrastructure:latest
+      # image: ricardobaeza/sour-infrastructure:latest
+      build: src/infrastructure/
       environment:
         - AWS_ACCESS_KEY_ID=test
         - AWS_SECRET_ACCESS_KEY=test
