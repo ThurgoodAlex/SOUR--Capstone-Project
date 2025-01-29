@@ -46,10 +46,11 @@ users_router = APIRouter(tags=["Users"])
 
 # ------------------------ users -------------------------- #
 
-@users_router.get('/', response_model= list[UserInDB], status_code=200)
-def get_all_users(session :Annotated[Session, Depends(get_session)])-> list[UserInDB]:
+@users_router.get('/', response_model= list[User], status_code=200)
+def get_all_users(session :Annotated[Session, Depends(get_session)])-> list[User]:
     """Gets all users"""
-    return session.exec(select(UserInDB)).all()
+    user_in_db = session.exec(select(UserInDB)).all()
+    return [map_user_db_to_response(user) for user in user_in_db]
 
 @users_router.get('/{user_id}/', response_model= User, status_code=200)
 def get_user_by_id(session: Annotated[Session, Depends(get_session)],
@@ -137,7 +138,7 @@ def get_following(session: Annotated[Session, Depends(get_session)],
     else:
         raise EntityNotFound('user', user_id)
     
-@users_router.post('/{user_id}/followers/', response_model= list[FollowingInDB], status_code=201)
+@users_router.get('/{user_id}/followers/', response_model= list[FollowingInDB], status_code=201)
 def get_followers(session: Annotated[Session, Depends(get_session)],
                 user_id: int,
                 current_user: UserInDB = Depends(auth_get_current_user))-> list[FollowingInDB]:
@@ -193,8 +194,33 @@ def get_posts_for_user(user_id: int,
     return [Post(**post.model_dump()) for post in posts_in_db]          
 
 
-
-
+@users_router.get('/{user_id}/likes/', response_model= list[Post], status_code=200)
+def get_liked_posts(user_id: int, 
+                    session :Annotated[Session, Depends(get_session)],
+                    current_user: UserInDB = Depends(auth_get_current_user))-> list[Post]:
+    
+     #fyi, even though I would prefer this route to not have the user_id part, 
+     # it has to in order to resolve the url, otherwise it tries to parse "likes" as a user_id
+     
+     #so, instead just check that user_id is current user (assuming you can't view what someone else has liked)
+     # check that user with id exists
+    user = session.get(UserInDB, user_id)
+    if not user:
+        raise EntityNotFound("user", user_id)
+    if user.id != current_user.id:
+        raise PermissionDenied("view", "likes of another user")
+    
+    # Query the liked posts, joining with the Post table
+    liked_posts = session.exec(
+        select(PostInDB)
+        .join(LikeInDB, PostInDB.id == LikeInDB.postID)
+        .where(LikeInDB.userID == current_user.id)
+        
+    ).all()
+    
+    return [Post(**post.model_dump()) for post in liked_posts]
+   
+    
 # ------------------------ Cart -------------------------- #
 @users_router.get("/{user_id}/cart/", response_model=list[Cart], status_code=200)
 def get_user_cart(
@@ -275,7 +301,7 @@ def get_stats_for_seller(user_id: int, session: Annotated[Session, Depends(get_s
     user_stats = session.exec(select(SellerStatInDB).where(SellerStatInDB.sellerID == user.id)).first()
 
     if user_stats is None:
-        raise EntityNotFound("stats", user.id)
+        raise EntityNotFound("stats for user", user.id)
     
     user_stats_response = SellerStat(**user_stats.model_dump())
     return user_stats_response

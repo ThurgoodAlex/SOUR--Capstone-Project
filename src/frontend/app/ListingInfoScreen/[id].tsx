@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Image, FlatList, ScrollView } from 'react-native';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 import ProfileThumbnail from '@/components/ProfileThumbnail';
@@ -8,105 +8,148 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useUser } from '@/context/user';
 import { useAuth } from '@/context/auth';
 import { useApi } from '@/context/api';
-import { Listing, User } from '@/constants/Types';
+import { Post, User } from '@/constants/Types';
+import { Ionicons } from '@expo/vector-icons';
 
-export default function ListingInfoScreen()
- {
-  const user = useUser(); // Fetch user details
-  const api = useApi();
-  
-  const [liked, setLike] = useState(false);
-  const [listing, setListing] = useState<Listing | null>(null); 
+export default function PostInfoScreen() {
+    const {user} = useUser(); // Fetch user details
+    const api = useApi();
 
-
-  const { id } = useLocalSearchParams(); // Get the dynamic `id` from the route
-  const images = ["sweater1.png", "sweater2.png","sweater3.png","sweater4.png"]
+    const [liked, setLike] = useState(false);
+    const [post, setPost] = useState<Post | null>(null);
 
 
-  useEffect(() => {
-    // Fetch the listing based on the dynamic id
-    const fetchListing = async () => {
-      try {
-        const response = await api.get(`/listing/${id}`);
-        const data = await response.json();
-       
-        // Transform the data
-        const transformedListing: Listing = {
-          title: data.title,
-          price: data.price,
-          description: data.description,
-          size: "Medium", // Set default size
+    const { id } = useLocalSearchParams(); // Get the dynamic `id` from the route
+    const images = ["sweater1.png", "sweater2.png", "sweater3.png", "sweater4.png"]
 
-          seller: {
-            name: data.seller || "Unknown poster", // Fallback to a default value
-            username: data.seller || "unknown", // Fallback to a default value
-            id: data.seller_id,
-        
-          },
-         
-          id: data.id,
-          createdDate: data.created_at, // Assuming created_at is the correct field
+
+    useEffect(() => {
+        // Fetch the Post based on the dynamic id
+        const fetchPost = async () => {
+            try {
+                const response = await api.get(`/posts/${id}/`);
+                const result = await response.json();
+
+                const sellerResponse = await api.get(`/users/${result.sellerID}/`);
+                const sellerData = await sellerResponse.json();
+
+                // Transform the data
+                const transformedPost: Post = {
+                    id: result.id,
+                    createdDate: result.created_at,
+                    seller: {
+                        id: sellerData.seller_id,
+                        firstname: sellerData.firstname,
+                        lastname: sellerData.lastname,
+                        username: sellerData.username,
+                        profilePic: sellerData.profilePic,
+                        email: sellerData.email,
+                        isSeller: sellerData.isSeller,
+                        bio: sellerData.bio
+                    },
+                    title: result.title,
+                    description: result.description,
+                    brand: result.brand,
+                    condition: result.condition,
+                    size: "Medium", // Set default size
+                    gender: result.gender,
+                    coverImage: result.coverImage,
+                    price: result.price,
+                    isSold: result.isSold,
+                    isListing: result.isListing
+                };
+
+                setPost(transformedPost); // Set the transformed data
+
+            } catch (error) {
+                console.error('Error fetching Post:', error);
+            }
         };
 
-        setListing(transformedListing); // Set the transformed data
+        
+        if (id) {
+            fetchPost(); // Fetch data when 'id' is available
+            
+        }
+    }, [id]);
 
-      } catch (error) {
-        console.error('Error fetching listing:', error);
-      }
-    };
 
-    if (id) {
-      fetchListing(); // Fetch data when 'id' is available
+
+    if (post) {
+
+        const fetchLike = async () => {
+            const response = await api.get(`/posts/${post.id}/like/`);
+            const data = await response.json();
+            setLike(data)
+        }
+
+        fetchLike();
+        
+        const toggleLike = async () => {
+            try {
+                if (liked) {
+                    await api.remove(`/posts/${post.id}/unlike/`,{});
+                } else {
+                    await api.post(`/posts/${post.id}/like/`);
+                }
+                setLike(!liked); // Update local state
+            } catch (error) {
+                console.error('Error toggling like:', error);
+            }
+        };
+
+        return (
+            <>
+                <View style={ScreenStyles.screen}>
+                    <ScrollView contentContainerStyle={{ gap: 6 }}>
+                        <PhotoCarousel />
+                        <View style={[Styles.row, { justifyContent: 'space-between' }]}>
+                            <ProfileThumbnail user={post.seller} />
+                            <TouchableOpacity onPress={toggleLike}>
+                                {liked ? (
+                                    <Ionicons size={20} name='heart' color='red' />
+                                ) : (
+                                    <Ionicons size={20} name='heart-outline' color='gray' />
+                                )}
+                            </TouchableOpacity>
+                        </View>
+                        <PostInfo post={post} />
+                    </ScrollView>
+                </View>
+                <NavBar />
+            </>
+        );
     }
-  }, [id]);
 
+    else {
+        return (
+            <>
+                <View style={ScreenStyles.screen}>
+                    <Text>Post information not available.</Text>
+                </View>
+                <NavBar />
+            </>
+        );
+    }
 
-  
-  if(listing){
-    //extract seller information into a User object
-    const seller: User = {
-      name: listing.seller.name,
-      username: listing.seller.username,
-      id: listing.seller.id,
-  
-    }; 
-
-    
-    return (
-      <>
-        <View style={ScreenStyles.screen}>
-          <ScrollView contentContainerStyle={{ gap: 6 }}>
-            <PhotoCarousel /> 
-            <ProfileThumbnail user={seller} /> 
-            <ListingInfo listing={listing} />
-          </ScrollView>
-        </View>
-        <NavBar /> 
-      </>
-    );
-  }
-
-  else{
-    return (
-      <>
-        <View style={ScreenStyles.screen}>
-          <Text>Listing information not available.</Text>
-        </View>
-        <NavBar /> 
-      </>
-    );
-  }
-  
 }
 
-// Component to display listing details
-function ListingInfo({ listing }: { listing: Listing}) {
-  return (
-    <View style={[Styles.row, { justifyContent: 'space-between', flexWrap: 'wrap' }]}>
-      <Text style={[TextStyles.h1, TextStyles.uppercase]}>{listing.title}</Text>
-      <Text style={TextStyles.h2}>{listing.price}</Text>
-      <Text style={TextStyles.h3}>Size: {listing.size}</Text>
-      <Text style={TextStyles.p}>{listing.description}</Text>
-    </View>
-  );
+// Component to display Post details
+function PostInfo({ post }: { post: Post }) {
+
+    const formattedPrice = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      }).format(parseFloat(post.price));
+
+    return (
+        <View style={Styles.column}>
+            <View style={[Styles.row, {justifyContent:'space-between'}]}>
+                <Text style={[TextStyles.h1, TextStyles.uppercase]}>{post.title}</Text>
+                <Text style={[TextStyles.h2, {textAlign:'right'}]}>{formattedPrice}</Text>
+            </View>
+            <Text style={[TextStyles.h3, {textAlign:'left'}]}>Size: {post.size}</Text>
+            <Text style={TextStyles.p}>{post.description}</Text>
+        </View>
+    );
 }

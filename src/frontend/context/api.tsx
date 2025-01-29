@@ -10,14 +10,15 @@ import { useAuth } from "@/context/auth";
 // API utility function
 const api = (token: string | null = null) => {
     // local host url
-     const baseUrl = "http://127.0.0.1:8000";
+    const baseUrl = "http://127.0.0.1:8000";
     // emma's url
-    // const baseUrl = 'http://10.18.50.27:8000';
+    //const baseUrl = 'http://10.18.149.36:8000';
 
     const getAuthHeaders = () => {
 
         const headers: Record<string, string> = {
             "Content-Type": "application/json",
+            "Accept": "application/json"
         };
         if (token) {
             headers["Authorization"] = `Bearer ${token}`;
@@ -38,7 +39,7 @@ const api = (token: string | null = null) => {
     };
 
     // POST request method with logging
-    const post = async (url: string, body: Record<string, unknown>) => {
+    const post = async (url: string, body: Record<string, unknown> = {}) => {
         const headers = getAuthHeaders();
         console.log("POST Request URL:", baseUrl + url);
         console.log("POST Body:", JSON.stringify(body));
@@ -47,6 +48,33 @@ const api = (token: string | null = null) => {
         return fetch(baseUrl + url, {
             method: "POST",
             body: JSON.stringify(body),
+            headers,
+        });
+    };
+
+
+    // have to call it remove becuase delete is not allowed as a method name :(
+    const remove = async (url: string, body: Record<string, unknown> = {}) => {
+        const headers = getAuthHeaders();
+        console.log("DELETE Request URL:", baseUrl + url);
+        console.log("DELETE Body:", JSON.stringify(body));
+        console.log("DELETE Headers:", headers);
+
+        return fetch(baseUrl + url, {
+            method: "DELETE",
+            body: JSON.stringify(body),
+            headers,
+        });
+    };
+
+    // PUT request method
+    const put = async (url: string) => {
+        const headers = getAuthHeaders();
+        console.log("PUT Request URL:", baseUrl + url);
+        console.log("PUT Headers:", headers);
+
+        return fetch(baseUrl + url, {
+            method: 'PUT',
             headers,
         });
     };
@@ -66,7 +94,7 @@ const api = (token: string | null = null) => {
         });
     };
 
-    return { get, post, login };
+    return { get, post, put, remove, login };
 };
 
 // Custom hook to provide the API instance with the current token

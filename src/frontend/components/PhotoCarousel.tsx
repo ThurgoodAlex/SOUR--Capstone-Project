@@ -29,9 +29,7 @@ export default function PhotoCarousel() {
         <View style={Styles.row}>
             <ScrollView horizontal={true} >
                 {dummyPosts.map((post) => (
-                    <View style={Styles.column}>
-                        <ImageBackground source={post.data} style={{height: 250, width:250, marginRight:6}}></ImageBackground>
-                    </View>
+                    <ImageBackground key={post.id} source={post.data} style={{height: 250, width:250, marginRight:6}}></ImageBackground>
                 ))}
             </ScrollView>
         </View>

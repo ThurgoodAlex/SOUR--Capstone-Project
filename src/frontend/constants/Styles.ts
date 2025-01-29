@@ -51,7 +51,7 @@ export const TextStyles = StyleSheet.create({
       marginBottom: 8,
   },
   small:{
-    fontSize:10,
+    fontSize:11,
   },
   light: {
     color: '#fff',
