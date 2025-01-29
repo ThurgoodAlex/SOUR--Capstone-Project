@@ -1,4 +1,4 @@
-from databaseAndSchemas.schema import *
+from databaseAndSchemas import *
 
 
 def map_user_db_to_response(user_db: UserInDB) -> User:

@@ -6,10 +6,11 @@ src/frontend/node_modules
 volume/*
 
 # ignore all pycache 
-__pycache__/
+**/__pycache__/
 *.py[cod]
 *$py.class
 
 # ignore auth log
 *.log
 src/frontend/.expo/settings.json
+src/infrastructure/cdk.out.deploy/*
