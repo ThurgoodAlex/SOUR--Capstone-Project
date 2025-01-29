@@ -14,7 +14,7 @@ from databaseAndSchemas.schema import (
     Media, MediaInDB, createMedia, UserInDB, User, PostInDB, Delete
 )
 from databaseAndSchemas.test_db import get_session
-from PRISM.src.prism_services.auth import auth_get_current_user
+from PRISM.auth import auth_get_current_user
 from exceptions import DuplicateResource, EntityNotFound, PermissionDenied
 
 
