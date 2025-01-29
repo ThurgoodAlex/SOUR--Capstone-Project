@@ -36,17 +36,6 @@ from .prism_exceptions import(
     InvalidToken
 ) 
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('logs/app_auth.log'),
-        logging.StreamHandler()
-    ]
-)
-
-# Create logger instance
-logger = logging.getLogger(__name__)
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 jwt_key = str(os.environ.get("JWT_KEY"))
 jwt_alg = "HS256"

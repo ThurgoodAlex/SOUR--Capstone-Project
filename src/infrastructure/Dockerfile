@@ -36,4 +36,4 @@ RUN mkdir /root/.aws && \
 
 RUN chmod +x deploy.sh 
 
-ENTRYPOINT [ "/app/infrastructure/deploy.sh" ]
+ENTRYPOINT [ "./deploy.sh" ]
