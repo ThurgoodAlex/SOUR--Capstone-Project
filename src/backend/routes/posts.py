@@ -1,14 +1,14 @@
 import os
 import sys
 import boto3
-from fastapi import APIRouter, Depends, HTTPException, Path
+from fastapi import APIRouter, Depends, Query
 from datetime import datetime, timezone
 from typing import Annotated
 import logging
 from sqlalchemy.future import select
 from sqlalchemy import desc
 from jose import JWTError, jwt
-from sqlmodel import Session, SQLModel, select
+from sqlmodel import Session, and_, select
 from exceptions import *
 from databaseAndSchemas.test_db import get_session
 from PRISM.auth import auth_get_current_user
@@ -92,6 +92,31 @@ def get_all_posts(session: Annotated[Session, Depends(get_session)],
     """Getting all posts"""
     post_in_db = session.exec(select(PostInDB)).all()
     return [Post(**post.model_dump()) for post in post_in_db]
+
+@posts_router.get('/filter/', response_model=list[Post])
+def get_filtered_posts(
+    size: Optional[str] = Query(None),
+    brand: Optional[str] = Query(None),
+    color: Optional[str] = Query(None),
+    session: Session = Depends(get_session)
+) -> List[Post]:
+    """Get posts with dynamic query filters"""
+    query = select(PostInDB)
+    filters = []
+
+    # Apply filters dynamically if they are provided
+    if size:
+        filters.append(PostInDB.size == size)
+    if brand:
+        filters.append(PostInDB.brand == brand)
+    if color:
+        filters.append(PostInDB.color == color)
+
+    if filters:
+        query = query.where(and_(*filters))
+
+    posts_in_db = session.exec(query).all()
+    return [Post(**post.model_dump()) for post in posts_in_db]
 
 
 @posts_router.delete('/comments/{comment_id}/', response_model= Delete, status_code=200)
