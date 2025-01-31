@@ -13,7 +13,7 @@ export const getCart = async () => {
     }
 
     try {
-      
+        console.log("Fetching cart for user:", user.id);
         const cartData = await api.get(`/users/${user.id}/cart/`);
 
         if (cartData.ok) {
