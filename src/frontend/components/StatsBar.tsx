@@ -113,19 +113,19 @@ export function StatsBar({user} : {user : User | null}) {
         <View style={StatStyles.statsSection}>
             <View style={Styles.center}>
                 <Text style={[TextStyles.h2, { marginBottom: 0 }]}>{sales}</Text>
-                <Text style={TextStyles.p}>sales</Text>
+                <Text style={TextStyles.p}>{sales === 1 ? 'sale' : 'sales'}</Text>
             </View>
             <View style={Styles.center}>
                 <Text style={[TextStyles.h2, { marginBottom: 0 }]}>{posts}</Text>
-                <Text style={TextStyles.p}>posts</Text>
+                <Text style={TextStyles.p}>{posts === 1 ? 'post' : 'posts'}</Text>
             </View>
             <View style={Styles.center}>
                 <Text style={[TextStyles.h2, { marginBottom: 0 }]}>{followers}</Text>
-                <Text style={TextStyles.p}>followers</Text>
+                <Text style={TextStyles.p}>{followers === 1 ? 'follower' : 'followers'}</Text>
             </View>
             <View style={Styles.center}>
                 <Text style={[TextStyles.h2, { marginBottom: 0 }]}>{following}</Text>
-                <Text style={TextStyles.p}>following</Text>
+                <Text style={TextStyles.p}>{following === 1 ? 'following' : 'following'}</Text>
             </View>
         </View>
     );
