@@ -5,7 +5,7 @@ import { useAuth } from '@/context/auth';
 import { useUser } from '@/context/user';
 import * as ImagePicker from "expo-image-picker";
 import { router } from 'expo-router';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {View, Text, TextInput, TouchableOpacity, Image, ScrollView, KeyboardTypeOptions, StyleSheet, Alert, ImageBackground, GestureResponderEvent,} from 'react-native';
 
 export default function CreateListing() {
@@ -25,7 +25,7 @@ export default function CreateListing() {
 
     const api = useApi();
     const {logout} = useAuth();
-    const user = useUser(); // Fetch user details
+    const {user} = useUser(); // Fetch user details
     
     var username = "";
     if(user){
@@ -85,7 +85,7 @@ export default function CreateListing() {
         });
 
         try {
-          const response = await api.post("/posts/",
+          const response = await api.post("/posts/listings/",
             {
               "title": name,
               "description": description,

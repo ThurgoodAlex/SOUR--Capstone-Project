@@ -4,77 +4,100 @@ import { PostPreview } from '@/components/PostPreview';
 import { NavBar } from '@/components/NavBar';
 import { FlatList, Text } from 'react-native';
 import PostCarousel from '@/components/PostCarousel';
-import { Listing, Post } from '@/constants/Types';
-import React, { useEffect, useState } from 'react';
-import { api, useApi } from '@/context/api';
+import { User, Post } from '@/constants/Types';
+import { useCallback, useEffect, useState } from 'react';
 import { useUser } from '@/context/user';
 import { useAuth } from '@/context/auth';
 
+import { useApi } from '@/context/api';
+
 export default function DiscoverScreen() {
 
-  const user = useUser(); // Fetch user details
+  const {user} = useUser(); // Fetch user details
   const { logout } = useAuth();
   const api = useApi();
-
   const [posts, setPosts] = useState<Post[]>([]);
 
-// Define dummy images
-const dummyImages = [
-  require('../assets/images/video.png'),
-  require('../assets/images/post.png'),
-  require('../assets/images/sweater1.png'),
-  require('../assets/images/listing2.png'),
-  require('../assets/images/listing.png'),
-  require('../assets/images/random1.png'),
-  require('../assets/images/random2.png'),
-  require('../assets/images/random3.png'),
-  require('../assets/images/random4.png'),
-  require('../assets/images/random5.png'),
-];
-
-
-
-
-
-  // Fetch posts from the API
-  const fetchPosts = async () => {
-      try {
-
-          //TODO: right now this just fetches listings, but we will need to get all posts and listings
-          const response = await api.get(`/listing/`);
-          const result = await response.json();
-
-          if (response.ok) {
-              console.log("Received all listings: ", result);
-
-              // Function to get a random image
-              const getRandomImage = () => dummyImages[Math.floor(Math.random() * dummyImages.length)];
-
-              // Transform the listings data to match the Post type
-              const transformedPosts: Post[] = result.map((item: any, index: number) => ({
-                id: item.id,
-                createdDate: item.created_at || new Date().toISOString(), 
-                data: getRandomImage(),
-                
-                author: {
-                  name: item.seller|| "Unknown poster", // Fallback to a default value
-                  username: item.seller || "unknown", // Fallback to a default value
-                  id: item.seller_id,
-                },
-              }));
-
-              setPosts(transformedPosts); // Update state with fetched posts
-
-          } else {
-              console.log(response);
-              Alert.alert('Error', 'Could not fetch listings.');
-          }
-      } catch (error) {
-          console.error('Error fetching listings:', error);
-          Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
-      }
-  };
+  const dummyImages = [
+    require('../assets/images/video.png'),
+    require('../assets/images/post.png'),
+    require('../assets/images/sweater1.png'),
+    require('../assets/images/listing2.png'),
+    require('../assets/images/listing.png'),
+    require('../assets/images/random1.png'),
+    require('../assets/images/random2.png'),
+    require('../assets/images/random3.png'),
+    require('../assets/images/random4.png'),
+    require('../assets/images/random5.png'),
+  ];
   
+  const fetchPosts = async () =>
+  {
+    try {
+      let endpoint = `/posts/`;
+      const response = await api.get(endpoint);
+      const result = await response.json();
+  
+      if (response.ok) {
+  
+        const getRandomImage = () =>
+          dummyImages[Math.floor(Math.random() * dummyImages.length)];
+  
+        const fetchSeller = async (sellerId: string) => {
+          try {
+            const sellerResponse = await api.get(`/users/${sellerId}/`);
+            const sellerData = await sellerResponse.json();
+  
+            if (sellerResponse.ok) {
+              return {
+                firstname: sellerData.firstname,
+                lastname: sellerData.lastname,
+                username: sellerData.username,
+                bio: sellerData.bio,
+                profilePicture: sellerData.profilePicture,
+                isSeller: sellerData.isSeller,
+                email: sellerData.email,
+                id: sellerData.id,
+              };
+            }
+          } catch (error) {
+            console.error(`Error fetching seller with id ${sellerId}:`, error);
+          }
+        };
+  
+        const transformedPosts: Post[] = await Promise.all(
+          result.map(async (item: any) => {
+            const seller = await fetchSeller(item.sellerID);
+            return {
+              id: item.id,
+              createdDate: item.created_at || new Date().toISOString(),
+              coverImage: getRandomImage(),
+              title: item.title,
+              description: item.description,
+              brand: item.brand,
+              condition: item.condition,
+              size: item.size,
+              gender: item.gender,
+              price: item.price,
+              isSold: item.isSold,
+              isListing: item.isListing,
+              seller,
+            };
+          })
+        );
+  
+        console.log(`Received posts from ${endpoint}:`, transformedPosts);
+        setPosts(transformedPosts);
+      } else {
+        console.log(response);
+        throw new Error('Could not fetch posts.');
+      }
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+      throw new Error('Failed to connect to the server.');
+    }
+  }
+
   // Fetch listings on page load
   useEffect(() => {fetchPosts(); }, []);
 
@@ -103,6 +126,7 @@ const dummyImages = [
         numColumns={2} // Grid layout with 2 columns
         columnWrapperStyle={Styles.grid} // Style for the row container
         showsVerticalScrollIndicator={false}
+        ListFooterComponent={<Text style={[TextStyles.p, {textAlign:'center'}, {color:"#888"}, {fontStyle:"italic"}]}>You're all caught up!</Text>} 
       />
       
     </View>

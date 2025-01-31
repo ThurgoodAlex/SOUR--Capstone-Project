@@ -39,6 +39,7 @@ const TabStyle = StyleSheet.create({
         justifyContent: 'center',
         borderBottomWidth: 1,
         borderBottomColor: '#ddd',
+        marginTop:20
     },
     tab: {
         fontWeight: 'normal',

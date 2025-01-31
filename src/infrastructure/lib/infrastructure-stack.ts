@@ -15,7 +15,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
         // Create Lambda function
         const starterPageLambda = new lambda.Function(this, 'StarterPageLambda', {
             runtime: lambda.Runtime.PYTHON_3_8,
-            handler: 'lambda.starter_page.lambda_handler',
+            handler: 'lambda.starter_page.starter_page_lambda',
             code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
             functionName: 'starter_page_lambda',
             environment: {
@@ -126,11 +126,22 @@ export class BackendInfrastructureStack extends cdk.Stack {
         });
 
         // get posts by users lambda
-        const getPostsByUserLambda = new lambda.Function(this, 'GetListingsByUserLambda', {
+        const getPostsByUserLambda = new lambda.Function(this, 'GetPostsByUserLambda', {
             runtime: lambda.Runtime.PYTHON_3_8,
             handler: 'lambda.listings_handlers.get_posts_by_user_lambda',
             code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
             functionName: 'get_posts_by_user_lambda',
+            environment: {
+                PYTHONPATH: '/var/task',
+            },
+        });
+
+        // get all liked posts lambda
+        const getLikedPostsLambda = new lambda.Function(this, 'GetLikedPosts', {
+            runtime: lambda.Runtime.PYTHON_3_8,
+            handler: 'lambda.post_handlers.get_liked_posts',
+            code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+            functionName: 'get_liked_posts',
             environment: {
                 PYTHONPATH: '/var/task',
             },
@@ -587,6 +598,9 @@ export class BackendInfrastructureStack extends cdk.Stack {
 
         const getPostsByUserResource = api.root.addResource('getPostsByUser');
         getPostsByUserResource.addMethod('GET', getPostsByUserIntegration);
+
+        const getLikedPostsResource = api.root.addResource('getLikedPosts');
+        getLikedPostsResource.addMethod('GET', getLikedPostsIntegration);
 
         const getPostByIdResource = api.root.addResource('getPostById');
         getPostByIdResource.addMethod('GET', getPostByIdIntegration);
