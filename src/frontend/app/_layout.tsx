@@ -94,6 +94,16 @@ export default function RootLayout() {
             }} 
           />
 
+
+          <Stack.Screen 
+            name="CartScreen" 
+            options={{
+              headerLeft: () => ""
+            }} 
+          />
+
+
+
           <Stack.Screen 
             name="MessagesScreen" 
             options={{
