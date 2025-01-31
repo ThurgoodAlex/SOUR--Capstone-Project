@@ -215,6 +215,20 @@ def get_posts_for_user(user_id: int,
     return [Post(**post.model_dump()) for post in posts_in_db]          
 
 
+@users_router.get('/{user_id}/posts/issold={is_sold}/', response_model = list[Post], status_code=200)
+def get_posts_by_user(user_id: int,
+                      is_sold: bool,
+                      session: Annotated[Session, Depends(get_session)],
+                      currentUser: UserInDB = Depends(auth_get_current_user)):
+    user = session.get(UserInDB, user_id)
+    if user:
+        posts_in_db = session.exec(select(PostInDB).where(PostInDB.sellerID == user_id).where(PostInDB.isSold == is_sold)).all()
+        return [Post(**post.model_dump()) for post in posts_in_db]
+    else:
+        raise EntityNotFound("user", user_id)
+
+
+
 @users_router.get('/{user_id}/likes/', response_model= list[Post], status_code=200)
 def get_liked_posts(user_id: int, 
                     session :Annotated[Session, Depends(get_session)],

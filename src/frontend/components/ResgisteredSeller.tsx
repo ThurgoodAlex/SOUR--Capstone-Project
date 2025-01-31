@@ -56,7 +56,7 @@ export function RegisteredSeller() {
     {
         try {
             //TODO: make route for getting listings only
-            let endpoint = `/users/${user?.id}/posts/`;
+            let endpoint = `/users/${user?.id}/posts/issold=false/`;
             const response = await api.get(endpoint);
             const result = await response.json();
             console.log(result)
@@ -101,7 +101,7 @@ export function RegisteredSeller() {
     {
         try {
             //TODO: make this router under the user router instead
-            let endpoint = `/posts/${user?.id}/issold=true/`;
+            let endpoint = `/users/${user?.id}/posts/issold=true/`;
             const response = await api.get(endpoint);
             const result = await response.json();
             console.log(result)
@@ -141,8 +141,6 @@ export function RegisteredSeller() {
             throw new Error('Failed to connect to the server.');
         }
     }
-    
-
     
 
     // Fetch posts on page load

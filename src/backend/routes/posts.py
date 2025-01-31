@@ -108,17 +108,6 @@ def delete_comment(session :Annotated[Session, Depends(get_session)],
         raise EntityNotFound("comment", comment_id)
 
 
-@posts_router.get('/{user_id}/issold={is_sold}/', response_model = list[Post], status_code=200)
-def get_posts_by_user(user_id: int,
-                      is_sold: bool,
-                      session: Annotated[Session, Depends(get_session)],
-                      currentUser: UserInDB = Depends(auth_get_current_user)):
-    user = session.get(UserInDB, user_id)
-    if user:
-        posts_in_db = session.exec(select(PostInDB).where(PostInDB.sellerID == user_id).where(PostInDB.isSold == is_sold)).all()
-        return [Post(**post.model_dump()) for post in posts_in_db]
-    else:
-        raise EntityNotFound("user", user_id)
 
 
 @posts_router.get('/{post_id}/', response_model = Post, status_code=200)
