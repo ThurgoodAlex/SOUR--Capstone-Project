@@ -17,8 +17,8 @@ from databaseAndSchemas.schema import (
     Post, PostInDB
 )
 from databaseAndSchemas.test_db import get_session
-from PRISM.auth import auth_get_current_user
-from databaseAndSchemas.mappings.userMapping import *
+from PRISM import auth_get_current_user
+from databaseAndSchemas import *
 
 
 SessionDep = Annotated[Session, Depends(get_session)]
