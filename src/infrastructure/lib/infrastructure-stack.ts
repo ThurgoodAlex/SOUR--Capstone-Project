@@ -71,6 +71,16 @@ export class BackendInfrastructureStack extends cdk.Stack {
             },
         });
 
+        const delCurrentUserLambda = new lambda.Function(this, 'delCurrentUserLambda', {
+            runtime: lambda.Runtime.PYTHON_3_8,
+            handler: 'lambda.auth_handlers.del_current_user_lambda',
+            code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+            functionName: 'del_current_user_lambda',
+            environment: {
+                PYTHONPATH: '/var/task',
+            },
+        });
+
         // upload a post
         const uploadPostLambda = new lambda.Function(this, 'uploadPostLambda', {
             runtime: lambda.Runtime.PYTHON_3_8,
@@ -228,11 +238,21 @@ export class BackendInfrastructureStack extends cdk.Stack {
             },
         });
 
-        const becomeSellerLambda = new lambda.Function(this, 'BecomeSeller', {
+        const becomeSellerLambda = new lambda.Function(this, 'BecomeSellerLambda', {
             runtime: lambda.Runtime.PYTHON_3_8,
             handler: 'lambda.users_handlers.become_seller_lambda',
             code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
             functionName: 'become_seller_lambda',
+            environment: {
+                PYTHONPATH: '/var/task',
+            },
+        });
+
+        const unregisterSellerLambda = new lambda.Function(this, 'UnregisterSellerLambda', {
+            runtime: lambda.Runtime.PYTHON_3_8,
+            handler: 'lambda.users_handlers.unregister_seller_lambda',
+            code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+            functionName: 'unregister_seller_lambda',
             environment: {
                 PYTHONPATH: '/var/task',
             },
@@ -501,6 +521,9 @@ export class BackendInfrastructureStack extends cdk.Stack {
         // Users
         const getAllUsersIntegration = new apigateway.LambdaIntegration(getAllUsersLambda);
         const getUserByIdIntegration = new apigateway.LambdaIntegration(getUserByIdLambda);
+        const delCurrentUserIntegration = new apigateway.LambdaIntegration(delCurrentUserLambda);
+        const unregisterSellerIntegration = new apigateway.LambdaIntegration(unregisterSellerLambda);
+        const getLikedPostsIntegration = new apigateway.LambdaIntegration(likePostLambda);
         const becomeSellerIntegration = new apigateway.LambdaIntegration(becomeSellerLambda)
         const followUserIntegration = new apigateway.LambdaIntegration(followUserLambda);
         const unfollowUserIntegration = new apigateway.LambdaIntegration(unfollowUserLambda);
@@ -525,6 +548,9 @@ export class BackendInfrastructureStack extends cdk.Stack {
         const createUserResource = api.root.addResource('createuser');
         createUserResource.addMethod('POST', createUserIntegration);
 
+        const delCurrentUserResource = api.root.addResource('delCurrentUser');
+        delCurrentUserResource.addMethod('DELETE', delCurrentUserIntegration);
+
         // Adding login user route from Auth
         const loginUserResource = api.root.addResource('loginuser');
         loginUserResource.addMethod('POST', loginUserIntegration);
@@ -539,6 +565,9 @@ export class BackendInfrastructureStack extends cdk.Stack {
 
         const becomeSellerResource = api.root.addResource('becomeseller');
         becomeSellerResource.addMethod('PUT', becomeSellerIntegration);
+
+        const unregisterSellerResource = api.root.addResource('unregisterseller');
+        unregisterSellerResource.addMethod('PUT', unregisterSellerIntegration);
 
         const getUserStatsResource = api.root.addResource('getUserStats');
         getUserStatsResource.addMethod('PUT', getUserStatsIntergration); 

@@ -13,11 +13,8 @@ from sqlalchemy.future import select
 from jose import JWTError, jwt
 from sqlmodel import Session, SQLModel, select
 from databaseAndSchemas.schema import (
-
-
-    Chat, ChatCreate, ChatInDB, Following, FollowingCreate, UserInDB, User, SellerStat, SellerStatInDB, SellerStatCreate,
-    Cart, CartCreate, CartInDB,
-    Post, PostInDB, Comment, CommentCreate, CommentInDB
+    Chat, ChatInDB, Following, UserInDB, User, SellerStat, SellerStatInDB,
+    Post, PostInDB
 )
 from databaseAndSchemas.test_db import get_session
 from PRISM.auth import auth_get_current_user
@@ -46,8 +43,21 @@ users_router = APIRouter(tags=["Users"])
 
 # ------------------------ users -------------------------- #
 
-@users_router.get('/', response_model= list[UserInDB], status_code=200)
-def get_all_users(session :Annotated[Session, Depends(get_session)])-> list[UserInDB]:
+@users_router.delete("/deleteuser/", response_model=Delete, status_code=200)
+def delete_current_user(session: Annotated[Session, Depends(get_session)],
+                    current_user: UserInDB = Depends(auth_get_current_user)) -> User:
+    try:
+        session.delete(current_user)
+        session.commit()
+        return Delete(message="Successfully deleted user")
+    except Exception as e:
+        session.rollback()
+        raise e
+    finally:
+        session.close()
+
+@users_router.get('/', response_model= list[User], status_code=200)
+def get_all_users(session :Annotated[Session, Depends(get_session)])-> list[User]:
     """Gets all users"""
     return session.exec(select(UserInDB)).all()
 
@@ -65,9 +75,20 @@ def get_user_by_id(session: Annotated[Session, Depends(get_session)],
 @users_router.put('/becomeseller/', response_model= User, status_code=200)
 def become_a_seller(session: Annotated[Session, Depends(get_session)],
                         current_user: UserInDB = Depends(auth_get_current_user))-> User:
-    """Update current;y logged in user to become a seller"""
+    """Update current logged in user to become a seller"""
     
     current_user.isSeller = True
+    session.add(current_user)
+    session.commit()
+    session.refresh(current_user)
+    return map_user_db_to_response(current_user)
+
+@users_router.put('/unregisterseller/', response_model= User, status_code=200)
+def unregister_as_seller(session: Annotated[Session, Depends(get_session)],
+                        current_user: UserInDB = Depends(auth_get_current_user))-> User:
+    """Update current logged in user to unregister as seller"""
+    
+    current_user.isSeller = False
     session.add(current_user)
     session.commit()
     session.refresh(current_user)
