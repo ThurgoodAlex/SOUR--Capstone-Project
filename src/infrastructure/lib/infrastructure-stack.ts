@@ -15,9 +15,9 @@ export class BackendInfrastructureStack extends cdk.Stack {
         // Create Lambda function
         const starterPageLambda = new lambda.Function(this, 'StarterPageLambda', {
             runtime: lambda.Runtime.PYTHON_3_8,
-            handler: 'lambda.starter_page.starter_page_lambda',
+            handler: 'lambda.starter_page.lambda_handler',
             code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
-            functionName: 'starter_page_lambda',
+            functionName: 'lambda_handler',
             environment: {
                 PYTHONPATH: '/var/task',
             },
