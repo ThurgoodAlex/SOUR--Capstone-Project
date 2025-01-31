@@ -173,7 +173,8 @@ export function RegisteredSeller() {
                         <Text style={TextStyles.h1}>{formattedEarnings}</Text>
                     </View>
         
-                    <Text style={TextStyles.h2}>{soldItems} items sold</Text>
+                    <Text style={TextStyles.h2}>{soldItems} {soldItems === 1 ? 'item sold' : 'items sold'}</Text>
+
               
          
                 </View>
