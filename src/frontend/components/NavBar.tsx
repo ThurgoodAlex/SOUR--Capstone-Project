@@ -81,15 +81,7 @@ export function NavBar() {
                 name="person"
                 onPress={() => handleNavigation('SelfProfileScreen')}
             />
-            <Ionicons
-                style={[
-                    NavBarStyles.icon,
-                    pathname === '/CartScreen' && NavBarStyles.activeIcon,
-                ]}
-                size={32}
-                name="cart-outline"
-                onPress={() => handleNavigation('CartScreen')}
-            />
+           
         </View>
     );
 }

@@ -6,24 +6,28 @@ import { ActivityIndicator, FlatList, View } from 'react-native';
 import { cartPageStyle } from '@/constants/Styles'
 import { Text } from 'react-native';
 
-export default function CartPage(){
+export default function CartScreen(){
     const [cart, setCart] = useState<Post[]>([]);
     const [loading, setLoading] = useState(true);
-
+    console.log("fetching cart")
     useEffect(() => {
-        const fetchCart = async () => {
-            const cartData = await getCart();
-            if (cartData) {
-                setCart(cartData);
-            }
-            setLoading(false);
-        };
-        fetchCart();
-
-    }, []);
-
+      console.log("useEffect called");
+      const fetchCart = async () => {
+          console.log("fetchCart function called");
+          setLoading(true);
+          const cartData = await getCart();
+          if (cartData) {
+              console.log("Cart data fetched:", cartData);
+              setCart(cartData);
+          }
+          setLoading(false);
+      };
+      fetchCart();
+  }, []);
+  console.log("afer useEffect");
     if (loading) {
         return (
+          console.log("loading cart"),
           <View style={cartPageStyle.loaderContainer}>
             <ActivityIndicator size="large" color="#0000ff" />
           </View>
@@ -32,6 +36,7 @@ export default function CartPage(){
     
       if (cart.length === 0) {
         return (
+          console.log("empty cart"),
           <View style={cartPageStyle.emptyContainer}>
             <Text style={cartPageStyle.emptyText}>Your cart is empty!</Text>
           </View>
