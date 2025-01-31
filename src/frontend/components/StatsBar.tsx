@@ -13,7 +13,7 @@ export function StatsBar({user} : {user : User | null}) {
 
     const fetchUserSales = async () => {
         try {
-            const response = await api.get(`/posts/${user?.id}/issold=true/`);
+            const response = await api.get(`/users/${user?.id}/posts/issold=true/`);
             const result = await response.json();
 
             if (response.ok) {

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity, Image, Alert, StyleSheet, FlatList, ScrollView, ImageBackground } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Alert, StyleSheet, FlatList, ScrollView, ImageBackground, ViewStyle } from 'react-native';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 
 import { useUser } from '@/context/user';
@@ -197,32 +197,61 @@ function ProfileInfo({ user }: { user: any }) {
 }
 
 
-//made this separate from the component for now, maybe make it into a different component?
-function PostPreview({ post}: { post: Post }){
+function PostPreview({ post }: { post: Post }) {
     let icon;
     let type = post.isListing ? "listing" : "post";
 
-    // if (type === 'listing') {
-    //     icon = <Ionicons size={20} name='videocam' />
-    // }
-    if (type === 'post') {
-        icon = <Ionicons size={20} name='megaphone' />
-    }
-    else if (type === 'listing') {
-        icon = <Ionicons size={20} name='pricetag' />
+    if (type === "post") {
+        icon = <Ionicons size={20} name="megaphone" />;
+    } else if (type === "listing") {
+        icon = <Ionicons size={20} name="pricetag" />;
     }
 
-    return( 
-        <View key={post.id} style={[Styles.column, { marginBottom: 1 }]}>
+    const isSold = post.isSold;
+    const containerStyle = [
+        Styles.column,
+        { marginBottom: 10, opacity: isSold ? 0.5 : 1 }, // Reduce opacity if sold
+    ];
+
+    const overlayStyle: ViewStyle | undefined = isSold
+        ? {
+              position: "absolute" as const, // Explicitly type position
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: "rgba(0, 0, 0, 0.3)",
+          }
+        : undefined;
+
+    return (
+        <View key={post.id} style={containerStyle}>
             <TouchableOpacity
-                onPress={() => router.push(`/ListingInfoScreen/${post.id}`)} // Navigate on press
-                style={{ flex: 1, margin: 5 }} // Add styles for spacing
+                onPress={() => router.push(`/ListingInfoScreen/${post.id}`)}
+                style={{ flex: 1, margin: 5 }}
+                disabled={isSold} // Disable interaction if sold
             >
-                <ImageBackground source={post.coverImage} style={{ height: 150, width: 150 }}>
-                    {icon}
-                </ImageBackground>
-                <Text style={[TextStyles.h3, {textAlign:'left'}]}>{post.title}</Text>
-
+                <View>
+                    <ImageBackground source={post.coverImage} style={{ height: 150, width: 150 }}>
+                        {icon}
+                        {isSold && <View style={overlayStyle} />} {/* Overlay when sold */}
+                    </ImageBackground>
+                    {isSold && (
+                        <Text
+                            style={{
+                                position: "absolute",
+                                top: 65,
+                                left: 50,
+                                color: "white",
+                                fontWeight: "bold",
+                                fontSize: 20,
+                            }}
+                        >
+                            SOLD
+                        </Text>
+                    )}
+                </View>
+                <Text style={[TextStyles.h3, { textAlign: "left" }]}>{post.title}</Text>
             </TouchableOpacity>
         </View>
     );
