@@ -30,7 +30,7 @@ export default function PostCarousel() {
     const fetchPosts = async () =>
     {
     try {
-        let endpoint = `/posts/`;
+        let endpoint = `/posts/new`;
         const response = await api.get(endpoint);
         const result = await response.json();
     
