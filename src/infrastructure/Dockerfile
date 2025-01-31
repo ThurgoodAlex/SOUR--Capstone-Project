@@ -31,7 +31,7 @@ COPY . .
 
 #Configuring a custom profile
 RUN mkdir /root/.aws && \
-  echo "[profile localstack]\nregion=us-west-2\noutput=json\nendpoint_url = http://localstack:4566" > /root/.aws/config && \
+  echo "[profile localstack]\nregion=us-west-1\noutput=json\nendpoint_url = http://localstack:4566" > /root/.aws/config && \
   echo "[localstack]\naws_access_key_id=test\naws_secret_access_key=test" > /root/.aws/credentials
 
 RUN chmod +x deploy.sh 
