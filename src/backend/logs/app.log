@@ -1,79 +1,50 @@
-2024-11-16 19:07:02,202 - app - INFO - Creating database and database tables...
-2024-11-16 19:07:02,209 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
-2024-11-16 19:07:02,211 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
-2024-11-16 19:07:02,211 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
-2024-11-16 19:07:02,214 - sqlalchemy.engine.Engine - INFO - PRAGMA temp.table_info("users")
-2024-11-16 19:07:02,215 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
-2024-11-16 19:07:02,216 - sqlalchemy.engine.Engine - INFO - 
-CREATE TABLE users (
-	id INTEGER NOT NULL, 
-	username VARCHAR NOT NULL, 
-	email VARCHAR NOT NULL, 
-	hashed_password VARCHAR NOT NULL, 
-	created_at DATETIME, 
-	PRIMARY KEY (id), 
-	UNIQUE (email)
-)
-
-
-2024-11-16 19:07:02,217 - sqlalchemy.engine.Engine - INFO - [no key 0.00049s] ()
-2024-11-16 19:07:02,227 - sqlalchemy.engine.Engine - INFO - CREATE UNIQUE INDEX ix_users_username ON users (username)
-2024-11-16 19:07:02,228 - sqlalchemy.engine.Engine - INFO - [no key 0.00051s] ()
-2024-11-16 19:07:02,238 - sqlalchemy.engine.Engine - INFO - COMMIT
-2024-11-16 19:09:36,430 - app - INFO - Creating database and database tables...
-2024-11-16 19:09:36,435 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
-2024-11-16 19:09:36,436 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
-2024-11-16 19:09:36,437 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
-2024-11-16 19:09:36,442 - sqlalchemy.engine.Engine - INFO - COMMIT
-2024-11-16 19:10:19,145 - app - INFO - Creating database and database tables...
-2024-11-16 19:10:19,151 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
-2024-11-16 19:10:19,152 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
-2024-11-16 19:10:19,152 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
-2024-11-16 19:10:19,155 - sqlalchemy.engine.Engine - INFO - COMMIT
-2024-11-16 19:11:08,920 - app - INFO - Creating database and database tables...
-2024-11-16 19:11:08,926 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
-2024-11-16 19:11:08,927 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
-2024-11-16 19:11:08,928 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
-2024-11-16 19:11:08,932 - sqlalchemy.engine.Engine - INFO - COMMIT
-2024-11-16 19:11:11,866 - app - INFO - Creating database and database tables...
-2024-11-16 19:11:11,871 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
-2024-11-16 19:11:11,871 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
-2024-11-16 19:11:11,872 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
-2024-11-16 19:11:11,875 - sqlalchemy.engine.Engine - INFO - COMMIT
-2024-11-16 19:13:00,954 - app - INFO - Creating database and database tables...
-2024-11-16 19:13:00,959 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
-2024-11-16 19:13:00,959 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
-2024-11-16 19:13:00,960 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
-2024-11-16 19:13:00,963 - sqlalchemy.engine.Engine - INFO - COMMIT
-2024-11-16 19:14:54,398 - app - INFO - Creating database and database tables...
-2024-11-16 19:14:54,404 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
-2024-11-16 19:14:54,405 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
-2024-11-16 19:14:54,405 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
-2024-11-16 19:14:54,409 - sqlalchemy.engine.Engine - INFO - COMMIT
-2024-11-16 19:17:52,612 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
-Traceback (most recent call last):
-  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
-    version = _bcrypt.__about__.__version__
-              ^^^^^^^^^^^^^^^^^
-AttributeError: module 'bcrypt' has no attribute '__about__'
-2024-11-16 19:26:36,782 - app - INFO - Creating database and database tables...
-2024-11-16 19:26:36,788 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
-2024-11-16 19:26:36,788 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
-2024-11-16 19:26:36,789 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
-2024-11-16 19:26:36,792 - sqlalchemy.engine.Engine - INFO - COMMIT
-2024-11-16 19:29:08,872 - app - INFO - Creating database and database tables...
-2024-11-16 19:29:08,877 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
-2024-11-16 19:29:08,877 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
-2024-11-16 19:29:08,878 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
-2024-11-16 19:29:08,881 - sqlalchemy.engine.Engine - INFO - COMMIT
-2024-11-16 19:31:17,066 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
-Traceback (most recent call last):
-  File "/usr/local/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
-    version = _bcrypt.__about__.__version__
-              ^^^^^^^^^^^^^^^^^
-AttributeError: module 'bcrypt' has no attribute '__about__'
-2024-11-16 19:40:33,181 - app - INFO - Creating database and database tables...
-2024-11-16 19:40:33,186 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
-2024-11-16 19:40:33,186 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
-2024-11-16 19:40:33,187 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
-2024-11-16 19:40:33,191 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-31 22:59:11,680 - app - INFO - Creating database and database tables...
+2025-01-31 22:59:11,687 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-31 22:59:11,687 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-01-31 22:59:11,688 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-31 22:59:11,694 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("posts")
+2025-01-31 22:59:11,695 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-31 22:59:11,699 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("media")
+2025-01-31 22:59:11,700 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-31 22:59:11,729 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("Likes")
+2025-01-31 22:59:11,729 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-31 22:59:11,732 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("Comments")
+2025-01-31 22:59:11,733 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-31 22:59:11,736 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("FollowingAndFolowees")
+2025-01-31 22:59:11,736 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-31 22:59:11,740 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("Links")
+2025-01-31 22:59:11,741 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-31 22:59:11,744 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("Chats")
+2025-01-31 22:59:11,744 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-31 22:59:11,747 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("Messages")
+2025-01-31 22:59:11,748 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-31 22:59:11,751 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("Cart")
+2025-01-31 22:59:11,752 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-31 22:59:11,754 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("SellerStats")
+2025-01-31 22:59:11,755 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-31 22:59:11,757 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-01-31 22:59:43,638 - app - INFO - Creating database and database tables...
+2025-01-31 22:59:43,655 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-01-31 22:59:43,657 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("users")
+2025-01-31 22:59:43,658 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-31 22:59:43,669 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("posts")
+2025-01-31 22:59:43,670 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-31 22:59:43,674 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("media")
+2025-01-31 22:59:43,675 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-31 22:59:43,681 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("Likes")
+2025-01-31 22:59:43,681 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-31 22:59:43,687 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("Comments")
+2025-01-31 22:59:43,687 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-31 22:59:43,692 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("FollowingAndFolowees")
+2025-01-31 22:59:43,693 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-31 22:59:43,697 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("Links")
+2025-01-31 22:59:43,698 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-31 22:59:43,703 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("Chats")
+2025-01-31 22:59:43,703 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-31 22:59:43,708 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("Messages")
+2025-01-31 22:59:43,708 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-31 22:59:43,710 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("Cart")
+2025-01-31 22:59:43,710 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-31 22:59:43,713 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("SellerStats")
+2025-01-31 22:59:43,713 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-01-31 22:59:43,715 - sqlalchemy.engine.Engine - INFO - COMMIT

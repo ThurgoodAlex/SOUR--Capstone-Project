@@ -20,27 +20,9 @@ from SOCIAL import (
 )
 
 
-# Create logs directory if it doesn't exist
-os.makedirs('logs', exist_ok=True)
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('logs/app.log'),
-        logging.StreamHandler()
-    ]
-)
-
-# Create logger instance
-logger = logging.getLogger(__name__)
-
 @asynccontextmanager
 async def lifespan(app:FastAPI):
-    logger.info("Creating database and database tables...")
     create_db_and_tables()
-    
     yield 
 
 

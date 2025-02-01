@@ -21,16 +21,6 @@ from PRISM import auth_get_current_user
 from databaseAndSchemas import *
 
 
-SessionDep = Annotated[Session, Depends(get_session)]
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('logs/users.log'),
-        logging.StreamHandler()
-    ]
-)
-logger = logging.getLogger(__name__)
 localstack_endpoint = os.environ.get('LOCALSTACK_ENDPOINT', 'http://localstack:4566')
 lambda_client = boto3.client('lambda', endpoint_url=localstack_endpoint, 
                              region_name='us-west-1',  # match with CDK stack region

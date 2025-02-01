@@ -14,20 +14,16 @@ from fastapi.security import (
     OAuth2PasswordBearer,
     OAuth2PasswordRequestForm,
 )
-
 from databaseAndSchemas.test_db import get_session
-
-SessionDep = Annotated[Session, Depends(get_session)]
-
 from databaseAndSchemas.schema import(
-    UserInDB, UserRegistration, User, UserLogin, AccessToken, Claims
+    UserInDB,
+    UserRegistration,
+    User, 
+    UserLogin, 
+    AccessToken, 
+    Claims
 )
 from databaseAndSchemas.mappings.userMapping import *
-
-
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
-
 from .prism_exceptions import(
     AuthException, 
     InvalidCredentials, 
@@ -35,20 +31,15 @@ from .prism_exceptions import(
     ExpiredToken,
     InvalidToken
 ) 
+SessionDep = Annotated[Session, Depends(get_session)]
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 jwt_key = str(os.environ.get("JWT_KEY"))
 jwt_alg = "HS256"
 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token/")
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
-
-class TokenRequest(BaseModel):
-    username: str
-    password: str
-    grant_type: str = "password"
-
-auth_router = APIRouter( tags=["Authentication"])
+auth_router = APIRouter(tags=["Authentication"])
 access_token_duration = 3600 
 
 localstack_endpoint = os.environ.get('LOCALSTACK_ENDPOINT', 'http://localstack:4566')
@@ -56,8 +47,6 @@ lambda_client = boto3.client('lambda', endpoint_url=localstack_endpoint,
                              region_name='us-west-1',  # match with CDK stack region
                              aws_access_key_id='test',
                              aws_secret_access_key='test')
-
-
 
 
 @auth_router.post("/createuser/", response_model=User, status_code=201)
@@ -109,18 +98,21 @@ def check_email(newUser, session):
     result = session.exec(select(UserInDB.email).where(UserInDB.email == newUser.email))
     return result.first() is not None
 
-
 @auth_router.post("/token/", response_model=AccessToken, status_code=200)
 def get_access_token(
     token_request: OAuth2PasswordRequestForm = Depends(), 
     session: Session = Depends(get_session)
 ):
     """Get access token for user."""
-    
-    # Authenticate the user with the provided credentials
     user = get_authenticated_user(session, token_request)
-    return build_access_token(user)
-
+    expiration = int(datetime.now(timezone.utc).timestamp()) + access_token_duration
+    claims = Claims(sub=str(user.id), exp=expiration)
+    access_token = jwt.encode(claims.model_dump(), key=jwt_key, algorithm=jwt_alg)
+    return AccessToken(
+        access_token=access_token,
+        token_type="bearer",
+        expires_in=access_token_duration,
+    )
 
 def auth_get_current_user(token: str = Depends(oauth2_scheme),
                           session: Session = Depends(get_session)) -> UserInDB:
@@ -133,7 +125,6 @@ def auth_get_current_user(token: str = Depends(oauth2_scheme),
     except Exception:
         raise HTTPException(status_code=401, detail="Not authenticated")
 
-
 def get_authenticated_user(session: Session,
                            token_request: TokenRequest) -> UserInDB:
     """Authenticating User"""
@@ -145,22 +136,9 @@ def get_authenticated_user(session: Session,
         raise InvalidCredentials()
     return user
 
-def build_access_token(user: UserInDB) -> AccessToken:
-    """Building access token for user"""
-    expiration = int(datetime.now(timezone.utc).timestamp()) + access_token_duration
-    claims = Claims(sub=str(user.id), exp=expiration)
-    access_token = jwt.encode(claims.model_dump(), key=jwt_key, algorithm=jwt_alg)
-
-    return AccessToken(
-        access_token=access_token,
-        token_type="bearer",
-        expires_in=access_token_duration,
-    )
-
-
 def decode_access_token(token: str, session: Session) -> UserInDB:
     """Decoding access token for user"""
-    logger.info("Attempting to decode the token.")
+    logger.debug("Attempting to decode the token.")
     
     # Log the token (be cautious when logging sensitive information in a production environment)
     logger.debug(f"Token received for decoding: {token[:50]}...")  # Log only part of the token for privacy reasons
