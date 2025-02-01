@@ -1,11 +1,10 @@
-# Use Ubuntu as the base image
 FROM ubuntu:20.04
 
 # Avoid prompts from apt
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Set the working directory
-WORKDIR /app/infrastructure
+WORKDIR /app
 
 # Update and install dependencies
 RUN apt-get update && apt-get install -y \
@@ -26,14 +25,23 @@ RUN pip3 install awscli awscli-local
 # Copy package.json and package-lock.json (if available)
 COPY package*.json ./
 
+# Install dependencies
+RUN npm install
+
+# Install cdk dependencies 
+RUN npm install -g aws-cdk-local aws-cdk
+
 # Copy the rest of your CDK code
 COPY . .
 
+# Compile TypeScript to JavaScript
+RUN npm run build
+
 #Configuring a custom profile
 RUN mkdir /root/.aws && \
-  echo "[profile localstack]\nregion=us-west-1\noutput=json\nendpoint_url = http://localstack:4566" > /root/.aws/config && \
+  echo "[profile localstack]\nregion=us-west-2\noutput=json\nendpoint_url = http://localstack:4566" > /root/.aws/config && \
   echo "[localstack]\naws_access_key_id=test\naws_secret_access_key=test" > /root/.aws/credentials
 
-RUN chmod +x deploy.sh 
-
-ENTRYPOINT [ "./deploy.sh" ]
+# Set the default command
+ENTRYPOINT ["tail"]
+CMD ["-f","/dev/null"]
