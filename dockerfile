@@ -14,7 +14,6 @@ RUN apt-get update && apt-get install -y \
     gnupg \
     python3 \
     python3-pip \
-    python3-venv \
     vim \
     git \
     && rm -rf /var/lib/apt/lists/*
@@ -22,13 +21,6 @@ RUN apt-get update && apt-get install -y \
 # Install Node.js
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs
-
-# Install AWS CLI and LocalStack
-RUN pip3 install awscli awscli-local
-
-# Create a Python virtual environment
-RUN python3 -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
 
 # Set up AWS configuration
 RUN mkdir /root/.aws && \
