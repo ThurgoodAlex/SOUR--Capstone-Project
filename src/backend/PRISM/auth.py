@@ -37,7 +37,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 jwt_key = str(os.environ.get("JWT_KEY"))
 jwt_alg = "HS256"
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token/")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token/")
 
 auth_router = APIRouter(tags=["Authentication"])
 access_token_duration = 3600 
@@ -138,7 +138,7 @@ def get_authenticated_user(session: Session,
 
 def decode_access_token(token: str, session: Session) -> UserInDB:
     """Decoding access token for user"""
-    logger.debug("Attempting to decode the token.")
+    logger.info("Attempting to decode the token.")
     
     # Log the token (be cautious when logging sensitive information in a production environment)
     logger.debug(f"Token received for decoding: {token[:50]}...")  # Log only part of the token for privacy reasons
