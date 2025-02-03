@@ -158,14 +158,17 @@ export default function SelfProfileScreen() {
 
     return (
         <>
-            <Stack.Screen options={{ title: 'SelfProfileScreen' }} />
+            <Stack.Screen options={{
+                title: 'SelfProfileScreen',
+                headerLeft: () => "",
+                headerRight: () =>
+                    <Ionicons
+                        size={30}
+                        name="cog-outline"
+                        onPress={() => router.push('/SettingsScreen')}
+                    />
+            }}/>
             <View style={ScreenStyles.screen}>
-                <Ionicons
-                    size={32}
-                    style={{ position: 'absolute', top: 10, right: 10 }}
-                    name="settings"
-                    onPress={() => router.push('/SettingsScreen')}
-                />
                 <ProfileInfo user={user} />
                 <StatsBar user={user} statsUpdated={true}/>
                 <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} tab1={'Posts'} tab2={'Likes'} />

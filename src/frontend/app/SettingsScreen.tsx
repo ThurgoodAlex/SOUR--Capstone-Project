@@ -24,7 +24,7 @@ export default function SettingsScreen() {
                 console.log("User updated to seller:", result);
                 setUser((prevUser: User | null) => ({
                     ...prevUser!,
-                    isSeller: true, // Update the `isSeller` flag
+                    isSeller: true,
                     }));
             } else {
                 console.error("Unexpected response:", response);
@@ -35,31 +35,48 @@ export default function SettingsScreen() {
             Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
         } finally {
             setLoading(false);
+            router.replace("/SellerScreen");
         }
     };
 
     const unregisterSeller = async () => {
-        setLoading(true);
-        try {
-            const response = await api.put('/users/unregisterseller/');
-            
-            if (response.status === 200) {
-                const result = await response.json();
-                console.log("User unregistered as seller:", result);
-                setUser((prevUser: User | null) => ({
-                    ...prevUser!,
-                    isSeller: false, // Update the `isSeller` flag
-                    }));
-            } else {
-                console.error("Unexpected response:", response);
-                Alert.alert('Error', 'Failed to update user.');
-            }
-        } catch (error) {
-            console.error('Error unregistering seller:', error);
-            Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
-        } finally {
-            setLoading(false);
-        }
+        Alert.alert(
+            'Unregister as a Seller',
+            'Are you sure you want to unregister as a seller?',
+            [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Confirm',
+                    onPress: async () => {
+                        setLoading(true);
+                        try {
+                            const response = await api.put('/users/unregisterseller/');
+                            
+                            if (response.status === 200) {
+                                const result = await response.json();
+                                console.log("User unregistered as seller:", result);
+                                setUser((prevUser: User | null) => ({
+                                    ...prevUser!,
+                                    isSeller: false,
+                                    }));
+                            } else {
+                                console.error("Unexpected response:", response);
+                                Alert.alert('Error', 'Failed to update user.');
+                            }
+                        } catch (error) {
+                            console.error('Error unregistering seller:', error);
+                            Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
+                        } finally {
+                            setLoading(false);
+                        }
+                    }
+                }
+            ],
+            { cancelable: false }
+        );
     };
 
     const deleteAccount = async () => {
@@ -104,9 +121,16 @@ export default function SettingsScreen() {
             <Stack.Screen
                 options={{
                     title: "SettingsScreen",
+                    headerTitle: "Settings",
+                    headerRight: () => ""
                 }}
+                
             />
             <View style={ScreenStyles.screenCentered}>
+                <View style={{justifyContent: 'flex-start'}}>
+                    <Text style={TextStyles.p}>username: {user?.username}</Text>
+                    <Text style={TextStyles.p}>email: {user?.email}</Text>
+                </View>
                 <TouchableOpacity
                     style={Styles.buttonDark}
                     onPress={logout}
