@@ -9,7 +9,6 @@ import { useApi } from '@/context/api';
 import { NavBar } from '@/components/NavBar';
 import { StatsBar } from '@/components/StatsBar';
 import { Tabs } from '@/components/Tabs';
-import PostCarousel from '@/components/PostCarousel';
 import { Post } from '@/constants/Types';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -17,7 +16,6 @@ import { Ionicons } from '@expo/vector-icons';
 export default function SelfProfileScreen() {
 
     const {user} = useUser(); // Fetch user details
-    const { logout } = useAuth();
     const api = useApi();
     const [posts, setPosts] = useState<Post[]>([]);
     const [likedPosts, setLikedPosts] = useState<Post[]>([]);
@@ -162,13 +160,12 @@ export default function SelfProfileScreen() {
         <>
             <Stack.Screen options={{ title: 'SelfProfileScreen' }} />
             <View style={ScreenStyles.screen}>
-                <TouchableOpacity
-                    onPress={() => logout()}
-                    style={Styles.buttonDark}>
-                    <Text style={[TextStyles.uppercase, TextStyles.light]}>
-                        Logout
-                    </Text>
-                </TouchableOpacity>
+                <Ionicons
+                    size={32}
+                    style={{ position: 'absolute', top: 10, right: 10 }}
+                    name="settings"
+                    onPress={() => router.push('/SettingsScreen')}
+                />
                 <ProfileInfo user={user} />
                 <StatsBar user={user} statsUpdated={true}/>
                 <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} tab1={'Posts'} tab2={'Likes'} />
