@@ -170,7 +170,7 @@ export default function SelfProfileScreen() {
                     </Text>
                 </TouchableOpacity>
                 <ProfileInfo user={user} />
-                <StatsBar user={user}/>
+                <StatsBar user={user} statsUpdated={true}/>
                 <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} tab1={'Posts'} tab2={'Likes'} />
                 {activeTab === 'Posts' ? (
                     <PostsGrid posts={posts} />
