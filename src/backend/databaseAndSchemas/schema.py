@@ -20,6 +20,12 @@ class Claims(BaseModel):
     sub: str  # id of user
     exp: int  # unix timestamp
 
+class TokenRequest(BaseModel):
+    username: str
+    password: str
+    grant_type: str = "password"
+
+
 class Delete(BaseModel):
     message: str
 

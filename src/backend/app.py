@@ -7,38 +7,22 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from contextlib import asynccontextmanager
-from databaseAndSchemas.test_db import create_db_and_tables
-from databaseAndSchemas.schema import * 
-from PRISM.auth import auth_router
 from fastapi.openapi.utils import get_openapi
-
-from routes.media import media_router
-from routes.posts import posts_router
-from routes.chats import chats_router
-from routes.users import users_router
-
-
-# Create logs directory if it doesn't exist
-os.makedirs('logs', exist_ok=True)
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('logs/app.log'),
-        logging.StreamHandler()
-    ]
+from databaseAndSchemas import * 
+from PRISM import (
+    auth_router,
+    users_router
+)
+from SOCIAL import (
+    chats_router,
+    posts_router,
+    media_router
 )
 
-# Create logger instance
-logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app:FastAPI):
-    logger.info("Creating database and database tables...")
     create_db_and_tables()
-    
     yield 
 
 
@@ -63,7 +47,7 @@ app.include_router(chats_router, prefix="/chats")
 # Configure boto3 to use LocalStack
 localstack_endpoint = os.environ.get('LOCALSTACK_ENDPOINT', 'http://localstack:4566')
 lambda_client = boto3.client('lambda', endpoint_url=localstack_endpoint, 
-                             region_name='us-west-1',  # match with CDK stack region
+                             region_name='us-west-2',  # match with CDK stack region
                              aws_access_key_id='test',
                              aws_secret_access_key='test')
 @app.get("/")

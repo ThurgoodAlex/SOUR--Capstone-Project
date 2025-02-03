@@ -98,3 +98,5 @@ def test_login_invalid_password(client, valid_user_data, user_login):
     response = client.post("/login", json=duplicate_data)
     data = response.json()
     assert response.status_code == 401
+
+def test_auth

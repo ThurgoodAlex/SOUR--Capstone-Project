@@ -11,3 +11,5 @@ bcrypt==4.1.2
 python-multipart==0.0.17
 alembic==1.14.0
 pytest==8.3.4
+awscli==1.37.9
+awscli-local==0.22.0
