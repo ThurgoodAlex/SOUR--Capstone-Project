@@ -15,11 +15,12 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 
 db_path = os.path.join(current_dir, "test_sour.db")
 
+POSTGRES_URL = os.environ.get("DATABASE_URL", "postgresql://root:password123@db:5432/sour-db")
+
 engine = create_engine(
-    f"sqlite:///{db_path}",
+    POSTGRES_URL,
     pool_pre_ping=True,
     echo=True,
-    connect_args={"check_same_thread": False},
 )
 
 def create_db_and_tables():
