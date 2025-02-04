@@ -2,30 +2,71 @@ import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 import { Stack, router } from 'expo-router';
-import { useApi } from '@/context/api'; 
+import { useApi } from '@/context/api';
 import { useUser } from '@/context/user';
 import { useAuth } from '@/context/auth';
 import { User } from '@/constants/Types';
+import Collapsible from 'react-native-collapsible';
+import { Ionicons } from '@expo/vector-icons';
 
 
 export default function SettingsScreen() {
-    const {user, setUser} = useUser();
+    const { user, setUser } = useUser();
     const { logout } = useAuth();
     const [loading, setLoading] = useState(false);
+    const [newPassword, setNewPassword] = useState('');
+    const [oldPassword, setOldPassword] = useState('');
+    const [verified, setVerified] = useState(false);
+    const [isCollapsed, setIsCollapsed] = useState(true);
     const api = useApi();
+
+    const verifyPassword = async () => {
+        try {
+            const response = await api.post('/auth/verifypassword/', { oldPassword });
+
+            if (response.status === 200) {
+                console.log("Password verified successfully.");
+                setVerified(true);
+            } else {
+                console.error("Verification failed:", response);
+            }
+        } catch (error) {
+            console.error('Error verifying password:', error);
+        }
+    };
+
+    const changePassword = async () => {
+        try {
+            const response = await fetch('/auth/changepassword/', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ new_password: newPassword }),
+            });
+
+            if (response.status === 200) {
+                console.log("Password changed successfully.");
+            } else {
+                console.error("Password change failed:", response);
+            }
+        } catch (error) {
+            console.error('Error changing password:', error);
+        }
+    };
 
     const becomeSeller = async () => {
         setLoading(true);
         try {
             const response = await api.put('/users/becomeseller/');
-            
+
             if (response.status === 200) {
                 const result = await response.json();
                 console.log("User updated to seller:", result);
                 setUser((prevUser: User | null) => ({
                     ...prevUser!,
                     isSeller: true,
-                    }));
+                }));
             } else {
                 console.error("Unexpected response:", response);
                 Alert.alert('Error', 'Failed to update user to seller.');
@@ -54,14 +95,14 @@ export default function SettingsScreen() {
                         setLoading(true);
                         try {
                             const response = await api.put('/users/unregisterseller/');
-                            
+
                             if (response.status === 200) {
                                 const result = await response.json();
                                 console.log("User unregistered as seller:", result);
                                 setUser((prevUser: User | null) => ({
                                     ...prevUser!,
                                     isSeller: false,
-                                    }));
+                                }));
                             } else {
                                 console.error("Unexpected response:", response);
                                 Alert.alert('Error', 'Failed to update user.');
@@ -93,7 +134,7 @@ export default function SettingsScreen() {
                     onPress: async () => {
                         try {
                             const response = await api.put('/users/deleteuser/');
-                            
+
                             if (response.status === 200) {
                                 const result = await response.json();
                                 console.log("User account deleted:", result);
@@ -114,7 +155,7 @@ export default function SettingsScreen() {
             { cancelable: false }
         );
     };
-    
+
 
     return (
         <>
@@ -124,12 +165,69 @@ export default function SettingsScreen() {
                     headerTitle: "Settings",
                     headerRight: () => ""
                 }}
-                
+
             />
             <View style={ScreenStyles.screenCentered}>
-                <View style={{justifyContent: 'flex-start'}}>
-                    <Text style={TextStyles.p}>username: {user?.username}</Text>
-                    <Text style={TextStyles.p}>email: {user?.email}</Text>
+                <View style={{ justifyContent: 'flex-start' }}>
+                    <Text style={TextStyles.dark}>username: {user?.username}</Text>
+                    <Text style={TextStyles.dark}>email: {user?.email}</Text>
+                    <TouchableOpacity
+                        style={Styles.collapsibleLight}
+                        onPress={() => setIsCollapsed(!isCollapsed)}
+                        disabled={loading}
+                    >
+                        <Text style={TextStyles.dark}>Reset Password</Text>
+                        {isCollapsed ? (
+                            <Ionicons style={TextStyles.dark} size={16} name='chevron-forward-outline' />
+                        ) : (
+                            <Ionicons style={TextStyles.dark} size={16} name='chevron-down-outline' />
+                        )}
+                    </TouchableOpacity>
+                    <Collapsible style={[Styles.column, { borderColor: '#d8ccaf60' }]} collapsed={isCollapsed}>
+                        <Text style={TextStyles.dark}>Verify Password:</Text>
+                        <TextInput
+                            style={Styles.input}
+                            placeholder="Password"
+                            value={oldPassword}
+                            onChangeText={setOldPassword}
+                        />
+                        <TouchableOpacity
+                            style={[
+                                Styles.buttonDark,
+                                (loading || !oldPassword.trim()) && Styles.buttonDisabled,
+                            ]}
+                            onPress={() => verifyPassword()}
+                            disabled={loading || !oldPassword.trim()}
+                        >
+                            {loading ? (
+                                <ActivityIndicator color="#ffffff" />
+                            ) : (
+                                <Text style={TextStyles.light}>Verify</Text>
+                            )}
+                        </TouchableOpacity>
+                        <Text style={TextStyles.dark}>New Password:</Text>
+                        <TextInput
+                            style={Styles.input}
+                            placeholder="Password"
+                            value={newPassword}
+                            onChangeText={setNewPassword}
+                            editable={verified}
+                        />
+                        <TouchableOpacity
+                            style={[
+                                Styles.buttonDark,
+                                (loading || !newPassword.trim()) && Styles.buttonDisabled,
+                            ]}
+                            onPress={changePassword}
+                            disabled={loading || !newPassword.trim()}
+                        >
+                            {loading ? (
+                                <ActivityIndicator color="#ffffff" />
+                            ) : (
+                                <Text style={TextStyles.light}>Confirm</Text>
+                            )}
+                        </TouchableOpacity>
+                    </Collapsible>
                 </View>
                 <TouchableOpacity
                     style={Styles.buttonDark}
@@ -144,9 +242,9 @@ export default function SettingsScreen() {
                 </TouchableOpacity>
                 {user?.isSeller ? (
                     <TouchableOpacity
-                    style={Styles.buttonDark}
-                    onPress={unregisterSeller}
-                    disabled={loading}
+                        style={Styles.buttonDark}
+                        onPress={unregisterSeller}
+                        disabled={loading}
                     >
                         {loading ? (
                             <ActivityIndicator color="#ffffff" />
@@ -156,9 +254,9 @@ export default function SettingsScreen() {
                     </TouchableOpacity>
                 ) : (
                     <TouchableOpacity
-                    style={Styles.buttonDark}
-                    onPress={becomeSeller}
-                    disabled={loading}
+                        style={Styles.buttonDark}
+                        onPress={becomeSeller}
+                        disabled={loading}
                     >
                         {loading ? (
                             <ActivityIndicator color="#ffffff" />
