@@ -227,7 +227,7 @@ function PostPreview({ post }: { post: Post }) {
     return (
         <View key={post.id} style={containerStyle}>
             <TouchableOpacity
-                onPress={() => router.push(`/ListingInfoScreen/${post.id}`)}
+                onPress={() => router.push(`/PostInfoScreen/${post.id}`)}
                 style={{ flex: 1, margin: 5 }}
                 disabled={isSold} // Disable interaction if sold
             >

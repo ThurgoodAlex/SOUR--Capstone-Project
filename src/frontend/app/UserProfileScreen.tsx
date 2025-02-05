@@ -185,7 +185,7 @@ function PostPreview({ post }: { post: Post }) {
     return (
         <View key={post.id} style={[Styles.column, { marginBottom: 1 }]}>
             <TouchableOpacity
-                onPress={() => router.push(`/ListingInfoScreen/${post.id}`)} // Navigate on press
+                onPress={() => router.push(`/PostInfoScreen/${post.id}`)} // Navigate on press
                 style={{ flex: 1, margin: 5 }} // Add styles for spacing
             >
                 <ImageBackground source={post.coverImage} style={{ height: 150, width: 150 }}>

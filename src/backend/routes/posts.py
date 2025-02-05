@@ -220,19 +220,34 @@ def create_new_link(session: Annotated[Session, Depends(get_session)],
         raise EntityNotFound("post", post_id)
     
 
-@posts_router.get('/{post_id}/links/', response_model= list[Link], status_code=200)
-def get_all_links_by_post_id(session :Annotated[Session, Depends(get_session)],
+    
+    
+@posts_router.get('/{post_id}/links/', response_model=list[Post], status_code=200)
+def get_all_links_by_post_id(session: Annotated[Session, Depends(get_session)],
                              post_id: int,
-                             current_user: UserInDB = Depends(auth_get_current_user))-> list[Link]:
+                             current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
+    
     post = session.get(PostInDB, post_id)
-    if post:
-        if post.isListing:
-            links_in_db = session.exec(select(LinkInDB).where(LinkInDB.listingID == post_id)).all()
-        else:
-            links_in_db = session.exec(select(LinkInDB).where(LinkInDB.postID == post_id)).all()
-        return [Link(**link.model_dump()) for link in links_in_db]
-    else:
+    if not post:
         raise EntityNotFound("post", post_id)
+    
+    if post.isListing:
+        links_query = select(LinkInDB).where(LinkInDB.listingID == post_id)
+        links_in_db = session.exec(links_query).all()
+        post_ids = [link.postID for link in links_in_db]
+       
+    
+    else:
+        links_query = select(LinkInDB).where(LinkInDB.postID == post_id)
+        links_in_db = session.exec(links_query).all()
+        post_ids = [link.listingID for link in links_in_db]
+   
+
+    posts_query = select(PostInDB).where(PostInDB.id.in_(post_ids))
+    posts = session.exec(posts_query).all()
+    
+    return [Post(**post.model_dump()) for post in posts]
+
     
 
 @posts_router.post('/{post_id}/like/', response_model= Like, status_code=201)
