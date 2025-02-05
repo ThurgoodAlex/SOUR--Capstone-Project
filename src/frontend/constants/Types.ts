@@ -71,4 +71,7 @@ export type CartItemProps = {
   };
 
 
+export type CartButtonProps = {
+      listingID: number;
+  };
   
