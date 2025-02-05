@@ -7,15 +7,18 @@ import { Post, Stats, User } from '@/constants/Types';
 import { router } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useUser } from '@/context/user';
+import { usePosts } from '@/hooks/usePosts';
 
 export function RegisteredSeller() {
     const api = useApi();
     const { user, setUser } = useUser();
     const [activeTab, setActiveTab] = useState('Active Listings');
     
-    const [posts, setPosts] = useState<Post[]>([]);
     const [earnings, setEarnings] = useState(0.00);
     const [soldItems, setSoldItems] = useState(0);
+
+    const { posts, loading, error } = usePosts(`/users/${user?.id}/posts/issold=false/`);
+    
 
     const fetchStats = async () => {
         try {
@@ -38,124 +41,20 @@ export function RegisteredSeller() {
         }
     };
 
-
-    const dummyImages = [
-        require('../assets/images/video.png'),
-        require('../assets/images/post.png'),
-        require('../assets/images/sweater1.png'),
-        require('../assets/images/listing2.png'),
-        require('../assets/images/listing.png'),
-        require('../assets/images/random1.png'),
-        require('../assets/images/random2.png'),
-        require('../assets/images/random3.png'),
-        require('../assets/images/random4.png'),
-        require('../assets/images/random5.png'),
-    ];
-
-    const fetchListings = async () =>
-    {
-        try {
-            //TODO: make route for getting listings only
-            let endpoint = `/users/${user?.id}/posts/issold=false/`;
-            const response = await api.get(endpoint);
-            const result = await response.json();
-            console.log(result)
-        
-            if (response.ok) {
-                const getRandomImage = () =>
-                    dummyImages[Math.floor(Math.random() * dummyImages.length)];
-            
-                const transformedPosts: Post[] = await Promise.all(
-                    result.map(async (item: any) => {
-                    return {
-                        id: item.id,
-                        createdDate: item.created_at || new Date().toISOString(),
-                        coverImage: getRandomImage(),
-                        title: item.title,
-                        description: item.description,
-                        brand: item.brand,
-                        condition: item.condition,
-                        size: item.size,
-                        gender: item.gender,
-                        price: item.price,
-                        isSold: item.isSold,
-                        isListing: item.isListing,
-                        seller: user
-                    };
-                    })
-                );
-            
-                console.log(`Received posts from ${endpoint}:`, transformedPosts);
-                setPosts(transformedPosts);
-            } else {
-            console.log(response);
-            throw new Error('Could not fetch posts.');
-            }
-        } catch (error) {
-            console.error('Error fetching posts:', error);
-            throw new Error('Failed to connect to the server.');
-        }
-    }
-
-    const fetchSoldListings = async () =>
-    {
-        try {
-            //TODO: make this router under the user router instead
-            let endpoint = `/users/${user?.id}/posts/issold=true/`;
-            const response = await api.get(endpoint);
-            const result = await response.json();
-            console.log(result)
-        
-            if (response.ok) {
-                const getRandomImage = () =>
-                    dummyImages[Math.floor(Math.random() * dummyImages.length)];
-            
-                const transformedPosts: Post[] = await Promise.all(
-                    result.map(async (item: any) => {
-                    return {
-                        id: item.id,
-                        createdDate: item.created_at || new Date().toISOString(),
-                        coverImage: getRandomImage(),
-                        title: item.title,
-                        description: item.description,
-                        brand: item.brand,
-                        condition: item.condition,
-                        size: item.size,
-                        gender: item.gender,
-                        price: item.price,
-                        isSold: item.isSold,
-                        isListing: item.isListing,
-                        seller: user
-                    };
-                    })
-                );
-            
-                console.log(`Received posts from ${endpoint}:`, transformedPosts);
-                setPosts(transformedPosts);
-            } else {
-            console.log(response);
-            throw new Error('Could not fetch posts.');
-            }
-        } catch (error) {
-            console.error('Error fetching posts:', error);
-            throw new Error('Failed to connect to the server.');
-        }
-    }
-    
-
     // Fetch posts on page load
     useEffect(() => {
         fetchStats();
-        if (activeTab === 'Active Listings') {
-            fetchListings();
-        }
-        else {
-            fetchSoldListings();
-        }
+        handleTabSwitch('Active Listings');
     }, [activeTab]);
 
     const handleTabSwitch = (tab: string) => {
         setActiveTab(tab);
+        if (tab === 'Active Listings') {
+            const { posts, loading, error } = usePosts(`/users/${user?.id}/posts/issold=false/`);
+        }
+        else {
+            const { posts, loading, error } = usePosts(`/users/${user?.id}/posts/issold=true/`);
+        }
     };
 
     const formattedEarnings = new Intl.NumberFormat('en-US', {

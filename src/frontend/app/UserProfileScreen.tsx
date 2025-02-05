@@ -10,6 +10,7 @@ import { Post, User } from '@/constants/Types';
 import { useSearchParams } from 'expo-router/build/hooks';
 import { Ionicons } from '@expo/vector-icons';
 import { useUser } from '@/context/user';
+import { usePosts } from '@/hooks/usePosts';
 
 export default function UserProfileScreen() {
     const searchParams = useSearchParams(); // Retrieve query parameters
@@ -17,23 +18,11 @@ export default function UserProfileScreen() {
     const api = useApi();
     const {user} = useUser();
     const targetUser: User | null = userParam ? JSON.parse(userParam) : null;
-    const [posts, setPosts] = useState<Post[]>([]);
     const [isFollowing, setIsFollowing] = useState<boolean>();
     const [statsUpdated, setStatsUpdated] = useState(false);
 
-    const dummyImages = [
-        require('../assets/images/video.png'),
-        require('../assets/images/post.png'),
-        require('../assets/images/sweater1.png'),
-        require('../assets/images/listing2.png'),
-        require('../assets/images/listing.png'),
-        require('../assets/images/random1.png'),
-        require('../assets/images/random2.png'),
-        require('../assets/images/random3.png'),
-        require('../assets/images/random4.png'),
-        require('../assets/images/random5.png'),
-    ];
-
+    const { posts, loading, error } = usePosts(`/users/${user?.id}/posts/`);
+    
     const follow = async () => {
         try {
             const getFollowingResponse = await api.get(`/users/${user?.id}/following/`);
@@ -84,50 +73,7 @@ export default function UserProfileScreen() {
             }
         };
         checkIfFollowing();
-
-        const fetchPosts = async () => {
-            try {
-                let endpoint = `/users/${targetUser?.id}/posts/`;
-                const response = await api.get(endpoint);
-                const result = await response.json();
-                console.log(result)
-    
-                if (response.ok) {
-                    const getRandomImage = () =>
-                        dummyImages[Math.floor(Math.random() * dummyImages.length)];
-    
-                    const transformedPosts: Post[] = await Promise.all(
-                        result.map(async (item: any) => {
-                            return {
-                                id: item.id,
-                                createdDate: item.created_at || new Date().toISOString(),
-                                coverImage: getRandomImage(),
-                                title: item.title,
-                                description: item.description,
-                                brand: item.brand,
-                                condition: item.condition,
-                                size: item.size,
-                                gender: item.gender,
-                                price: item.price,
-                                isSold: item.isSold,
-                                isListing: item.isListing,
-                                seller: targetUser
-                            };
-                        })
-                    );
-    
-                    console.log(`Received posts from ${endpoint}:`, transformedPosts);
-                    setPosts(transformedPosts);
-                } else {
-                    console.log(response);
-                    throw new Error('Could not fetch posts.');
-                }
-            } catch (error) {
-                console.error('Error fetching posts:', error);
-                throw new Error('Failed to connect to the server.');
-            }
-        };
-        fetchPosts();
+          
     }, []);
 
 
