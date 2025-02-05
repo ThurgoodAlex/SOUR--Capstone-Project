@@ -24,7 +24,7 @@ export default function SettingsScreen() {
         try {
             const response = await api.post('/auth/verifypassword/', { oldPassword });
 
-            if (response.status === 200) {
+            if (response.ok) {
                 console.log("Password verified successfully.");
                 setVerified(true);
             } else {
@@ -45,7 +45,7 @@ export default function SettingsScreen() {
                 body: JSON.stringify({ new_password: newPassword }),
             });
 
-            if (response.status === 200) {
+            if (response.ok) {
                 console.log("Password changed successfully.");
             } else {
                 console.error("Password change failed:", response);
@@ -60,7 +60,7 @@ export default function SettingsScreen() {
         try {
             const response = await api.put('/users/becomeseller/');
 
-            if (response.status === 200) {
+            if (response.ok) {
                 const result = await response.json();
                 console.log("User updated to seller:", result);
                 setUser((prevUser: User | null) => ({
@@ -96,7 +96,7 @@ export default function SettingsScreen() {
                         try {
                             const response = await api.put('/users/unregisterseller/');
 
-                            if (response.status === 200) {
+                            if (response.ok) {
                                 const result = await response.json();
                                 console.log("User unregistered as seller:", result);
                                 setUser((prevUser: User | null) => ({
@@ -135,7 +135,7 @@ export default function SettingsScreen() {
                         try {
                             const response = await api.put('/users/deleteuser/');
 
-                            if (response.status === 200) {
+                            if (response.ok) {
                                 const result = await response.json();
                                 console.log("User account deleted:", result);
                                 router.replace("/SignUpScreen");
