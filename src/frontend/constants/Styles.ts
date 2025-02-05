@@ -1,4 +1,3 @@
-import { Collapsible } from '@/components/Collapsible';
 import { StyleSheet } from 'react-native';
 
 const dark = '#692b20';

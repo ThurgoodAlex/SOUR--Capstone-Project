@@ -70,5 +70,10 @@ export type CartItemProps = {
     onDelete: (item: Post) => void;
   };
 
+export type ChatData = {
+    id: number;
+    sellerID: number;
+    recipientID: number;
+};
 
   

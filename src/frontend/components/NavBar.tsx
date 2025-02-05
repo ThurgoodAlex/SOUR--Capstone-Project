@@ -21,16 +21,17 @@ export function NavBar() {
         navBar: {
             flexDirection: 'row',
             justifyContent: 'space-around',
-            marginBottom: 16,
-            backgroundColor: '#f5f5f5',
+            padding: 16,
+            backgroundColor: '#d8ccaf',
         },
         icon: {
-            flexDirection: 'column'
+            flexDirection: 'column',
+            color: '#692b2060',
         },
         activeIcon: {
-            color: '#000',
+            color: '#692b20',
             borderTopWidth: 2,
-            borderTopColor: '#000',
+            borderTopColor: '#692b20',
         },
     });
 
@@ -66,11 +67,11 @@ export function NavBar() {
             <Ionicons
                 style={[
                     NavBarStyles.icon,
-                    pathname === '/MessagesScreen' && NavBarStyles.activeIcon,
+                    pathname === '/ChatsScreen' && NavBarStyles.activeIcon,
                 ]}
                 size={32}
                 name="chatbubbles"
-                onPress={() => handleNavigation('MessagesScreen')}
+                onPress={() => handleNavigation('ChatsScreen')}
             />
             <Ionicons
                 style={[
