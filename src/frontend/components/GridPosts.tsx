@@ -18,6 +18,7 @@ export const GridPosts: React.FC<GridPostsProps> = ({ posts }) => {
                         key={post.id}
                         post={post}
                         size={175}
+                        thumbnailSize='small'
                     />
                 ))}
             </View>

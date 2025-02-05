@@ -9,7 +9,6 @@ import { useApi } from '@/context/api';
 import { NavBar } from '@/components/NavBar';
 import { StatsBar } from '@/components/StatsBar';
 import { Tabs } from '@/components/Tabs';
-import PostCarousel from '@/components/PostCarousel';
 import { Post } from '@/constants/Types';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -17,7 +16,6 @@ import { Ionicons } from '@expo/vector-icons';
 export default function SelfProfileScreen() {
 
     const {user} = useUser(); // Fetch user details
-    const { logout } = useAuth();
     const api = useApi();
     const [posts, setPosts] = useState<Post[]>([]);
     const [likedPosts, setLikedPosts] = useState<Post[]>([]);
@@ -160,17 +158,19 @@ export default function SelfProfileScreen() {
 
     return (
         <>
-            <Stack.Screen options={{ title: 'SelfProfileScreen' }} />
+            <Stack.Screen options={{
+                title: 'SelfProfileScreen',
+                headerLeft: () => "",
+                headerRight: () =>
+                    <Ionicons
+                        size={30}
+                        name="cog-outline"
+                        onPress={() => router.push('/SettingsScreen')}
+                    />
+            }}/>
             <View style={ScreenStyles.screen}>
-                <TouchableOpacity
-                    onPress={() => logout()}
-                    style={Styles.buttonDark}>
-                    <Text style={[TextStyles.uppercase, TextStyles.light]}>
-                        Logout
-                    </Text>
-                </TouchableOpacity>
                 <ProfileInfo user={user} />
-                <StatsBar user={user}/>
+                <StatsBar user={user} statsUpdated={true}/>
                 <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} tab1={'Posts'} tab2={'Likes'} />
                 {activeTab === 'Posts' ? (
                     <PostsGrid posts={posts} />
@@ -227,7 +227,7 @@ function PostPreview({ post }: { post: Post }) {
     return (
         <View key={post.id} style={containerStyle}>
             <TouchableOpacity
-                onPress={() => router.push(`/ListingInfoScreen/${post.id}`)}
+                onPress={() => router.push(`/PostInfoScreen/${post.id}`)}
                 style={{ flex: 1, margin: 5 }}
                 disabled={isSold} // Disable interaction if sold
             >

@@ -1,5 +1,6 @@
 import os
 import sys
+from exceptions import AuthenticationFailed
 import boto3
 import logging
 from passlib.context import CryptContext
@@ -178,4 +179,24 @@ def decode_access_token(token: str, session: Session) -> UserInDB:
 @auth_router.get("/me/", response_model=User)
 def get_current_user(current_user: UserInDB = Depends(auth_get_current_user)):
     """Get current user."""
+    return map_user_db_to_response(current_user)
+
+@auth_router.post("/verifypassword/", status_code=200)
+def verify_password(password: str,
+                    session: Annotated[Session, Depends(get_session)],
+                    current_user: UserInDB = Depends(auth_get_current_user)):
+    """Verify user password"""
+    if not pwd_context.verify(password, current_user.hashed_password):
+        raise AuthenticationFailed
+    return {"message": "Password verified successfully"}
+
+@auth_router.put("/changepassword/", response_model=User, status_code=200)
+def change_password(new_password: str,
+                    session: Annotated[Session, Depends(get_session)],
+                    current_user: UserInDB = Depends(auth_get_current_user)):
+    """Change user password"""
+    current_user.hashed_password = pwd_context.hash(new_password)
+    session.add(current_user)
+    session.commit()
+    session.refresh(current_user)
     return map_user_db_to_response(current_user)

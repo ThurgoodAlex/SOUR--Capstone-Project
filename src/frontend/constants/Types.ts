@@ -64,7 +64,11 @@ export type ThemedTextProps = TextProps & {
     type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link';
 };
 
-
+export type CartItemProps = {
+    item: Post;
+    onPress: (item: Post) => void;
+    onDelete: (item: Post) => void;
+  };
 
 
   

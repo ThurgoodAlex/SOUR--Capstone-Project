@@ -1,6 +1,6 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Slot, Stack } from 'expo-router'; // Correct imports for expo-router
+import { router, Slot, Stack } from 'expo-router'; // Correct imports for expo-router
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
@@ -8,6 +8,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import { AuthProvider } from '@/context/auth'; // Adjust the path as needed
 import { UserProvider } from '@/context/user'; // Adjust the path as needed
+import { TouchableOpacity } from 'react-native';
 
 // Prevent splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -42,7 +43,11 @@ export default function RootLayout() {
                 backgroundColor: '#bde0eb', // Header background color
               },
               
-              headerRight: () => <Ionicons size={30} name="cart-outline" />, // Custom header icon
+              headerRight: () => (
+                <TouchableOpacity onPress={() => router.push('/CartScreen')}>
+                  <Ionicons size={30} name="cart-outline" color="#fff" />
+                </TouchableOpacity>
+              ),
               headerTintColor: '#fff', // Header text/icon color
               headerTitleStyle: {
                 fontWeight: 'bold', // Bold header title
@@ -59,7 +64,7 @@ export default function RootLayout() {
           />
 
           <Stack.Screen 
-            name="ProfileScreen" 
+            name="SelfProfileScreen" 
             options={{
               headerLeft: () => ""
             }} 
