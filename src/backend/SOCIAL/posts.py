@@ -154,7 +154,7 @@ def del_post_by_id(post_id : int,
     return Delete(message="Post deleted successfully.")
 
 
-@posts_router.get('/new', response_model= list[Post], )
+@posts_router.get('/new/', response_model= list[Post], )
 def get_newest_posts(session: Annotated[Session, Depends(get_session)], 
                   current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
     """Getting up to the 5 newest posts, ordered from newest to oldest."""
