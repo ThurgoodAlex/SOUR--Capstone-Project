@@ -37,7 +37,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 jwt_key = str(os.environ.get("JWT_KEY"))
 jwt_alg = "HS256"
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token/")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
 
 auth_router = APIRouter(tags=["Authentication"])
 access_token_duration = 3600 

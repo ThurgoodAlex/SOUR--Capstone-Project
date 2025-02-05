@@ -1,5 +1,10 @@
 import pytest
-from PRISM.tests.auth_tests_env_setup import engine_fixture, session_fixture, client_fixture, mock_logging
+from TestUtilites import (
+    engine_fixture, 
+    session_fixture, 
+    client_fixture
+)
+
 from PRISM.prism_exceptions import DuplicateUserRegistration
 from databaseAndSchemas.schema import(
     UserInDB 
@@ -99,4 +104,3 @@ def test_login_invalid_password(client, valid_user_data, user_login):
     data = response.json()
     assert response.status_code == 401
 
-def test_auth

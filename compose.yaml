@@ -11,6 +11,7 @@ services:
       - DATABASE_URL = "postgresql://root:password123@localhost:5432/sour-db"
     depends_on: 
       - localstack
+      - db
     volumes:
       - ./src/backend:/app/
     # develop:
