@@ -114,6 +114,16 @@ export class BackendInfrastructureStack extends cdk.Stack {
             },
         });
 
+        const getFilteredPostsLambda = new lambda.Function(this, 'GetFilteredPostsLambda', {
+            runtime: lambda.Runtime.PYTHON_3_8,
+            handler: 'lambda.post_handlers.get_filtered_posts_lambda',
+            code: lambda.Code.fromAsset(path.join(__dirname, '../../backend')),
+            functionName: 'get_filtered_posts_lambda',
+            environment: {
+                PYTHONPATH: '/var/task',
+            },
+        });
+
         // get newest post lambda
         const getNewestPostsLambda = new lambda.Function(this, 'GetNewestPostsLambda', {
             runtime: lambda.Runtime.PYTHON_3_8,
@@ -510,6 +520,7 @@ export class BackendInfrastructureStack extends cdk.Stack {
         const uploadPostIntegration = new apigateway.LambdaIntegration(uploadPostLambda);
         const uploadListingIntegration = new apigateway.LambdaIntegration(uploadListingLambda);
         const getAllPostsIntegration = new apigateway.LambdaIntegration(getAllPostsLambda);
+        const getFilteredPostsIntegration = new apigateway.LambdaIntegration(getFilteredPostsLambda);
         const getNewestPostsIntegration = new apigateway.LambdaIntegration(getNewestPostsLambda);
         const getPostsByUserIntegration = new apigateway.LambdaIntegration(getPostsByUserLambda);
         const getPostByIdIntegration = new apigateway.LambdaIntegration(getPostingByIdLambda);
@@ -592,6 +603,9 @@ export class BackendInfrastructureStack extends cdk.Stack {
 
         const getAllPostsResource = api.root.addResource('getAllPosts');
         getAllPostsResource.addMethod('GET', getAllPostsIntegration);
+
+        const getFilteredPostsResource = api.root.addResource('getFilteredPosts');
+        getFilteredPostsResource.addMethod('GET', getFilteredPostsIntegration);
 
         const getNewestPostsResource = api.root.addResource('getNewestPosts');
         getNewestPostsResource.addMethod('GET', getNewestPostsIntegration);
