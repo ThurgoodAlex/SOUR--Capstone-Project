@@ -4,111 +4,40 @@ import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 import { User } from '@/constants/Types';
 import { useApi } from '@/context/api';
 
-export function StatsBar({user} : {user : User | null}) {
+export function StatsBar({ user, statsUpdated }: { user: User | null; statsUpdated: boolean }) {
     const api = useApi();
     const [sales, setSales] = useState(0);
     const [posts, setPosts] = useState(0);
     const [followers, setFollowers] = useState(0);
     const [following, setFollowing] = useState(0);
 
-    const fetchUserSales = async () => {
+    const fetchUserStats = async () => {
         try {
-            const response = await api.get(`/users/${user?.id}/posts/issold=true/`);
-            const result = await response.json();
+            const [salesResponse, postsResponse, followersResponse, followingResponse] = await Promise.all([
+                api.get(`/users/${user?.id}/posts/issold=true/`),
+                api.get(`/users/${user?.id}/posts/`),
+                api.get(`/users/${user?.id}/followers/`),
+                api.get(`/users/${user?.id}/following/`)
+            ]);
 
-            if (response.ok) {
-                console.log("Received all sales: ", result);
-                
-                const count = result.length;
-                console.log("Number of sales received:", count);
-
-                setSales(count)
-
+            if (salesResponse.ok && postsResponse.ok && followersResponse.ok && followingResponse.ok) {
+                setSales((await salesResponse.json()).length);
+                setPosts((await postsResponse.json()).length);
+                setFollowers((await followersResponse.json()).length);
+                setFollowing((await followingResponse.json()).length);
             } else {
-                console.log(response);
-                Alert.alert('Error', 'Could not fetch sales.');
+                Alert.alert('Error', 'Failed to fetch stats.');
             }
         } catch (error) {
-            console.error('Error fetching sales:', error);
-            Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
-        }
-    };
-
-    const fetchUserPosts = async () => {
-        try {
-            const response = await api.get(`/users/${user?.id}/posts/`);
-            const result = await response.json();
-
-            if (response.ok) {
-                console.log("Received all posts: ", result);
-                
-                const count = result.length;
-                console.log("Number of posts received:", count);
-
-                setPosts(count)
-
-            } else {
-                console.log(response);
-                Alert.alert('Error', 'Could not fetch posts.');
-            }
-        } catch (error) {
-            console.error('Error fetching posts:', error);
-            Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
-        }
-    };
-
-    const fetchUserFollowers = async () => {
-        try {
-            const response = await api.get(`/users/${user?.id}/followers/`);
-            const result = await response.json();
-
-            if (response.ok) {
-                console.log("Received all followers: ", result);
-                
-                const count = result.length;
-                console.log("Number of followers received:", count);
-
-                setFollowers(count)
-
-            } else {
-                console.log(response);
-                Alert.alert('Error', 'Could not fetch followers.');
-            }
-        } catch (error) {
-            console.error('Error fetching followers:', error);
-            Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
-        }
-    };
-
-    const fetchUserFollowing = async () => {
-        try {
-            const response = await api.get(`/users/${user?.id}/following/`);
-            const result = await response.json();
-
-            if (response.ok) {
-                console.log("Received all following: ", result);
-                
-                const count = result.length;
-                console.log("Number of following received:", count);
-
-                setFollowing(count)
-
-            } else {
-                console.log(response);
-                Alert.alert('Error', 'Could not fetch following.');
-            }
-        } catch (error) {
-            console.error('Error fetching following:', error);
-            Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
+            console.error('Error fetching stats:', error);
+            Alert.alert('Error', 'Failed to connect to the server.');
         }
     };
 
     useEffect(() => {
-        fetchUserSales();
-        fetchUserPosts();
-        fetchUserFollowers();
-        fetchUserFollowing();
-    }, []);
+        fetchUserStats();
+    }, [user, statsUpdated]);
+
     return (
         <View style={StatStyles.statsSection}>
             <View style={Styles.center}>
@@ -130,6 +59,7 @@ export function StatsBar({user} : {user : User | null}) {
         </View>
     );
 }
+
 
 const StatStyles = StyleSheet.create(
     {

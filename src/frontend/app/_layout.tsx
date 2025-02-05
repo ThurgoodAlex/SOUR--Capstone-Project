@@ -59,7 +59,7 @@ export default function RootLayout() {
           />
 
           <Stack.Screen 
-            name="ProfileScreen" 
+            name="SelfProfileScreen" 
             options={{
               headerLeft: () => ""
             }} 

@@ -125,23 +125,22 @@ def follow_user(session: Annotated[Session, Depends(get_session)],
     else:
         raise MethodNotAllowed('following yourself')
     
-@users_router.delete('/{user_id}/unfollow/', response_model= Delete, status_code=201)
+@users_router.delete('/{user_id}/unfollow/', response_model= Delete, status_code=200)
 def unfollow_user(session: Annotated[Session, Depends(get_session)],
                 user_id: int,
-                current_user: UserInDB = Depends(auth_get_current_user))-> Following:
-    """Current User Follows a User with User ID"""
-    user = session.get(UserInDB, user_id)
+                current_user: UserInDB = Depends(auth_get_current_user))-> Delete:
+    """Current User unfollows a User with User ID"""
     if user_id != current_user.id:
+        user = session.get(UserInDB, user_id)
         if user:
-            currentFollow = session.exec(select(FollowingInDB).where((FollowingInDB.followerID == current_user.id) & (FollowingInDB.followeeID == user_id))).all()
+            currentFollow = session.exec(select(FollowingInDB).where(FollowingInDB.followerID == current_user.id).where(FollowingInDB.followeeID == user_id)).first()
             if currentFollow:
                 session.delete(currentFollow)
                 session.commit()
-                session.refresh(currentFollow)
 
                 return Delete(message="User successfully unfollowed.")
             else:
-                raise EntityNotFound('following', user_id + 'and' + current_user.id)
+                raise EntityNotFound('following', f"{user_id} and {current_user.id}")
         else:
             raise EntityNotFound('user', user_id)
     else:

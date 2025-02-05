@@ -8,90 +8,153 @@ import { NavBar } from '@/components/NavBar';
 import { StatsBar } from '@/components/StatsBar';
 import { Post, User } from '@/constants/Types';
 import { useSearchParams } from 'expo-router/build/hooks';
-import { Tabs } from '@/components/Tabs';
 import { Ionicons } from '@expo/vector-icons';
+import { useUser } from '@/context/user';
 
 export default function UserProfileScreen() {
     const searchParams = useSearchParams(); // Retrieve query parameters
     const userParam = searchParams.get('user');
     const api = useApi();
-    const user: User | null = userParam ? JSON.parse(userParam) : null; 
+    const {user} = useUser();
+    const targetUser: User | null = userParam ? JSON.parse(userParam) : null;
     const [posts, setPosts] = useState<Post[]>([]);
+    const [isFollowing, setIsFollowing] = useState<boolean>();
+    const [statsUpdated, setStatsUpdated] = useState(false);
 
     const dummyImages = [
-            require('../assets/images/video.png'),
-            require('../assets/images/post.png'),
-            require('../assets/images/sweater1.png'),
-            require('../assets/images/listing2.png'),
-            require('../assets/images/listing.png'),
-            require('../assets/images/random1.png'),
-            require('../assets/images/random2.png'),
-            require('../assets/images/random3.png'),
-            require('../assets/images/random4.png'),
-            require('../assets/images/random5.png'),
-        ];
-        
-        const fetchPosts = async () =>
-        {
+        require('../assets/images/video.png'),
+        require('../assets/images/post.png'),
+        require('../assets/images/sweater1.png'),
+        require('../assets/images/listing2.png'),
+        require('../assets/images/listing.png'),
+        require('../assets/images/random1.png'),
+        require('../assets/images/random2.png'),
+        require('../assets/images/random3.png'),
+        require('../assets/images/random4.png'),
+        require('../assets/images/random5.png'),
+    ];
+
+    const follow = async () => {
         try {
-            let endpoint = `/users/${user?.id}/posts/`;
-            const response = await api.get(endpoint);
-            const result = await response.json();
-            console.log(result)
-        
-            if (response.ok) {
-                const getRandomImage = () =>
-                    dummyImages[Math.floor(Math.random() * dummyImages.length)];
-            
-                const transformedPosts: Post[] = await Promise.all(
-                    result.map(async (item: any) => {
-                    return {
-                        id: item.id,
-                        createdDate: item.created_at || new Date().toISOString(),
-                        coverImage: getRandomImage(),
-                        title: item.title,
-                        description: item.description,
-                        brand: item.brand,
-                        condition: item.condition,
-                        size: item.size,
-                        gender: item.gender,
-                        price: item.price,
-                        isSold: item.isSold,
-                        isListing: item.isListing,
-                        seller: user
-                    };
-                    })
-                );
-            
-                console.log(`Received posts from ${endpoint}:`, transformedPosts);
-                setPosts(transformedPosts);
+            const getFollowingResponse = await api.get(`/users/${user?.id}/following/`);
+            if (getFollowingResponse.ok) {
+                const following = await getFollowingResponse.json();
+                if (following.some((entry: any) => entry.followeeID === targetUser?.id)) {
+                    const unfollowResponse = await api.remove(`/users/${targetUser?.id}/unfollow/`);
+                    if (unfollowResponse.ok) {
+                        setIsFollowing(false);
+                        setStatsUpdated(!statsUpdated);
+                    } else {
+                        Alert.alert('Failed to unfollow user.');
+                    }
+                } else {
+                    const followResponse = await api.post(`/users/${targetUser?.id}/follow/`);
+                    if (followResponse.ok) {
+                        setIsFollowing(true);
+                        setStatsUpdated(!statsUpdated);
+                    } else {
+                        Alert.alert('Failed to follow user.');
+                    }
+                }
             } else {
-            console.log(response);
-            throw new Error('Could not fetch posts.');
+                console.log(getFollowingResponse);
+                throw new Error('Could not fetch following.');
             }
         } catch (error) {
-            console.error('Error fetching posts:', error);
+            console.error('Error following user:', error);
             throw new Error('Failed to connect to the server.');
         }
-        }
+    };
+
+
+    // Fetch listings on page load
+    useEffect(() => {
+        const checkIfFollowing = async() => {
+            const getFollowingResponse = await api.get(`/users/${user?.id}/following/`);
+            if (getFollowingResponse.ok) {
+                const following = await getFollowingResponse.json();
+                if (following.some((entry: any) => entry.followeeID === targetUser?.id)) {
+                    setIsFollowing(true);
+                } else {
+                    setIsFollowing(false);
+                }
+            } else {
+                console.log(getFollowingResponse);
+                throw new Error('Could not fetch following.');
+            }
+        };
+        checkIfFollowing();
+
+        const fetchPosts = async () => {
+            try {
+                let endpoint = `/users/${targetUser?.id}/posts/`;
+                const response = await api.get(endpoint);
+                const result = await response.json();
+                console.log(result)
     
-        // Fetch listings on page load
-        useEffect(() => {fetchPosts(); }, []);
-       
+                if (response.ok) {
+                    const getRandomImage = () =>
+                        dummyImages[Math.floor(Math.random() * dummyImages.length)];
+    
+                    const transformedPosts: Post[] = await Promise.all(
+                        result.map(async (item: any) => {
+                            return {
+                                id: item.id,
+                                createdDate: item.created_at || new Date().toISOString(),
+                                coverImage: getRandomImage(),
+                                title: item.title,
+                                description: item.description,
+                                brand: item.brand,
+                                condition: item.condition,
+                                size: item.size,
+                                gender: item.gender,
+                                price: item.price,
+                                isSold: item.isSold,
+                                isListing: item.isListing,
+                                seller: targetUser
+                            };
+                        })
+                    );
+    
+                    console.log(`Received posts from ${endpoint}:`, transformedPosts);
+                    setPosts(transformedPosts);
+                } else {
+                    console.log(response);
+                    throw new Error('Could not fetch posts.');
+                }
+            } catch (error) {
+                console.error('Error fetching posts:', error);
+                throw new Error('Failed to connect to the server.');
+            }
+        };
+        fetchPosts();
+    }, []);
 
-        return (
-            <>
-                <Stack.Screen options={{ title: 'UserProfileScreen' }} />
-                <View style={ScreenStyles.screen}>
-                    <ProfileInfo user={user} />
-                    <StatsBar user={user} />
-                    <PostsGrid posts={posts} />
-                </View>
-                <NavBar />
-            </>
-        );
+
+    return (
+        <>
+            <Stack.Screen options={{ title: 'UserProfileScreen' }} />
+            <View style={ScreenStyles.screen}>
+                <ProfileInfo user={targetUser} />
+                <StatsBar user={targetUser} statsUpdated={statsUpdated} />
+                <Text> {isFollowing} </Text>
+                <TouchableOpacity
+                    onPress={() => follow()}
+                    style={Styles.buttonDark}>
+                    <Text style={[TextStyles.uppercase, TextStyles.light]}>
+                        {isFollowing ? (
+                            'Unfollow'
+                        ) : (
+                            'Follow'
+                        )}
+                    </Text>
+                </TouchableOpacity>
+                <PostsGrid posts={posts} />
+            </View>
+            <NavBar />
+        </>
+    );
 }
-
 
 
 function ProfileInfo({ user }: { user: User | null }) {
@@ -101,21 +164,17 @@ function ProfileInfo({ user }: { user: User | null }) {
                 source={require('../assets/images/profile_pic.jpg')}
                 style={UserProfileStyles.profileImage}
             />
-            <Text style={TextStyles.h1}>{user?.firstname + " " + user?.lastname|| "ERROR: can't find name"}</Text>
+            <Text style={TextStyles.h1}>{user?.firstname + " " + user?.lastname || "ERROR: can't find name"}</Text>
             <Text style={TextStyles.h3}>{user?.username || "ERROR: can't find username"}</Text>
         </View>
     );
 }
 
 
-
-function PostPreview({ post}: { post: Post }){
+function PostPreview({ post }: { post: Post }) {
     let icon;
     let type = post.isListing ? "listing" : "post";
 
-    // if (type === 'listing') {
-    //     icon = <Ionicons size={20} name='videocam' />
-    // }
     if (type === 'post') {
         icon = <Ionicons size={20} name='megaphone' />
     }
@@ -123,7 +182,7 @@ function PostPreview({ post}: { post: Post }){
         icon = <Ionicons size={20} name='pricetag' />
     }
 
-    return( 
+    return (
         <View key={post.id} style={[Styles.column, { marginBottom: 1 }]}>
             <TouchableOpacity
                 onPress={() => router.push(`/PostInfoScreen/${post.id}`)} // Navigate on press
@@ -132,7 +191,7 @@ function PostPreview({ post}: { post: Post }){
                 <ImageBackground source={post.coverImage} style={{ height: 150, width: 150 }}>
                     {icon}
                 </ImageBackground>
-                <Text style={[TextStyles.h3, {textAlign:'left'}]}>{post.title}</Text>
+                <Text style={[TextStyles.h3, { textAlign: 'left' }]}>{post.title}</Text>
 
             </TouchableOpacity>
         </View>
@@ -140,17 +199,15 @@ function PostPreview({ post}: { post: Post }){
 }
 
 
-
 function PostsGrid({ posts }: { posts: Post[] }) {
-    
-    
-    const renderPost = ({ item }: {item: Post}) => (
+
+    const renderPost = ({ item }: { item: Post }) => (
         <PostPreview
-          post={item}
+            post={item}
         />
     );
 
-   return ( 
+    return (
         <FlatList
             data={posts} // Data for FlatList
             keyExtractor={(item) => item.id.toString()} // Unique key for each item

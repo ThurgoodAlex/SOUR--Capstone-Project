@@ -1,5 +1,16 @@
+import { Collapsible } from '@/components/Collapsible';
 import { StyleSheet } from 'react-native';
 
+const dark = '#692b20';
+const dark60 = '#692b2060';
+const light = '#d8ccaf';
+const light60 = '#d8ccaf60';
+const grapefruit = '#f98b69';
+const yellow = '#ffdb32';
+const orange = '#f9b032'
+const green = '#7e9151';
+const white = '#f7f3ea';
+const black = '#000000';
 
 
 export const ScreenStyles = StyleSheet.create({
@@ -7,13 +18,13 @@ export const ScreenStyles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 18,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: white,
   },
   screen: {
     flex: 1,
     justifyContent: 'flex-start',
     padding: 18,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: white,
   },
 });
 
@@ -54,11 +65,11 @@ export const TextStyles = StyleSheet.create({
     fontSize:11,
   },
   light: {
-    color: '#fff',
+    color: light,
     fontWeight: 'bold',
   },
   dark: {
-      color: '#000',
+      color: dark,
       fontWeight: 'bold',
   },
 
@@ -71,15 +82,16 @@ export const Styles = StyleSheet.create({
     
     input: {
         borderWidth: 1,
-        borderColor: '#ddd',
-        backgroundColor: '#fff',
+        borderColor: dark,
+        backgroundColor: white,
+        width: '100%',
         padding: 12,
         borderRadius: 8,
         fontSize: 16,
         marginBottom: 16,
     },
     buttonLight: {
-        backgroundColor: '#D3D3D3',
+        backgroundColor: light,
         padding: 16,
         borderRadius: 8,
         alignItems: 'center',
@@ -87,13 +99,44 @@ export const Styles = StyleSheet.create({
         justifyContent:'space-around'
     },
     buttonDark: {
-        backgroundColor: '#454545',
+        backgroundColor: dark,
         padding: 16,
         borderRadius: 8,
         alignItems: 'center',
         marginBottom: 16,
         justifyContent:'space-around'
        
+    },
+
+    buttonDisabled: {
+        backgroundColor: dark60,
+        padding: 16,
+        borderRadius: 8,
+        alignItems: 'center',
+        marginBottom: 16,
+        justifyContent:'space-around'
+       
+    },
+
+    collapsibleLight: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        backgroundColor: light60,
+        padding: 16,
+        borderRadius: 8,
+        marginBottom: 16,
+    },
+
+    collapsibleDark: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        backgroundColor: dark60,
+        padding: 16,
+        borderRadius: 8,
+        marginBottom: 16,
     },
     
     row:{
