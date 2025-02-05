@@ -15,6 +15,7 @@ from fastapi.security import (
     OAuth2PasswordBearer,
     OAuth2PasswordRequestForm,
 )
+from databaseAndSchemas.mappings.userMapping import map_user_db_to_response
 from databaseAndSchemas.test_db import get_session
 from databaseAndSchemas.schema import(
     UserInDB,
@@ -139,14 +140,14 @@ def get_authenticated_user(session: Session,
 
 def decode_access_token(token: str, session: Session) -> UserInDB:
     """Decoding access token for user"""
-    logger.info("Attempting to decode the token.")
+    # logger.info("Attempting to decode the token.")
     
     # Log the token (be cautious when logging sensitive information in a production environment)
-    logger.debug(f"Token received for decoding: {token[:50]}...")  # Log only part of the token for privacy reasons
+    # logger.debug(f"Token received for decoding: {token[:50]}...")  # Log only part of the token for privacy reasons
     
     try:
         # Decode the token using the secret key and algorithm
-        logger.info("Decoding the token using the JWT key and algorithm.")
+        # logger.info("Decoding the token using the JWT key and algorithm.")
         claims_dict = jwt.decode(token, key=jwt_key, algorithms=[jwt_alg])
         
         claims = Claims(**claims_dict)
@@ -158,20 +159,20 @@ def decode_access_token(token: str, session: Session) -> UserInDB:
         if user is None:
             raise InvalidToken()
 
-        logger.info(f"User with ID {user_id} found in the database.")
+        # logger.info(f"User with ID {user_id} found in the database.")
         return user
     
     except ExpiredSignatureError:
-        logger.error("Token has expired.")
+        # logger.error("Token has expired.")
         raise ExpiredToken()
     except JWTError as e:
-        logger.error(f"JWT error occurred: {str(e)}")
+        # logger.error(f"JWT error occurred: {str(e)}")
         raise InvalidToken()
     except ValidationError as e:
-        logger.error(f"Validation error occurred while decoding claims: {str(e)}")
+        # logger.error(f"Validation error occurred while decoding claims: {str(e)}")
         raise InvalidToken()
     except Exception as e:
-        logger.error(f"Unexpected error during token decoding: {str(e)}")
+        # logger.error(f"Unexpected error during token decoding: {str(e)}")
         raise InvalidToken()
 
 
