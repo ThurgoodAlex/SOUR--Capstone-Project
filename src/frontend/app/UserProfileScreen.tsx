@@ -11,6 +11,7 @@ import { useSearchParams } from 'expo-router/build/hooks';
 import { Ionicons } from '@expo/vector-icons';
 import { useUser } from '@/context/user';
 import { usePosts } from '@/hooks/usePosts';
+import { PostPreview } from '@/components/PostPreview';
 
 export default function UserProfileScreen() {
     const searchParams = useSearchParams(); // Retrieve query parameters
@@ -117,40 +118,11 @@ function ProfileInfo({ user }: { user: User | null }) {
 }
 
 
-function PostPreview({ post }: { post: Post }) {
-    let icon;
-    let type = post.isListing ? "listing" : "post";
-
-    if (type === 'post') {
-        icon = <Ionicons size={20} name='megaphone' />
-    }
-    else if (type === 'listing') {
-        icon = <Ionicons size={20} name='pricetag' />
-    }
-
-    return (
-        <View key={post.id} style={[Styles.column, { marginBottom: 1 }]}>
-            <TouchableOpacity
-                onPress={() => router.push(`/PostInfoScreen/${post.id}`)} // Navigate on press
-                style={{ flex: 1, margin: 5 }} // Add styles for spacing
-            >
-                <ImageBackground source={post.coverImage} style={{ height: 150, width: 150 }}>
-                    {icon}
-                </ImageBackground>
-                <Text style={[TextStyles.h3, { textAlign: 'left' }]}>{post.title}</Text>
-
-            </TouchableOpacity>
-        </View>
-    );
-}
-
-
 function PostsGrid({ posts }: { posts: Post[] }) {
 
     const renderPost = ({ item }: { item: Post }) => (
-        <PostPreview
-            post={item}
-        />
+        <PostPreview post={item} size={150} profileThumbnail='none'/>
+        
     );
 
     return (

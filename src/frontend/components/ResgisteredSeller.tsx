@@ -16,9 +16,18 @@ export function RegisteredSeller() {
     
     const [earnings, setEarnings] = useState(0.00);
     const [soldItems, setSoldItems] = useState(0);
-
-    const { posts, loading, error } = usePosts(`/users/${user?.id}/posts/issold=false/`);
     
+    const [endpoint, setEndpoint] = useState(`/users/${user?.id}/posts/issold=false/`);
+    const { posts, loading, error } = usePosts(endpoint);
+    
+    const handleTabSwitch = (tab: string) => {
+        setActiveTab(tab);
+        setEndpoint(tab === 'Active Listings' 
+            ? `/users/${user?.id}/posts/issold=false/`
+            : `/users/${user?.id}/posts/issold=true/`
+        );
+    };
+
 
     const fetchStats = async () => {
         try {
@@ -41,21 +50,8 @@ export function RegisteredSeller() {
         }
     };
 
-    // Fetch posts on page load
-    useEffect(() => {
-        fetchStats();
-        handleTabSwitch('Active Listings');
-    }, [activeTab]);
-
-    const handleTabSwitch = (tab: string) => {
-        setActiveTab(tab);
-        if (tab === 'Active Listings') {
-            const { posts, loading, error } = usePosts(`/users/${user?.id}/posts/issold=false/`);
-        }
-        else {
-            const { posts, loading, error } = usePosts(`/users/${user?.id}/posts/issold=true/`);
-        }
-    };
+   
+    useEffect(() => { fetchStats(); }, []);
 
     const formattedEarnings = new Intl.NumberFormat('en-US', {
         style: 'currency',

@@ -11,6 +11,7 @@ import { useApi } from '@/context/api';
 import { Post, User } from '@/constants/Types';
 import { Ionicons } from '@expo/vector-icons';
 import { GridPosts } from '@/components/GridPosts';
+import { PostPreview } from '@/components/PostPreview';
 
 export default function PostInfoScreen() {
     const {user} = useUser(); // Fetch user details
@@ -246,7 +247,7 @@ function LinkedItems({ links, originalPost }: { links: Post[], originalPost: Pos
         <LinkPreview listing={item} />
     );
     const renderPost = ({ item }: { item: Post }) => (
-        <PostPreview post={item} />
+        <PostPreview post={item} size={110} profileThumbnail='none'/>
     );
 
     return (
@@ -270,37 +271,6 @@ function LinkedItems({ links, originalPost }: { links: Post[], originalPost: Pos
     );
 }
 
-function PostPreview({ post }: { post: Post }) {
-    let icon;
-    let type = post.isListing ? "listing" : "post";
-
-    if (type === "post") {
-        icon = <Ionicons size={20} name="megaphone" />;
-    } else if (type === "listing") {
-        icon = <Ionicons size={20} name="pricetag" />;
-    }
-
-    const isSold = post.isSold;
-
-    return (
-        <View key={post.id} style={[Styles.column, { opacity: isSold ? 0.5 : 1 }]}> 
-            <TouchableOpacity
-                onPress={() => router.push(`/PostInfoScreen/${post.id}`)}
-                style={{ flex: 1, margin: 5 }}
-                disabled={isSold} 
-            >
-                
-            <ImageBackground source={post.coverImage} style={[{height: 110},{width: 110}]}>
-                {icon}
-            </ImageBackground>
-            <View>
-                <Text style={[TextStyles.h3, { textAlign: "left" }]}>{post.title}</Text>
-            </View>
-                
-            </TouchableOpacity>
-        </View>
-    );
-}
 
 function LinkPreview({ listing }: { listing: Post }) {
 

@@ -12,29 +12,26 @@ import { Tabs } from '@/components/Tabs';
 import { Post } from '@/constants/Types';
 import { Ionicons } from '@expo/vector-icons';
 import { usePosts } from '@/hooks/usePosts';
+import { PostPreview } from '@/components/PostPreview';
 
 
 export default function SelfProfileScreen() {
 
     const {user} = useUser(); 
     // default to posts
-    const { posts, loading, error } = usePosts(`/users/${user?.id}/posts/`);
     const [activeTab, setActiveTab] = useState('Posts');
 
+
+    const [endpoint, setEndpoint] = useState(`/users/${user?.id}/posts/`);
+    const { posts, loading, error } = usePosts(endpoint);
     
     const handleTabSwitch = (tab: string) => {
         setActiveTab(tab);
-        if (tab === 'Likes') {
-            const { posts, loading, error } = usePosts(`/users/${user?.id}/likes/`);
-        }
-        else {
-            const { posts, loading, error } = usePosts(`/users/${user?.id}/posts/`);
-        }
+        setEndpoint(tab === 'Posts' 
+            ? `/users/${user?.id}/posts/`
+            : `/users/${user?.id}/likes/`
+        );
     };
-
-    // Fetch posts on page load
-    useEffect(() => {handleTabSwitch("posts"); }, []);
-
 
     return (
         <>
@@ -77,71 +74,10 @@ function ProfileInfo({ user }: { user: any }) {
 }
 
 
-function PostPreview({ post }: { post: Post }) {
-    let icon;
-    let type = post.isListing ? "listing" : "post";
-
-    if (type === "post") {
-        icon = <Ionicons size={20} name="megaphone" />;
-    } else if (type === "listing") {
-        icon = <Ionicons size={20} name="pricetag" />;
-    }
-
-    const isSold = post.isSold;
-    const containerStyle = [
-        Styles.column,
-        { marginBottom: 10, opacity: isSold ? 0.5 : 1 }, // Reduce opacity if sold
-    ];
-
-    const overlayStyle: ViewStyle | undefined = isSold
-        ? {
-              position: "absolute" as const, // Explicitly type position
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: "rgba(0, 0, 0, 0.3)",
-          }
-        : undefined;
-
-    return (
-        <View key={post.id} style={containerStyle}>
-            <TouchableOpacity
-                onPress={() => router.push(`/PostInfoScreen/${post.id}`)}
-                style={{ flex: 1, margin: 5 }}
-                disabled={isSold} // Disable interaction if sold
-            >
-                <View>
-                    <ImageBackground source={post.coverImage} style={{ height: 150, width: 150 }}>
-                        {icon}
-                        {isSold && <View style={overlayStyle} />} {/* Overlay when sold */}
-                    </ImageBackground>
-                    {isSold && (
-                        <Text
-                            style={{
-                                position: "absolute",
-                                top: 65,
-                                left: 50,
-                                color: "white",
-                                fontWeight: "bold",
-                                fontSize: 20,
-                            }}
-                        >
-                            SOLD
-                        </Text>
-                    )}
-                </View>
-                <Text style={[TextStyles.h3, { textAlign: "left" }]}>{post.title}</Text>
-            </TouchableOpacity>
-        </View>
-    );
-}
 
 function PostsGrid({ posts }: { posts: Post[] }) {
     const renderPost = ({ item }: {item: Post}) => (
-        <PostPreview
-          post={item}
-        />
+        <PostPreview post={item} size={150} profileThumbnail='none'/>
     );
 
    return ( 
@@ -158,9 +94,7 @@ function PostsGrid({ posts }: { posts: Post[] }) {
 
 function LikesGrid({ posts }: { posts: Post[] }) {
     const renderPost = ({ item }: {item: Post}) => (
-        <PostPreview
-          post={item}
-        />
+        <PostPreview post={item} size={150} profileThumbnail='none'/>
     );
 
    return ( 

@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, FlatList, ScrollView, ImageBackground } from 'react-native';
 import { Styles } from '@/constants/Styles';
-import { PostPreview } from './PostPreview';
-import ProfileThumbnail from '@/components/ProfileThumbnail';
 
 export default function PhotoCarousel() {
     

@@ -1,5 +1,5 @@
-import { View, Text, ImageBackground, TouchableOpacity } from 'react-native';
-import { Styles } from '@/constants/Styles';
+import { View, Text, ImageBackground, TouchableOpacity, ViewStyle } from 'react-native';
+import { Styles, TextStyles } from '@/constants/Styles';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Post, User } from '@/constants/Types';
 import ProfileThumbnail from '@/components/ProfileThumbnail';
@@ -12,7 +12,7 @@ import { useUser } from '@/context/user';
  * @param post - Props object containing the post details.
  * @returns A post view component.
  */
-export function PostPreview({ post, size, thumbnailSize }: { post: Post, size: number, thumbnailSize: string }) {
+export function PostPreview({ post, size, profileThumbnail = "none"}: { post: Post, size: number, profileThumbnail: string }) {
     
 
     let icon;
@@ -29,6 +29,23 @@ export function PostPreview({ post, size, thumbnailSize }: { post: Post, size: n
     }
 
 
+    const isSold = post.isSold;
+    const previewStyle = [
+        Styles.column,
+        { marginBottom: 10, opacity: isSold ? 0.5 : 1 }, // Reduce opacity if sold
+    ];
+    const overlayStyle: ViewStyle | undefined = isSold
+        ? {
+              position: "absolute" as const, // Explicitly type position
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: "rgba(0, 0, 0, 0.3)",
+          }
+        : undefined;
+
+
     //extract seller information into a User object
     const seller: User = {
         firstname: post.seller.firstname,
@@ -42,24 +59,51 @@ export function PostPreview({ post, size, thumbnailSize }: { post: Post, size: n
     }; 
 
     return (
-        <View key={post.id} style={[Styles.column, { marginBottom: 1 }]}>
+        <View key={post.id} style={previewStyle}>
             <TouchableOpacity
                 onPress={() => router.push(`/PostInfoScreen/${post.id}`)} // Navigate on press
                 style={{ flex: 1, margin: 5 }} // Add styles for spacing
+                disabled={isSold} // Disable interaction if sold
             >
+                
                 <ImageBackground source={post.coverImage} style={{ height: size, width: size }}>
                     {icon}
+                    {isSold && <View style={overlayStyle} />} {/* Overlay when sold */}
                 </ImageBackground>
-                
-
+                    {isSold && (
+                        <Text
+                            style={{
+                                position: "absolute",
+                                top: 65,
+                                left: 50,
+                                color: "white",
+                                fontWeight: "bold",
+                                fontSize: 20,
+                            }}
+                        >
+                            SOLD
+                        </Text>
+                    )}
+               
             </TouchableOpacity>
-            
-                {thumbnailSize === 'big' ? (<ProfileThumbnail user={seller} />)
-                    : seller ? (<ProfileThumbnailSmall user={seller} />) : (<Text>No seller information available</Text>)
-                }
-        
+
+            { profileThumbnail != "none" ? 
+                (profileThumbnail === 'big' ? 
+                    (<ProfileThumbnail user={seller} />)
+                    : seller ? 
+                        (<ProfileThumbnailSmall user={seller} />) 
+                        : (<Text>No seller information available</Text>)
+                )
+                :  <Text style={[TextStyles.h3, { textAlign: "left" }]}>{post.title}</Text>}
+       
         </View>
 
     );
 
 }
+
+
+
+    
+    
+               

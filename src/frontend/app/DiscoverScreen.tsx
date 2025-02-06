@@ -14,10 +14,10 @@ import { usePosts } from '@/hooks/usePosts';
 
 export default function DiscoverScreen() {
 
-  const { posts, loading, error } = usePosts('/posts/new');
+  const { posts, loading, error } = usePosts('/posts/');
 
   const renderPost = ({ item }: {item: Post}) => (
-    <PostPreview post={item} size={160} thumbnailSize='small' />
+    <PostPreview post={item} size={160} profileThumbnail='small' />
   );
 
   return (
