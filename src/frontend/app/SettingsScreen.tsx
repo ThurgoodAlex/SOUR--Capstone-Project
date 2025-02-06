@@ -22,7 +22,7 @@ export default function SettingsScreen() {
 
     const verifyPassword = async () => {
         try {
-            const response = await api.post('/auth/verifypassword/', { oldPassword });
+            const response = await api.post('/auth/verifypassword/', { "password": oldPassword });
 
             if (response.ok) {
                 console.log("Password verified successfully.");
@@ -37,13 +37,7 @@ export default function SettingsScreen() {
 
     const changePassword = async () => {
         try {
-            const response = await fetch('/auth/changepassword/', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ new_password: newPassword }),
-            });
+            const response = await api.put('/auth/changepassword/', { "password": newPassword });
 
             if (response.ok) {
                 console.log("Password changed successfully.");

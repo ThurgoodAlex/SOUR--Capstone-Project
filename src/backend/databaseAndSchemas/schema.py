@@ -64,6 +64,9 @@ class UserRegistration(BaseModel):
 class UserLogin(BaseModel):
     username: str
     password: str
+    
+class Password(BaseModel):
+    password: str
 ###############################
 
 
