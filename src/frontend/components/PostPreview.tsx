@@ -8,13 +8,17 @@ import ProfileThumbnailSmall from '@/components/ProfileThumbnailSmall';
 import { useUser } from '@/context/user';
 
 /**
- * The visualization of how a campus post looks like.
  * @param post - Props object containing the post details.
+ * @param size - The size of the post view.
+ * @param profileThumbnail - 3 Accepted options
+ *  - 'none' - No profile thumbnail, show title instead
+ *  - 'small' - username only
+ *  - 'big' - username, firstname, lastname
+ *      
  * @returns A post view component.
  */
 export function PostPreview({ post, size, profileThumbnail = "none"}: { post: Post, size: number, profileThumbnail: string }) {
     
-
     let icon;
     let type = post.isListing ? "listing" : "post";
 
@@ -28,7 +32,7 @@ export function PostPreview({ post, size, profileThumbnail = "none"}: { post: Po
         icon = <Ionicons size={20} name='pricetag' />
     }
 
-
+    // Styles for the post preview, including opacity if sold
     const isSold = post.isSold;
     const previewStyle = [
         Styles.column,
