@@ -10,8 +10,8 @@ import { useAuth } from '@/context/auth';
 import { useApi } from '@/context/api';
 import { Post, User } from '@/constants/Types';
 import { Ionicons } from '@expo/vector-icons';
-import { GridPosts } from '@/components/GridPosts';
 import { PostPreview } from '@/components/PostPreview';
+import { LinkedItems } from '@/components/Linkedtems';
 
 export default function PostInfoScreen() {
     const {user} = useUser(); // Fetch user details
@@ -187,7 +187,15 @@ export default function PostInfoScreen() {
                             </TouchableOpacity>
                         </View>
                         {post.isListing ? (<ListingInfo post={post} />): <PostInfo post={post} />  }
-                        {linkedItems.length > 0 ? <LinkedItems links={linkedItems} originalPost={post}/>: null}
+                        {linkedItems.length > 0 ? (
+                                <>
+                                    <Text style={[TextStyles.h2, TextStyles.uppercase]}>
+                                        {post.isListing ? "Posts" : "Featured Listings"}
+                                    </Text>
+                                    <LinkedItems posts={linkedItems} columns={post.isListing ? 3 : 1}/>
+                                </>
+                            ) : null
+                        }
                     </ScrollView>
                 </View>
                 <NavBar />
@@ -240,69 +248,3 @@ function PostInfo({ post }: { post: Post }) {
     );
 }
 
-
-
-function LinkedItems({ links, originalPost }: { links: Post[], originalPost: Post }) {
-    const renderLink = ({ item }: { item: Post }) => (
-        <LinkPreview listing={item} />
-    );
-    const renderPost = ({ item }: { item: Post }) => (
-        <PostPreview post={item} size={110} profileThumbnail='none'/>
-    );
-
-    return (
-        <>
-            <Text style={[TextStyles.h2, TextStyles.uppercase]}>
-                {originalPost.isListing ? "Posts" : "Featured Listings"}
-            </Text>
-
-            <View> 
-                <FlatList
-                    data={links}
-                    keyExtractor={(item) => item.id.toString()}
-                    renderItem={originalPost.isListing ? renderPost : renderLink}
-                    numColumns={originalPost.isListing ? 3 : 1} 
-                    columnWrapperStyle={originalPost.isListing ? Styles.grid : undefined}
-                    showsVerticalScrollIndicator={false}
-                    scrollEnabled={false}
-                />
-            </View>
-        </>
-    );
-}
-
-
-function LinkPreview({ listing }: { listing: Post }) {
-
-    const formattedPrice = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      }).format(parseFloat(listing.price));
-
-    return (
-        <View key={listing.id} style={{ opacity: listing.isSold ? 0.5 : 1 }}> 
-            <TouchableOpacity
-                onPress={() => router.push(`/PostInfoScreen/${listing.id}`)}
-                style={{ flex: 1, margin: 5 }}
-                disabled={listing.isSold} 
-            >
-                <View style={[Styles.row, {gap:6}]}>
-                    <ImageBackground source={listing.coverImage} style={[ {height: 70}, {width: 70} ]} />
-
-                    <View style={[Styles.row, { justifyContent: "space-between" }]}>
-                    
-                        <Text style={[TextStyles.h2, { textAlign: "left" }]}>{listing.title}</Text>
-                        {!(listing.size && listing.size != "n/a")? <Text>{listing.size}</Text>: null}
-
-                        <View style={[Styles.column, {alignItems: "flex-end"}]}>
-                            <Text style={TextStyles.h3}>{formattedPrice}</Text>
-                            {!(listing.isSold)? <Text style={{color:"#008000"}}>Still Available</Text>: <Text>Sold</Text>}
-                        </View>
-                    
-                    </View>
-                </View>
-               
-            </TouchableOpacity>
-        </View>
-    );
-}

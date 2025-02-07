@@ -12,6 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useUser } from '@/context/user';
 import { usePosts } from '@/hooks/usePosts';
 import { PostPreview } from '@/components/PostPreview';
+import { PostsFlatList } from '@/components/PostsFlatList';
 
 export default function UserProfileScreen() {
     const searchParams = useSearchParams(); // Retrieve query parameters
@@ -96,7 +97,7 @@ export default function UserProfileScreen() {
                         )}
                     </Text>
                 </TouchableOpacity>
-                <PostsGrid posts={posts} />
+                <PostsFlatList posts={posts} height={270} />
             </View>
             <NavBar />
         </>
@@ -118,24 +119,6 @@ function ProfileInfo({ user }: { user: User | null }) {
 }
 
 
-function PostsGrid({ posts }: { posts: Post[] }) {
-
-    const renderPost = ({ item }: { item: Post }) => (
-        <PostPreview post={item} size={150} profileThumbnail='none'/>
-        
-    );
-
-    return (
-        <FlatList
-            data={posts} // Data for FlatList
-            keyExtractor={(item) => item.id.toString()} // Unique key for each item
-            renderItem={renderPost} // Function to render each item
-            numColumns={2} // Grid layout with 2 columns
-            columnWrapperStyle={Styles.grid} // Style for the row container
-            showsVerticalScrollIndicator={false}
-        />
-    )
-}
 
 const UserProfileStyles = StyleSheet.create({
     profileImage: {

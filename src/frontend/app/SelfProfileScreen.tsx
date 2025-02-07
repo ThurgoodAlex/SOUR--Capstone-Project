@@ -13,6 +13,7 @@ import { Post } from '@/constants/Types';
 import { Ionicons } from '@expo/vector-icons';
 import { usePosts } from '@/hooks/usePosts';
 import { PostPreview } from '@/components/PostPreview';
+import { PostsFlatList } from '@/components/PostsFlatList';
 
 
 export default function SelfProfileScreen() {
@@ -45,15 +46,12 @@ export default function SelfProfileScreen() {
                         onPress={() => router.push('/SettingsScreen')}
                     />
             }}/>
+            
             <View style={ScreenStyles.screen}>
                 <ProfileInfo user={user} />
                 <StatsBar user={user} statsUpdated={true}/>
                 <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} tab1={'Posts'} tab2={'Likes'} />
-                {activeTab === 'Posts' ? (
-                    <PostsGrid posts={posts} />
-                ) : (
-                    <LikesGrid posts={posts}/>
-                )}
+                <PostsFlatList posts={posts} height={270} />
             </View>
             <NavBar/>
         </>
@@ -73,41 +71,6 @@ function ProfileInfo({ user }: { user: any }) {
     );
 }
 
-
-
-function PostsGrid({ posts }: { posts: Post[] }) {
-    const renderPost = ({ item }: {item: Post}) => (
-        <PostPreview post={item} size={150} profileThumbnail='none'/>
-    );
-
-   return ( 
-        <FlatList
-            data={posts} // Data for FlatList
-            keyExtractor={(item) => item.id.toString()} // Unique key for each item
-            renderItem={renderPost} // Function to render each item
-            numColumns={2} // Grid layout with 2 columns
-            columnWrapperStyle={Styles.grid} // Style for the row container
-            showsVerticalScrollIndicator={false}
-        />
-    )
-}
-
-function LikesGrid({ posts }: { posts: Post[] }) {
-    const renderPost = ({ item }: {item: Post}) => (
-        <PostPreview post={item} size={150} profileThumbnail='none'/>
-    );
-
-   return ( 
-        <FlatList
-            data={posts} // Data for FlatList
-            keyExtractor={(item) => item.id.toString()} // Unique key for each item
-            renderItem={renderPost} // Function to render each item
-            numColumns={2} // Grid layout with 2 columns
-            columnWrapperStyle={Styles.grid} // Style for the row container
-            showsVerticalScrollIndicator={false}
-        />
-    )
-}
 
 const ProfileStyles = StyleSheet.create({
     profileImage: {
