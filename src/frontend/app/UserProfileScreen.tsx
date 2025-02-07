@@ -23,7 +23,7 @@ export default function UserProfileScreen() {
     const [isFollowing, setIsFollowing] = useState<boolean>();
     const [statsUpdated, setStatsUpdated] = useState(false);
 
-    const { posts, loading, error } = usePosts(`/users/${user?.id}/posts/`);
+    const { posts, loading, error } = usePosts(`/users/${targetUser?.id}/posts/`);
     
     const follow = async () => {
         try {
