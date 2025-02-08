@@ -1,9 +1,10 @@
-import { View, Image, StyleSheet, Text } from 'react-native';
+import { View, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { Styles, TextStyles } from '@/constants/Styles';
 import { ChatData, User } from '@/constants/Types';
 import { useEffect, useState } from 'react';
 import { useUser } from '@/context/user';
 import { useApi } from '@/context/api';
+import { router } from 'expo-router';
 
 export function Chat({ chat }: { chat: ChatData }) {
     const {user} = useUser();
@@ -20,7 +21,7 @@ export function Chat({ chat }: { chat: ChatData }) {
     const getUser = async () => {
         try {
             const response = await api.get(`/users/${targetUserId}/`);
-            if (response.status === 200) {
+            if (response.ok) {
                 const userData = await response.json();
                 console.log("User retrived successfully.");
                 setTargetUser(userData);
@@ -35,13 +36,18 @@ export function Chat({ chat }: { chat: ChatData }) {
         getUser();
     }, []);
     return (
-        <View style={ChatProfileStyles.chat}>
+        <TouchableOpacity
+            style={ChatProfileStyles.chat}
+            onPress={() => router.push({
+                pathname: '/MessagesScreen',
+                params: { chatID: chat.id },
+        })}>
             <Image
                 source={require('../assets/images/profile_pic.jpg')}
                 style={ChatProfileStyles.profileImage}
             />
             <Text style={TextStyles.dark}>{targetUser?.username}</Text>
-        </View>
+        </TouchableOpacity>
     );
 };
 

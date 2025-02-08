@@ -34,7 +34,14 @@ export default function ChatsScreen() {
     }, []);
 
     const renderChat = ({ item }: {item: ChatData}) => (
-        <Chat chat={item} />
+        <TouchableOpacity
+            onPress={() => router.push({
+                pathname: '/MessagesScreen',
+                params: { chatID: item.id },
+            })}>
+            <Chat chat={item} />
+        </TouchableOpacity>
+        
       );
     return (
         <>

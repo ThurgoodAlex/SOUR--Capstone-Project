@@ -76,4 +76,12 @@ export type ChatData = {
     recipientID: number;
 };
 
+export type MessageData = {
+    id: number;
+    chatID: number;
+    author: number;
+    message: string;
+    created_at: Date;
+};
+
   
