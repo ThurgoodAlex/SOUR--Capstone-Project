@@ -1,9 +1,8 @@
 import { Chat } from '@/components/Chat';
 import { NavBar } from '@/components/NavBar';
 import { ScreenStyles } from '@/constants/Styles';
-import { User, MessageData } from '@/constants/Types';
+import { MessageData } from '@/constants/Types';
 import { useApi } from '@/context/api';
-import { useUser } from '@/context/user';
 import { Ionicons } from '@expo/vector-icons';
 import { router, Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
