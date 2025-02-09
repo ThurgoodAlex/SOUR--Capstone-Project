@@ -5,7 +5,6 @@ import { Post, User } from '@/constants/Types';
 import ProfileThumbnail from '@/components/ProfileThumbnail';
 import { router } from 'expo-router';
 import ProfileThumbnailSmall from '@/components/ProfileThumbnailSmall';
-import { useUser } from '@/context/user';
 
 /**
  * @param post - Props object containing the post details.
@@ -14,7 +13,7 @@ import { useUser } from '@/context/user';
  *  - 'none' - No profile thumbnail, show title instead
  *  - 'small' - username only
  *  - 'big' - username, firstname, lastname
- *      
+ * 
  * @returns A post view component.
  */
 export function PostPreview({ post, size, profileThumbnail = "none"}: { post: Post, size: number, profileThumbnail: string }) {
@@ -101,9 +100,7 @@ export function PostPreview({ post, size, profileThumbnail = "none"}: { post: Po
                 :  <Text style={[TextStyles.h3, { textAlign: "left" }]}>{post.title}</Text>}
        
         </View>
-
     );
-
 }
 
 

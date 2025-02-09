@@ -1,14 +1,13 @@
-import React from 'react';
-import { View, ScrollView, FlatList } from 'react-native';
+import { View } from 'react-native';
 import { PostPreview } from '@/components/PostPreview';
 import { LinkPreview } from '@/components/LinkPreview';
 import { Styles } from '@/constants/Styles';
 import { Post } from '@/constants/Types';
 
 /**
- * Displays a list of posts in a grid format, within a scrollview
- * @param posts a list of Posts
- * @returns the posts in a grid format, within a scroll view
+ * Displays Linked Items for a certain post or listing
+ * @param posts the linked posts to display
+ * @param columns the number of columns (1 if list of linked listings, 3 if a grid of all types of posts)
  */
 
 
@@ -20,7 +19,7 @@ export function LinkedItems ({ posts, columns }: { posts: Post[], columns: numbe
                     {columns === 1 ? (
                         <LinkPreview listing={item} />
                     ) : (
-                        <PostPreview post={item} size={150} profileThumbnail={"none"} />
+                        <PostPreview post={item} size={110} profileThumbnail={"none"} />
                     )}
                 </View>
             ))}

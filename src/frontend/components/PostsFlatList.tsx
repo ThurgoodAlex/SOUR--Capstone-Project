@@ -5,20 +5,18 @@ import { Styles } from '@/constants/Styles';
 import { Post, PostFlatListProps } from '@/constants/Types';
 
 /**
- * Displays a list of posts in a grid format, within a scrollview
+ * Displays a list of posts in a grid format scrollable flatlist
  * @param posts a list of Posts
+ * @param height the height of the scrollable area
  * @returns the posts in a grid format, within a scroll view
  */
 
 export const PostsFlatList: React.FC<PostFlatListProps> = ({ posts, height }) => {
-
     const size = 150; 
-
     const renderPost = ({ item }: {item: Post}) => (
         <PostPreview post={item} size={size} profileThumbnail='none'/>
     );
 
-    
     return ( 
         <FlatList
             data={posts} 
@@ -30,6 +28,5 @@ export const PostsFlatList: React.FC<PostFlatListProps> = ({ posts, height }) =>
             nestedScrollEnabled={true}
             style={{ height: height }}
         />
-    )
-    
+    ) 
 };
