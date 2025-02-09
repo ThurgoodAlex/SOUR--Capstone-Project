@@ -1,13 +1,13 @@
 import { Chat } from '@/components/Chat';
 import { NavBar } from '@/components/NavBar';
-import { ScreenStyles } from '@/constants/Styles';
+import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 import { MessageData } from '@/constants/Types';
 import { useApi } from '@/context/api';
 import { Ionicons } from '@expo/vector-icons';
 import { router, Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'expo-router/build/hooks';
-import { FlatList, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Message } from '@/components/Message';
 
 export default function MessagesScreen() {
@@ -15,6 +15,8 @@ export default function MessagesScreen() {
     const searchParams = useSearchParams();
     const chatParam = Number(searchParams.get('chatID'));
     const [messages, setMessages] = useState<MessageData[]>([]);
+    const [newMessage, setNewMessage] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const getMessages = async () => {
         try {
@@ -37,8 +39,26 @@ export default function MessagesScreen() {
     }, []);
 
     const renderMessage = ({ item }: {item: MessageData}) => (
-        <Message message={item} authorID={item.author} chatID={chatParam} />
-      );
+        <Message message={item} authorID={item.author} />
+    );
+
+    const sendMessage = async () => {
+        setLoading(true);
+        try {
+            const response = await api.post(`/chats/${chatParam}/messages/`, {
+                message: newMessage,
+            });
+            if (response.ok) {
+                console.log("Message sent successfully.");
+            } else {
+                console.error("Message sending failed:", response);
+            }
+        } catch (error) {
+            console.error('Message sending failed:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
       
     return (
         <>
@@ -61,6 +81,25 @@ export default function MessagesScreen() {
                     contentContainerStyle={{ padding: 10 }}
                     ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
                     />
+                <View style={Styles.row}>
+                    <TextInput
+                        style={Styles.input}
+                        placeholder="Message"
+                        value={newMessage}
+                        onChangeText={setNewMessage}
+                    />
+                    <TouchableOpacity
+                        style={[Styles.buttonDark, {width: '20%'}]}
+                        onPress={sendMessage}
+                        disabled={loading}
+                    >
+                        {loading ? (
+                            <ActivityIndicator color="#ffffff" />
+                        ) : (
+                            <Text style={TextStyles.light}>Send</Text>
+                        )}
+                    </TouchableOpacity>
+                </View>
             </View>
             <NavBar/>
         </>
