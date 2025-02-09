@@ -1,26 +1,22 @@
-import { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Alert, StyleSheet, ScrollView, Button, FlatList, ImageBackground } from 'react-native';
-import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
+import { useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import { Styles, TextStyles } from '@/constants/Styles';
 import { Tabs } from '@/components/Tabs';
 import { PostsFlatList } from '@/components/PostsFlatList';
-import { useApi } from '@/context/api';
-import { Post, Stats, User } from '@/constants/Types';
 import { router } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useUser } from '@/context/user';
 import { usePosts } from '@/hooks/usePosts';
-import { Float } from 'react-native/Libraries/Types/CodegenTypes';
+import { useStats } from '@/hooks/useStats';
 
 export function RegisteredSeller() {
-    const api = useApi();
-    const { user, setUser } = useUser();
+    const { user } = useUser();
     const [activeTab, setActiveTab] = useState('Active Listings');
     
-    const [earnings, setEarnings] = useState(0.00);
-    const [soldItems, setSoldItems] = useState(0);
-    
     const [endpoint, setEndpoint] = useState(`/users/${user?.id}/posts/issold=false/`);
-    const { posts, loading, error } = usePosts(endpoint);
+    
+    const { earnings, soldItems, loading: statsLoading, error: statsError } = useStats(user!);
+    const { posts, loading: postsLoading, error: postsError } = usePosts(endpoint);
     
     const handleTabSwitch = (tab: string) => {
         setActiveTab(tab);
@@ -30,53 +26,27 @@ export function RegisteredSeller() {
         );
     };
 
-
-    const fetchStats = async () => {
-        try {
-            const response = await api.get(`/users/${user?.id}/stats/`);
-            const result = await response.json();
-
-            if (response.ok) {
-                console.log("Received all stats: ", result);
-
-                setEarnings(result.totalEarnings);
-                setSoldItems(result.itemsSold);
-
-            } else {
-                setEarnings(0.00)
-                setSoldItems(0)
-            }
-        } catch (error) {
-            console.error('Error fetching stats:', error);
-            Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
-        }
-    };
-
-   
-    useEffect(() => { fetchStats(); }, []);
-
-    
-
     return (
         <>
-                
-            <Earnings earnings={earnings} soldItems={soldItems} />
-            
-            <Tabs 
-                activeTab={activeTab} 
-                handleTabSwitch={handleTabSwitch} 
-                tab1={'Active Listings'} 
-                tab2={'Sold Listings'} 
-            />
-
-            <PostsFlatList posts={posts} height={270} />
-
-            <CreateButtons />
-               
-                
+           {statsLoading || postsLoading ? (
+                <ActivityIndicator size="large" color="#0000ff" />
+            ) : (
+                <>
+                    <Earnings earnings={earnings} soldItems={soldItems} />
+                    <Tabs 
+                        activeTab={activeTab} 
+                        handleTabSwitch={handleTabSwitch} 
+                        tab1={'Active Listings'} 
+                        tab2={'Sold Listings'} 
+                    />
+                    <PostsFlatList posts={posts} height={270} />
+                    <CreateButtons />
+                </>
+            )}
         </>
     );
 }
+
 
 function Earnings({ earnings, soldItems }: { earnings: number, soldItems: number }){
     const formattedEarnings = new Intl.NumberFormat('en-US', {
@@ -99,6 +69,7 @@ function Earnings({ earnings, soldItems }: { earnings: number, soldItems: number
         </View>
     )
 }
+
 
 function CreateButtons(){
     return (
