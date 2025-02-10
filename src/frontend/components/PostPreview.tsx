@@ -71,22 +71,19 @@ export function PostPreview({ post, size, profileThumbnail = "none"}: { post: Po
                 
                 <ImageBackground source={post.coverImage} style={{ height: size, width: size }}>
                     {icon}
-                    {isSold && <View style={overlayStyle} />} {/* Overlay when sold */}
-                </ImageBackground>
-                    {isSold && (
-                        <Text
-                            style={{
-                                position: "absolute",
-                                top: 65,
-                                left: 50,
-                                color: "white",
-                                fontWeight: "bold",
-                                fontSize: 20,
-                            }}
-                        >
-                            SOLD
-                        </Text>
+
+                    {Boolean(isSold) && <View style={overlayStyle} />}
+                    {Boolean(isSold) && (
+                        <View style={{ position: "absolute", top: 65, left: 50 }}>
+                            <Text style={{ color: "white", fontWeight: "bold", fontSize: 20 }}>
+                                SOLD
+                            </Text>
+                        </View>
                     )}
+
+
+                  
+                </ImageBackground>
                
             </TouchableOpacity>
 
@@ -102,7 +99,6 @@ export function PostPreview({ post, size, profileThumbnail = "none"}: { post: Po
         </View>
     );
 }
-
 
 
     
