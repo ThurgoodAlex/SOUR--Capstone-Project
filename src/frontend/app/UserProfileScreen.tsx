@@ -1,17 +1,15 @@
 import { useState, useEffect } from 'react';
-import { View, Text, Image, Alert, StyleSheet, ScrollView, TouchableOpacity, ImageBackground, FlatList } from 'react-native';
+import { View, Text, Image, Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 
-import { router, Stack } from 'expo-router';
+import { Stack } from 'expo-router';
 import { useApi } from '@/context/api';
 import { NavBar } from '@/components/NavBar';
 import { StatsBar } from '@/components/StatsBar';
-import { Post, User } from '@/constants/Types';
+import { User } from '@/constants/Types';
 import { useSearchParams } from 'expo-router/build/hooks';
-import { Ionicons } from '@expo/vector-icons';
 import { useUser } from '@/context/user';
 import { usePosts } from '@/hooks/usePosts';
-import { PostPreview } from '@/components/PostPreview';
 import { PostsFlatList } from '@/components/PostsFlatList';
 
 export default function UserProfileScreen() {

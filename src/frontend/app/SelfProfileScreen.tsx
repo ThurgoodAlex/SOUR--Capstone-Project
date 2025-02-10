@@ -1,18 +1,14 @@
-import { useState, useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity, Image, Alert, StyleSheet, FlatList, ScrollView, ImageBackground, ViewStyle } from 'react-native';
+import { useState } from 'react';
+import { View, Text, Image, Alert, StyleSheet } from 'react-native';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 
 import { useUser } from '@/context/user';
 import { router, Stack } from 'expo-router';
-import { useAuth } from '@/context/auth';
-import { useApi } from '@/context/api';
 import { NavBar } from '@/components/NavBar';
 import { StatsBar } from '@/components/StatsBar';
 import { Tabs } from '@/components/Tabs';
-import { Post } from '@/constants/Types';
 import { Ionicons } from '@expo/vector-icons';
 import { usePosts } from '@/hooks/usePosts';
-import { PostPreview } from '@/components/PostPreview';
 import { PostsFlatList } from '@/components/PostsFlatList';
 
 
