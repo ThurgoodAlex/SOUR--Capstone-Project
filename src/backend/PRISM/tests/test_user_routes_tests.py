@@ -46,18 +46,21 @@ def create_test_fixture(session):
         session.rollback()
 
 
-@pytest.fixture(name="test_token")
+@pytest.fixture(name="test_token", scope="module")
 def token_fixture(client: TestClient, test_user: UserInDB):
    """Get authentication token for test user"""
    response = client.post(
        "/auth/token",
-       data={"username": test_user.username, "password": "password123"}
+       data={
+            "username": TEST_USER["username"],
+            "password": TEST_USER["password"] 
+            }
    )
    return response.json()["access_token"]
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-@pytest.fixture()
+@pytest.fixture(scope="module")
 def create_test_user( session):
     JOHN = UserInDB(
                 firstname="John",
@@ -71,7 +74,7 @@ def create_test_user( session):
     session.add(JOHN)
     session.commit()
 
-@pytest.fixture( name="test_user")
+@pytest.fixture( name="test_user", scope="module")
 def test_user(create_test_user, engine):
     with engine.connect() as conn:
         result = conn.execute(text(""" SELECT * FROM users WHERE username = 'johndoe'""")).first()

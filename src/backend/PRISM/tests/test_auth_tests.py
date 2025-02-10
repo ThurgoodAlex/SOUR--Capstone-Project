@@ -9,6 +9,7 @@ from PRISM.prism_exceptions import DuplicateUserRegistration
 from databaseAndSchemas.schema import(
     UserInDB 
 )
+from sqlalchemy import text
 from sqlmodel import select
 from datetime import datetime, timezone
 from jose import jwt
@@ -32,6 +33,13 @@ TEST_USER = {
     "isSeller":False
 }
 
+@pytest.fixture( name="test_user", scope="module")
+def test_user(create_test_user, engine):
+    with engine.connect() as conn:
+        result = conn.execute(text(""" SELECT * FROM users WHERE username = 'johndoe'""")).first()
+    return UserInDB(**result._asdict())
+
+
 @pytest.fixture(scope="module", name= "create_test_user", autouse=True)
 def create_test_fixture(session):
     try:
@@ -51,7 +59,7 @@ def create_test_fixture(session):
         session.rollback()
 
 
-@pytest.fixture(name="test_token")
+@pytest.fixture(name="test_token",scope="module")
 def token_fixture(client: TestClient, test_user: UserInDB):
    """Get authentication token for test user"""
    response = client.post(
@@ -168,8 +176,11 @@ class TestTokenAuthentication:
         decoded = jwt.decode(token, key=jwt_key, algorithms=[jwt_alg])
         assert decoded["exp"] > datetime.now(timezone.utc).timestamp()
     
-    def test_get_current_user(self, client: TestClient):
+    def test_get_current_user(self, client: TestClient, test_token):
+
+        request_headers = {"Authorization": f"Bearer {test_token}"}
         response = client.get(
             "/auth/me", 
-            data=USER_LOGIN
+            headers=request_headers
         )
+        assert response.status_code == 200
