@@ -1,13 +1,12 @@
-import React from 'react';
 import { TouchableOpacity, Text, Alert, ActivityIndicator } from 'react-native';
 import { useApi } from '@/context/api';
 import { useUser } from '@/context/user';
-import { CartButtonProps } from '@/constants/Types';
+import { useState } from 'react';
 
-const CartButton: React.FC<CartButtonProps> = ({ listingID }) => {
+export default function CartButton({listingID} : {listingID: number}) {
     const api = useApi();
     const { user } = useUser();
-    const [loading, setLoading] = React.useState(false);
+    const [loading, setLoading] = useState(false);
 
     const addToCart = async () => {
         if (!user || !user.id) {
@@ -55,5 +54,3 @@ const CartButton: React.FC<CartButtonProps> = ({ listingID }) => {
         </TouchableOpacity>
     );
 };
-
-export default CartButton;

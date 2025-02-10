@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, FlatList, ScrollView, ViewStyle, ImageBackground, TextComponent } from 'react-native';
+import { View, Text, TouchableOpacity, Image, FlatList, ScrollView, ViewStyle, ImageBackground, TextComponent, ActivityIndicator } from 'react-native';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 import ProfileThumbnail from '@/components/ProfileThumbnail';
 import PhotoCarousel from '@/components/PhotoCarousel';
@@ -178,6 +178,7 @@ export default function PostInfoScreen() {
                         <PhotoCarousel />
                         <View style={[Styles.row, { justifyContent: 'space-between' }]}>
                             <ProfileThumbnail user={post.seller} />
+                            {post.isListing ? (<CartButton listingID={post.id} />): null  }
                             <TouchableOpacity onPress={toggleLike}>
                                 {liked ? (
                                     <Ionicons size={20} name='heart' color='red' />
@@ -221,13 +222,13 @@ function ListingInfo({ post }: { post: Post }) {
             <View style={[Styles.row, {justifyContent:'space-between'}]}>
                 <Text style={[TextStyles.h1, TextStyles.uppercase]}>{post.title}</Text>
                 <Text style={[TextStyles.h2, {textAlign:'right'}]}>{formattedPrice}</Text>
-                <CartButton listingID={post.id} />
             </View>
             {post.size != "n/a" ? (<Text style={[TextStyles.h3, {textAlign:'left'}]}>Size: {post.size}</Text>) : null }
             <Text style={TextStyles.p}>{post.description}</Text>
         </View>
     );
 }
+
 
 function PostInfo({ post }: { post: Post }) {
 
