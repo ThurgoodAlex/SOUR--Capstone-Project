@@ -1,16 +1,24 @@
 import { useEffect, useState } from "react";
 import { getCart } from "@/components/GetCart";
 import { useUser } from "@/context/user";
-import { StyleSheet } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { useApi } from "@/context/api";
 import { ActivityIndicator, FlatList, View, Text, Alert } from "react-native";
-import { CartItemProps } from "@/constants/Types";
 import { Post } from "@/constants/Types";
 import { CartItem } from "@/components/CartItem";
 import { router } from "expo-router";
+import { Dimensions } from "react-native";
+
+
+
+
 
 
 export default function CartScreen() {
+
+
+  console.log("CartScreen Component Mounted!");
+
     const [cart, setCart] = useState<Post[]>([]);
     const [loading, setLoading] = useState(true);
     const { user } = useUser();
@@ -46,6 +54,7 @@ export default function CartScreen() {
         fetchCart();
     }, [user]);
 
+
     if (loading) {
         return (
             <View style={cartPageStyle.loaderContainer}>
@@ -63,22 +72,22 @@ export default function CartScreen() {
     }
 
     const handlePress = (item: Post) => {
-      router.push('/PostInfoScreen/${item.id}/'); // Use Expo Router to navigate to another screen
+      router.push(`/PostInfoScreen/${item.id}/`);
+ // Use Expo Router to navigate to another screen
     };
 
     const handleDelete = async (item: any) => {
       try {
-        const cartItemId = item.id; // This is the cart item ID, not the listing ID
+        const cartItemId = item.id; // This is the listingID as shown in the cart
         console.log("Deleting item from cart:", cartItemId);
         
-        // Ensure cartItemId exists
         if (!cartItemId) {
           Alert.alert("Error", "Invalid cart item ID");
           return;
         }
     
         // Perform the DELETE request using the cartItemId
-        const response = await api.remove(`/users/${user?.id}/cart/${cartItemId}/`);
+        const response = await api.remove(`/users/users/${user?.id}/cart/${cartItemId}/`);
     
         if (response.ok) {
           // Remove the item from the cart state if deletion is successful
@@ -92,58 +101,89 @@ export default function CartScreen() {
         Alert.alert("Error", "Something went wrong. Please try again.");
       }
     };
-    
-    
-  
+      
     return (
-        <View style={cartPageStyle.container}>
-            <FlatList
-                data={cart}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => (
-                  <CartItem
-                      item={item}
-                      onPress={handlePress} 
-                      onDelete={() => handleDelete(item)}
-                  />
-              )}
-                contentContainerStyle={cartPageStyle.list}
-            />
+      <View style={cartPageStyle.container}>
+        {/* Cart Items List */}
+        <View style={cartPageStyle.listContainer}>
+          <FlatList
+            data={cart}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <CartItem
+                item={item}
+                onPress={() => handlePress(item)}
+                onDelete={() => handleDelete(item)}
+              />
+            )}
+            contentContainerStyle={cartPageStyle.list}
+          />
         </View>
+    
+        <View style={cartPageStyle.checkoutContainer}>
+          <TouchableOpacity
+            style={cartPageStyle.checkoutButton}
+            onPress={() => Alert.alert("Proceeding to checkout")}
+          >
+            <Text style={cartPageStyle.checkoutText}>Checkout</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     );
+    
 }
-
-
-
-
   
-
-
-   
-
   
-  export const cartPageStyle = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#f5f5f5',
-      padding: 10,
-    },
-    list: {
-      paddingBottom: 20,
-    },
-    loaderContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    emptyContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    emptyText: {
-      fontSize: 18,
-      color: '#666',
-      fontWeight: 'bold',
-    },
-  });
+export const cartPageStyle = StyleSheet.create({
+  container: {
+    flex: 1, // Ensures full-screen usage
+    backgroundColor: "#f5f5f5",
+    paddingHorizontal: 10,
+  },
+  listContainer: {
+    flex: 1, // Allows the cart list to grow and fill available space
+  },
+  list: {
+    paddingBottom: 20, // Adds spacing before checkout button
+  },
+  checkoutContainer: {
+    width: "100%",
+    paddingVertical: 15,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+    borderTopWidth: 1,
+    borderTopColor: "#ddd",
+  },
+  emptyText:
+  {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#777",
+  },
+  checkoutButton: {
+    width: "90%",
+    backgroundColor: "#007AFF",
+    paddingVertical: 15,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  checkoutText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
+
+ 

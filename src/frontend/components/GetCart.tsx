@@ -16,13 +16,11 @@ export const getCart = async (user: { id: string } | null, api: any): Promise<Po
 
         if (response.ok) {
             const cartData = await response.json();
-            console.log("Cart Response:", cartData);
 
-            // Extract `listingID` from each cart item
+            // Extract `listingID` from each cart item an fetch item in parallel
             const listingIDs = cartData.map((item: { listingID: number }) => item.listingID);
             console.log("Extracted Listing IDs:", listingIDs);
 
-            // Fetch full item details in parallel
             const cartItems = await Promise.all(
                 listingIDs.map(async (id: any) => {
                     const itemResponse = await api.get(`/posts/${id}/`);
@@ -30,7 +28,6 @@ export const getCart = async (user: { id: string } | null, api: any): Promise<Po
                 })
             );
 
-            // Filter out any failed API calls (null values)
             const validCartItems = cartItems.filter((item) => item !== null);
             console.log("Full Cart Items:", validCartItems);
             return validCartItems;

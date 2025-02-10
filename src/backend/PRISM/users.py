@@ -260,13 +260,16 @@ def get_user_cart(
 
     return [Cart(**item.model_dump()) for item in user_cart]
 
+class CartRequest(BaseModel):
+    listing_id: int
+
 @users_router.post("/{user_id}/cart/", response_model=Cart, status_code=200)
 def add_item_to_cart(
-    listing_id: int,
+    request: CartRequest,  # ✅ Now listing_id comes from request body
     session: Annotated[Session, Depends(get_session)],
     currentUser: UserInDB = Depends(auth_get_current_user)
 ) -> Cart:
-   
+    listing_id = request.listing_id  # ✅ Extract listing_id from request body
 
     listing = session.exec(
         select(PostInDB).where(
@@ -303,7 +306,7 @@ def del_item_from_cart(
     
     cart_item = session.exec(
         select(CartInDB).where(
-            and_(CartInDB.userID == currentUser.id, CartInDB.id == cart_item_id)
+            and_(CartInDB.userID == currentUser.id, CartInDB.listingID == cart_item_id)
         )
     ).first()
 

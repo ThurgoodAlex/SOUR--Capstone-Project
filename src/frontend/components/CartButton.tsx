@@ -1,35 +1,58 @@
 import React from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { TouchableOpacity, Text, Alert, ActivityIndicator } from 'react-native';
 import { useApi } from '@/context/api';
 import { useUser } from '@/context/user';
 import { CartButtonProps } from '@/constants/Types';
 
-
-
 const CartButton: React.FC<CartButtonProps> = ({ listingID }) => {
-    const navigation = useNavigation();
     const api = useApi();
-    const user = useUser();
+    const { user } = useUser();
+    const [loading, setLoading] = React.useState(false);
 
     const addToCart = async () => {
-        
+        if (!user || !user.id) {
+            Alert.alert('Error', 'You must be logged in to add items to the cart.');
+            return;
+        }
+
+        setLoading(true);
+
         try {
-            const response = await api.post(`/${user.user?.id}/cart/`, { listing_id: listingID });
-    
+            console.log("Adding to cart:", listingID);
+            const response = await api.post(`/users/${user.id}/cart/`, {
+                listing_id: listingID,
+            });
             if (!response.ok) {
                 throw new Error(`Failed to add item: ${response.statusText}`);
             }
+
             const data = await response.json();
+            Alert.alert('Success', 'Item added to cart!');
             console.log('Item added to cart:', data);
+
         } catch (error) {
-            console.error('There was a problem with the fetch operation:', error);
+            console.error('Error adding to cart:', error);
+            Alert.alert('Error', 'Failed to add item to cart.');
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <button onClick={addToCart}>
-            Add to Cart
-        </button>
+        <TouchableOpacity
+            onPress={addToCart}
+            style={{
+                backgroundColor: '#7e9151',
+                padding: 10,
+                borderRadius: 5,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginTop: 10,
+            }}
+            disabled={loading}
+        >
+            {loading ? <ActivityIndicator color="white" /> : <Text style={{ color: 'white' }}>Add to Cart</Text>}
+        </TouchableOpacity>
     );
 };
 

@@ -11,6 +11,7 @@ import { useApi } from '@/context/api';
 import { Post, User } from '@/constants/Types';
 import { Ionicons } from '@expo/vector-icons';
 import { GridPosts } from '@/components/GridPosts';
+import  CartButton  from '@/components/CartButton';
 
 export default function PostInfoScreen() {
     const {user} = useUser(); // Fetch user details
@@ -209,7 +210,7 @@ export default function PostInfoScreen() {
 
 // Component to display Post details
 function ListingInfo({ post }: { post: Post }) {
-
+    console.log("listing")
     const formattedPrice = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
@@ -220,6 +221,7 @@ function ListingInfo({ post }: { post: Post }) {
             <View style={[Styles.row, {justifyContent:'space-between'}]}>
                 <Text style={[TextStyles.h1, TextStyles.uppercase]}>{post.title}</Text>
                 <Text style={[TextStyles.h2, {textAlign:'right'}]}>{formattedPrice}</Text>
+                <CartButton listingID={post.id} />
             </View>
             {post.size != "n/a" ? (<Text style={[TextStyles.h3, {textAlign:'left'}]}>Size: {post.size}</Text>) : null }
             <Text style={TextStyles.p}>{post.description}</Text>
