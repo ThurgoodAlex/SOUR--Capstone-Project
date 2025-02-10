@@ -1,29 +1,28 @@
 import { useState } from 'react';
-import { View, Text, TouchableOpacity, Image, FlatList, ScrollView, ViewStyle, ImageBackground, TextComponent } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 import ProfileThumbnail from '@/components/ProfileThumbnail';
 import PhotoCarousel from '@/components/PhotoCarousel';
 import { NavBar } from '@/components/NavBar';
 import { useLocalSearchParams } from 'expo-router';
 import { useApi } from '@/context/api';
-import { Post, User } from '@/constants/Types';
+import { Post } from '@/constants/Types';
 import { Ionicons } from '@expo/vector-icons';
-import { PostPreview } from '@/components/PostPreview';
 import { LinkedItems } from '@/components/Linkedtems';
 import { usePost } from '@/hooks/usePost';
 import { usePosts } from '@/hooks/usePosts';
 
 export default function PostInfoScreen() {
-    const api = useApi();
-
+    
     const { id } = useLocalSearchParams(); // Get the dynamic `id` from the route
 
     const { post, loading: postsLoading, error: postsError } = usePost(`${id}`);
     const { posts: linkedItems, loading: linkedPostsLoading, error: linkedPostsError } = usePosts(`/posts/${id}/links/`);
+    
     const [liked, setLike] = useState(false);
 
-
     if (post) {
+        const api = useApi();
         const fetchLike = async () => {
             const response = await api.get(`/posts/${post.id}/like/`);
             const data = await response.json();
@@ -91,9 +90,8 @@ export default function PostInfoScreen() {
 
 }
 
-// Component to display Post details
+//display Listing details
 function ListingInfo({ post }: { post: Post }) {
-
     const formattedPrice = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
@@ -111,8 +109,8 @@ function ListingInfo({ post }: { post: Post }) {
     );
 }
 
+//display Post details
 function PostInfo({ post }: { post: Post }) {
-
     return (
         <View style={Styles.column}>
             <View style={[Styles.row, {justifyContent:'space-between'}]}>
