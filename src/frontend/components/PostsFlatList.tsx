@@ -12,7 +12,7 @@ import { Post, PostFlatListProps } from '@/constants/Types';
  */
 
 export const PostsFlatList: React.FC<PostFlatListProps> = ({ posts, height }) => {
-    const size = 150; 
+    const size = 160; 
     const renderPost = ({ item }: {item: Post}) => (
         <PostPreview post={item} size={size} profileThumbnail='none'/>
     );
