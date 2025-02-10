@@ -10,6 +10,10 @@ from databaseAndSchemas import  (
 )
 from .database_config import engine 
 from sqlalchemy import create_engine, text
+"""
+This database seeder is meant to used for manual testing in dev environments.
+This isn't used for unit tests, instead each unit test module has it's own test db instance. 
+"""
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
