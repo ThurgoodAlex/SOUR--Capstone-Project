@@ -15,8 +15,8 @@ export default function ChatsScreen() {
     const [chats, setChats] = useState<ChatData[]>([]);
     const getChats = async () => {
         try {
-            const response = await api.get('/users/chats/');
-            if (response.status === 200) {
+            const response = await api.get(`/users/${user?.id}/chats/`);
+            if (response.ok) {
                 const chatData = await response.json();
                 console.log("Chats retrived successfully.");
                 

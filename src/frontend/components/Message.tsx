@@ -1,9 +1,8 @@
 import { View, Image, StyleSheet, Text } from 'react-native';
 import { Styles, TextStyles } from '@/constants/Styles';
 import { MessageData, User } from '@/constants/Types';
-import { useEffect, useState } from 'react';
-import { useApi } from '@/context/api';
 import { useUser } from '@/context/user';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 export function Message({ message, authorID }: { message: MessageData, authorID: number }) {
     const {user} = useUser();
@@ -17,23 +16,23 @@ export function Message({ message, authorID }: { message: MessageData, authorID:
 
     return (
         <View style={Styles.row}>
-            <Text style={isUser ? (MessageProfileStyles.myMessage) : (MessageProfileStyles.theirMessage)}>
+            <Text style={isUser ? (MessageStyles.myMessage) : (MessageStyles.theirMessage)}>
                 {message.message}
             </Text>
             <View style={[Styles.row, {justifyContent: 'space-between', width: '60%'}]}>
                 <Text style={TextStyles.dark}>{message.author}</Text>
-                <Text style={TextStyles.dark}>{message.created_at.toDateString()}</Text>  
+                <Text style={TextStyles.dark}>{message.created_at.toLocaleDateString()}</Text>  
             </View>
         </View>
     );
 };
 
-const MessageProfileStyles = StyleSheet.create({
+const MessageStyles = StyleSheet.create({
     myMessage: {
         flexDirection: 'row',
         width: '60%',
         justifyContent: 'flex-end',
-        backgroundColor: '#f98b69',
+        backgroundColor: Colors.grapefruit,
         padding: 16,
         borderRadius: 8,
     },
@@ -41,7 +40,7 @@ const MessageProfileStyles = StyleSheet.create({
         flexDirection: 'row',
         width: '60%',
         justifyContent: 'flex-start',
-        backgroundColor: '#7e9151',
+        backgroundColor: Colors.green,
         padding: 16,
         borderRadius: 8,
     }
