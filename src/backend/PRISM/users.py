@@ -254,7 +254,6 @@ def get_user_cart(
     currentUser: UserInDB = Depends(auth_get_current_user)
 ) -> list[Cart]:
     
-    #TODO: Exception if current user is not user_id?
     
     user_cart = session.exec(select(CartInDB).where(CartInDB.userID == currentUser.id)).all()
 
@@ -265,11 +264,11 @@ class CartRequest(BaseModel):
 
 @users_router.post("/{user_id}/cart/", response_model=Cart, status_code=200)
 def add_item_to_cart(
-    request: CartRequest,  # ✅ Now listing_id comes from request body
+    request: CartRequest,
     session: Annotated[Session, Depends(get_session)],
     currentUser: UserInDB = Depends(auth_get_current_user)
 ) -> Cart:
-    listing_id = request.listing_id  # ✅ Extract listing_id from request body
+    listing_id = request.listing_id 
 
     listing = session.exec(
         select(PostInDB).where(
