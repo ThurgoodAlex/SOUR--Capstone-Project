@@ -111,6 +111,16 @@ def get_filtered_posts(
     return [Post(**post.model_dump()) for post in posts_in_db]
 
 
+@posts_router.get('/new', response_model= list[Post], )
+def get_newest_posts(session: Annotated[Session, Depends(get_session)], 
+                  current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
+    """Getting up to the 5 newest posts, ordered from newest to oldest."""
+    post_in_db = session.exec(
+        select(PostInDB).order_by(desc(PostInDB.created_at)).limit(5)
+    ).all()
+    return [Post(**post.model_dump()) for post in post_in_db]
+
+
 @posts_router.delete('/comments/{comment_id}/', response_model= Delete, status_code=200)
 def delete_comment(session :Annotated[Session, Depends(get_session)],
                     comment_id: int,
@@ -154,14 +164,6 @@ def del_post_by_id(post_id : int,
     return Delete(message="Post deleted successfully.")
 
 
-@posts_router.get('/new/', response_model= list[Post], )
-def get_newest_posts(session: Annotated[Session, Depends(get_session)], 
-                  current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
-    """Getting up to the 5 newest posts, ordered from newest to oldest."""
-    post_in_db = session.exec(
-        select(PostInDB).order_by(desc(PostInDB.created_at)).limit(5)
-    ).all()
-    return [Post(**post.model_dump()) for post in post_in_db]
 
 
 

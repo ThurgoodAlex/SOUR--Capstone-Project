@@ -49,8 +49,9 @@ export type Stats = {
 }
 
 
-export type GridPostsProps = {
+export type PostFlatListProps = {
     posts: Post[];
+    height: number
 };
 
 export type ThemedViewProps = ViewProps & {
