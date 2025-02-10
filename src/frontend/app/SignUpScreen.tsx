@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert, StyleSheet } from 'react-native';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 import { router } from 'expo-router';
 import { useApi } from '@/context/api';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { Ionicons } from '@expo/vector-icons';
+import { Colors } from '@/constants/Colors';
 
 export default function SignUpScreen() {
     const [username, setUsername] = useState('');
@@ -11,7 +13,10 @@ export default function SignUpScreen() {
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [verifyPassword, setVerifyPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    const [passwordVisible, setPasswordVisible] = useState(false);
+    const [verifyPasswordVisible, setVerifyPasswordVisible] = useState(false);
 
     // Get the `post` method from the API
     const { post } = useApi();
@@ -19,6 +24,17 @@ export default function SignUpScreen() {
     const requestCreateUser = async () => {
         if (!username || !email || !password || !firstName || !lastName) {
             Alert.alert('Error', 'Please fill out all fields.');
+            return;
+        }
+
+        if (password !== verifyPassword) {
+            Alert.alert('Error', 'Passwords do not match.');
+            return;
+        }
+
+        const passwordRegex = /^(?=.*[A-Z])(?=.*[0-9!@#$%^&*])(?=.{8,})/;
+        if (!passwordRegex.test(password)) {
+            Alert.alert('Error', 'Password must be at least 8 characters long, contain at least one uppercase letter, and include either a number or a special character.');
             return;
         }
 
@@ -37,7 +53,6 @@ export default function SignUpScreen() {
             const result = await response.json();
             console.log(result);
 
-
             if (response.ok) {
                 Alert.alert('Success', `Account created successfully! Welcome, ${result.firstName || firstName}!`);
                 router.replace('/LoginScreen');
@@ -53,56 +68,99 @@ export default function SignUpScreen() {
     };
 
     return (
-        <View style={ScreenStyles.screenCentered}>
-            <KeyboardAwareScrollView>
-
-                <Text style={[TextStyles.h2, TextStyles.uppercase]}>Create an Account</Text>
-                <TextInput
-                    style={Styles.input}
-                    placeholder="First Name"
-                    value={firstName}
-                    onChangeText={setFirstName}
-                />
-                <TextInput
-                    style={Styles.input}
-                    placeholder="Last Name"
-                    value={lastName}
-                    onChangeText={setLastName}
-                />
-                
-                <TextInput
-                    style={Styles.input}
-                    placeholder="Username"
-                    value={username}
-                    onChangeText={setUsername}
-                />
-                <TextInput
-                    style={Styles.input}
-                    placeholder="Email"
-                    keyboardType="email-address"
-                    value={email}
-                    onChangeText={setEmail}
-                />
+        <KeyboardAwareScrollView contentContainerStyle={ScreenStyles.screen}>
+            <Text style={TextStyles.h1}>Sign Up</Text>
+            <TextInput
+                style={Styles.input}
+                placeholder="Username"
+                value={username}
+                onChangeText={setUsername}
+            />
+            <TextInput
+                style={Styles.input}
+                placeholder="First Name"
+                value={firstName}
+                onChangeText={setFirstName}
+            />
+            <TextInput
+                style={Styles.input}
+                placeholder="Last Name"
+                value={lastName}
+                onChangeText={setLastName}
+            />
+            <TextInput
+                style={Styles.input}
+                placeholder="Email"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+            />
+            <View style={style.passwordContainer}>
                 <TextInput
                     style={Styles.input}
                     placeholder="Password"
-                    secureTextEntry
+                    secureTextEntry={!passwordVisible}
                     value={password}
                     onChangeText={setPassword}
                 />
-
+                <Ionicons
+                    name={passwordVisible ? 'eye-off' : 'eye'}
+                    size={24}
+                    color="gray"
+                    onPress={() => setPasswordVisible(!passwordVisible)}
+                    style ={style.icon}
+                />
+            </View>
+            <Text style={[TextStyles.small, style.hint]}>
+                Password must be at least 8 characters long, contain at least one uppercase letter, and include either a number or a special character.
+            </Text>
+            <View style={style.passwordContainer}>
+                <TextInput
+                    style={Styles.input}
+                    placeholder="Verify Password"
+                    secureTextEntry={!verifyPasswordVisible}
+                    value={verifyPassword}
+                    onChangeText={setVerifyPassword}
+                />
+                <Ionicons
+                    name={verifyPasswordVisible ? 'eye-off' : 'eye'}
+                    size={24}
+                    color="gray"
+                    onPress={() => setVerifyPasswordVisible(!verifyPasswordVisible)}
+                    style ={style.icon}
+                />
+            </View>
+            {loading ? (
+                <ActivityIndicator size="large" color="#0000ff" />
+            ) : (
                 <TouchableOpacity
                     style={Styles.buttonDark}
                     onPress={requestCreateUser}
                     disabled={loading}
                 >
-                    {loading ? (
-                        <ActivityIndicator color="#ffffff" />
-                    ) : (
-                        <Text style={TextStyles.light}>Sign Up</Text>
-                    )}
+                    <Text style={TextStyles.light}>Sign Up</Text>
                 </TouchableOpacity>
-            </KeyboardAwareScrollView>
-        </View>
+            )}
+        </KeyboardAwareScrollView>
     );
 }
+
+
+export const style = StyleSheet.create({
+    passwordContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '100%',
+    },
+    icon: {
+        padding: 10,
+        position: 'absolute',
+        right: 10,
+        bottom: 15
+    },
+    hint: {
+        marginTop:-10,
+        marginBottom:15,
+        color:Colors.dark
+    }
+});
