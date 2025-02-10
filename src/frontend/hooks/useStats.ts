@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useApi } from '@/context/api';
-import { Post, User } from '@/constants/Types';
+import { User } from '@/constants/Types';
 import { Alert } from 'react-native';
 
 /**
  * Custom hook to fetch stats for a given user
- * @param endpoint - API endpoint for fetching posts
+ * @param user - user object to fetch stats for
  */
 export function useStats(user: User) {
     const api = useApi();

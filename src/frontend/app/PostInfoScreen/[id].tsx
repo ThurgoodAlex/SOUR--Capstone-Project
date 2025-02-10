@@ -1,152 +1,27 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, FlatList, ScrollView, ViewStyle, ImageBackground, TextComponent } from 'react-native';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 import ProfileThumbnail from '@/components/ProfileThumbnail';
 import PhotoCarousel from '@/components/PhotoCarousel';
 import { NavBar } from '@/components/NavBar';
-import { router, useLocalSearchParams } from 'expo-router';
-import { useUser } from '@/context/user';
-import { useAuth } from '@/context/auth';
+import { useLocalSearchParams } from 'expo-router';
 import { useApi } from '@/context/api';
 import { Post, User } from '@/constants/Types';
 import { Ionicons } from '@expo/vector-icons';
 import { PostPreview } from '@/components/PostPreview';
 import { LinkedItems } from '@/components/Linkedtems';
+import { usePost } from '@/hooks/usePost';
+import { usePosts } from '@/hooks/usePosts';
 
 export default function PostInfoScreen() {
-    const {user} = useUser(); // Fetch user details
     const api = useApi();
 
-    const [liked, setLike] = useState(false);
-    const [post, setPost] = useState<Post | null>(null);
-    const [seller, setSeller] = useState<User | null>(null);
-    const [linkedItems, setLinkedItems] = useState<Post[]>([]);
-
     const { id } = useLocalSearchParams(); // Get the dynamic `id` from the route
-    const images = ["sweater1.png", "sweater2.png", "sweater3.png", "sweater4.png"]
 
+    const { post, loading: postsLoading, error: postsError } = usePost(`${id}`);
+    const { posts: linkedItems, loading: linkedPostsLoading, error: linkedPostsError } = usePosts(`/posts/${id}/links/`);
+    const [liked, setLike] = useState(false);
 
-    // Fetch the Post based on the dynamic id
-    const fetchPost = async () => {
-        try {
-            const response = await api.get(`/posts/${id}/`);
-            const result = await response.json();
-
-            const sellerResponse = await api.get(`/users/${result.sellerID}/`);
-            const sellerData = await sellerResponse.json();
-
-            const seller : User = {
-                id: sellerData.seller_id,
-                firstname: sellerData.firstname,
-                lastname: sellerData.lastname,
-                username: sellerData.username,
-                profilePic: sellerData.profilePic,
-                email: sellerData.email,
-                isSeller: sellerData.isSeller,
-                bio: sellerData.bio
-            }
-            setSeller(seller);
-
-            // Transform the data
-            if (seller) {
-                const transformedPost: Post = {
-                    id: result.id,
-                    createdDate: result.created_at,
-                    seller: seller,
-                    title: result.title,
-                    description: result.description,
-                    brand: result.brand,
-                    condition: result.condition,
-                    size: "n/a", // Set default size
-                    gender: result.gender,
-                    coverImage: result.coverImage,
-                    price: result.price,
-                    isSold: result.isSold,
-                    isListing: result.isListing
-                };
-
-                setPost(transformedPost); // Set the transformed data
-            } else {
-                console.error('Seller information is not available.');
-            }
-
-        } catch (error) {
-            console.error('Error fetching Post:', error);
-        }
-    };
-
-    const dummyImages = [
-        require('../../assets/images/video.png'),
-        require('../../assets/images/post.png'),
-        require('../../assets/images/sweater1.png'),
-        require('../../assets/images/listing2.png'),
-        require('../../assets/images/listing.png'),
-        require('../../assets/images/random1.png'),
-        require('../../assets/images/random2.png'),
-        require('../../assets/images/random3.png'),
-        require('../../assets/images/random4.png'),
-        require('../../assets/images/random5.png'),
-        ];
-
-
-
-    const fetchLinkedPosts = async () => {
-        try {
-            const response = await api.get(`/posts/${id}/links/`);
-            const result = await response.json();
-
-            console.log("Linked Listings", result)
-
-            if(seller){
-                const getRandomImage = () =>
-                    dummyImages[Math.floor(Math.random() * dummyImages.length)];
-
-
-                const transformedPosts: Post[] = await Promise.all(
-                    result.map(async (item: any) => {
-                        
-                        return {
-                            id: item.id,
-                            createdDate: item.created_at || new Date().toISOString(),
-                            coverImage: getRandomImage(),
-                            title: item.title,
-                            description: item.description,
-                            brand: item.brand,
-                            condition: item.condition,
-                            size: item.size,
-                            gender: item.gender,
-                            price: item.price,
-                            isSold: item.isSold,
-                            isListing: item.isListing,
-                            seller:seller,
-                        };
-                    })
-                    );
-                    
-                setLinkedItems(transformedPosts); // Set the transformed data
-            }
-            else {
-                console.error('Seller information is not available.');
-            }
-
-        } catch (error) {
-            console.error('Error fetching Linked Items:', error);
-        }
-    };
-
-    
-       
- 
-    useEffect(() => {
-        fetchPost();  // Fetch post first
-    }, [id]); // Only runs when `id` changes
-    
-    useEffect(() => {
-        if (seller) {
-            fetchLinkedPosts(); // Only fetch linked posts after seller is set
-        }
-    }, [seller]); // Runs only when `seller` is updated
-    
 
     if (post) {
         const fetchLike = async () => {
