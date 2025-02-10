@@ -14,6 +14,8 @@ import { usePosts } from '@/hooks/usePosts';
 
 export default function PostInfoScreen() {
     
+    const api = useApi();
+    
     const { id } = useLocalSearchParams(); // Get the dynamic `id` from the route
 
     const { post, loading: postsLoading, error: postsError } = usePost(`${id}`);
@@ -22,7 +24,7 @@ export default function PostInfoScreen() {
     const [liked, setLike] = useState(false);
 
     if (post) {
-        const api = useApi();
+       
         const fetchLike = async () => {
             const response = await api.get(`/posts/${post.id}/like/`);
             const data = await response.json();
