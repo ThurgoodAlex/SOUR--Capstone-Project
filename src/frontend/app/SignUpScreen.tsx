@@ -51,13 +51,24 @@ export default function SignUpScreen() {
             });
 
             const result = await response.json();
-            console.log(result);
+            console.log("Result", result);
 
             if (response.ok) {
                 Alert.alert('Success', `Account created successfully! Welcome, ${result.firstName || firstName}!`);
                 router.replace('/LoginScreen');
             } else {
-                Alert.alert('Error', result.message || 'Failed to create an account. Please try again.');
+                if (response.status === 409) {
+                    let message = result.detail || '';
+                    if (message.includes('username')) {
+                        Alert.alert('Error', 'Username is already taken. Please try a different username.');
+                    } else if (message.includes('email')) {
+                        Alert.alert('Error', 'Email is already in use. Please try a different email or log in to your existing account.');
+                    } else {
+                        Alert.alert('Error', result.message || 'Failed to create an account. Please try again.');
+                    }
+                } else {
+                    Alert.alert('Error', result.message || 'Failed to create an account. Please try again.');
+                }
             }
         } catch (error) {
             console.error('Error creating account:', error);
