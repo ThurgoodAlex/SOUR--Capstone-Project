@@ -11,7 +11,7 @@ import { useStats } from '@/hooks/useStats';
 
 export function RegisteredSeller() {
     const { user } = useUser();
-    const [activeTab, setActiveTab] = useState('Active Listings');
+    const [activeTab, setActiveTab] = useState('Active');
     
     const [endpoint, setEndpoint] = useState(`/users/${user?.id}/posts/issold=false/`);
     
@@ -20,7 +20,7 @@ export function RegisteredSeller() {
     
     const handleTabSwitch = (tab: string) => {
         setActiveTab(tab);
-        setEndpoint(tab === 'Active Listings' 
+        setEndpoint(tab === 'Active' 
             ? `/users/${user?.id}/posts/issold=false/`
             : `/users/${user?.id}/posts/issold=true/`
         );
@@ -36,10 +36,17 @@ export function RegisteredSeller() {
                     <Tabs 
                         activeTab={activeTab} 
                         handleTabSwitch={handleTabSwitch} 
-                        tab1={'Active Listings'} 
-                        tab2={'Sold Listings'} 
+                        tab1={'Active'} 
+                        tab2={'Sold'} 
                     />
-                    <PostsFlatList posts={posts} height={270} />
+                     {posts.length > 0 ? (
+                        <PostsFlatList posts={posts} height={270} />
+                    ) : (
+                        <View style={{height:350}}>
+                            <Text style={[TextStyles.p, {textAlign:'center', marginTop:20}]}>Create a post or listing below!</Text>
+                        </View>
+                    )}
+                   
                     <CreateButtons />
                 </>
             )}

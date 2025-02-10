@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, Image, Alert, StyleSheet } from 'react-native';
+import { View, Text, Image, Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 
 import { useUser } from '@/context/user';
@@ -48,7 +48,17 @@ export default function SelfProfileScreen() {
                 <ProfileInfo user={user} />
                 <StatsBar user={user} statsUpdated={true}/>
                 <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} tab1={'Posts'} tab2={'Likes'} />
-                <PostsFlatList posts={posts} height={270} />
+                
+                {posts.length > 0 ? (
+                    <PostsFlatList posts={posts} height={270} />
+                ) : (
+                    activeTab === 'Posts' ? (
+                        <StartSelling />
+                    ) : (
+                        <Text style={[TextStyles.p, {textAlign:'center', marginTop:20}]}>You haven't liked anything yet.</Text>
+                    )
+                )}
+              
             </View>
             <NavBar/>
         </>
@@ -68,6 +78,17 @@ function ProfileInfo({ user }: { user: any }) {
     );
 }
 
+function StartSelling(){
+    return(
+        <>
+            <Text style={[TextStyles.p, {textAlign:'center', marginTop:20}]}>You haven't made any posts yet.</Text>
+           
+            <TouchableOpacity onPress={() => router.replace("/SellerScreen")} style={Styles.buttonLight}>
+                    <Text style={TextStyles.dark}>Get Started Today!</Text>
+            </TouchableOpacity>
+        </>
+    )
+}
 
 const ProfileStyles = StyleSheet.create({
     profileImage: {
