@@ -51,7 +51,9 @@ export const TextStyles = StyleSheet.create({
       marginBottom: 8,
   },
   small:{
-    fontSize:11,
+    color: Colors.dark, 
+    fontSize: 11,
+    marginBottom: 8,
   },
   light: {
     color: Colors.light,
@@ -130,7 +132,7 @@ export const Styles = StyleSheet.create({
     row:{
       flex: 1,
       flexDirection: 'row',
-      alignItems: 'center',
+      alignContent: 'center',
     },
     column: {
       flex: 1,
