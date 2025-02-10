@@ -1,14 +1,10 @@
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
-import { Alert, ImageSourcePropType, View } from 'react-native';
+import { View } from 'react-native';
 import { PostPreview } from '@/components/PostPreview';
 import { NavBar } from '@/components/NavBar';
 import { FlatList, Text } from 'react-native';
 import PostCarousel from '@/components/PostCarousel';
-import { User, Post } from '@/constants/Types';
-import { useCallback, useEffect, useState } from 'react';
-import { useUser } from '@/context/user';
-import { useAuth } from '@/context/auth';
-import { useApi } from '@/context/api';
+import { Post } from '@/constants/Types';
 import { usePosts } from '@/hooks/usePosts';
 
 
