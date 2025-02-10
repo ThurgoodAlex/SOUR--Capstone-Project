@@ -39,6 +39,7 @@ export default function SelfProfileScreen() {
                     <Ionicons
                         size={30}
                         name="cog-outline"
+                        color='#692b20'
                         onPress={() => router.push('/SettingsScreen')}
                     />
             }}/>

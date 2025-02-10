@@ -68,13 +68,14 @@ const api = (token: string | null = null) => {
     };
 
     // PUT request method
-    const put = async (url: string) => {
+    const put = async (url: string, body: Record<string, unknown> = {}) => {
         const headers = getAuthHeaders();
         console.log("PUT Request URL:", baseUrl + url);
         console.log("PUT Headers:", headers);
 
         return fetch(baseUrl + url, {
             method: 'PUT',
+            body: JSON.stringify(body),
             headers,
         });
     };

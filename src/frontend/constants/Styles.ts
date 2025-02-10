@@ -1,16 +1,5 @@
-import { Collapsible } from '@/components/Collapsible';
 import { StyleSheet } from 'react-native';
-
-const dark = '#692b20';
-const dark60 = '#692b2060';
-const light = '#d8ccaf';
-const light60 = '#d8ccaf60';
-const grapefruit = '#f98b69';
-const yellow = '#ffdb32';
-const orange = '#f9b032'
-const green = '#7e9151';
-const white = '#f7f3ea';
-const black = '#000000';
+import { Colors } from './Colors';
 
 
 export const ScreenStyles = StyleSheet.create({
@@ -18,13 +7,13 @@ export const ScreenStyles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 18,
-    backgroundColor: white,
+    backgroundColor: Colors.white,
   },
   screen: {
     flex: 1,
     justifyContent: 'flex-start',
     padding: 18,
-    backgroundColor: white,
+    backgroundColor: Colors.white,
   },
 });
 
@@ -40,24 +29,24 @@ export const TextStyles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 8,
-    color: '#333',
+    color: Colors.dark,
   },
   h2: {
       fontSize: 18,
       fontWeight: 'bold',
       marginBottom: 8,
-      color: '#222',
+      color: Colors.dark,
     },
   h3: {
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 8,
-    color: '#222',
+    color: Colors.dark,
   },
   p:{
     fontSize: 16,
-      color: '#666', 
+      color: Colors.dark, 
       lineHeight: 22,
       marginBottom: 8,
   },
@@ -65,11 +54,11 @@ export const TextStyles = StyleSheet.create({
     fontSize:11,
   },
   light: {
-    color: light,
+    color: Colors.light,
     fontWeight: 'bold',
   },
   dark: {
-      color: dark,
+      color: Colors.dark,
       fontWeight: 'bold',
   },
 
@@ -79,11 +68,10 @@ export const TextStyles = StyleSheet.create({
 
 
 export const Styles = StyleSheet.create({
-    
     input: {
         borderWidth: 1,
-        borderColor: dark,
-        backgroundColor: white,
+        borderColor: Colors.dark,
+        backgroundColor: Colors.white,
         width: '100%',
         padding: 12,
         borderRadius: 8,
@@ -91,7 +79,7 @@ export const Styles = StyleSheet.create({
         marginBottom: 16,
     },
     buttonLight: {
-        backgroundColor: light,
+        backgroundColor: Colors.light,
         padding: 16,
         borderRadius: 8,
         alignItems: 'center',
@@ -99,7 +87,7 @@ export const Styles = StyleSheet.create({
         justifyContent:'space-around'
     },
     buttonDark: {
-        backgroundColor: dark,
+        backgroundColor: Colors.dark,
         padding: 16,
         borderRadius: 8,
         alignItems: 'center',
@@ -109,7 +97,7 @@ export const Styles = StyleSheet.create({
     },
 
     buttonDisabled: {
-        backgroundColor: dark60,
+        backgroundColor: Colors.dark60,
         padding: 16,
         borderRadius: 8,
         alignItems: 'center',
@@ -122,7 +110,7 @@ export const Styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: light60,
+        backgroundColor: Colors.light60,
         padding: 16,
         borderRadius: 8,
         marginBottom: 16,
@@ -133,7 +121,7 @@ export const Styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: dark60,
+        backgroundColor: Colors.dark60,
         padding: 16,
         borderRadius: 8,
         marginBottom: 16,

@@ -4,7 +4,7 @@ from exceptions import AuthenticationFailed
 import boto3
 import logging
 from passlib.context import CryptContext
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Body
 from datetime import datetime, timezone
 from pydantic import BaseModel, ValidationError
 from typing import Annotated
@@ -20,6 +20,7 @@ from databaseAndSchemas.test_db import get_session
 from databaseAndSchemas.schema import(
     UserInDB,
     UserRegistration,
+    Password,
     User, 
     UserLogin, 
     AccessToken, 
@@ -183,20 +184,20 @@ def get_current_user(current_user: UserInDB = Depends(auth_get_current_user)):
     return map_user_db_to_response(current_user)
 
 @auth_router.post("/verifypassword/", status_code=200)
-def verify_password(password: str,
+def verify_password(password: Password,
                     session: Annotated[Session, Depends(get_session)],
                     current_user: UserInDB = Depends(auth_get_current_user)):
     """Verify user password"""
-    if not pwd_context.verify(password, current_user.hashed_password):
+    if not pwd_context.verify(password.password, current_user.hashed_password):
         raise AuthenticationFailed
     return {"message": "Password verified successfully"}
 
 @auth_router.put("/changepassword/", response_model=User, status_code=200)
-def change_password(new_password: str,
+def change_password(new_password: Password,
                     session: Annotated[Session, Depends(get_session)],
                     current_user: UserInDB = Depends(auth_get_current_user)):
     """Change user password"""
-    current_user.hashed_password = pwd_context.hash(new_password)
+    current_user.hashed_password = pwd_context.hash(new_password.password)
     session.add(current_user)
     session.commit()
     session.refresh(current_user)
