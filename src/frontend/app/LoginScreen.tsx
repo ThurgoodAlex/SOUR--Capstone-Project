@@ -1,23 +1,26 @@
 import { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 import { Stack, router } from 'expo-router';
 import { useAuth } from '@/context/auth'; 
 import { useApi } from '@/context/api'; 
-
+import { Ionicons } from '@expo/vector-icons';
+import { Colors } from '@/constants/Colors';
 
 export default function LoginScreen() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const [passwordVisible, setPasswordVisible] = useState(true);
+    const [error, setError] = useState(""); // Added error state
 
     const { login } = useAuth(); 
     const api = useApi();
 
     const handleLogin = async () => {
         setLoading(true);
+        setError(""); // Reset error message on each login attempt
         try {
-            // Format body as URLSearchParams
             const body = new URLSearchParams({
                 grant_type: "password",
                 username: username,
@@ -27,37 +30,35 @@ export default function LoginScreen() {
                 client_secret: ""
             });
     
-            // Use api.post to send the request
             const response = await api.login(body);
             const result = await response.json();
-            console.log(result)
+            console.log(result);
             const access_token = result.access_token;
-            console.log("Token response: ", access_token);
 
             if (response.status == 200 && access_token) {
                 login(access_token);
                 router.replace('/DiscoverScreen');
             } else {
-                Alert.alert('Incorrect username or password. Please try again.');
+                setError('Incorrect username or password. Please try again.'); // Set error message
             }
         } catch (error) {
             console.error('Error logging in:', error);
-            Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
+            setError('Failed to connect to the server. Please check your connection.'); // Set error message
         } finally {
             setLoading(false);
         }
-
     };
 
     return (
         <>
-            <Stack.Screen
-                options={{
-                    title: "LoginScreen",
-                }}
-            />
+            <Stack.Screen options={{ title: "LoginScreen" }} />
             <View style={ScreenStyles.screenCentered}>
+                
                 <Text style={[TextStyles.h2, TextStyles.uppercase]}>Login</Text>
+
+                {error ? (
+                    <Text style={[TextStyles.error, {marginTop:10, textAlign:'center'}]}>{error}</Text> // Display error message if any
+                ) : null}
 
                 <TextInput
                     style={Styles.input}
@@ -66,13 +67,26 @@ export default function LoginScreen() {
                     value={username}
                     onChangeText={setUsername}
                 />
-                <TextInput
-                    style={Styles.input}
-                    placeholder="Password"
-                    secureTextEntry
-                    value={password}
-                    onChangeText={setPassword}
-                />
+
+                <View style={styles.passwordContainer}>
+                    <TextInput
+                        style={Styles.input}
+                        placeholder="Password"
+                        secureTextEntry={passwordVisible}
+                        value={password}
+                        onChangeText={setPassword}
+                    />
+                    <TouchableOpacity
+                        onPress={() => setPasswordVisible(!passwordVisible)}
+                        style={styles.icon}
+                    >
+                        <Ionicons
+                            name={passwordVisible ? 'eye-off' : 'eye'}
+                            size={24}
+                            color={Colors.dark}
+                        />
+                    </TouchableOpacity>
+                </View>
 
                 <TouchableOpacity
                     style={Styles.buttonDark}
@@ -85,7 +99,21 @@ export default function LoginScreen() {
                         <Text style={TextStyles.light}>Login</Text>
                     )}
                 </TouchableOpacity>
+
+               
             </View>
         </>
     );
 }
+
+const styles = StyleSheet.create({
+    passwordContainer: {
+        position: 'relative',
+        width: '100%',
+    },
+    icon: {
+        position: 'absolute',
+        right: 10,
+        padding: 10,
+    },
+});

@@ -61,7 +61,12 @@ export const TextStyles = StyleSheet.create({
       color: Colors.dark,
       fontWeight: 'bold',
   },
-
+  error: {
+    fontSize:11,
+    color:Colors.grapefruit,
+    marginTop:-10,
+    marginBottom: 15
+  }
 
 });
 
