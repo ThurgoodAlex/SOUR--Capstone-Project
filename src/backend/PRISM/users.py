@@ -305,7 +305,7 @@ def del_item_from_cart(
     
     cart_item = session.exec(
         select(CartInDB).where(
-            and_(CartInDB.userID == currentUser.id, CartInDB.listingID == cart_item_id)
+            and_(CartInDB.userID == currentUser.id, CartInDB.id == cart_item_id)
         )
     ).first()
 

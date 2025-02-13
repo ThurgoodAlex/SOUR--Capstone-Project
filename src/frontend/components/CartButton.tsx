@@ -3,7 +3,12 @@ import { useApi } from '@/context/api';
 import { useUser } from '@/context/user';
 import { useState } from 'react';
 
-export default function CartButton({listingID} : {listingID: number}) {
+interface CartButtonProps {
+    listingID: number;
+    onItemAdded: (item: any) => void; // Callback function to pass the added item
+}
+
+const CartButton: React.FC<CartButtonProps> = ({ listingID, onItemAdded }) => {
     const api = useApi();
     const { user } = useUser();
     const [loading, setLoading] = useState(false);
@@ -28,6 +33,9 @@ export default function CartButton({listingID} : {listingID: number}) {
             const data = await response.json();
             Alert.alert('Success', 'Item added to cart!');
             console.log('Item added to cart:', data);
+
+            // Call the callback function to pass the added item
+            onItemAdded(data);
 
         } catch (error) {
             console.error('Error adding to cart:', error);
@@ -54,3 +62,5 @@ export default function CartButton({listingID} : {listingID: number}) {
         </TouchableOpacity>
     );
 };
+
+export default CartButton;

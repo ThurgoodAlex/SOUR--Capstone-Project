@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, FlatList, ScrollView, ViewStyle, ImageBackground, TextComponent, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, Image, FlatList, ScrollView, ViewStyle, ImageBackground, TextComponent, ActivityIndicator, Alert } from 'react-native';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 import ProfileThumbnail from '@/components/ProfileThumbnail';
 import PhotoCarousel from '@/components/PhotoCarousel';
@@ -170,7 +170,11 @@ export default function PostInfoScreen() {
             }
         };
 
-        
+        const handleItemAdded = (item: any) => {
+            console.log('Item added to cart:', item);
+            Alert.alert('Item added to cart', `Item ID: ${item.id}`);
+        };
+    
         return (
             <>
                 <View style={ScreenStyles.screen}>
@@ -178,7 +182,7 @@ export default function PostInfoScreen() {
                         <PhotoCarousel />
                         <View style={[Styles.row, { justifyContent: 'space-between' }]}>
                             <ProfileThumbnail user={post.seller} />
-                            {post.isListing ? (<CartButton listingID={post.id} />): null  }
+                            {post.isListing ? (<CartButton listingID={post.id} onItemAdded={handleItemAdded} />): null  }
                             <TouchableOpacity onPress={toggleLike}>
                                 {liked ? (
                                     <Ionicons size={20} name='heart' color='red' />
