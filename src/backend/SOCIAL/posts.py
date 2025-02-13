@@ -85,6 +85,27 @@ def get_all_posts(session: Annotated[Session, Depends(get_session)],
     post_in_db = session.exec(select(PostInDB)).all()
     return [Post(**post.model_dump()) for post in post_in_db]
 
+@posts_router.get('/isListing=false/', response_model= list[Post], )
+def get_only_posts(session: Annotated[Session, Depends(get_session)], 
+                  current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
+    """Getting all posts"""
+    post_in_db = session.exec(select(PostInDB).where(PostInDB.isListing == False)).all()
+    return [Post(**post.model_dump()) for post in post_in_db]
+
+@posts_router.get('/isListing=true/', response_model= list[Post], )
+def get_only_listings(session: Annotated[Session, Depends(get_session)], 
+                  current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
+    """Getting all posts"""
+    post_in_db = session.exec(select(PostInDB).where(PostInDB.isListing == True)).all()
+    return [Post(**post.model_dump()) for post in post_in_db]
+
+# @posts_router.get('/', response_model= list[Post], )
+# def get_only_videos(session: Annotated[Session, Depends(get_session)], 
+#                   current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
+#     """Getting all posts"""
+#     post_in_db = session.exec(select(PostInDB)).all()
+#     return [Post(**post.model_dump()) for post in post_in_db]
+
 @posts_router.get('/filter/', response_model=list[Post])
 def get_filtered_posts(
     size: Optional[str] = Query(None),

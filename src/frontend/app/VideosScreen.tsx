@@ -6,6 +6,8 @@ import { useEvent } from 'expo';
 import { NavBar } from '@/components/NavBar';
 import { Stack } from 'expo-router';
 import { ScreenStyles } from '@/constants/Styles';
+import { useApi } from '@/context/api';
+import { Video } from '@/components/Video';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -17,14 +19,10 @@ const videos = [
     require('../assets/vids/testFashion(4).mp4'),
     require('../assets/vids/testFashion(5).mp4'),
     require('../assets/vids/testFashion(6).mp4'),
-    // "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-    // "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-    // "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-    // "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-    // "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
 ];
 
 export default function VideoScreen() {
+    const api = useApi();
     const [currentViewableItemIndex, setCurrentViewableItemIndex] = useState(0);
     const viewabilityConfig = { viewAreaCoveragePercentThreshold: 50 }
     const onViewableItemsChanged = ({ viewableItems }: any) => {
@@ -33,14 +31,34 @@ export default function VideoScreen() {
         }
     }
     const viewabilityConfigCallbackPairs = useRef([{ viewabilityConfig, onViewableItemsChanged }])
+
+    const getVideos = async () => {
+        // try {
+        //     const response = await api.get(`/posts/isVideo=true/`);
+        //     if (response.ok) {
+        //     } else {
+        //         console.error("Chats retrival failed:", response);
+        //     }
+        // } catch (error) {
+        //     console.error('Chats retrival failed:', error);
+        // }
+    };
+
+    useEffect(() => {
+        getVideos();
+    }, []);
+
+    const renderVideo = ({item, index} : {item: number, index: number}) => (
+        <Video assetId={item} index={index} currentViewableItemIndex={currentViewableItemIndex}/>
+    );
     return (
         <>
             <Stack.Screen options={{ title: 'VideosScreen' }}/>
-            <View style={styles.container}>
+            <View style={ScreenStyles.screenCentered}>
                 <FlatList
                     data={videos}
                     renderItem={({ item, index }) => (
-                        <Item assetId={item} shouldPlay={index === currentViewableItemIndex} />
+                        renderVideo({item, index})
                     )}
                     keyExtractor={item => item}
                     pagingEnabled
@@ -56,45 +74,3 @@ export default function VideoScreen() {
         
     );
 }
-
-const Item = ({ assetId, shouldPlay }: { assetId: any; shouldPlay: boolean }) => {
-    const videoSource: VideoSource = {assetId};
-    const player = useVideoPlayer(videoSource, player => {
-        player.loop = true;
-    });
-
-    const { isPlaying } = useEvent(player, 'playingChange', { isPlaying: player.playing });
-
-    useEffect(() => {
-        if (shouldPlay) {
-          player.play();
-        } else {
-          player.pause();
-          player.currentTime = 0;
-        }
-      }, [shouldPlay]);
-
-    return (
-        <Pressable onPress={() => (isPlaying ? player.pause() : player.play())}>
-            <View style={styles.videoContainer}>
-                <VideoView player={player} style={styles.video} />
-            </View>
-        </Pressable>
-    );
-}
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        paddingBottom: 34
-    },
-    videoContainer: {
-        width: SCREEN_WIDTH,
-        height: SCREEN_HEIGHT,
-    },
-    video: {
-        width: '100%',
-        height: '100%',
-    },
-});
