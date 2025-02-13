@@ -1,0 +1,98 @@
+import { useState, useEffect, useCallback } from 'react';
+import { useApi } from '@/context/api';
+import { Post } from '@/constants/Types';
+
+// Dummy images for placeholders
+const dummyImages = [
+  require('../assets/images/video.png'),
+  require('../assets/images/post.png'),
+  require('../assets/images/sweater1.png'),
+  require('../assets/images/listing2.png'),
+  require('../assets/images/listing.png'),
+  require('../assets/images/random1.png'),
+  require('../assets/images/random2.png'),
+  require('../assets/images/random3.png'),
+  require('../assets/images/random4.png'),
+  require('../assets/images/random5.png'),
+];
+
+const getRandomImage = () => dummyImages[Math.floor(Math.random() * dummyImages.length)];
+
+/**
+ * Custom hook to fetch posts from a given endpoint
+ * @param endpoint - API endpoint for fetching posts
+ */
+export function usePosts(endpoint: string) {
+  const api = useApi();
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchSeller = async (sellerId: string) => {
+    try {
+      const sellerResponse = await api.get(`/users/${sellerId}/`);
+      const sellerData = await sellerResponse.json();
+      if (sellerResponse.ok) {
+        return {
+          firstname: sellerData.firstname,
+          lastname: sellerData.lastname,
+          username: sellerData.username,
+          bio: sellerData.bio,
+          profilePicture: sellerData.profilePicture,
+          isSeller: sellerData.isSeller,
+          email: sellerData.email,
+          id: sellerData.id,
+        };
+      }
+    } catch (error) {
+      console.error(`Error fetching seller with id ${sellerId}:`, error);
+    }
+    return null;
+  };
+
+  const fetchPosts = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await api.get(endpoint);
+      const result = await response.json();
+
+      if (!response.ok) throw new Error('Could not fetch posts.');
+
+      const transformedPosts: Post[] = await Promise.all(
+        result.map(async (item: any) => {
+          const seller = await fetchSeller(item.sellerID);
+          return {
+            id: item.id,
+            createdDate: item.created_at || new Date().toISOString(),
+            coverImage: getRandomImage(),
+            title: item.title,
+            description: item.description,
+            brand: item.brand,
+            condition: item.condition,
+            size: item.size,
+            gender: item.gender,
+            price: item.price,
+            isSold: item.isSold,
+            isListing: item.isListing,
+            seller,
+          };
+        })
+      );
+
+      setPosts(transformedPosts);
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+      setError((error as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  }, [endpoint]);
+
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
+
+  return { posts, loading, error, refetch: fetchPosts };
+}

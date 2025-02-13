@@ -11,6 +11,7 @@ import { UserProvider } from '@/context/user'; // Adjust the path as needed
 import { TouchableOpacity } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
+
 // Prevent splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -31,30 +32,37 @@ export default function RootLayout() {
   }
 
   return (
+
     <GestureHandlerRootView style={{ flex: 1 }}>
       <AuthProvider>
         <UserProvider>
           <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
             <Stack
               screenOptions={{
+             
+              animation: 'none', // Disable screen animations globally
+            
+              headerTitle: () => (
+                <Image
+                  source={require('../assets/images/SOUR-horizontal-logo.png')} // Replace with your image path
+                  style={{ width: 120, height: 40 }} // Adjust the size as needed
+                  resizeMode="contain" // Keeps the image aspect ratio intact
+                />
+              ),
+              headerStyle: {
+                backgroundColor: '#d8ccaf', // Header background color
+              },
               
-                animation: 'none', // Disable screen animations globally
-              
-                headerTitle: "SOUR", // Header title
-                headerStyle: {
-                  backgroundColor: '#bde0eb', // Header background color
-                },
-                
-                headerRight: () => (
-                  <TouchableOpacity onPress={() => router.push('/CartScreen')}>
-                    <Ionicons size={30} name="cart-outline" color="#fff" />
-                  </TouchableOpacity>
-                ),
-                headerTintColor: '#fff', // Header text/icon color
-                headerTitleStyle: {
-                  fontWeight: 'bold', // Bold header title
-                },
-              }}
+              headerRight: () => (
+                <TouchableOpacity onPress={() => router.push('/CartScreen')}>
+                  <Ionicons size={30} name="cart-outline" color="#692b20" />
+                </TouchableOpacity>
+              ),
+              headerTintColor: '#692b20', // Header text/icon color
+              headerTitleStyle: {
+                fontWeight: 'bold', // Bold header title
+              },
+            }}
             >
 
             {/* All of these screens should not have a back option- you must log out in the profile page instead */}

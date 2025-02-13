@@ -10,10 +10,9 @@ import { useAuth } from "@/context/auth";
 // API utility function
 const api = (token: string | null = null) => {
     // local host url
-    //const baseUrl = "http://127.0.0.1:8000";
+    //  const baseUrl = "http://127.0.0.1:8000";
     // emma's url
-    //const baseUrl = 'http://10.17.49.158:8000';
-    const baseUrl = 'http://10.18.71.155:8000';
+    const baseUrl = 'http://10.18.236.253:8000';
 
     const getAuthHeaders = () => {
 
@@ -69,13 +68,14 @@ const api = (token: string | null = null) => {
     };
 
     // PUT request method
-    const put = async (url: string) => {
+    const put = async (url: string, body: Record<string, unknown> = {}) => {
         const headers = getAuthHeaders();
         console.log("PUT Request URL:", baseUrl + url);
         console.log("PUT Headers:", headers);
 
         return fetch(baseUrl + url, {
             method: 'PUT',
+            body: JSON.stringify(body),
             headers,
         });
     };
