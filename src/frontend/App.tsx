@@ -1,21 +1,17 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { GestureHandlerRootView } from 'react-native-gesture-handler'; // ✅ Import this
 import RootLayout from '@/app/_layout';
-import { Slot } from 'expo-router';
 import { AuthProvider } from '@/context/auth';
 import { UserProvider } from '@/context/user';
 
-const Stack = createStackNavigator();
-
-
 export default function App() {
   return (
-    <AuthProvider>
-      <UserProvider>
-        <RootLayout /> 
-      </UserProvider>
-    </AuthProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <AuthProvider>
+        <UserProvider>
+          <RootLayout />
+        </UserProvider>
+      </AuthProvider>
+    </GestureHandlerRootView>
   );
-
 }

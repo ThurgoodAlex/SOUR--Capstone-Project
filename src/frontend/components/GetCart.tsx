@@ -1,7 +1,7 @@
 import { Alert } from "react-native";
-import { Post } from "@/constants/Types"; // Ensure 'Post' type is defined
+import { CartPost, Post } from "@/constants/Types"; // Ensure 'Post' type is defined
 
-export const getCart = async (user: { id: string } | null, api: any): Promise<Post[] | null> => {
+export const getCart = async (user: { id: string } | null, api: any): Promise<CartPost[] | null> => {
     console.log("getCart function called");
 
     if (!user) {
@@ -16,23 +16,24 @@ export const getCart = async (user: { id: string } | null, api: any): Promise<Po
 
         if (response.ok) {
             const cartData = await response.json();
-            console.log("Cart Response:", cartData);
 
-            // Extract `listingID` from each cart item
             const listingIDs = cartData.map((item: { listingID: number }) => item.listingID);
             console.log("Extracted Listing IDs:", listingIDs);
 
-            // Fetch full item details in parallel
+            // Fetch the details of each listing in the cart and return the data
             const cartItems = await Promise.all(
-                listingIDs.map(async (id: any) => {
-                    const itemResponse = await api.get(`/posts/${id}/`);
-                    return itemResponse.ok ? await itemResponse.json() : null;
+                cartData.map(async (item: { listingID: number, id: number }) => {
+                    const itemResponse = await api.get(`/posts/${item.listingID}/`);
+                    if (itemResponse.ok) {
+                        const itemData = await itemResponse.json();
+                        return { ...itemData, cartItemId: item.id };
+                    }
+                    return null;
                 })
             );
 
-            // Filter out any failed API calls (null values)
+
             const validCartItems = cartItems.filter((item) => item !== null);
-            console.log("Full Cart Items:", validCartItems);
             return validCartItems;
         } else {
             console.error("Failed to fetch cart:", response.status);
