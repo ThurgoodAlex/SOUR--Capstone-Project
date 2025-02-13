@@ -1,14 +1,14 @@
 import os
 import sys
 import boto3
-from fastapi import APIRouter, Depends, HTTPException, Path
+from fastapi import APIRouter, Depends, Query
 from datetime import datetime, timezone
 from typing import Annotated
 import logging
 from sqlalchemy.future import select
 from sqlalchemy import desc
 from jose import JWTError, jwt
-from sqlmodel import Session, SQLModel, select
+from sqlmodel import Session, and_, select
 from exceptions import *
 from databaseAndSchemas.test_db import get_session
 from PRISM.auth import auth_get_current_user
@@ -85,6 +85,41 @@ def get_all_posts(session: Annotated[Session, Depends(get_session)],
     post_in_db = session.exec(select(PostInDB)).all()
     return [Post(**post.model_dump()) for post in post_in_db]
 
+@posts_router.get('/filter/', response_model=list[Post])
+def get_filtered_posts(
+    size: Optional[str] = Query(None),
+    brand: Optional[str] = Query(None),
+    color: Optional[str] = Query(None),
+    session: Session = Depends(get_session)
+) -> List[Post]:
+    """Get posts with dynamic query filters"""
+    query = select(PostInDB)
+    filters = []
+
+    # Apply filters dynamically if they are provided
+    if size:
+        filters.append(PostInDB.size == size)
+    if brand:
+        filters.append(PostInDB.brand == brand)
+    if color:
+        filters.append(PostInDB.color == color)
+
+    if filters:
+        query = query.where(and_(*filters))
+
+    posts_in_db = session.exec(query).all()
+    return [Post(**post.model_dump()) for post in posts_in_db]
+
+
+@posts_router.get('/new', response_model= list[Post], )
+def get_newest_posts(session: Annotated[Session, Depends(get_session)], 
+                  current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
+    """Getting up to the 5 newest posts, ordered from newest to oldest."""
+    post_in_db = session.exec(
+        select(PostInDB).order_by(desc(PostInDB.created_at)).limit(5)
+    ).all()
+    return [Post(**post.model_dump()) for post in post_in_db]
+
 
 @posts_router.delete('/comments/{comment_id}/', response_model= Delete, status_code=200)
 def delete_comment(session :Annotated[Session, Depends(get_session)],
@@ -129,14 +164,6 @@ def del_post_by_id(post_id : int,
     return Delete(message="Post deleted successfully.")
 
 
-@posts_router.get('/new', response_model= list[Post], )
-def get_newest_posts(session: Annotated[Session, Depends(get_session)], 
-                  current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
-    """Getting up to the 5 newest posts, ordered from newest to oldest."""
-    post_in_db = session.exec(
-        select(PostInDB).order_by(desc(PostInDB.created_at)).limit(5)
-    ).all()
-    return [Post(**post.model_dump()) for post in post_in_db]
 
 
 
@@ -212,19 +239,34 @@ def create_new_link(session: Annotated[Session, Depends(get_session)],
         raise EntityNotFound("post", post_id)
     
 
-@posts_router.get('/{post_id}/links/', response_model= list[Link], status_code=200)
-def get_all_links_by_post_id(session :Annotated[Session, Depends(get_session)],
+    
+    
+@posts_router.get('/{post_id}/links/', response_model=list[Post], status_code=200)
+def get_all_links_by_post_id(session: Annotated[Session, Depends(get_session)],
                              post_id: int,
-                             current_user: UserInDB = Depends(auth_get_current_user))-> list[Link]:
+                             current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
+    
     post = session.get(PostInDB, post_id)
-    if post:
-        if post.isListing:
-            links_in_db = session.exec(select(LinkInDB).where(LinkInDB.listingID == post_id)).all()
-        else:
-            links_in_db = session.exec(select(LinkInDB).where(LinkInDB.postID == post_id)).all()
-        return [Link(**link.model_dump()) for link in links_in_db]
-    else:
+    if not post:
         raise EntityNotFound("post", post_id)
+    
+    if post.isListing:
+        links_query = select(LinkInDB).where(LinkInDB.listingID == post_id)
+        links_in_db = session.exec(links_query).all()
+        post_ids = [link.postID for link in links_in_db]
+       
+    
+    else:
+        links_query = select(LinkInDB).where(LinkInDB.postID == post_id)
+        links_in_db = session.exec(links_query).all()
+        post_ids = [link.listingID for link in links_in_db]
+   
+
+    posts_query = select(PostInDB).where(PostInDB.id.in_(post_ids))
+    posts = session.exec(posts_query).all()
+    
+    return [Post(**post.model_dump()) for post in posts]
+
     
 
 @posts_router.post('/{post_id}/like/', response_model= Like, status_code=201)

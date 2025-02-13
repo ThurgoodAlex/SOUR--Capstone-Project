@@ -49,8 +49,9 @@ export type Stats = {
 }
 
 
-export type GridPostsProps = {
+export type PostFlatListProps = {
     posts: Post[];
+    height: number
 };
 
 export type ThemedViewProps = ViewProps & {
@@ -64,7 +65,24 @@ export type ThemedTextProps = TextProps & {
     type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link';
 };
 
+export type CartItemProps = {
+    item: Post;
+    onPress: (item: Post) => void;
+    onDelete: (item: Post) => void;
+  };
 
+export type ChatData = {
+    id: number;
+    sellerID: number;
+    recipientID: number;
+};
 
+export type MessageData = {
+    id: number;
+    chatID: number;
+    author: number;
+    message: string;
+    created_at: Date;
+};
 
   

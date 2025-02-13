@@ -1,9 +1,10 @@
 import os
 import sys
+from exceptions import AuthenticationFailed
 import boto3
 import logging
 from passlib.context import CryptContext
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Body
 from datetime import datetime, timezone
 from pydantic import BaseModel, ValidationError
 from typing import Annotated
@@ -14,10 +15,12 @@ from fastapi.security import (
     OAuth2PasswordBearer,
     OAuth2PasswordRequestForm,
 )
+from databaseAndSchemas.mappings.userMapping import map_user_db_to_response
 from databaseAndSchemas.test_db import get_session
 from databaseAndSchemas.schema import(
     UserInDB,
     UserRegistration,
+    Password,
     User, 
     UserLogin, 
     AccessToken, 
@@ -37,7 +40,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 jwt_key = str(os.environ.get("JWT_KEY"))
 jwt_alg = "HS256"
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token/")
 
 auth_router = APIRouter(tags=["Authentication"])
 access_token_duration = 3600 
@@ -170,4 +173,24 @@ def decode_access_token(token: str, session: Session) -> UserInDB:
 @auth_router.get("/me/", response_model=User)
 def get_current_user(current_user: UserInDB = Depends(auth_get_current_user)):
     """Get current user."""
+    return map_user_db_to_response(current_user)
+
+@auth_router.post("/verifypassword/", status_code=200)
+def verify_password(password: Password,
+                    session: Annotated[Session, Depends(get_session)],
+                    current_user: UserInDB = Depends(auth_get_current_user)):
+    """Verify user password"""
+    if not pwd_context.verify(password.password, current_user.hashed_password):
+        raise AuthenticationFailed
+    return {"message": "Password verified successfully"}
+
+@auth_router.put("/changepassword/", response_model=User, status_code=200)
+def change_password(new_password: Password,
+                    session: Annotated[Session, Depends(get_session)],
+                    current_user: UserInDB = Depends(auth_get_current_user)):
+    """Change user password"""
+    current_user.hashed_password = pwd_context.hash(new_password.password)
+    session.add(current_user)
+    session.commit()
+    session.refresh(current_user)
     return map_user_db_to_response(current_user)

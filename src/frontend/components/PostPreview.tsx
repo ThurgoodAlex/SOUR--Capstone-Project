@@ -1,20 +1,23 @@
-import { View, Text, ImageBackground, TouchableOpacity } from 'react-native';
-import { Styles } from '@/constants/Styles';
+import { View, Text, ImageBackground, TouchableOpacity, ViewStyle } from 'react-native';
+import { Styles, TextStyles } from '@/constants/Styles';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Post, User } from '@/constants/Types';
 import ProfileThumbnail from '@/components/ProfileThumbnail';
 import { router } from 'expo-router';
 import ProfileThumbnailSmall from '@/components/ProfileThumbnailSmall';
-import { useUser } from '@/context/user';
 
 /**
- * The visualization of how a campus post looks like.
  * @param post - Props object containing the post details.
+ * @param size - The size of the post view.
+ * @param profileThumbnail - 3 Accepted options
+ *  - 'none' - No profile thumbnail, show title instead
+ *  - 'small' - username only
+ *  - 'big' - username, firstname, lastname
+ * 
  * @returns A post view component.
  */
-export function PostPreview({ post, size, thumbnailSize }: { post: Post, size: number, thumbnailSize: string }) {
+export function PostPreview({ post, size, profileThumbnail = "none"}: { post: Post, size: number, profileThumbnail: string }) {
     
-
     let icon;
     let type = post.isListing ? "listing" : "post";
 
@@ -27,6 +30,23 @@ export function PostPreview({ post, size, thumbnailSize }: { post: Post, size: n
     else if (type === 'listing') {
         icon = <Ionicons size={20} name='pricetag' />
     }
+
+    // Styles for the post preview, including opacity if sold
+    const isSold = post.isSold;
+    const previewStyle = [
+        Styles.column,
+        { marginBottom: 10, opacity: isSold ? 0.5 : 1 }, // Reduce opacity if sold
+    ];
+    const overlayStyle: ViewStyle | undefined = isSold
+        ? {
+              position: "absolute" as const, // Explicitly type position
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: "rgba(0, 0, 0, 0.3)",
+          }
+        : undefined;
 
 
     //extract seller information into a User object
@@ -42,24 +62,45 @@ export function PostPreview({ post, size, thumbnailSize }: { post: Post, size: n
     }; 
 
     return (
-        <View key={post.id} style={[Styles.column, { marginBottom: 1 }]}>
+        <View key={post.id} style={previewStyle}>
             <TouchableOpacity
-                onPress={() => router.push(`/ListingInfoScreen/${post.id}`)} // Navigate on press
+                onPress={() => router.push(`/PostInfoScreen/${post.id}`)} // Navigate on press
                 style={{ flex: 1, margin: 5 }} // Add styles for spacing
+                disabled={isSold} // Disable interaction if sold
             >
+                
                 <ImageBackground source={post.coverImage} style={{ height: size, width: size }}>
                     {icon}
+
+                    {Boolean(isSold) && <View style={overlayStyle} />}
+                    {Boolean(isSold) && (
+                        <View style={{ position: "absolute", top: 65, left: 50 }}>
+                            <Text style={{ color: "white", fontWeight: "bold", fontSize: 20 }}>
+                                SOLD
+                            </Text>
+                        </View>
+                    )}
+
+
+                  
                 </ImageBackground>
-                
-
+               
             </TouchableOpacity>
-            
-                {thumbnailSize === 'big' ? (<ProfileThumbnail user={seller} />)
-                    : seller ? (<ProfileThumbnailSmall user={seller} />) : (<Text>No seller information available</Text>)
-                }
-        
+
+            { profileThumbnail != "none" ? 
+                (profileThumbnail === 'big' ? 
+                    (<ProfileThumbnail user={seller} />)
+                    : seller ? 
+                        (<ProfileThumbnailSmall user={seller} />) 
+                        : (<Text>No seller information available</Text>)
+                )
+                :  <Text style={[TextStyles.h3, { textAlign: "left" }]}>{post.title}</Text>}
+       
         </View>
-
     );
-
 }
+
+
+    
+    
+               
