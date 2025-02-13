@@ -11,16 +11,26 @@ export const CartItem: React.FC<CartItemProps> = ({ item, onPress, onDelete }) =
   const imageSource: ImageSourcePropType =
     typeof item.coverImage === "string" ? { uri: item.coverImage } : item.coverImage || require('@/assets/images/random1.png');
 
-  // Right swipe action (Delete)
+  // Right swipe action (Delete) and animation for the swiping
   const renderRightActions = (
-    progressAnimatedValue: SharedValue<number>,  // Correct type for progress
-    dragAnimatedValue: SharedValue<number>,      // Additional parameter for drag
-    swipeable: any                             // Additional swipeable methods
+    progressAnimatedValue: SharedValue<number>,  
+    swipeable: any                             
   ) => {
+    const opacity = interpolate(progressAnimatedValue.value,
+      [0, 1],
+      [1, 0],
+      Extrapolation.CLAMP,
+    );
 
     return (
-      <Animated.View style={[cartStyle.deleteContainer]}>
-        <Pressable onPress={() => onDelete(item)} style={cartStyle.deleteButton}>
+      <Animated.View style={[cartStyle.deleteContainer, { opacity }]}>
+        <Pressable
+          onPress={() => {
+            onDelete(item);
+            swipeable.current?.close();
+          }}
+          style={cartStyle.deleteButton}
+        >
           <Text style={cartStyle.deleteText}>Delete</Text>
         </Pressable>
       </Animated.View>
@@ -46,7 +56,7 @@ export const cartStyle = StyleSheet.create({
     container: {
       flexDirection: "row",
       padding: 10,
-      backgroundColor: "#fff",
+      backgroundColor: "#d8ccaf60",
       borderRadius: 10,
       marginVertical: 5,
       alignItems: "center",
@@ -54,6 +64,7 @@ export const cartStyle = StyleSheet.create({
       shadowOpacity: 0.1,
       shadowRadius: 5,
       elevation: 2,
+      color:"#d8ccaf60"
     },
     image: {
       width: 80,
@@ -77,42 +88,26 @@ export const cartStyle = StyleSheet.create({
     price: {
       fontSize: 16,
       fontWeight: "bold",
-      color: "#ff4d4d",
+      color: "#f98b69",
     },
   
     deleteButton: {
-  
-      backgroundColor: "red",
-  
+      backgroundColor: "#f98b69",
       justifyContent: "center",
-  
       alignItems: "center",
-  
       width: 70,
-  
       height: "100%",
   
     },
     deleteContainer: {
-  
-      backgroundColor: "red",
-  
+      backgroundColor: "#f98b69",
       justifyContent: "center",
-  
       alignItems: "center",
-  
       width: 70,
-  
       height: "100%",
-  
     },
-  
     deleteText: {
-  
-      color: "#fff",
-  
+      color: "#692b20",
       fontWeight: "bold",
-  
     },
-  
   });

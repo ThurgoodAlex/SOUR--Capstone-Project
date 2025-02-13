@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+
+import { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, Image, FlatList, ScrollView, ViewStyle, ImageBackground, TextComponent, ActivityIndicator, Alert } from 'react-native';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 import ProfileThumbnail from '@/components/ProfileThumbnail';
 import PhotoCarousel from '@/components/PhotoCarousel';
@@ -8,9 +9,13 @@ import { useLocalSearchParams } from 'expo-router';
 import { useApi } from '@/context/api';
 import { Post } from '@/constants/Types';
 import { Ionicons } from '@expo/vector-icons';
+import { GridPosts } from '@/components/GridPosts';
+import  CartButton  from '@/components/CartButton';
+
 import { LinkedItems } from '@/components/Linkedtems';
 import { usePost } from '@/hooks/usePost';
 import { usePosts } from '@/hooks/usePosts';
+
 
 export default function PostInfoScreen() {
     
@@ -46,7 +51,11 @@ export default function PostInfoScreen() {
             }
         };
 
-        
+        const handleItemAdded = (item: any) => {
+            console.log('Item added to cart:', item);
+            // Alert.alert('Item added to cart', `Item ID: ${item.id}`);
+        };
+    
         return (
             <>
                 <View style={ScreenStyles.screen}>
@@ -54,6 +63,7 @@ export default function PostInfoScreen() {
                         <PhotoCarousel />
                         <View style={[Styles.row, { justifyContent: 'space-between' }]}>
                             <ProfileThumbnail user={post.seller} />
+                            {post.isListing ? (<CartButton listingID={post.id} onItemAdded={handleItemAdded} />): null  }
                             <TouchableOpacity onPress={toggleLike}>
                                 {liked ? (
                                     <Ionicons size={20} name='heart' color='red' />
@@ -94,6 +104,7 @@ export default function PostInfoScreen() {
 
 //display Listing details
 function ListingInfo({ post }: { post: Post }) {
+
     const formattedPrice = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
@@ -111,7 +122,7 @@ function ListingInfo({ post }: { post: Post }) {
     );
 }
 
-//display Post details
+
 function PostInfo({ post }: { post: Post }) {
     return (
         <View style={Styles.column}>

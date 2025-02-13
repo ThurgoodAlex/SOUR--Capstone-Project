@@ -254,19 +254,21 @@ def get_user_cart(
     currentUser: UserInDB = Depends(auth_get_current_user)
 ) -> list[Cart]:
     
-    #TODO: Exception if current user is not user_id?
     
     user_cart = session.exec(select(CartInDB).where(CartInDB.userID == currentUser.id)).all()
 
     return [Cart(**item.model_dump()) for item in user_cart]
 
+class CartRequest(BaseModel):
+    listing_id: int
+
 @users_router.post("/{user_id}/cart/", response_model=Cart, status_code=200)
 def add_item_to_cart(
-    listing_id: int,
+    request: CartRequest,
     session: Annotated[Session, Depends(get_session)],
     currentUser: UserInDB = Depends(auth_get_current_user)
 ) -> Cart:
-   
+    listing_id = request.listing_id 
 
     listing = session.exec(
         select(PostInDB).where(
@@ -294,13 +296,12 @@ def add_item_to_cart(
         created_at=new_cart_item.created_at
     )
 
-@users_router.delete("/users/{user_id}/cart/{cart_item_id}/", status_code=200)
+@users_router.delete("/cart/{cart_item_id}/", status_code=200)
 def del_item_from_cart(
     cart_item_id: int,
     session: Annotated[Session, Depends(get_session)],
     currentUser: UserInDB = Depends(auth_get_current_user)
 ):
-    
     cart_item = session.exec(
         select(CartInDB).where(
             and_(CartInDB.userID == currentUser.id, CartInDB.id == cart_item_id)

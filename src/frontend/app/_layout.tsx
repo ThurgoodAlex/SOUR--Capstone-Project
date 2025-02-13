@@ -8,7 +8,9 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import { AuthProvider } from '@/context/auth'; // Adjust the path as needed
 import { UserProvider } from '@/context/user'; // Adjust the path as needed
-import { TouchableOpacity, Image } from 'react-native';
+import { TouchableOpacity } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
 
 // Prevent splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -30,11 +32,13 @@ export default function RootLayout() {
   }
 
   return (
-    <AuthProvider>
-      <UserProvider>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <Stack
-            screenOptions={{
+
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <AuthProvider>
+        <UserProvider>
+          <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+            <Stack
+              screenOptions={{
              
               animation: 'none', // Disable screen animations globally
             
@@ -59,37 +63,37 @@ export default function RootLayout() {
                 fontWeight: 'bold', // Bold header title
               },
             }}
-          >
+            >
 
-          {/* All of these screens should not have a back option- you must log out in the profile page instead */}
-          <Stack.Screen 
-            name="DiscoverScreen" 
-            options={{
-              headerLeft: () => ""
-            }} 
-          />
+            {/* All of these screens should not have a back option- you must log out in the profile page instead */}
+            <Stack.Screen 
+              name="DiscoverScreen" 
+              options={{
+                headerLeft: () => ""
+              }} 
+            />
 
-          <Stack.Screen 
-            name="SelfProfileScreen" 
-            options={{
-              headerLeft: () => ""
-            }} 
-          />
+            <Stack.Screen 
+              name="SelfProfileScreen" 
+              options={{
+                headerLeft: () => ""
+              }} 
+            />
 
-          <Stack.Screen 
-            name="VideosScreen" 
-            options={{
-              headerLeft: () => ""
-            }} 
-          />
+            <Stack.Screen 
+              name="VideosScreen" 
+              options={{
+                headerLeft: () => ""
+              }} 
+            />
 
 
-          <Stack.Screen 
-            name="SellerScreen" 
-            options={{
-              headerLeft: () => ""
-            }} 
-          />
+            <Stack.Screen 
+              name="SellerScreen" 
+              options={{
+                headerLeft: () => ""
+              }} 
+            />
 
         
           <Stack.Screen 
@@ -99,16 +103,17 @@ export default function RootLayout() {
             }} 
           />
 
-          <Stack.Screen 
-            name="MessagesScreen" 
-            options={{
-              headerLeft: () => ""
-            }} 
-          />
-            <Slot />
-          </Stack>
-        </ThemeProvider>
-      </UserProvider>
-    </AuthProvider>
+            <Stack.Screen 
+              name="MessagesScreen" 
+              options={{
+                headerLeft: () => ""
+              }} 
+            />
+              <Slot />
+            </Stack>
+          </ThemeProvider>
+        </UserProvider>
+      </AuthProvider>
+    </GestureHandlerRootView>
   );
 }
