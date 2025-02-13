@@ -11,16 +11,26 @@ export const CartItem: React.FC<CartItemProps> = ({ item, onPress, onDelete }) =
   const imageSource: ImageSourcePropType =
     typeof item.coverImage === "string" ? { uri: item.coverImage } : item.coverImage || require('@/assets/images/random1.png');
 
-  // Right swipe action (Delete)
+  // Right swipe action (Delete) and animation for the swiping
   const renderRightActions = (
-    progressAnimatedValue: SharedValue<number>,  // Correct type for progress
-    dragAnimatedValue: SharedValue<number>,      // Additional parameter for drag
-    swipeable: any                             // Additional swipeable methods
+    progressAnimatedValue: SharedValue<number>,  
+    swipeable: any                             
   ) => {
+    const opacity = interpolate(progressAnimatedValue.value,
+      [0, 1],
+      [1, 0],
+      Extrapolation.CLAMP,
+    );
 
     return (
-      <Animated.View style={[cartStyle.deleteContainer]}>
-        <Pressable onPress={() => onDelete(item)} style={cartStyle.deleteButton}>
+      <Animated.View style={[cartStyle.deleteContainer, { opacity }]}>
+        <Pressable
+          onPress={() => {
+            onDelete(item);
+            swipeable.current?.close();
+          }}
+          style={cartStyle.deleteButton}
+        >
           <Text style={cartStyle.deleteText}>Delete</Text>
         </Pressable>
       </Animated.View>
@@ -94,25 +104,14 @@ export const cartStyle = StyleSheet.create({
   
     },
     deleteContainer: {
-  
       backgroundColor: "red",
-  
       justifyContent: "center",
-  
       alignItems: "center",
-  
       width: 70,
-  
       height: "100%",
-  
     },
-  
     deleteText: {
-  
       color: "#fff",
-  
       fontWeight: "bold",
-  
     },
-  
   });

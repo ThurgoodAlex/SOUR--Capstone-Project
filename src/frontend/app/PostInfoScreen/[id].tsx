@@ -172,7 +172,7 @@ export default function PostInfoScreen() {
 
         const handleItemAdded = (item: any) => {
             console.log('Item added to cart:', item);
-            Alert.alert('Item added to cart', `Item ID: ${item.id}`);
+            // Alert.alert('Item added to cart', `Item ID: ${item.id}`);
         };
     
         return (

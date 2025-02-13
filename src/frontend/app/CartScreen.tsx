@@ -7,10 +7,6 @@ import { ActivityIndicator, FlatList, View, Text, Alert } from "react-native";
 import { CartPost, Post } from "@/constants/Types";
 import { CartItem } from "@/components/CartItem";
 import { router } from "expo-router";
-import CartButton from "@/components/CartButton";
-
-
-
 
 export default function CartScreen() {
   const [cart, setCart] = useState<CartPost[]>([]);

@@ -3,9 +3,13 @@ import { useApi } from '@/context/api';
 import { useUser } from '@/context/user';
 import { useState } from 'react';
 
+
+
+// Needed to make this so I could pass the right ID from the listing to the cart
+// There might be a better way to do this but I'm not sure what it is
 interface CartButtonProps {
     listingID: number;
-    onItemAdded: (item: any) => void; // Callback function to pass the added item
+    onItemAdded: (item: any) => void;
 }
 
 const CartButton: React.FC<CartButtonProps> = ({ listingID, onItemAdded }) => {
@@ -22,7 +26,7 @@ const CartButton: React.FC<CartButtonProps> = ({ listingID, onItemAdded }) => {
         setLoading(true);
 
         try {
-            console.log("Adding to cart:", listingID);
+            // console.log("Adding to cart:", listingID);
             const response = await api.post(`/users/${user.id}/cart/`, {
                 listing_id: listingID,
             });
@@ -32,9 +36,9 @@ const CartButton: React.FC<CartButtonProps> = ({ listingID, onItemAdded }) => {
 
             const data = await response.json();
             Alert.alert('Success', 'Item added to cart!');
-            console.log('Item added to cart:', data);
+            // console.log('Item added to cart:', data);
 
-            // Call the callback function to pass the added item
+            // callback function to add the item to the cart
             onItemAdded(data);
 
         } catch (error) {
