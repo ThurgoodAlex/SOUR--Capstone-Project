@@ -296,13 +296,12 @@ def add_item_to_cart(
         created_at=new_cart_item.created_at
     )
 
-@users_router.delete("/users/{user_id}/cart/{cart_item_id}/", status_code=200)
+@users_router.delete("/cart/{cart_item_id}/", status_code=200)
 def del_item_from_cart(
     cart_item_id: int,
     session: Annotated[Session, Depends(get_session)],
     currentUser: UserInDB = Depends(auth_get_current_user)
 ):
-    
     cart_item = session.exec(
         select(CartInDB).where(
             and_(CartInDB.userID == currentUser.id, CartInDB.id == cart_item_id)

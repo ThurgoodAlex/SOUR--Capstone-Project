@@ -75,7 +75,7 @@ export default function CartScreen() {
       }
 
       // Perform the DELETE request using the cartItemId
-      const response = await api.remove(`/users/users/${user?.id}/cart/${cartItemId}/`);
+      const response = await api.remove(`/users/cart/${cartItemId}/`);
 
       if (response.ok) {
         // Remove the item from the cart state if deletion is successful
@@ -123,7 +123,7 @@ export default function CartScreen() {
 export const cartPageStyle = StyleSheet.create({
   container: {
     flex: 1, // Ensures full-screen usage
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#d8ccaf",
     paddingHorizontal: 10,
   },
   listContainer: {
@@ -135,7 +135,7 @@ export const cartPageStyle = StyleSheet.create({
   checkoutContainer: {
     width: "100%",
     paddingVertical: 15,
-    backgroundColor: "#fff",
+    backgroundColor: "#d8ccaf",
     alignItems: "center",
     justifyContent: "center",
     borderTopWidth: 1,
@@ -144,17 +144,18 @@ export const cartPageStyle = StyleSheet.create({
   emptyText: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#777",
+    backgroundColor: "#d8ccaf",
+    color: "#7e9151",
   },
   checkoutButton: {
     width: "90%",
-    backgroundColor: "#007AFF",
+    backgroundColor: "#7e9151",
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: "center",
   },
   checkoutText: {
-    color: "#fff",
+    color: "#d8ccaf",
     fontSize: 18,
     fontWeight: "bold",
   },
@@ -167,5 +168,6 @@ export const cartPageStyle = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor:"#d8ccaf"
   },
 });
