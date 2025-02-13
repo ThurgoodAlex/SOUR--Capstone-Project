@@ -91,13 +91,7 @@ export default function RootLayout() {
             }} 
           />
 
-          <Stack.Screen 
-            name="CreateListingScreen" 
-            options={{
-              headerLeft: () => ""
-            }} 
-          />
-
+        
           <Stack.Screen 
             name="LoggedOutScreen" 
             options={{

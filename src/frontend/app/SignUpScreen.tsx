@@ -135,14 +135,18 @@ export default function SignUpScreen() {
                         </TouchableOpacity>
                     )}  
                 </View>
-                {errors[key] && <Text style={TextStyles.error}>{errors[key]}</Text>}
+                {errors[key] && <Text style={[TextStyles.error, {marginTop:-10, marginBottom:10,}]}>{errors[key]}</Text>}
                 </>
             ))}
     
             {loading ? (
                 <ActivityIndicator size="large" color="#0000ff" />
             ) : (
-                <TouchableOpacity style={Styles.buttonDark} onPress={requestCreateUser} disabled={loading}>
+                <TouchableOpacity 
+                    style={[Styles.buttonDark, (username === "" || password === "") && Styles.buttonDisabled]} 
+                    onPress={requestCreateUser} 
+                    disabled={username == "" || firstName == ""|| lastName == "" || email == "" || password == ""|| verifyPassword == ""}
+                >
                     <Text style={TextStyles.light}>Sign Up</Text>
                 </TouchableOpacity>
             )}

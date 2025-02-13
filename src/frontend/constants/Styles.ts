@@ -64,8 +64,12 @@ export const TextStyles = StyleSheet.create({
   error: {
     fontSize:11,
     color:Colors.grapefruit,
-    marginTop:-10,
-    marginBottom: 15
+    fontWeight: 'bold'
+  },
+
+  required: {
+    fontSize:11,
+    color:Colors.dark60,
   }
 
 });
@@ -77,7 +81,7 @@ export const Styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: Colors.dark,
         backgroundColor: Colors.white,
-        width: '100%',
+        width:'100%',
         padding: 12,
         borderRadius: 8,
         fontSize: 16,
@@ -163,8 +167,8 @@ export const Styles = StyleSheet.create({
     },
 
     image: {
-      width: 250,
-      height: 250,
+      width: 220,
+      height: 220,
       borderRadius: 8,
       marginRight: 8,
       marginBottom: 16,

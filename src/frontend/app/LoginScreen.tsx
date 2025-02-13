@@ -54,10 +54,10 @@ export default function LoginScreen() {
             <Stack.Screen options={{ title: "LoginScreen" }} />
             <View style={ScreenStyles.screenCentered}>
                 
-                <Text style={[TextStyles.h2, TextStyles.uppercase]}>Login</Text>
+                <Text style={[TextStyles.h1, TextStyles.uppercase]}>Login</Text>
 
                 {error ? (
-                    <Text style={[TextStyles.error, {marginTop:10, textAlign:'center'}]}>{error}</Text> // Display error message if any
+                    <Text style={[TextStyles.error, {marginTop:10, marginBottom:10, textAlign:'center'}]}>{error}</Text> // Display error message if any
                 ) : null}
 
                 <TextInput
@@ -88,18 +88,20 @@ export default function LoginScreen() {
                     </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity
-                    style={Styles.buttonDark}
-                    onPress={handleLogin}
-                    disabled={loading}
-                >
-                    {loading ? (
-                        <ActivityIndicator color="#ffffff" />
-                    ) : (
+               
+            
+                   {loading ? (
+                    <ActivityIndicator size="large" color="#0000ff" />
+                ) : (
+                    <TouchableOpacity
+                        style={[Styles.buttonDark, (username === "" || password === "") && Styles.buttonDisabled]}
+                        onPress={handleLogin}
+                        disabled={username == "" || password == ""}
+                    >
                         <Text style={TextStyles.light}>Login</Text>
-                    )}
-                </TouchableOpacity>
-
+                    </TouchableOpacity>
+                )}
+            
                
             </View>
         </>
@@ -116,4 +118,5 @@ const styles = StyleSheet.create({
         right: 10,
         padding: 10,
     },
+    
 });
