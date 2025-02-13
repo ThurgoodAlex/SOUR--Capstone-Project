@@ -30,6 +30,7 @@ class InvalidCredentials(AuthException):
 class InvalidToken(AuthException):
     def __init__(self):
         super().__init__(
+            status_code=401,
             error="invalid_client",
             description="invalid access token",
         )
@@ -40,4 +41,11 @@ class ExpiredToken(AuthException):
         super().__init__(
             error="invalid_client",
             description="expired access token",
+        )
+
+class EntityNotFound(HTTPException):
+    def __init__(self, entity: str, id: int):
+        super().__init__(
+            status_code=404,
+            detail=f"{entity} with id {id} not found"
         )
