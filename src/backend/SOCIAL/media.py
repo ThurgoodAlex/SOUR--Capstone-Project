@@ -1,7 +1,8 @@
 import os
 import sys
 import boto3
-from fastapi import APIRouter, Depends, HTTPException
+from botocore.exceptions import ClientError
+from fastapi import APIRouter, Depends, HTTPException, UploadFile
 from datetime import datetime, timezone
 from pydantic import BaseModel, ValidationError
 from typing import Annotated
@@ -19,12 +20,54 @@ from exceptions import DuplicateResource, EntityNotFound, PermissionDenied
 
 
 localstack_endpoint = os.environ.get('LOCALSTACK_ENDPOINT', 'http://localstack:4566')
-lambda_client = boto3.client('lambda', endpoint_url=localstack_endpoint, 
-                             region_name='us-west-1',  # match with CDK stack region
-                             aws_access_key_id='test',
-                             aws_secret_access_key='test')
+
+REGION = os.environ.get('CDK_DEFAULT_REGION', 'us-west-1')
+
+s3_client = boto3.client('s3', region_name=REGION)
 
 media_router = APIRouter(tags=["Media"])
+
+@media_router.post("/upload/", response_model=Media, status_code=201)
+async def upload_media( file:UploadFile, session : Annotated[Session, Depends(get_session)], 
+                  current_user: UserInDB = Depends(auth_get_current_user)):
+    try: 
+
+        file_content = await file.read()
+
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        unique_filename = f"{current_user.id}_{timestamp}_{file.filename}"
+
+        # Upload to S3 using put_object
+        response = s3_client.put_object(
+            Bucket="sour-user-images-000000000000-us-west-1",
+            Key=unique_filename,
+            Body=file_content,
+            ContentType=file.content_type
+        )
+
+        print(response)
+
+        # Generate the URL for the uploaded file
+        img_url = f"{localstack_endpoint}/sour-user-images-000000000000-us-west-1/{unique_filename}"
+
+        
+        # Create media record
+        media = MediaInDB(
+            url= img_url,
+            postID=1,
+            isVideo=False
+        )
+        
+        # Save to database
+        session.add(media)
+        session.commit()
+
+    except ClientError as e:
+        return False
+    return True
+
+    
+    
 
 #route used to test out upload.
 @media_router.get('/', response_model=list[Media], status_code = 200)
@@ -67,3 +110,6 @@ def del_media_by_id(media_id : int,
     session.delete(media)
     session.commit()
     return Delete(message="Media deleted successfully.")
+
+
+    
