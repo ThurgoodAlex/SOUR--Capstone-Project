@@ -61,5 +61,3 @@ def user_fixture(session: Session):
     session.commit()
     session.refresh(user)
     return user
-
-def 

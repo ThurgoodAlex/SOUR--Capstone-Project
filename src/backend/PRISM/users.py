@@ -3,7 +3,7 @@ from databaseAndSchemas.mappings.userMapping import map_user_db_to_response
 from sqlalchemy import or_
 import os
 import sys
-from exceptions import DuplicateResource, EntityNotFound, MethodNotAllowed, PermissionDenied
+from exceptions import DuplicateResource, MethodNotAllowed, PermissionDenied
 import boto3
 from fastapi import APIRouter, Depends, HTTPException
 from datetime import datetime, timezone
@@ -20,6 +20,9 @@ from databaseAndSchemas.schema import (
 from databaseAndSchemas.test_db import get_session
 from PRISM import auth_get_current_user
 from databaseAndSchemas import *
+from PRISM.prism_exceptions import (
+    AuthException
+)
 
 
 localstack_endpoint = os.environ.get('LOCALSTACK_ENDPOINT', 'http://localstack:4566')
@@ -53,7 +56,23 @@ def get_all_users(session :Annotated[Session, Depends(get_session)])-> list[User
     user_in_db = session.exec(select(UserInDB)).all()
     return [map_user_db_to_response(user) for user in user_in_db]
 
-@users_router.get('/{user_id}/', response_model= User, status_code=200)
+
+@users_router.get('/{user_id}/', response_model= User, status_code=200, 
+    responses= {
+        404: {
+            "description": "User not found",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail":{
+                            "error": "entity_not_found",
+                            "message": "unable to find user with id:5"
+                        } 
+                    }
+                }
+            }
+        }
+    })
 def get_user_by_id(session: Annotated[Session, Depends(get_session)],
                     user_id: int,
                     current_user: UserInDB = Depends(auth_get_current_user))-> User:
@@ -62,7 +81,8 @@ def get_user_by_id(session: Annotated[Session, Depends(get_session)],
     if user:
         return map_user_db_to_response(user)
     else:
-        raise EntityNotFound("user", user_id)
+        raise HTTPException(status_code=404, 
+                            detail=f"user with id:{user_id} not found") 
 
 @users_router.put('/becomeseller/', response_model= User, status_code=200)
 def become_a_seller(session: Annotated[Session, Depends(get_session)],

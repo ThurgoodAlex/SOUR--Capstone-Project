@@ -34,7 +34,7 @@ class UserInDB(SQLModel, table=True):
     __tablename__ = "users"
     __table_args__ = {'extend_existing': True} 
      
-    profilePic: Optional[str] = Field(default=None, foreign_key="media.url")
+    profilePic: Optional[str] = Field(default=None)   
     id: Optional[int] = Field(default=None, primary_key=True)
     firstname: str = Field(index = False)
     lastname: str = Field(index = False)
@@ -187,7 +187,7 @@ class CommentCreate(BaseModel):
 
 ### All Following Schemas
 class FollowingInDB(SQLModel, table = True):
-    __tablename__ = "FollowingAndFolowees"
+    __tablename__ = "FollowingAndFollowees"
     id: Optional[int] = Field(default=None, primary_key=True)
     followerID: int = Field(foreign_key="users.id")
     followeeID: int = Field(foreign_key="users.id")

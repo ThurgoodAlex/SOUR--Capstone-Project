@@ -8,8 +8,10 @@ services:
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
       - ENDPOINT_URL=http://localstack:4566
+      - DATABASE_URL = "postgresql://root:password123@localhost:5432/sour-db"
     depends_on: 
       - localstack
+      - db
     volumes:
       - ./src/backend:/app/
     # develop:
@@ -56,3 +58,15 @@ services:
         - ./src/:/app/
       depends_on: 
         - localstack
+  db:
+      image: postgres:17-bookworm 
+      environment:
+        - POSTGRES_USER=root
+        - POSTGRES_PASSWORD=password123
+        - POSTGRES_DB=sour-db
+      ports:
+        - "5432:5432"
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+  volumes:
+    postgres_data:
