@@ -39,7 +39,7 @@ export function RegisteredSeller() {
                         tab1={'Active Listings'} 
                         tab2={'Sold Listings'} 
                     />
-                    <PostsFlatList posts={posts} height={270} />
+                    <PostsFlatList posts={posts} height={250} />
                     <CreateButtons />
                 </>
             )}
