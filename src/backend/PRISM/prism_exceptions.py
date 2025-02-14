@@ -42,10 +42,3 @@ class ExpiredToken(AuthException):
             error="invalid_client",
             description="expired access token",
         )
-
-class EntityNotFound(HTTPException):
-    def __init__(self, entity: str, id: int):
-        super().__init__(
-            status_code=404,
-            detail=f"{entity} with id {id} not found"
-        )

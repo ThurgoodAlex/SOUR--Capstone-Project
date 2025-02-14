@@ -21,7 +21,6 @@ from databaseAndSchemas.test_db import get_session
 from PRISM import auth_get_current_user
 from databaseAndSchemas import *
 from PRISM.prism_exceptions import (
-    EntityNotFound,
     AuthException
 )
 
