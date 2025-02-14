@@ -3,7 +3,7 @@ from databaseAndSchemas.mappings.userMapping import map_user_db_to_response
 from sqlalchemy import or_
 import os
 import sys
-from exceptions import DuplicateResource, MethodNotAllowed, PermissionDenied
+from exceptions import DuplicateResource, EntityNotFound, MethodNotAllowed, PermissionDenied
 import boto3
 from fastapi import APIRouter, Depends, HTTPException
 from datetime import datetime, timezone
