@@ -6,243 +6,291 @@ import { useUser } from '@/context/user';
 import * as ImagePicker from "expo-image-picker";
 import { router } from 'expo-router';
 import { useState } from 'react';
-import {View, Text, TextInput, TouchableOpacity, Image, ScrollView, KeyboardTypeOptions, StyleSheet, Alert, ImageBackground, GestureResponderEvent,} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, StyleSheet, Alert, KeyboardTypeOptions } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
+import { Colors } from '@/constants/Colors';
+import ModalSelector from 'react-native-modal-selector';
+import * as Yup from 'yup';
+import { style } from '@/app/SignUpScreen';
+import { Ionicons } from '@expo/vector-icons';
 
-export default function CreateListing() {
-    const [name, setName] = useState('');
-    const [size, setSize] = useState('');
-    const [description, setDescription] = useState('');
-    const [brand, setBrand] = useState('');
-    const [condition, setCondition] = useState('');
+
+const validationSchema = Yup.object().shape({
+    name: Yup.string().required('Item name is required'),
+    price: Yup.string().matches(/^\d+(\.\d{1,2})?$/, 'Enter a valid price').required('Price is required'),
+    size: Yup.string().required('Size is required'),
+});
+export default function CreateListing(): JSX.Element {
+    const [name, setName] = useState<string>('');
+    const [price, setPrice] = useState<string>('');
+    const [gender, setGender] = useState<string>('');
+    const [condition, setCondition] = useState<string>('');
+    const [size, setSize] =  useState<string>('');
+    const [description, setDescription] =  useState<string>('');
+    const [brand, setBrand] =  useState<string>('');
     const [color, setColor] = useState('');
-    const [gender, setGender] = useState('');
-    const [price, setPrice] = useState('');
+       
+    const [loading, setLoading] = useState(false);
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
     const PlaceholderImage = require('@/assets/images/icon.png');
 
     const MAX_IMAGES = 10;
-    const [images, setImages] = useState<string[]>([]); // Store multiple image URIs
-    const [error, setError] = useState(null);
+    const [images, setImages] = useState<string[]>([]);
+    const [error, setError] = useState<string | null>(null);
 
     const api = useApi();
-    const {logout} = useAuth();
-    const {user} = useUser(); // Fetch user details
-    
-    var username = "";
-    if(user){
-      username = user.username;
-    }
-    else{
-      logout();
-    }
-    
-   
-    //pick images from the device's media library
-    const uploadImages = async () => {
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-  
-      if (status !== "granted") {
-          Alert.alert(
-              "Permission Denied", "Sorry, we need camera roll permission to upload images."
-          );
-      } else {
-          // Launch the image library and get the selected images
-          const result = await ImagePicker.launchImageLibraryAsync({
-              mediaTypes: 'images',
-              allowsMultipleSelection: true,
-              selectionLimit: MAX_IMAGES - images.length,
-              orderedSelection: true,
-          });
-  
-          if (!result.canceled && result.assets) {
-              const newImages = result.assets
-                  .map((asset) => asset.uri)  // Get the URIs of the selected images
-                  .filter((uri) => !images.includes(uri));  // Filter out duplicates
-  
-              console.log('NewImages:', newImages);
-              // Add the new images to the existing images array
-              setImages((prevImages) => [...prevImages, ...newImages]);
-              setError(null);  // Clear any previous errors
-              
-          }
-      }
-  };
-  
+    const { logout } = useAuth();
+    const { user } = useUser();
+    if (!user) logout();
 
-    
-      
-    
-    const handleSubmit = async () => {
+    const uploadImages = async (): Promise<void> => {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-        console.log({
-            name,
-            size,
-            description,
-            brand,
-            gender,
-            condition,
-            color,
-            price,
-        });
+        if (status !== "granted") {
+            Alert.alert(
+                "Permission Denied", "Sorry, we need camera roll permission to upload images."
+            );
+            return;
+        }
 
         try {
-          const response = await api.post("/posts/listings/",
-            {
-              "title": name,
-              "description": description,
-              "brand": brand,
-              "condition": condition,
-              "size": size,
-              "gender": gender,
-              "price": price,
-              "isSold": true,
-              "isListing": true,
-              "coverImage": ""
+            const result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: 'images',
+                allowsMultipleSelection: true,
+                selectionLimit: MAX_IMAGES - images.length,
+                orderedSelection: true,
+            });
+
+            if (!result.canceled && result.assets) {
+                const newImages = result.assets
+                    .map((asset) => asset.uri)
+                    .filter((uri) => !images.includes(uri));
+
+                setImages((prevImages) => [...prevImages, ...newImages]);
+                setError(null);
             }
-          );
-          const result = await response.json();
-
-          if (response.ok) {
-              console.log("created listing: ", result)
-              router.replace("/SelfProfileScreen")
-            
-          } else {
-              console.log(response)
-              Alert.alert('Error', 'Something went wrong, we could not create your listing.');
-
-          }
-        } catch (error) {
-            console.error('Error creating listing:', error);
-            Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
-        } 
-        // router.replace('/DiscoverScreen');
+        } catch (err) {
+            setError("Failed to upload images. Please try again.");
+        }
     };
 
-  return (
-    <>
-     <View style={ScreenStyles.screen}>
-     
-          <Text style={[TextStyles.h2, TextStyles.uppercase]}>New Listing</Text>
-        
-          {/* Display Selected Images */}
-          <UploadPhotosCarousel images={images} onAddImages={uploadImages} />
-        <ScrollView >
-          {/* Form Inputs */}
-          <FormGroup labelText="Name" placeholderText="Enter item name" value={name} setter={setName}/>
-          <FormGroup labelText="Size" placeholderText="Enter item size" value={size} setter={setSize}/>
-          <FormGroup labelText="Price" placeholderText="Enter price" value={price} setter={setPrice} keyboardType="numeric"/>
-          <FormGroup labelText="Description" placeholderText="Enter item description" value={description} setter={setDescription} multiline/>
-          <FormGroup labelText="Brand" placeholderText="Enter brand" value={brand} setter={setBrand}/>
-          <FormGroup labelText="Gender" placeholderText="Enter gender" value={gender} setter={setGender}/>
-          <FormGroup labelText="Condition" placeholderText="Enter condition" value={condition} setter={setCondition}/>
-          <FormGroup labelText="Color" placeholderText="Select a color" value={color} setter={setColor}/>
-          
-          
-          {/* Submit Button */}
-          <TouchableOpacity style={Styles.buttonDark} onPress={handleSubmit}>
-              <Text style={TextStyles.light}>Post</Text>
-          </TouchableOpacity>
-          
-      </ScrollView>
-    </View>
-    <NavBar/>
-    </>
-   
-  );
-}
+    const handleSubmit = async (): Promise<void> => {
+        try {
+            await validationSchema.validate(
+                { name, description, size, price, gender, condition, brand, color }, 
+                { abortEarly: false }
+            );
+            setErrors({});
+            setLoading(true);
 
+            const response = await api.post("/posts/listings/", {
+                "title": name,
+                "gender": gender,
+                "size": size,
+                "description": description,
+                "condition": condition,
+                "brand": brand,
+                "price": price,
+                "isSold": false,
+                "isListing": true,
+                "coverImage": "",
+                "color": color
+            });
 
-function UploadPhotosCarousel({
-  images,
-  onAddImages,
-}: {
-  images: string[];
-  onAddImages: () => Promise<void>;
-}) {
-  const isButtonDisabled = images.length >= 10;  // Disable the button if 10 images are already selected
-
-  return (
-    <View>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {images.map((imageUri, index) => (
-          <View key={index}>
-            <ImageBackground
-              source={{ uri: imageUri }}
-              style={Styles.image}
-              resizeMode="cover"
-            />
-          </View>
-        ))}
-        
-        {/* Add More Button */}
-        <TouchableOpacity
-          style={[Styles.buttonLight, isButtonDisabled && { opacity: 0.5 }, {width:250, height:250}]}  // Apply style to indicate the button is disabled
-          onPress={onAddImages}
-          disabled={isButtonDisabled}  // Disable the button if there are 10 images
-        >
-          <Text style={TextStyles.h3}>
-            {isButtonDisabled
-              ? "10 Photos Limit Reached"  // Display message when 10 images are selected
-              : images.length > 0
-              ? "Add More Images"
-              : "Upload Images"
+            if (response.ok) {
+                console.log("Created listing: ", await response.json());
+                router.replace("/SelfProfileScreen");
+            } else {
+                Alert.alert('Error', 'Something went wrong, we could not create your listing.');
             }
-          </Text>
-        </TouchableOpacity>
-      </ScrollView>
-    </View>
-  );
+        } catch (err) {
+            if (err instanceof Yup.ValidationError) {
+                const newErrors: { [key: string]: string } = {};
+                err.inner.forEach(error => {
+                    if (error.path) {
+                        newErrors[error.path] = error.message;
+                    }
+                });
+                setErrors(newErrors);
+            } else {
+                Alert.alert('Error', 'An unexpected error occurred. Please try again.');
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <>
+            <View style={ScreenStyles.screen}>
+                <Text style={[TextStyles.h2, TextStyles.uppercase]}>New Listing</Text>
+                <ScrollView>
+                    <UploadPhotosCarousel images={images} onAddImages={uploadImages} />
+                    <FormGroup labelText="Name" placeholderText="Enter item name" value={name} setter={setName} error={errors["name"]} required/>
+                    <FormGroup labelText="Price" placeholderText="Enter price" value={price} setter={setPrice} error={errors["price"]} keyboardType="numeric" required/>
+                    <Dropdown labelText="Size" selectedValue={size} onValueChange={setSize} options={["XXSmall", "XSmall", "Small", "Medium", "Large", "XLarge", "XXLarge", "XXXLarge", "00", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]} error={errors["size"]} required/>
+                    <FormGroup labelText="Description" placeholderText="Enter item description" value={description} setter={setDescription} error={errors["description"]} multiline/>
+                    <FormGroup labelText="Brand" placeholderText="Enter brand" value={brand} setter={setBrand} error={errors["brand"]}/>
+                    <Dropdown labelText="Gender" selectedValue={gender} onValueChange={setGender} options={["Men's", "Women's", "Unisex"]} error={errors["gender"]} />
+                    <Dropdown labelText="Condition" selectedValue={condition} onValueChange={setCondition} options={["New", "Like New", "Good", "Fair", "Needs Repair"]} error={errors["condition"]}/>
+                    <FormGroup labelText="Color" placeholderText="Select a color" value={color} setter={setColor} error={errors["color"]}/>
+                    <TouchableOpacity 
+                        style={[Styles.buttonDark, (name == "" || price == "" || size == "") && Styles.buttonDisabled]}
+                        onPress={handleSubmit}
+                        disabled={name == "" || price == "" || size == ""}
+                    >
+                        <Text style={TextStyles.light}>Post</Text>
+                    </TouchableOpacity>
+                </ScrollView>
+            </View>
+            <NavBar />
+        </>
+    );
 }
 
+function UploadPhotosCarousel({ images, onAddImages }: { images: string[]; onAddImages: () => Promise<void> }): JSX.Element {
+    return (
+        <View>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                {images.map((imageUri, index) => (
+                    <Image key={index} source={{ uri: imageUri }} style={Styles.image} resizeMode="cover" />
+                ))}
+                <TouchableOpacity style={[Styles.buttonLight, { backgroundColor:Colors.dark60, width: 220, height: 220, borderColor:Colors.dark, borderWidth:1 }]} onPress={onAddImages}>
+                    <Text style={TextStyles.h3}>{images.length >= 10 ? "10 Photos Limit Reached" : "Upload Images"}</Text>
+                </TouchableOpacity>
+            </ScrollView>
+        </View>
+        
+    );
+}
 
-function FormGroup({
-    labelText,
-    placeholderText,
-    value,
-    setter,
-    keyboardType,
-    multiline
-}: {
+function FormGroup({ labelText, placeholderText, value, setter, error, keyboardType, multiline, required}: {
     labelText: string;
     placeholderText: string;
     value: string;
     setter: React.Dispatch<React.SetStateAction<string>>;
-    keyboardType?: KeyboardTypeOptions;
-    multiline?: boolean
-}) {
-
+    error: string;
+    keyboardType?: string;
+    multiline?: boolean;
+    required?: boolean;
+}): JSX.Element {
     return (
-    <View style={CreateListingStyles.formGroup}>
-      <Text style={TextStyles.h3}>{labelText}</Text>
-      <TextInput
-        style={[Styles.input, multiline ? CreateListingStyles.textArea : null, {width:250}]} // Conditionally apply styles.textArea
-        placeholder={placeholderText}
-        value={value}
-        onChangeText={setter}
-        keyboardType={keyboardType}
-        multiline={multiline}
-        textAlignVertical={multiline ? 'top' : 'center'} // Optional: Adjust text alignment for multiline
-      />
-    </View>
+        <View style={CreateListingStyles.formGroup}>
+             <View style={Styles.row}>
+                <Text style={[TextStyles.h3, { textAlign: 'left' }]}>{labelText} </Text>  
+                {required? <Text style={[TextStyles.required, { marginBottom:5}]}>*required</Text> : null }
+            </View>
+            <TextInput  
+                style={[Styles.input, multiline ? CreateListingStyles.textArea : null]} 
+                placeholder={placeholderText} 
+                value={value} 
+                onChangeText={setter} 
+                keyboardType={keyboardType as KeyboardTypeOptions}
+                textAlignVertical={multiline ? 'top' : 'center'} 
+                multiline={multiline}
+            />
+            {error && <Text style={[TextStyles.error, {marginTop:-10}]}>{error}</Text>}
+        </View>
+    );
+}
+
+
+function Dropdown({ labelText, selectedValue, onValueChange, options, error, required }: {
+  labelText: string;
+  selectedValue: string;
+  onValueChange: (value: string) => void;
+  options: string[];
+  error: string;
+  required?: boolean;
+}): JSX.Element {
+  const data = options.map((option, index) => ({
+      key: index,
+      label: option,
+      value: option,
+  }));
+
+  return (
+    <>
+      <View style={CreateListingStyles.formGroup}>
+        <View style={Styles.row}>
+            <Text style={[TextStyles.h3, { textAlign: 'left' }]}>{labelText} </Text>  
+            {required ? <Text style={[TextStyles.required, { marginBottom: 5 }]}>*required</Text> : null}
+        </View>
+
+        <View style={{ position: 'relative' }}> 
+            <ModalSelector
+                data={data}
+                initValue={selectedValue || "Select an option"} 
+                onChange={(option) => onValueChange(option.value)}
+                initValueTextStyle={selectedValue == "" ? { color: 'gray', textAlign: 'left', marginTop: 4 } : { color: Colors.dark, textAlign: 'left', marginTop: 4 }}
+                overlayStyle={{
+                    position: 'absolute',
+                    top: '35%',
+                    width: '90%',
+                    maxHeight: 400,
+                    backgroundColor: Colors.white,
+                    borderRadius: 8,
+                    alignSelf: 'center',
+                    shadowColor: '#692b20',
+                    shadowOpacity: 0.25,
+                    shadowRadius: 10,
+                    opacity: 0.95
+                }}
+                optionContainerStyle={{ backgroundColor: 'transparent' }}
+                optionStyle={{ backgroundColor: 'transparent' }}
+                optionTextStyle={{ color: Colors.dark }}
+                selectStyle={{
+                    backgroundColor: Colors.light60,
+                    height: 45,
+                    borderColor: Colors.dark,
+                    borderRadius: 8,
+                    paddingRight: 30, // Make space for the icon
+                    justifyContent: 'center'
+                }}
+                selectTextStyle={{ color: Colors.dark, textAlign: 'left' }}
+                selectedItemTextStyle={{ color: Colors.dark }}
+                cancelStyle={{ backgroundColor: Colors.dark }}
+                cancelTextStyle={{ color: Colors.white }}
+                cancelText='Cancel'
+            />
+            
+            <Ionicons
+                name={'chevron-down-outline'}
+                size={24}
+                color={Colors.dark}
+                style={{
+                    position: 'absolute',
+                    right: 10,
+                    top: '50%',
+                    transform: [{ translateY: -12 }], // Adjusts it to center vertically
+                    pointerEvents: 'none' // Prevents blocking touch events
+                }}
+            />
+        </View>
+
+    {error && <Text style={[TextStyles.error, { marginTop: 5 }]}>{error}</Text>}
+</View>
+
+        
+   </>
   );
-  }
+}
 
-  
-  
-
-  export const CreateListingStyles = StyleSheet.create({
-    
+export const CreateListingStyles = StyleSheet.create({
     formGroup: {
-      marginBottom: 12,
-      flexDirection:'row',
-      gap:8,
-      alignItems:'flex-start',
-      justifyContent:'space-between'
+        marginBottom: 12,
+        maxWidth: '100%',
+        position: 'relative',
     },
 
-    
     textArea: {
       height: 120,
       textAlignVertical: 'top',
-    },
 
-  })
+    },
+   
+
+});
+
+
