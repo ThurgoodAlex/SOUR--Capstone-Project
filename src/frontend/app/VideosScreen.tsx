@@ -1,28 +1,19 @@
 
-import { useVideoPlayer, VideoView, VideoSource } from 'expo-video';
-import { View, Dimensions, FlatList, StyleSheet, Pressable } from 'react-native';
+import { View, Dimensions, FlatList, StyleSheet } from 'react-native';
 import { useEffect, useRef, useState } from 'react';
-import { useEvent } from 'expo';
 import { NavBar } from '@/components/NavBar';
 import { Stack } from 'expo-router';
 import { ScreenStyles } from '@/constants/Styles';
 import { useApi } from '@/context/api';
 import { Video } from '@/components/Video';
+import { Post } from '@/constants/Types';
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
-
-const videos = [
-    require('../assets/vids/testFashion.mp4'),
-    require('../assets/vids/testFashion(1).mp4'),
-    require('../assets/vids/testFashion(2).mp4'),
-    require('../assets/vids/testFashion(3).mp4'),
-    require('../assets/vids/testFashion(4).mp4'),
-    require('../assets/vids/testFashion(5).mp4'),
-    require('../assets/vids/testFashion(6).mp4'),
-];
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+const VIDEO_HEIGHT = SCREEN_HEIGHT - 64;
 
 export default function VideoScreen() {
     const api = useApi();
+    const [videos, setVideos] = useState();
     const [currentViewableItemIndex, setCurrentViewableItemIndex] = useState(0);
     const viewabilityConfig = { viewAreaCoveragePercentThreshold: 50 }
     const onViewableItemsChanged = ({ viewableItems }: any) => {
@@ -33,28 +24,33 @@ export default function VideoScreen() {
     const viewabilityConfigCallbackPairs = useRef([{ viewabilityConfig, onViewableItemsChanged }])
 
     const getVideos = async () => {
-        // try {
-        //     const response = await api.get(`/posts/isVideo=true/`);
-        //     if (response.ok) {
-        //     } else {
-        //         console.error("Chats retrival failed:", response);
-        //     }
-        // } catch (error) {
-        //     console.error('Chats retrival failed:', error);
-        // }
+        try {
+            const response = await api.get(`/posts/isListing=false/`);
+            if (response.ok) {
+                const videosData = await response.json();
+                setVideos(videosData)
+            } else {
+                console.error("posts retrival failed:", response);
+            }
+        } catch (error) {
+            console.error('posts retrival failed:', error);
+        }
     };
 
     useEffect(() => {
         getVideos();
     }, []);
 
-    const renderVideo = ({item, index} : {item: number, index: number}) => (
-        <Video assetId={item} index={index} currentViewableItemIndex={currentViewableItemIndex}/>
+    const renderVideo = ({item, index} : {item: Post, index: number}) => (
+        <Video post={item} index={index} currentViewableItemIndex={currentViewableItemIndex}/>
     );
     return (
         <>
-            <Stack.Screen options={{ title: 'VideosScreen' }}/>
-            <View style={ScreenStyles.screenCentered}>
+            <Stack.Screen options={{
+                title: 'VideosScreen',
+                headerShown: false
+                }}/>
+            <View style={styles.container}>
                 <FlatList
                     data={videos}
                     renderItem={({ item, index }) => (
@@ -63,7 +59,7 @@ export default function VideoScreen() {
                     keyExtractor={item => item}
                     pagingEnabled
                     snapToAlignment="start"
-                    snapToInterval={SCREEN_HEIGHT}
+                    snapToInterval={VIDEO_HEIGHT}
                     decelerationRate="fast"
                     showsVerticalScrollIndicator={false}
                     viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
@@ -74,3 +70,10 @@ export default function VideoScreen() {
         
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'black',
+    },
+});
