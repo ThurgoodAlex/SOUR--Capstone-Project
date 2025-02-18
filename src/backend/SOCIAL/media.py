@@ -21,9 +21,11 @@ from exceptions import DuplicateResource, EntityNotFound, PermissionDenied
 
 localstack_endpoint = os.environ.get('LOCALSTACK_ENDPOINT', 'http://localstack:4566')
 
-REGION = os.environ.get('CDK_DEFAULT_REGION', 'us-west-1')
+AWS_REGION = os.environ.get('CDK_DEFAULT_REGION', 'us-west-1')
 
-s3_client = boto3.client('s3', region_name=REGION)
+AWS_ACCOUNT_ID = os.environ.get('CDK_DEFAULT_ACCOUNT', '000000000000')
+    
+s3_client = boto3.client('s3', region_name=AWS_REGION)
 
 media_router = APIRouter(tags=["Media"])
 
@@ -44,7 +46,7 @@ async def upload_media(
 
         # Upload to S3 using put_object
         response = s3_client.put_object(
-            Bucket="sour-user-images-000000000000-us-west-1",
+            Bucket=f"sour-user-images-{AWS_ACCOUNT_ID}-{AWS_REGION}",
             Key=unique_filename,
             Body=file_content,
             ContentType=file.content_type
@@ -73,7 +75,6 @@ async def upload_media(
     except ClientError as e:
         return False
 
-    
     
 
 #route used to test out upload.
