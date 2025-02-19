@@ -1,23 +1,17 @@
 import { NavBar } from '@/components/NavBar';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
-import { api, useApi } from '@/context/api';
+import { useApi } from '@/context/api';
 import { useAuth } from '@/context/auth';
 import { useUser } from '@/context/user';
 import * as ImagePicker from "expo-image-picker";
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, StyleSheet, Alert, KeyboardTypeOptions } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
 import { Colors } from '@/constants/Colors';
 import ModalSelector from 'react-native-modal-selector';
 import * as Yup from 'yup';
-import { style } from '@/app/SignUpScreen';
 import { Ionicons } from '@expo/vector-icons';
-import { LinkedItems } from '@/components/Linkedtems';
 import { usePosts } from '@/hooks/usePosts';
-import { Collapsible } from '@/components/Collapsible';
-import { ThemedView } from '@/components/ThemedView';
-import { ThemedText } from '@/components/ThemedText';
 import { Post } from '@/constants/Types';
 import { LinkedItemsSelection } from '@/components/LinkItemsSelection';
 
@@ -73,6 +67,7 @@ export default function CreateListing(): JSX.Element {
             });
 
             if (!result.canceled && result.assets) {
+                console.log(result.assets);
                 const newImages = result.assets
                     .map((asset) => asset.uri)
                     .filter((uri) => !images.includes(uri));
