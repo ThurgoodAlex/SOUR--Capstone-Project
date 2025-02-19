@@ -13,6 +13,13 @@ import ModalSelector from 'react-native-modal-selector';
 import * as Yup from 'yup';
 import { style } from '@/app/SignUpScreen';
 import { Ionicons } from '@expo/vector-icons';
+import { LinkedItems } from '@/components/Linkedtems';
+import { usePosts } from '@/hooks/usePosts';
+import { Collapsible } from '@/components/Collapsible';
+import { ThemedView } from '@/components/ThemedView';
+import { ThemedText } from '@/components/ThemedText';
+import { Post } from '@/constants/Types';
+import { LinkedItemsSelection } from '@/components/LinkItemsSelection';
 
 
 const validationSchema = Yup.object().shape({
@@ -37,11 +44,14 @@ export default function CreateListing(): JSX.Element {
 
     const MAX_IMAGES = 10;
     const [images, setImages] = useState<string[]>([]);
+
     const [error, setError] = useState<string | null>(null);
 
     const api = useApi();
     const { logout } = useAuth();
     const { user } = useUser();
+    const { posts } = usePosts(`/users/${user?.id}/posts/`);
+    const [ linkedPosts, setLinkedPosts] = useState<Post[]>([]);
     if (!user) logout();
 
     const uploadImages = async (): Promise<void> => {
@@ -74,36 +84,53 @@ export default function CreateListing(): JSX.Element {
             setError("Failed to upload images. Please try again.");
         }
     };
-
     const handleSubmit = async (): Promise<void> => {
         try {
             await validationSchema.validate(
-                { name, description, size, price, gender, condition, brand, color }, 
+                { name, description, size, price, gender, condition, brand, color },
                 { abortEarly: false }
             );
             setErrors({});
             setLoading(true);
-
+    
+            // Create the listing first
             const response = await api.post("/posts/listings/", {
-                "title": name,
-                "gender": gender,
-                "size": size,
-                "description": description,
-                "condition": condition,
-                "brand": brand,
-                "price": price,
-                "isSold": false,
-                "isListing": true,
-                "coverImage": "",
-                "color": color
+                title: name,
+                gender: gender,
+                size: size,
+                description: description,
+                condition: condition,
+                brand: brand,
+                price: price,
+                isSold: false,
+                isListing: true,
+                coverImage: "",
+                color: color
             });
-
-            if (response.ok) {
-                console.log("Created listing: ", await response.json());
-                router.replace("/SelfProfileScreen");
-            } else {
+    
+            if (!response.ok) {
                 Alert.alert('Error', 'Something went wrong, we could not create your listing.');
+                return;
             }
+    
+            const newListing = await response.json();
+            const listingId = newListing.id;
+    
+            console.log("Created listing:", listingId);
+    
+            // Link listing to selected posts
+            for (const post of linkedPosts) {
+                console.log("linking post id = ", post.id)
+                const linkResponse = await api.post(`/posts/${post.id}/link/${listingId}/`);
+
+                console.log(linkResponse.json())
+                if (!linkResponse.ok) {
+                    console.error(`Failed to link post ${post.id} with listing ${listingId}`);
+                }
+            }
+    
+            // Navigate after success
+            router.replace("/SelfProfileScreen");
         } catch (err) {
             if (err instanceof Yup.ValidationError) {
                 const newErrors: { [key: string]: string } = {};
@@ -120,6 +147,7 @@ export default function CreateListing(): JSX.Element {
             setLoading(false);
         }
     };
+    
 
     return (
         <>
@@ -135,6 +163,8 @@ export default function CreateListing(): JSX.Element {
                     <Dropdown labelText="Gender" selectedValue={gender} onValueChange={setGender} options={["Men's", "Women's", "Unisex"]} error={errors["gender"]} />
                     <Dropdown labelText="Condition" selectedValue={condition} onValueChange={setCondition} options={["New", "Like New", "Good", "Fair", "Needs Repair"]} error={errors["condition"]}/>
                     <FormGroup labelText="Color" placeholderText="Select a color" value={color} setter={setColor} error={errors["color"]}/>
+                    <SelectLinks posts={posts} selected={linkedPosts} setter={setLinkedPosts}/>
+                    
                     <TouchableOpacity 
                         style={[Styles.buttonDark, (name == "" || price == "" || size == "") && Styles.buttonDisabled]}
                         onPress={handleSubmit}
@@ -142,6 +172,7 @@ export default function CreateListing(): JSX.Element {
                     >
                         <Text style={TextStyles.light}>Post</Text>
                     </TouchableOpacity>
+
                 </ScrollView>
             </View>
             <NavBar />
@@ -165,6 +196,57 @@ function UploadPhotosCarousel({ images, onAddImages }: { images: string[]; onAdd
     );
 }
 
+function SelectLinks({ posts, selected, setter }: {posts: Post[], selected: Post[], setter: React.Dispatch<React.SetStateAction<Post[]>>}){
+    const [isOpen, setIsOpen] = useState(false);
+     
+    
+    return (
+    <View>
+        <Text style={[TextStyles.h3, {textAlign:'left'}]}>Link Posts</Text>
+        <TouchableOpacity
+        style={[TextStyles.h3,  
+            {
+                backgroundColor: Colors.light60,
+                height: 45,
+                borderColor: Colors.dark,
+                borderWidth:1,
+                borderRadius: 8,
+                paddingRight: 30, // Make space for the icon
+                justifyContent: 'center'
+            }
+        ]}
+        onPress={() => setIsOpen((value) => !value)}
+        activeOpacity={0.8}>
+        <Ionicons
+                name={isOpen? 'chevron-forward':'chevron-down-outline'}
+                size={24}
+                color={Colors.dark}
+                style={{
+                    position: 'absolute',
+                    right: 10,
+                    top: '50%',
+                    transform: [{ translateY: -12 }], // Adjusts it to center vertically
+                    pointerEvents: 'none' // Prevents blocking touch events
+                }}
+            />
+
+        
+        <Text 
+            style={[TextStyles.p, 
+                    { color: 'gray', 
+                    textAlign: 'left', 
+                    marginTop: 4, 
+                    paddingLeft:12}
+                    ]}>
+            {selected.length} selected
+        </Text>
+        </TouchableOpacity>
+        {isOpen && <LinkedItemsSelection posts={posts} columns={3} setter={setter}/>}
+    </View>
+    );
+
+}
+
 function FormGroup({ labelText, placeholderText, value, setter, error, keyboardType, multiline, required}: {
     labelText: string;
     placeholderText: string;
@@ -179,7 +261,7 @@ function FormGroup({ labelText, placeholderText, value, setter, error, keyboardT
         <View style={CreateListingStyles.formGroup}>
              <View style={Styles.row}>
                 <Text style={[TextStyles.h3, { textAlign: 'left' }]}>{labelText} </Text>  
-                {required? <Text style={[TextStyles.required, { marginBottom:5}]}>*required</Text> : null }
+                {required? <Text style={[TextStyles.required]}>*required</Text> : null }
             </View>
             <TextInput  
                 style={[Styles.input, multiline ? CreateListingStyles.textArea : null]} 
@@ -215,7 +297,7 @@ function Dropdown({ labelText, selectedValue, onValueChange, options, error, req
       <View style={CreateListingStyles.formGroup}>
         <View style={Styles.row}>
             <Text style={[TextStyles.h3, { textAlign: 'left' }]}>{labelText} </Text>  
-            {required ? <Text style={[TextStyles.required, { marginBottom: 5 }]}>*required</Text> : null}
+            {required ? <Text style={[TextStyles.required]}>*required</Text> : null}
         </View>
 
         <View style={{ position: 'relative' }}> 
@@ -279,7 +361,7 @@ function Dropdown({ labelText, selectedValue, onValueChange, options, error, req
 
 export const CreateListingStyles = StyleSheet.create({
     formGroup: {
-        marginBottom: 12,
+        marginBottom: 10,
         maxWidth: '100%',
         position: 'relative',
     },

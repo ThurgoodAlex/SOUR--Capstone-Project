@@ -16,7 +16,7 @@ import ProfileThumbnailSmall from '@/components/ProfileThumbnailSmall';
  * 
  * @returns A post view component.
  */
-export function PostPreview({ post, size, profileThumbnail = "none"}: { post: Post, size: number, profileThumbnail: string }) {
+export function PostPreview({ post, size, profileThumbnail = "none", touchable=true}: { post: Post, size: number, profileThumbnail: string, touchable?: boolean }) {
     
     let icon;
     let type = post.isListing ? "listing" : "post";
@@ -35,7 +35,8 @@ export function PostPreview({ post, size, profileThumbnail = "none"}: { post: Po
     const isSold = post.isSold;
     const previewStyle = [
         Styles.column,
-        { marginBottom: 10, opacity: isSold ? 0.5 : 1 }, // Reduce opacity if sold
+        { marginBottom: 10, opacity: isSold ? 0.5 : 1 },
+         // Reduce opacity if sold
     ];
     const overlayStyle: ViewStyle | undefined = isSold
         ? {
@@ -62,11 +63,12 @@ export function PostPreview({ post, size, profileThumbnail = "none"}: { post: Po
     }; 
 
     return (
-        <View key={post.id} style={previewStyle}>
+        <View key={post.id} style={[previewStyle,  {justifyContent:"flex-start"}]}>
+           
             <TouchableOpacity
                 onPress={() => router.push(`/PostInfoScreen/${post.id}`)} // Navigate on press
-                style={{ flex: 1, margin: 5 }} // Add styles for spacing
-                disabled={isSold} // Disable interaction if sold
+                style={{ margin: 5 }} // Add styles for spacing
+                disabled={isSold || !touchable} // Disable interaction if sold
             >
                 
                 <ImageBackground source={post.coverImage} style={{ height: size, width: size }}>
