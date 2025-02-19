@@ -16,10 +16,10 @@ from databaseAndSchemas.schema import (
 )
 from databaseAndSchemas.test_db import get_session
 from PRISM.auth import auth_get_current_user
-from exceptions import DuplicateResource, EntityNotFound, PermissionDenied
+from exceptions import EntityNotFound, PermissionDenied
+from socialexceptions import InvalidFileType 
 
-
-localstack_endpoint = os.environ.get('LOCALSTACK_ENDPOINT', 'http://localstack:4566')
+localstack_endpoint = os.environ.get('LOCALSTACK_ENDPOINT', 'http://localhost:4566')
 
 AWS_REGION = os.environ.get('CDK_DEFAULT_REGION', 'us-west-1')
 
@@ -34,38 +34,43 @@ async def upload_media(
     session : Annotated[Session, Depends(get_session)], 
                         current_user: UserInDB = Depends(auth_get_current_user),
                         file: UploadFile = File(...),
-                        post_id: str = Form(...),
+                        post_id: int = Form(...),
                         ):
-    """"""
+    """Endpoint used to upload images and videos to the backend"""
+
     try: 
 
         file_content = await file.read()
 
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        unique_filename = f"{current_user.id}_{timestamp}_{file.filename}"
 
-        # Upload to S3 using put_object
-        response = s3_client.put_object(
+        file_mime_type = file.content_type.split("/")[0]
+
+        if file_mime_type not in ["video", "image"]:
+            raise InvalidFileType(file_mime_type)
+        
+        unique_filename = f"{current_user.id}/{post_id}/{file_mime_type}/{timestamp}_{file.filename}"
+
+        s3_client.put_object(
             Bucket=f"sour-user-images-{AWS_ACCOUNT_ID}-{AWS_REGION}",
             Key=unique_filename,
             Body=file_content,
             ContentType=file.content_type
         )
 
-        print(response)
+        img_url = f"{localstack_endpoint}/sour-user-images-{AWS_ACCOUNT_ID}-{AWS_REGION}/{unique_filename}"
 
-        # Generate the URL for the uploaded file
-        img_url = f"{localstack_endpoint}/sour-user-images-000000000000-us-west-1/{unique_filename}"
+        file_is_video = False
 
+        if file_mime_type == "video":
+            file_is_video=True 
         
-        # Create media record
         media = MediaInDB(
             url= img_url,
             postID=post_id,
-            isVideo=False
+            isVideo=file_is_video
         )
         
-        # Save to database
         session.add(media)
         session.commit()
         session.refresh(media)
