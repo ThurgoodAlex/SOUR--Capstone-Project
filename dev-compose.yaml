@@ -6,6 +6,7 @@ services:
       - "19000:19000"  # Frontend
       - "19001:19001"  # Frontend additional
       - "19002:19002"  # Frontend additional
+      - "8081:8081"
     volumes:
       - ./:/app/
       - /app/src/frontend/node_modules  # Preserve frontend node_modules
