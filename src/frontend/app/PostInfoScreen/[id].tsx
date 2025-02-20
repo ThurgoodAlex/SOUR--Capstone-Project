@@ -9,12 +9,12 @@ import { useLocalSearchParams } from 'expo-router';
 import { useApi } from '@/context/api';
 import { Post } from '@/constants/Types';
 import { Ionicons } from '@expo/vector-icons';
-import { GridPosts } from '@/components/GridPosts';
 import  CartButton  from '@/components/CartButton';
 
 import { LinkedItems } from '@/components/Linkedtems';
 import { usePost } from '@/hooks/usePost';
 import { usePosts } from '@/hooks/usePosts';
+import { Colors } from '@/constants/Colors';
 
 
 export default function PostInfoScreen() {
@@ -63,16 +63,21 @@ export default function PostInfoScreen() {
                         <PhotoCarousel />
                         <View style={[Styles.row, { justifyContent: 'space-between' }]}>
                             <ProfileThumbnail user={post.seller} />
+
+                            
                             {post.isListing ? (<CartButton listingID={post.id} onItemAdded={handleItemAdded} />): null  }
                             <TouchableOpacity onPress={toggleLike}>
                                 {liked ? (
-                                    <Ionicons size={20} name='heart' color='red' />
+                                    <Ionicons size={28} name='heart' color={Colors.grapefruit} style={{marginTop:5}} />
                                 ) : (
-                                    <Ionicons size={20} name='heart-outline' color='gray' />
+                                    <Ionicons size={28} name='heart-outline'  color={Colors.dark60} style={{marginTop:5}}  />
                                 )}
                             </TouchableOpacity>
+                           
                         </View>
                         {post.isListing ? (<ListingInfo post={post} />): <PostInfo post={post} />  }
+                        
+
                         {linkedItems.length > 0 ? (
                                 <>
                                     <Text style={[TextStyles.h2, TextStyles.uppercase]}>

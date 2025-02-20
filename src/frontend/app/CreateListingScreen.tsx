@@ -7,7 +7,6 @@ import * as ImagePicker from "expo-image-picker";
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, StyleSheet, Alert, KeyboardTypeOptions } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
 import { Colors } from '@/constants/Colors';
 import ModalSelector from 'react-native-modal-selector';
 import * as Yup from 'yup';
@@ -20,6 +19,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { Post } from '@/constants/Types';
 import { LinkedItemsSelection } from '@/components/LinkItemsSelection';
+import { LinkInputDropdown } from '@/components/LinkInputDropdown';
 
 
 const validationSchema = Yup.object().shape({
@@ -50,7 +50,7 @@ export default function CreateListing(): JSX.Element {
     const api = useApi();
     const { logout } = useAuth();
     const { user } = useUser();
-    const { posts } = usePosts(`/users/${user?.id}/posts/`);
+    const { posts } = usePosts(`/users/${user?.id}/posts/?is_listing=false`);
     const [ linkedPosts, setLinkedPosts] = useState<Post[]>([]);
     if (!user) logout();
 
@@ -84,6 +84,7 @@ export default function CreateListing(): JSX.Element {
             setError("Failed to upload images. Please try again.");
         }
     };
+    
     const handleSubmit = async (): Promise<void> => {
         try {
             await validationSchema.validate(
@@ -163,7 +164,7 @@ export default function CreateListing(): JSX.Element {
                     <Dropdown labelText="Gender" selectedValue={gender} onValueChange={setGender} options={["Men's", "Women's", "Unisex"]} error={errors["gender"]} />
                     <Dropdown labelText="Condition" selectedValue={condition} onValueChange={setCondition} options={["New", "Like New", "Good", "Fair", "Needs Repair"]} error={errors["condition"]}/>
                     <FormGroup labelText="Color" placeholderText="Select a color" value={color} setter={setColor} error={errors["color"]}/>
-                    <SelectLinks posts={posts} selected={linkedPosts} setter={setLinkedPosts}/>
+                    <LinkInputDropdown posts={posts} selected={linkedPosts} setter={setLinkedPosts} columns={3}/>
                     
                     <TouchableOpacity 
                         style={[Styles.buttonDark, (name == "" || price == "" || size == "") && Styles.buttonDisabled]}
@@ -196,56 +197,7 @@ function UploadPhotosCarousel({ images, onAddImages }: { images: string[]; onAdd
     );
 }
 
-function SelectLinks({ posts, selected, setter }: {posts: Post[], selected: Post[], setter: React.Dispatch<React.SetStateAction<Post[]>>}){
-    const [isOpen, setIsOpen] = useState(false);
-     
-    
-    return (
-    <View>
-        <Text style={[TextStyles.h3, {textAlign:'left'}]}>Link Posts</Text>
-        <TouchableOpacity
-        style={[TextStyles.h3,  
-            {
-                backgroundColor: Colors.light60,
-                height: 45,
-                borderColor: Colors.dark,
-                borderWidth:1,
-                borderRadius: 8,
-                paddingRight: 30, // Make space for the icon
-                justifyContent: 'center'
-            }
-        ]}
-        onPress={() => setIsOpen((value) => !value)}
-        activeOpacity={0.8}>
-        <Ionicons
-                name={isOpen? 'chevron-forward':'chevron-down-outline'}
-                size={24}
-                color={Colors.dark}
-                style={{
-                    position: 'absolute',
-                    right: 10,
-                    top: '50%',
-                    transform: [{ translateY: -12 }], // Adjusts it to center vertically
-                    pointerEvents: 'none' // Prevents blocking touch events
-                }}
-            />
 
-        
-        <Text 
-            style={[TextStyles.p, 
-                    { color: 'gray', 
-                    textAlign: 'left', 
-                    marginTop: 4, 
-                    paddingLeft:12}
-                    ]}>
-            {selected.length} selected
-        </Text>
-        </TouchableOpacity>
-        {isOpen && <LinkedItemsSelection posts={posts} columns={3} setter={setter}/>}
-    </View>
-    );
-
-}
 
 function FormGroup({ labelText, placeholderText, value, setter, error, keyboardType, multiline, required}: {
     labelText: string;
@@ -344,7 +296,7 @@ function Dropdown({ labelText, selectedValue, onValueChange, options, error, req
                 style={{
                     position: 'absolute',
                     right: 10,
-                    top: '50%',
+                    top: 15,
                     transform: [{ translateY: -12 }], // Adjusts it to center vertically
                     pointerEvents: 'none' // Prevents blocking touch events
                 }}

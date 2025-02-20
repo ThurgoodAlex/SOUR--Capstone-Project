@@ -2,11 +2,8 @@ import { TouchableOpacity, Text, Alert, ActivityIndicator } from 'react-native';
 import { useApi } from '@/context/api';
 import { useUser } from '@/context/user';
 import { useState } from 'react';
+import { Colors } from '@/constants/Colors';
 
-
-
-// Needed to make this so I could pass the right ID from the listing to the cart
-// There might be a better way to do this but I'm not sure what it is
 interface CartButtonProps {
     listingID: number;
     onItemAdded: (item: any) => void;
@@ -16,6 +13,7 @@ const CartButton: React.FC<CartButtonProps> = ({ listingID, onItemAdded }) => {
     const api = useApi();
     const { user } = useUser();
     const [loading, setLoading] = useState(false);
+    const [isAdded, setIsAdded] = useState(false);
 
     const addToCart = async () => {
         if (!user || !user.id) {
@@ -26,7 +24,6 @@ const CartButton: React.FC<CartButtonProps> = ({ listingID, onItemAdded }) => {
         setLoading(true);
 
         try {
-            // console.log("Adding to cart:", listingID);
             const response = await api.post(`/users/${user.id}/cart/`, {
                 listing_id: listingID,
             });
@@ -35,11 +32,8 @@ const CartButton: React.FC<CartButtonProps> = ({ listingID, onItemAdded }) => {
             }
 
             const data = await response.json();
-            Alert.alert('Success', 'Item added to cart!');
-            // console.log('Item added to cart:', data);
-
-            // callback function to add the item to the cart
             onItemAdded(data);
+            setIsAdded(true);
 
         } catch (error) {
             console.error('Error adding to cart:', error);
@@ -53,16 +47,23 @@ const CartButton: React.FC<CartButtonProps> = ({ listingID, onItemAdded }) => {
         <TouchableOpacity
             onPress={addToCart}
             style={{
-                backgroundColor: '#7e9151',
-                padding: 10,
+                backgroundColor: isAdded ?  Colors.green  : 'transparent',
+                padding: 8,
                 borderRadius: 5,
                 alignItems: 'center',
                 justifyContent: 'center',
-                marginTop: 10,
+                marginTop: 3,
+                marginRight:8,
+                borderWidth: 2,
+                borderColor:  Colors.green ,
             }}
             disabled={loading}
         >
-            {loading ? <ActivityIndicator color="white" /> : <Text style={{ color: 'white' }}>Add to Cart</Text>}
+            {loading ? <ActivityIndicator color={isAdded ? Colors.white : Colors.green} /> :
+                <Text style={{ color: isAdded ?  Colors.white  : Colors.green  }}>
+                    {isAdded ? 'Added to Cart' : 'Add to Cart'}
+                </Text>
+            }
         </TouchableOpacity>
     );
 };

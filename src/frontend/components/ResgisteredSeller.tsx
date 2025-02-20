@@ -74,7 +74,7 @@ function Earnings({ earnings, soldItems }: { earnings: number, soldItems: number
 function CreateButtons(){
     return (
         <View style={[Styles.column, {gap:12}]}>
-            <Text style={[TextStyles.h1, TextStyles.uppercase, {marginTop:6}]}>Create</Text>
+            <Text style={[TextStyles.h1, TextStyles.uppercase, {marginTop:8, marginBottom:-3}]}>Create</Text>
 
             <View style={[Styles.row, {gap:20}]}>
                 <TouchableOpacity style={[Styles.column, Styles.buttonDark, {alignItems: 'center', width: 30, height: 80}]} onPress={() => router.push('/CreateListingScreen')}>

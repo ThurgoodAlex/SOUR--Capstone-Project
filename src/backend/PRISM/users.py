@@ -217,12 +217,26 @@ def get_all_chats(user_id: int,
     
 
 # ------------------------ posts -------------------------- #
-@users_router.get('/{user_id}/posts/', response_model= list[Post], status_code=200)
+# @users_router.get('/{user_id}/posts/', response_model= list[Post], status_code=200)
+# def get_posts_for_user(user_id: int, 
+#                        session: Annotated[Session, Depends(get_session)], 
+#                        current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
+#     """Getting all posts for a specific user"""
+#     posts_in_db = session.exec(select(PostInDB).where(PostInDB.sellerID == user_id))
+#     return [Post(**post.model_dump()) for post in posts_in_db] 
+
+@users_router.get('/{user_id}/posts/', response_model=list[Post], status_code=200)
 def get_posts_for_user(user_id: int, 
-                       session: Annotated[Session, Depends(get_session)], current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
-    """Getting all posts for a specific user"""
-    posts_in_db = session.exec(select(PostInDB).where(PostInDB.sellerID == user_id))
-    return [Post(**post.model_dump()) for post in posts_in_db]          
+                       session: Annotated[Session, Depends(get_session)], 
+                       current_user: UserInDB = Depends(auth_get_current_user),
+                       is_listing: bool | None = None) -> list[Post]:
+    """Getting all posts for a specific user, with optional filtering for listings or posts."""
+    query = select(PostInDB).where(PostInDB.sellerID == user_id)
+    if is_listing is not None:
+        query = query.where(PostInDB.isListing == is_listing)
+    posts_in_db = session.exec(query)
+    return [Post(**post.model_dump()) for post in posts_in_db]
+         
 
 
 @users_router.get('/{user_id}/posts/issold={is_sold}/', response_model = list[Post], status_code=200)
