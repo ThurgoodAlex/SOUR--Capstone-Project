@@ -7,9 +7,11 @@ import { ScreenStyles } from '@/constants/Styles';
 import { useApi } from '@/context/api';
 import { Video } from '@/components/Video';
 import { Post } from '@/constants/Types';
+import { Colors } from '@/constants/Colors';
+import { useVideoPlayer, VideoView } from 'expo-video';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
-const VIDEO_HEIGHT = SCREEN_HEIGHT - 64;
+const VIDEO_HEIGHT = SCREEN_HEIGHT - 40;
 
 export default function VideoScreen() {
     const api = useApi();
@@ -41,8 +43,14 @@ export default function VideoScreen() {
         getVideos();
     }, []);
 
+    // const player = useVideoPlayer(require('../assets/vids/testFashion.mp4'), player => {
+    //     player.loop = true;
+    //     player.play();
+    //   });
+
     const renderVideo = ({item, index} : {item: Post, index: number}) => (
         <Video post={item} index={index} currentViewableItemIndex={currentViewableItemIndex}/>
+        // <VideoView style={{ width: '100%', height: VIDEO_HEIGHT }} player={player} />
     );
     return (
         <>
@@ -56,7 +64,7 @@ export default function VideoScreen() {
                     renderItem={({ item, index }) => (
                         renderVideo({item, index})
                     )}
-                    keyExtractor={item => item}
+                    keyExtractor={item => item.id}
                     pagingEnabled
                     snapToAlignment="start"
                     snapToInterval={VIDEO_HEIGHT}
@@ -74,6 +82,6 @@ export default function VideoScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'black',
+        backgroundColor: Colors.grapefruit,
     },
 });

@@ -1,5 +1,4 @@
-import { View, Text, ImageBackground, TouchableOpacity, ViewStyle, Pressable, Dimensions, StyleSheet } from 'react-native';
-import { Styles, TextStyles } from '@/constants/Styles';
+import { View, TouchableOpacity, Pressable, Dimensions, StyleSheet } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Post, User } from '@/constants/Types';
 import ProfileThumbnail from '@/components/ProfileThumbnail';
@@ -11,12 +10,11 @@ import { useApi } from '@/context/api';
 import { usePosts } from '@/hooks/usePosts';
 import { LinkedItems } from './Linkedtems';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StretchOutX } from 'react-native-reanimated';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
-const VIDEO_HEIGHT = SCREEN_HEIGHT - 64;
+const VIDEO_HEIGHT = SCREEN_HEIGHT - 40;
 
-const videos: number[] = [
+const videos = [
     require('../assets/vids/testFashion.mp4'),
     require('../assets/vids/testFashion(1).mp4'),
     require('../assets/vids/testFashion(2).mp4'),
@@ -34,6 +32,7 @@ export function Video({ post, index, currentViewableItemIndex }: { post: Post, i
     const shouldPlay = index == currentViewableItemIndex;
     const { posts: linkedItems, loading: linkedPostsLoading, error: linkedPostsError } = usePosts(`/posts/${post.id}/links/`);
     const getRandomVideo = () => videos[Math.floor(Math.random() * videos.length)];
+    const [assetId, setAssetId] = useState(getRandomVideo());
 
     //extract seller information into a User object
     // const seller: User = {
@@ -75,104 +74,70 @@ export function Video({ post, index, currentViewableItemIndex }: { post: Post, i
         }
     };
 
-    const videoSource: VideoSource = getRandomVideo();
-    const player = useVideoPlayer(videoSource, player => {
-        player.play()
+    const player = useRef(useVideoPlayer(assetId, player => {
         player.loop = true;
-    });
-
-    const { isPlaying } = useEvent(player, 'playingChange', { isPlaying: player.playing });
-    const onPress = () => {
-        if (!video.current){
-            return;
-        }
-        if (isPlaying){
-            player.pause();
-        }
-        else{
-            player.play();
-        }
-        
-    };
+        player.play();
+    })).current;
 
     useEffect(() => {
         fetchLike();
-        if(shouldPlay){
-            player.play()
-        }
-        else {
-            player.pause();
-            player.currentTime = 0;
-        }
       }, [shouldPlay]);
 
     return (
         <View style={styles.container}>
-            <Pressable onPress={() => (isPlaying ? player.pause() : player.play())}>
+            <View style={{ width: '100%', height: VIDEO_HEIGHT }}>
                 <VideoView
                     ref={video}
                     player={player}
-                    style={[styles.video, StyleSheet.absoluteFill]}
+                    style={StyleSheet.absoluteFill}
                     contentFit='contain'
-                    nativeControls={false}
                 />
-            </Pressable>
+            </View>
             
-            <Pressable onPress={onPress} style={styles.content}>
-                <LinearGradient
-                    colors={['transparent', '#00000080']}
-                    style={[StyleSheet.absoluteFillObject, styles.overlay]}
-                />
-                {isPlaying ? null : 
-                    <Ionicons
-                        style={{position: 'absolute', alignSelf: 'center', top: '50%'}}
-                        name='play'
-                        size={60}
-                        color="#ffffff70"
-                    />
-                }
-                
-                <SafeAreaView style={{ flex: 1 }}>
-                    <View style={styles.footer}>
-                        <View style={styles.leftColumn}>
-                            { showLinks ? (
-                                    <LinkedItems posts={linkedItems} columns={post.isListing ? 3 : 1}/>
-                                ) : null
-                            }
-                            <ProfileThumbnail user={seller} />
-                        </View>
-                        <View style={styles.rightColumn}>
-                            {linkedItems.length > 0 ? (
-                                <TouchableOpacity onPress={() => setShowLinks(!showLinks)}>
-                                    <Ionicons size={30} name='link' color='gray' />
-                                </TouchableOpacity>
-                            ) : null}
-                            <TouchableOpacity onPress={toggleLike}>
-                                {liked ? (
-                                    <Ionicons size={30} name='heart' color='red' />
-                                ) : (
-                                    <Ionicons size={30} name='heart-outline' color='gray' />
-                                )}
-                            </TouchableOpacity>
-                        </View>
+            <LinearGradient
+                colors={['transparent', '#00000080']}
+                style={[StyleSheet.absoluteFillObject, styles.overlay]}
+            />
+            <SafeAreaView style={styles.overlayContainer}>
+                <View style={styles.footer}>
+                    <View style={styles.leftColumn}>
+                        { showLinks ? (
+                                <LinkedItems posts={linkedItems} columns={post.isListing ? 3 : 1}/>
+                            ) : null
+                        }
+                        <ProfileThumbnail user={seller} />
                     </View>
-                </SafeAreaView>
-            </Pressable>
-            
+                    <View style={styles.rightColumn}>
+                        {linkedItems.length > 0 ? (
+                            <TouchableOpacity onPress={() => setShowLinks(!showLinks)}>
+                                <Ionicons size={30} name='link' color='gray' />
+                            </TouchableOpacity>
+                        ) : null}
+                        <TouchableOpacity onPress={toggleLike}>
+                            {liked ? (
+                                <Ionicons size={30} name='heart' color='red' />
+                            ) : (
+                                <Ionicons size={30} name='heart-outline' color='gray' />
+                            )}
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </SafeAreaView>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
+    overlayContainer: {
+        ...StyleSheet.absoluteFillObject,
+        flex: 1
+    },
     container: {
         height: VIDEO_HEIGHT,
     },
     content: {
         flex: 1,
         padding: 10
-    },
-    video: {
-
     },
     overlay: {
         top: '50%'
@@ -186,11 +151,8 @@ const styles = StyleSheet.create({
         flex: 1
     },
     rightColumn: {
-        gap: 10
+        gap: 10,
+        paddingRight: 10
     },
-    
-    header: {
-
-    }
 });
                
