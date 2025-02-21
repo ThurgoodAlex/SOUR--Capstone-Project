@@ -9,6 +9,7 @@ import { CartItem } from "@/components/CartItem";
 import { router } from "expo-router";
 import { ScreenStyles, Styles, TextStyles } from "@/constants/Styles";
 import { NavBar } from "@/components/NavBar";
+import { Colors } from "@/constants/Colors";
 
 export default function CartScreen() {
   const [cart, setCart] = useState<CartPost[]>([]);
@@ -49,7 +50,7 @@ export default function CartScreen() {
   if (loading) {
     return (
       <View style={cartPageStyle.loaderContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color={Colors.orange} />
       </View>
     );
   }

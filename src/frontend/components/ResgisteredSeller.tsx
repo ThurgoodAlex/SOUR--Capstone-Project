@@ -8,6 +8,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useUser } from '@/context/user';
 import { usePosts } from '@/hooks/usePosts';
 import { useStats } from '@/hooks/useStats';
+import { Colors } from '@/constants/Colors';
 
 export function RegisteredSeller() {
     const { user } = useUser();
@@ -29,7 +30,7 @@ export function RegisteredSeller() {
     return (
         <>
            {statsLoading || postsLoading ? (
-                <ActivityIndicator size="large" color="#0000ff" />
+                <ActivityIndicator size="large" color={Colors.orange} />
             ) : (
                 <>
                     <Earnings earnings={earnings} soldItems={soldItems} />

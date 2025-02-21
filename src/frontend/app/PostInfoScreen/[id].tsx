@@ -55,7 +55,7 @@ export default function PostInfoScreen() {
     if (postsLoading) {
         return (
             <View style={ScreenStyles.screen}>
-                <ActivityIndicator size="large" color={Colors.grapefruit} />
+                <ActivityIndicator size="large" color={Colors.orange} />
             </View>
         );
     }
