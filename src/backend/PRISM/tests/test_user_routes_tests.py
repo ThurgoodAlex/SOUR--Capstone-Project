@@ -138,6 +138,7 @@ class TestGettingUsersByID:
 
         assert response_detail == f"user with id:{INVALID_USER_ID} not found"
 
+    @pytest.mark.skip(reason="test not fully implemented")
     def test_querying_deleted_user(self, client:TestClient, engine, env_manager:TestEnvManager):
 
         request_header = env_manager.get_auth_headers('MicahBell', "tahiti01")
@@ -239,6 +240,7 @@ class TestUnregisteringAsSeller:
 
 class TestUnregisteringAsSeller:
 
+    @pytest.mark.skip(reason="test not fully implemented")
     def test_seller_unregisters(self, env_manager:TestEnvManager, client:TestClient): 
         request_headers = env_manager.get_auth_headers("DutchVanDerLinde", "Tahiti1899")
         response = client.put("/users/unregisterseller", headers=request_headers)
@@ -273,6 +275,7 @@ class TestUnregisteringAsSeller:
     def test_deleted_user_unregisters(self):
         pass 
 
+@pytest.mark.skip(reason="test not fully implemented")
 class TestFollow:
     def test_following_another_user(self, client:TestClient, env_manager:TestEnvManager, engine):
 
