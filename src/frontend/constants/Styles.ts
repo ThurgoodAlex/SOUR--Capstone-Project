@@ -49,6 +49,10 @@ export const TextStyles = StyleSheet.create({
       color: Colors.dark, 
       lineHeight: 22,
       marginBottom: 8,
+      fontWeight: 300,
+  },
+  bold:{
+    fontWeight: 500,
   },
   small:{
     color: Colors.dark, 
@@ -56,7 +60,7 @@ export const TextStyles = StyleSheet.create({
     marginBottom: 8,
   },
   light: {
-    color: Colors.light,
+    color: Colors.white,
     fontWeight: 'bold',
   },
   dark: {

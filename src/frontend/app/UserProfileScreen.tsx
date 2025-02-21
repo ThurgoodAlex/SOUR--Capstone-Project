@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { View, Text, Image, Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import { useApi } from '@/context/api';
 import { NavBar } from '@/components/NavBar';
 import { StatsBar } from '@/components/StatsBar';
@@ -11,6 +11,7 @@ import { useSearchParams } from 'expo-router/build/hooks';
 import { useUser } from '@/context/user';
 import { usePosts } from '@/hooks/usePosts';
 import { PostsFlatList } from '@/components/PostsFlatList';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function UserProfileScreen() {
     const searchParams = useSearchParams(); // Retrieve query parameters
@@ -76,25 +77,60 @@ export default function UserProfileScreen() {
           
     }, []);
 
+    const handleMessage = async () => {
+        try {
+            //chat already exists
+            const chatId = `${user?.id}_${targetUser?.id}`;
+            const checkChatResponse = await api.get(`/chats/${chatId}/`);
+            if (checkChatResponse.ok) {
+                let chat = await checkChatResponse.json();
+                router.push({
+                    pathname: '/MessagesScreen',
+                    params: { chatID: chat.id },
+                })
+            } else if (checkChatResponse.status === 404) {
+                // create new chat
+                const response = await api.post('/chats/', { recipientID: targetUser?.id });
+                if (response.ok) {
+                    router.push('/ChatsScreen');
+                } else {
+                    Alert.alert('Failed to create chat.');
+                }
+            } else {
+                Alert.alert('Failed to check chat existence.');
+            }
+        } catch (error) {
+            console.error('Error creating chat:', error);
+            Alert.alert('Failed to connect to the server.');
+        }
+    }
+
 
     return (
         <>
             <Stack.Screen options={{ title: 'UserProfileScreen' }} />
             <View style={ScreenStyles.screen}>
                 <ProfileInfo user={targetUser} />
+                <TouchableOpacity onPress={handleMessage}>
+                    <Ionicons name="chatbubble-outline" size={24} color="black" />
+                </TouchableOpacity>
                 <StatsBar user={targetUser} statsUpdated={statsUpdated} />
                 <Text> {isFollowing} </Text>
-                <TouchableOpacity
-                    onPress={() => follow()}
-                    style={Styles.buttonDark}>
-                    <Text style={[TextStyles.uppercase, TextStyles.light]}>
+               
                         {isFollowing ? (
-                            'Unfollow'
+                             <TouchableOpacity
+                             onPress={() => follow()}
+                             style={Styles.buttonLight}>
+                                <Text style={[TextStyles.uppercase, TextStyles.dark]}> Unfollow</Text>
+                            </TouchableOpacity>
                         ) : (
-                            'Follow'
+                            <TouchableOpacity
+                            onPress={() => follow()}
+                            style={Styles.buttonDark}>
+                               <Text style={[TextStyles.uppercase, TextStyles.light]}> Follow</Text>
+                           </TouchableOpacity>
                         )}
-                    </Text>
-                </TouchableOpacity>
+                   
                 <PostsFlatList posts={posts} height={270} />
             </View>
             <NavBar />

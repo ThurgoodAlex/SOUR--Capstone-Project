@@ -7,6 +7,8 @@ import { ActivityIndicator, FlatList, View, Text, Alert } from "react-native";
 import { CartPost, Post } from "@/constants/Types";
 import { CartItem } from "@/components/CartItem";
 import { router } from "expo-router";
+import { ScreenStyles, Styles, TextStyles } from "@/constants/Styles";
+import { NavBar } from "@/components/NavBar";
 
 export default function CartScreen() {
   const [cart, setCart] = useState<CartPost[]>([]);
@@ -91,11 +93,13 @@ export default function CartScreen() {
   };
 
   return (
-    <View style={cartPageStyle.container}>
+    <>
+    <View style={ScreenStyles.screen}>
       {/* Cart Items List */}
-      <View style={cartPageStyle.listContainer}>
+      <View >
         <FlatList
           data={cart}
+          contentContainerStyle={{height:600}}
           keyExtractor={(item) => item.cartItemId.toString()} // Use cartItemId as the key
           renderItem={({ item }) => (
             <CartItem
@@ -104,43 +108,26 @@ export default function CartScreen() {
               onDelete={() => handleDelete(item)}
             />
           )}
-          contentContainerStyle={cartPageStyle.list}
         />
       </View>
 
-      <View style={cartPageStyle.checkoutContainer}>
+      <View>
         <TouchableOpacity
-          style={cartPageStyle.checkoutButton}
+          style={[Styles.buttonDark, {width:'100%'}]}
           onPress={() => Alert.alert("Proceeding to checkout")}
         >
-          <Text style={cartPageStyle.checkoutText}>Checkout</Text>
+          <Text style={TextStyles.light}>Checkout</Text>
         </TouchableOpacity>
       </View>
+    
     </View>
+    <NavBar/>
+    </>
   );
 }
 
 export const cartPageStyle = StyleSheet.create({
-  container: {
-    flex: 1, // Ensures full-screen usage
-    backgroundColor: "#d8ccaf",
-    paddingHorizontal: 10,
-  },
-  listContainer: {
-    flex: 1, // Allows the cart list to grow and fill available space
-  },
-  list: {
-    paddingBottom: 20, // Adds spacing before checkout button
-  },
-  checkoutContainer: {
-    width: "100%",
-    paddingVertical: 15,
-    backgroundColor: "#d8ccaf",
-    alignItems: "center",
-    justifyContent: "center",
-    borderTopWidth: 1,
-    borderTopColor: "#ddd",
-  },
+
   emptyText: {
     fontSize: 18,
     fontWeight: "bold",

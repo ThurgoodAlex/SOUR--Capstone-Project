@@ -10,7 +10,7 @@ import { usePosts } from '@/hooks/usePosts';
 
 export default function DiscoverScreen() {
 
-  const { posts, loading, error } = usePosts('/posts/');
+  const { posts, loading, error } = usePosts('/posts/?is_sold=false');
 
   const renderPost = ({ item }: {item: Post}) => (
     <PostPreview post={item} size={160} profileThumbnail='small' />

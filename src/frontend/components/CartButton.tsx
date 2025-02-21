@@ -16,15 +16,11 @@ const CartButton: React.FC<CartButtonProps> = ({ listingID, onItemAdded }) => {
     const [isAdded, setIsAdded] = useState(false);
 
     const addToCart = async () => {
-        if (!user || !user.id) {
-            Alert.alert('Error', 'You must be logged in to add items to the cart.');
-            return;
-        }
 
         setLoading(true);
 
         try {
-            const response = await api.post(`/users/${user.id}/cart/`, {
+            const response = await api.post(`/users/${user?.id}/cart/`, {
                 listing_id: listingID,
             });
             if (!response.ok) {
@@ -53,7 +49,6 @@ const CartButton: React.FC<CartButtonProps> = ({ listingID, onItemAdded }) => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 marginTop: 3,
-                marginRight:8,
                 borderWidth: 2,
                 borderColor:  Colors.green ,
             }}

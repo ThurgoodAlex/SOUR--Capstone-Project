@@ -1,6 +1,5 @@
-
 import { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, FlatList, ScrollView, ViewStyle, ImageBackground, TextComponent, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 import ProfileThumbnail from '@/components/ProfileThumbnail';
 import PhotoCarousel from '@/components/PhotoCarousel';
@@ -9,84 +8,79 @@ import { useLocalSearchParams } from 'expo-router';
 import { useApi } from '@/context/api';
 import { Post } from '@/constants/Types';
 import { Ionicons } from '@expo/vector-icons';
-import  CartButton  from '@/components/CartButton';
-
+import CartButton from '@/components/CartButton';
 import { LinkedItems } from '@/components/Linkedtems';
 import { usePost } from '@/hooks/usePost';
 import { usePosts } from '@/hooks/usePosts';
 import { Colors } from '@/constants/Colors';
 
-
 export default function PostInfoScreen() {
-    
     const api = useApi();
-    
-    const { id } = useLocalSearchParams(); // Get the dynamic `id` from the route
+    const { id } = useLocalSearchParams(); 
 
-    const { post, loading: postsLoading, error: postsError } = usePost(`${id}`);
-    const { posts: linkedItems, loading: linkedPostsLoading, error: linkedPostsError } = usePosts(`/posts/${id}/links/`);
-    
+    const { post, loading: postsLoading } = usePost(`${id}`);
+    const { posts: linkedItems } = usePosts(`/posts/${id}/links/`);
+
     const [liked, setLike] = useState(false);
 
-    if (post) {
-       
-        const fetchLike = async () => {
-            const response = await api.get(`/posts/${post.id}/like/`);
-            const data = await response.json();
-            setLike(data)
-        }
-
-        fetchLike();
-        
-        const toggleLike = async () => {
-            try {
-                if (liked) {
-                    await api.remove(`/posts/${post.id}/unlike/`,{});
-                } else {
-                    await api.post(`/posts/${post.id}/like/`);
+    useEffect(() => {
+        if (post?.id) {
+            const fetchLike = async () => {
+                try {
+                    const response = await api.get(`/posts/${post.id}/like/`);
+                    const data = await response.json();
+                    setLike(data?.liked ?? false); 
+                } catch (error) {
+                    console.error('Error fetching like status:', error);
                 }
-                setLike(!liked); // Update local state
-            } catch (error) {
-                console.error('Error toggling like:', error);
-            }
-        };
+            };
+            fetchLike();
+        }
+    }, [post?.id]);
 
-        const handleItemAdded = (item: any) => {
-            console.log('Item added to cart:', item);
-            // Alert.alert('Item added to cart', `Item ID: ${item.id}`);
-        };
-    
+    const toggleLike = async () => {
+        if (!post?.id) return;
+        try {
+            if (liked) {
+                await api.post(`/posts/${post.id}/unlike/`, {});
+            } else {
+                await api.post(`/posts/${post.id}/like/`);
+            }
+            setLike(!liked);
+        } catch (error) {
+            console.error('Error toggling like:', error);
+        }
+    };
+
+    if (postsLoading) {
+        return (
+            <View style={ScreenStyles.screen}>
+                <ActivityIndicator size="large" color={Colors.grapefruit} />
+            </View>
+        );
+    }
+
+    if (post) {
         return (
             <>
                 <View style={ScreenStyles.screen}>
                     <ScrollView contentContainerStyle={{ gap: 6 }}>
+                        <ProfileThumbnail user={post.seller} />
                         <PhotoCarousel />
-                        <View style={[Styles.row, { justifyContent: 'space-between' }]}>
-                            <ProfileThumbnail user={post.seller} />
-
-                            
-                            {post.isListing ? (<CartButton listingID={post.id} onItemAdded={handleItemAdded} />): null  }
-                            <TouchableOpacity onPress={toggleLike}>
-                                {liked ? (
-                                    <Ionicons size={28} name='heart' color={Colors.grapefruit} style={{marginTop:5}} />
-                                ) : (
-                                    <Ionicons size={28} name='heart-outline'  color={Colors.dark60} style={{marginTop:5}}  />
-                                )}
-                            </TouchableOpacity>
-                           
-                        </View>
-                        {post.isListing ? (<ListingInfo post={post} />): <PostInfo post={post} />  }
-                        
-
-                        {linkedItems.length > 0 ? (
-                                <>
-                                    <Text style={[TextStyles.h2, TextStyles.uppercase]}>
-                                        {post.isListing ? "Posts" : "Featured Listings"}
-                                    </Text>
-                                    <LinkedItems posts={linkedItems} columns={post.isListing ? 3 : 1}/>
-                                </>
-                            ) : null
-                        }
+                        {post.isListing ? (
+                            <ListingInfo post={post} liked={liked} toggleLike={toggleLike} />
+                        ) : (
+                            <PostInfo post={post} liked={liked} toggleLike={toggleLike} />
+                        )}
+                        {linkedItems.length > 0 && (
+                            <>
+                                <View style={{ borderBottomColor: Colors.dark60, borderBottomWidth: 1, marginVertical: 10 }} />
+                                <Text style={[TextStyles.h2, TextStyles.uppercase]}>
+                                    {post.isListing ? "Posts" : "Featured Listings"}
+                                </Text>
+                                <LinkedItems posts={linkedItems} columns={post.isListing ? 3 : 1} />
+                            </>
+                        )}
                     </ScrollView>
                 </View>
                 <NavBar />
@@ -94,48 +88,66 @@ export default function PostInfoScreen() {
         );
     }
 
-    else {
-        return (
-            <>
-                <View style={ScreenStyles.screen}>
-                    <Text>Post information not available.</Text>
-                </View>
-                <NavBar />
-            </>
-        );
-    }
-
+    return (
+        <View style={ScreenStyles.screen}>
+            <Text>Post information not available.</Text>
+        </View>
+    );
 }
 
-//display Listing details
-function ListingInfo({ post }: { post: Post }) {
-
+// ListingInfo Component
+function ListingInfo({ post, liked, toggleLike }: { post: Post, liked: boolean, toggleLike: () => void }) {
     const formattedPrice = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
-      }).format(parseFloat(post.price));
+    }).format(parseFloat(post.price));
+
+    const handleItemAdded = (item: any) => {
+        console.log('Item added to cart:', item);
+    };
 
     return (
         <View style={Styles.column}>
-            <View style={[Styles.row, {justifyContent:'space-between'}]}>
+            <View style={[Styles.row, { justifyContent: 'space-between' }]}>
                 <Text style={[TextStyles.h1, TextStyles.uppercase]}>{post.title}</Text>
-                <Text style={[TextStyles.h2, {textAlign:'right'}]}>{formattedPrice}</Text>
+                {!post.isSold && <LikeButton liked={liked} onPress={toggleLike} />}
             </View>
-            {post.size != "n/a" ? (<Text style={[TextStyles.h3, {textAlign:'left'}]}>Size: {post.size}</Text>) : null }
+
+            <View style={[Styles.row, { justifyContent: 'space-between', marginBottom: -10, marginTop: -2 }]}>
+                <Text style={[TextStyles.h2, { textAlign: 'left' }]}>{formattedPrice}</Text>
+                {!post.isSold && <CartButton listingID={post.id} onItemAdded={handleItemAdded} />}
+            </View>
+
+            <Text style={[TextStyles.h3, { textAlign: 'left', marginBottom: -2 }]}>Size: {post.size}</Text>
+            <Text style={[TextStyles.p, { textAlign: 'left' }]}>
+                {[post.brand, post.gender, post.condition].filter(Boolean).join('  |  ')}
+            </Text>
+        </View>
+    );
+}
+
+// PostInfo Component
+function PostInfo({ post, liked, toggleLike }: { post: Post, liked: boolean, toggleLike: () => void }) {
+    return (
+        <View style={Styles.column}>
+            <View style={[Styles.row, { justifyContent: 'space-between' }]}>
+                <Text style={[TextStyles.h1, TextStyles.uppercase]}>{post.title}</Text>
+                <LikeButton liked={liked} onPress={toggleLike} />
+            </View>
             <Text style={TextStyles.p}>{post.description}</Text>
         </View>
     );
 }
 
-
-function PostInfo({ post }: { post: Post }) {
+// LikeButton Component
+function LikeButton({ liked, onPress }: { liked: boolean, onPress: () => void }) {
     return (
-        <View style={Styles.column}>
-            <View style={[Styles.row, {justifyContent:'space-between'}]}>
-                <Text style={[TextStyles.h1, TextStyles.uppercase]}>{post.title}</Text>
-            </View>
-            <Text style={TextStyles.p}>{post.description}</Text>
-        </View>
+        <TouchableOpacity onPress={onPress}>
+            <Ionicons 
+                name={liked ? "heart" : "heart-outline"} 
+                size={30} 
+                color={liked ? Colors.grapefruit : Colors.dark60} 
+            />
+        </TouchableOpacity>
     );
 }
-

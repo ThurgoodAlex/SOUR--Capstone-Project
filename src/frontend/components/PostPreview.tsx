@@ -68,7 +68,7 @@ export function PostPreview({ post, size, profileThumbnail = "none", touchable=t
             <TouchableOpacity
                 onPress={() => router.push(`/PostInfoScreen/${post.id}`)} // Navigate on press
                 style={{ margin: 5 }} // Add styles for spacing
-                disabled={isSold || !touchable} // Disable interaction if sold
+                disabled={!touchable} // Disable interaction if sold
             >
                 
                 <ImageBackground source={post.coverImage} style={{ height: size, width: size }}>
