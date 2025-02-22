@@ -11,7 +11,7 @@ import { useAuth } from "@/context/auth";
 const api = (token: string | null = null) => {
     // local host url
 
-     const baseUrl = "http://10.0.0.240:8000";
+     const baseUrl = "http://10.0.0.62:8000";
      //const baseUrl = "http://10.18.224.228:8000";
 
     // emma's url
@@ -28,6 +28,19 @@ const api = (token: string | null = null) => {
         }
         return headers;
     };
+
+    const getFormHeaders = () => {
+
+        const headers: Record<string, string> = {
+            "Content-Type": "multipart/form-data",
+            "Accept": "multipart/form-data"
+        };
+        if (token) {
+            headers["Authorization"] = `Bearer ${token}`;
+        }
+        return headers;
+    };
+
 
     // GET request method with logging
     const get = async (url: string) => {
@@ -56,7 +69,7 @@ const api = (token: string | null = null) => {
     };
 
     const postForm = async (url: string, formData: FormData) => {
-        const headers = getAuthHeaders();
+        const headers = getFormHeaders();
         console.log("POSTform Request URL:", baseUrl + url);
         console.log("POSTform FormData:", formData);
         console.log("POSTform Headers:", headers);

@@ -5,14 +5,15 @@ import { api, useApi } from '@/context/api';
 import { useAuth } from '@/context/auth';
 import { useUser } from '@/context/user';
 import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
 import { router } from 'expo-router';
 import { useState } from 'react';
 import {View, Text, TextInput, TouchableOpacity, Image, ScrollView, KeyboardTypeOptions, StyleSheet, Alert, ImageBackground, GestureResponderEvent,} from 'react-native';
 
 export default function CreatePost() {
     const [name, setName] = useState('');
+    const [isImagePickerOpen, setIsImagePickerOpen] = useState(false);
     const [description, setDescription] = useState('');
-    const [binaryStrings, setBinaryStrings] = useState<string[]>([]);
     const [PostID, setPostID] = useState('');
     
     const MAX_IMAGES = 10;
@@ -25,6 +26,11 @@ export default function CreatePost() {
     
     //pick images from the device's media library
     const uploadImages = async () => {
+      if (isImagePickerOpen) {
+          return;
+      }
+      setIsImagePickerOpen(true);
+      console.log('Image Picker triggered');
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
   
       if (status !== "granted") {
@@ -40,97 +46,93 @@ export default function CreatePost() {
               orderedSelection: true,
               base64: true, // Include base64 string in the response
           });
-
+          
+          console.log('Image Picker Result:', result);
           if (!result.canceled && result.assets) {
-            const binaryStrings: string[] = [];
-
-            // Loop through the assets to extract the base64 string from each image
-            result.assets.forEach((asset) => {
-              // Ensure base64 string is included
-              if (asset.base64) {
-                const binaryString = Buffer.from(asset.base64, 'base64').toString('binary'); // Convert base64 to binary string
-                binaryStrings.push(binaryString); // Push binary string to the array
-              }
-              });
-              console.log('BinaryStrings:', binaryStrings);
-              setBinaryStrings(binaryStrings);
               const newImages = result.assets
-                  .map((asset) => asset.uri)  // Get the URIs of the selected images
-                  .filter((uri) => !images.includes(uri));  // Filter out duplicates
+                  .map((asset) => asset.uri)
+                  .filter((uri) => !images.includes(uri));
   
               console.log('NewImages:', newImages);
-              // Add the new images to the existing images array
               setImages((prevImages) => [...prevImages, ...newImages]);
               setError(null);  // Clear any previous errors
-              
           }
       }
+      setIsImagePickerOpen(false);
   };
-  
-    const handleSubmit = async () => {
-        console.log({
-            name,
-            description,
+
+
+const fileUpload = async (images: string | any[]) => {
+    const uploadedFiles = [];
+      for (const image of images) {
+        console.log("Uploading image:", image);
+        const base64Image = await FileSystem.readAsStringAsync(image, {
+          encoding: FileSystem.EncodingType.Base64,
         });
+        const formData = new FormData();
+        formData.append("file", base64Image);
+        formData.append("post_id", PostID);
+        console.log("Uploading form data:", formData);
+        uploadedFiles.push(formData);
+        };
+        return uploadedFiles;
+}
 
-        try {
-            // Upload images
-            await uploadImages();
-            if (binaryStrings.length === 0) {
-              console.log("No images selected for upload.");
-              return; // Exit early if no images are selected
+const handleSubmit = async () => {
+  console.log({
+      name,
+      description,
+  });
+
+  try {
+      // Ensure that images are uploaded first
+      if (images.length === 0) {
+          console.log("No images selected for upload.");
+          return; // Exit early if no images are selected
+      }
+
+      // Upload images
+      const formDataArray = await fileUpload(images);
+      const uploadedImages = [];
+
+      // Perform the upload request
+      for (const formData of formDataArray) {
+          const uploadResponse = await api.postForm("/media/upload", formData);
+
+          if (uploadResponse.ok) {
+              const result = await uploadResponse.json();
+              console.log("Uploaded image:", result);
+
+              // Assuming the response contains the URL of the uploaded image
+              uploadedImages.push(result.fileUrl); 
+          } else {
+              console.log("Upload failed for image:", formData);
+              Alert.alert('Error', 'Something went wrong, we could not upload your image.');
+              return; // Exit early if any upload fails
           }
+      }
 
-            const uploadedImages = [];
-            for (const binaryString of binaryStrings) {
-              console.log("Uploading image with binary string:", binaryString);
-        
-              // Create a Blob from the binary string
-              const blob = new Blob([binaryString], { type: 'image/jpeg' });
-        
-              // Prepare the FormData
-              const formData = new FormData();
-              formData.append('file', blob, "upload.jpg"); // Append blob as the file
-              formData.append('post_id', PostID); // Append post ID
-        
-              console.log("Uploading form data:", formData);
-        
-              // Perform the upload request
-              const uploadResponse = await api.postForm("/media/upload", formData);
-        
-              if (uploadResponse.ok) {
-                const result = await uploadResponse.json();
-                Alert.alert('Success', 'Your images have been uploaded.');
-                console.log("Uploaded image:", result);
-                uploadedImages.push(result.fileUrl); // Assuming the response contains the URL of the uploaded image
-                } else {
-                    console.log(uploadResponse);
-                    Alert.alert('Error', 'Something went wrong, we could not upload your images.');
-                    return;
-                }
-            }
 
-            // Create post with uploaded images
-            const response = await api.post("/posts/", {
-                "title": name,
-                "description": description,
-            });
+      const response = await api.post("/posts/", {
+          "title": name,
+          "description": description,
+      });
 
-            const result = await response.json();
+      const result = await response.json();
 
-            if (response.ok) {
-                console.log("created post: ", result);
-                setPostID(result.id);
-                router.replace("/SelfProfileScreen");
-            } else {
-                console.log(response);
-                Alert.alert('Error', 'Something went wrong, we could not create your post.');
-            }
-        } catch (error) {
-            console.error('Error creating listing:', error);
-            Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
-        }
-    };
+      if (response.ok) {
+          console.log("Created post: ", result);
+          setPostID(result.id);
+          router.replace("/SelfProfileScreen");
+      } else {
+          console.log(response);
+          Alert.alert('Error', 'Something went wrong, we could not create your post.');
+      }
+  } catch (error) {
+      console.error('Error creating listing:', error);
+      Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
+  }
+};
 
   return (
     <>
