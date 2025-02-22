@@ -72,7 +72,7 @@ const fileUpload = async (images: string | any[]) => {
         const formData = new FormData();
         formData.append("file", base64Image);
         formData.append("post_id", PostID);
-        console.log("Uploading form data:", formData);
+        //console.log("Uploading form data:", formData);
         uploadedFiles.push(formData);
         };
         return uploadedFiles;
@@ -85,34 +85,7 @@ const handleSubmit = async () => {
   });
 
   try {
-      // Ensure that images are uploaded first
-      if (images.length === 0) {
-          console.log("No images selected for upload.");
-          return; // Exit early if no images are selected
-      }
-
-      // Upload images
-      const formDataArray = await fileUpload(images);
-      const uploadedImages = [];
-
-      // Perform the upload request
-      for (const formData of formDataArray) {
-          const uploadResponse = await api.postForm("/media/upload", formData);
-
-          if (uploadResponse.ok) {
-              const result = await uploadResponse.json();
-              console.log("Uploaded image:", result);
-
-              // Assuming the response contains the URL of the uploaded image
-              uploadedImages.push(result.fileUrl); 
-          } else {
-              console.log("Upload failed for image:", formData);
-              Alert.alert('Error', 'Something went wrong, we could not upload your image.');
-              return; // Exit early if any upload fails
-          }
-      }
-
-
+      // Create post first
       const response = await api.post("/posts/", {
           "title": name,
           "description": description,
@@ -120,16 +93,40 @@ const handleSubmit = async () => {
 
       const result = await response.json();
 
-      if (response.ok) {
-          console.log("Created post: ", result);
-          setPostID(result.id);
-          router.replace("/SelfProfileScreen");
-      } else {
+      if (!response.ok) {
           console.log(response);
           Alert.alert('Error', 'Something went wrong, we could not create your post.');
+          return;
       }
+
+      console.log("Created post: ", result);
+      setPostID(result.id);
+
+      // Then handle image uploads if there are any
+      if (images.length > 0) {
+          const formDataArray = await fileUpload(images);
+          const uploadedImages = [];
+
+          // Perform the upload request
+          for (const formData of formDataArray) {
+            //console.log("Uploading image:", formData);
+              const uploadResponse = await api.postForm("/media/upload/", formData);
+
+              if (uploadResponse.ok) {
+                  const result = await uploadResponse.json();
+                  console.log("Uploaded image:", result);
+                  uploadedImages.push(result.fileUrl);
+              } else {
+                  console.log("Upload failed for image");
+                  Alert.alert('Error', 'Some images failed to upload, but your post was created.');
+              }
+          }
+      }
+      // Navigate after everything is done
+      router.replace("/SelfProfileScreen");
+
   } catch (error) {
-      console.error('Error creating listing:', error);
+      console.error('Error creating post:', error);
       Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
   }
 };
