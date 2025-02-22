@@ -11,7 +11,7 @@ import { useAuth } from "@/context/auth";
 const api = (token: string | null = null) => {
     // local host url
 
-     const baseUrl = "http://127.0.0.1:8000";
+     const baseUrl = "http://10.0.0.240:8000";
      //const baseUrl = "http://10.18.224.228:8000";
 
     // emma's url
@@ -55,6 +55,18 @@ const api = (token: string | null = null) => {
         });
     };
 
+    const postForm = async (url: string, formData: FormData) => {
+        const headers = getAuthHeaders();
+        console.log("POSTform Request URL:", baseUrl + url);
+        console.log("POSTform FormData:", formData);
+        console.log("POSTform Headers:", headers);
+
+        return fetch(baseUrl + url, {
+            method: "POST",
+            body: formData,
+            headers: headers
+        });
+    };
 
     // have to call it remove becuase delete is not allowed as a method name :(
     const remove = async (url: string, body: Record<string, unknown> = {}) => {
@@ -98,7 +110,7 @@ const api = (token: string | null = null) => {
         });
     };
 
-    return { get, post, put, remove, login };
+    return { get, post, put, remove, login, postForm };
 };
 
 // Custom hook to provide the API instance with the current token

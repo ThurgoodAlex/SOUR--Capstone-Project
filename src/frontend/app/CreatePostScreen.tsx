@@ -12,6 +12,8 @@ import {View, Text, TextInput, TouchableOpacity, Image, ScrollView, KeyboardType
 export default function CreatePost() {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    const [binaryStrings, setBinaryStrings] = useState<string[]>([]);
+    const [PostID, setPostID] = useState('');
     
     const MAX_IMAGES = 10;
     const [images, setImages] = useState<string[]>([]); // Store multiple image URIs
@@ -36,9 +38,22 @@ export default function CreatePost() {
               allowsMultipleSelection: true,
               selectionLimit: MAX_IMAGES - images.length,
               orderedSelection: true,
+              base64: true, // Include base64 string in the response
           });
-  
+
           if (!result.canceled && result.assets) {
+            const binaryStrings: string[] = [];
+
+            // Loop through the assets to extract the base64 string from each image
+            result.assets.forEach((asset) => {
+              // Ensure base64 string is included
+              if (asset.base64) {
+                const binaryString = Buffer.from(asset.base64, 'base64').toString('binary'); // Convert base64 to binary string
+                binaryStrings.push(binaryString); // Push binary string to the array
+              }
+              });
+              console.log('BinaryStrings:', binaryStrings);
+              setBinaryStrings(binaryStrings);
               const newImages = result.assets
                   .map((asset) => asset.uri)  // Get the URIs of the selected images
                   .filter((uri) => !images.includes(uri));  // Filter out duplicates
@@ -52,39 +67,69 @@ export default function CreatePost() {
       }
   };
   
-
-    
-      
-    
     const handleSubmit = async () => {
-
         console.log({
             name,
             description,
         });
 
         try {
-          const response = await api.post("/posts/",
-            {
-              "title": name,
-              "description": description,
-            }
-          );
-          const result = await response.json();
-
-          if (response.ok) {
-              console.log("created post: ", result)
-              router.replace("/SelfProfileScreen")
-            
-          } else {
-              console.log(response)
-              Alert.alert('Error', 'Something went wrong, we could not create your post.');
-
+            // Upload images
+            await uploadImages();
+            if (binaryStrings.length === 0) {
+              console.log("No images selected for upload.");
+              return; // Exit early if no images are selected
           }
+
+            const uploadedImages = [];
+            for (const binaryString of binaryStrings) {
+              console.log("Uploading image with binary string:", binaryString);
+        
+              // Create a Blob from the binary string
+              const blob = new Blob([binaryString], { type: 'image/jpeg' });
+        
+              // Prepare the FormData
+              const formData = new FormData();
+              formData.append('file', blob, "upload.jpg"); // Append blob as the file
+              formData.append('post_id', PostID); // Append post ID
+        
+              console.log("Uploading form data:", formData);
+        
+              // Perform the upload request
+              const uploadResponse = await api.postForm("/media/upload", formData);
+        
+              if (uploadResponse.ok) {
+                const result = await uploadResponse.json();
+                Alert.alert('Success', 'Your images have been uploaded.');
+                console.log("Uploaded image:", result);
+                uploadedImages.push(result.fileUrl); // Assuming the response contains the URL of the uploaded image
+                } else {
+                    console.log(uploadResponse);
+                    Alert.alert('Error', 'Something went wrong, we could not upload your images.');
+                    return;
+                }
+            }
+
+            // Create post with uploaded images
+            const response = await api.post("/posts/", {
+                "title": name,
+                "description": description,
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                console.log("created post: ", result);
+                setPostID(result.id);
+                router.replace("/SelfProfileScreen");
+            } else {
+                console.log(response);
+                Alert.alert('Error', 'Something went wrong, we could not create your post.');
+            }
         } catch (error) {
             console.error('Error creating listing:', error);
             Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
-        } 
+        }
     };
 
   return (
