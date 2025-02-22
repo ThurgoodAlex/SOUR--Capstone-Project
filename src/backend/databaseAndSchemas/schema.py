@@ -4,7 +4,7 @@ from sqlmodel import Field, SQLModel, Relationship
 from pydantic import BaseModel, ConfigDict
 from sqlalchemy.types import Text, DECIMAL
 from decimal import Decimal
-
+from fastapi import UploadFile
 
 class Metadata(BaseModel):
     count: int 
@@ -141,7 +141,10 @@ class Media(BaseModel):
     isVideo: bool
     # This allows us to map from imageInDB to an image
     model_config = ConfigDict(from_attributes=True)
-###############################
+
+class UploadMedia(BaseModel):
+    post_id: int 
+        ###############################
 
 
 ### All Likes Schemas ###
