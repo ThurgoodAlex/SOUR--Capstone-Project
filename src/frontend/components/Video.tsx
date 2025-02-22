@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, Pressable, Dimensions, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Pressable, Dimensions, StyleSheet, ScrollView } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Post, User } from '@/constants/Types';
 import ProfileThumbnail from '@/components/ProfileThumbnail';
@@ -8,8 +8,10 @@ import { useEvent } from 'expo';
 import { useEffect, useRef, useState } from 'react';
 import { useApi } from '@/context/api';
 import { usePosts } from '@/hooks/usePosts';
-import { LinkedItems } from './Linkedtems';
+import { LinkedItems } from '@/components/LinkedItems';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Styles } from '@/constants/Styles';
+import { Colors } from '@/constants/Colors';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const VIDEO_HEIGHT = SCREEN_HEIGHT - 40;
@@ -84,7 +86,7 @@ export function Video({ post, index, currentViewableItemIndex }: { post: Post, i
       }, [shouldPlay]);
 
     return (
-        <View style={styles.container}>
+        <View style={VideoStyles.container}>
             <View style={{ width: '100%', height: VIDEO_HEIGHT }}>
                 <VideoView
                     ref={video}
@@ -96,28 +98,32 @@ export function Video({ post, index, currentViewableItemIndex }: { post: Post, i
             
             <LinearGradient
                 colors={['transparent', '#00000080']}
-                style={[StyleSheet.absoluteFillObject, styles.overlay]}
+                style={[StyleSheet.absoluteFillObject, VideoStyles.overlay]}
             />
-            <SafeAreaView style={styles.overlayContainer}>
-                <View style={styles.footer}>
-                    <View style={styles.leftColumn}>
+            <SafeAreaView style={VideoStyles.overlayContainer}>
+                <View style={VideoStyles.footer}>
+                    <View style={VideoStyles.leftColumn}>
                         { showLinks ? (
-                                <LinkedItems posts={linkedItems} columns={post.isListing ? 3 : 1}/>
+                            <ScrollView style={VideoStyles.linkedItemsContainer}>
+                                <LinkedItems posts={linkedItems} columns={1}/>
+                            </ScrollView>
                             ) : null
                         }
-                        <ProfileThumbnail user={seller} />
+                        <View style={VideoStyles.fixedProfile}>
+                            <ProfileThumbnail user={seller}/>
+                        </View>
                     </View>
-                    <View style={styles.rightColumn}>
+                    <View style={VideoStyles.rightColumn}>
                         {linkedItems.length > 0 ? (
                             <TouchableOpacity onPress={() => setShowLinks(!showLinks)}>
-                                <Ionicons size={30} name='link' color='gray' />
+                                <Ionicons size={30} name='link' color={Colors.light} />
                             </TouchableOpacity>
                         ) : null}
                         <TouchableOpacity onPress={toggleLike}>
                             {liked ? (
                                 <Ionicons size={30} name='heart' color='red' />
                             ) : (
-                                <Ionicons size={30} name='heart-outline' color='gray' />
+                                <Ionicons size={30} name='heart-outline' color={Colors.light} />
                             )}
                         </TouchableOpacity>
                     </View>
@@ -127,7 +133,7 @@ export function Video({ post, index, currentViewableItemIndex }: { post: Post, i
     );
 }
 
-const styles = StyleSheet.create({
+const VideoStyles = StyleSheet.create({
     overlayContainer: {
         ...StyleSheet.absoluteFillObject,
         flex: 1
@@ -146,6 +152,27 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginTop: 'auto',
         alignItems: 'flex-end'
+    },
+    linkedItemsContainer: {
+        backgroundColor: Colors.light60,
+        maxHeight: 200,
+        marginBottom: 60,
+    },
+    fixedProfile: {
+        position: "absolute",
+        bottom: 10,
+        left: 10,
+    },
+    h3: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginBottom: 8,
+        color: Colors.light,
+    },
+    small: {
+        fontSize:11,
+        color: Colors.light,
     },
     leftColumn: {
         flex: 1

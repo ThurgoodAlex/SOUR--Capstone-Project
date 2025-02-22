@@ -9,6 +9,7 @@ import { Video } from '@/components/Video';
 import { Post } from '@/constants/Types';
 import { Colors } from '@/constants/Colors';
 import { useVideoPlayer, VideoView } from 'expo-video';
+import { StatusBar } from 'expo-status-bar';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const VIDEO_HEIGHT = SCREEN_HEIGHT - 40;
@@ -58,6 +59,7 @@ export default function VideoScreen() {
                 title: 'VideosScreen',
                 headerShown: false
                 }}/>
+            <StatusBar style='light'/>
             <View style={styles.container}>
                 <FlatList
                     data={videos}
@@ -82,6 +84,6 @@ export default function VideoScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.grapefruit,
+        backgroundColor: 'black',
     },
 });

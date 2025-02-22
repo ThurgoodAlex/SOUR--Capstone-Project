@@ -10,7 +10,6 @@ import { Post } from '@/constants/Types';
  * @param columns the number of columns (1 if list of linked listings, 3 if a grid of all types of posts)
  */
 
-
 export function LinkedItems ({ posts, columns }: { posts: Post[], columns: number }){
     return (
         <View style={[Styles.row, { flexWrap: 'wrap', justifyContent: 'space-between' }]}>
