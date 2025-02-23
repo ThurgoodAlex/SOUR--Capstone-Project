@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, Alert } from 'react-native';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 import ProfileThumbnail from '@/components/ProfileThumbnail';
 import PhotoCarousel from '@/components/PhotoCarousel';
 import { NavBar } from '@/components/NavBar';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useApi } from '@/context/api';
 import { Post } from '@/constants/Types';
 import { Ionicons } from '@expo/vector-icons';
@@ -13,6 +13,7 @@ import { LinkedItems } from '@/components/Linkedtems';
 import { usePost } from '@/hooks/usePost';
 import { usePosts } from '@/hooks/usePosts';
 import { Colors } from '@/constants/Colors';
+import { useUser } from '@/context/user';
 
 export default function PostInfoScreen() {
     const api = useApi();
@@ -20,7 +21,7 @@ export default function PostInfoScreen() {
 
     const { post, loading: postsLoading } = usePost(`${id}`);
     const { posts: linkedItems } = usePosts(`/posts/${id}/links/`);
-
+    const { user } = useUser();
     const [liked, setLike] = useState(false);
 
     useEffect(() => {
@@ -52,6 +53,38 @@ export default function PostInfoScreen() {
         }
     };
 
+    const handleMessage = async () => {
+            try {
+                //chat already exists
+          
+                const checkChatResponse = await api.get(`/users/${user?.id}/chats/${post?.seller.id}/`);
+                if (checkChatResponse.ok) {
+                    let chat = await checkChatResponse.json();
+                    router.push({
+                        pathname: '/MessagesScreen',
+                        params: { chatID: chat.id },
+                    })
+                } else if (checkChatResponse.status === 404) {
+                    // create new chat
+                    const response = await api.post('/chats/', { reciepientID: post?.seller.id });
+                    const chat = await response.json();
+                    if (response.ok) {
+                        router.push({
+                            pathname: '/MessagesScreen',
+                            params: { chatID: chat.id },
+                        })
+                    } else {
+                        Alert.alert('Failed to create chat.');
+                    }
+                } else {
+                    Alert.alert('Failed to check chat existence.');
+                }
+            } catch (error) {
+                console.error('Error creating chat:', error);
+                Alert.alert('Failed to connect to the server.');
+            }
+        }
+
     if (postsLoading) {
         return (
             <View style={ScreenStyles.screen}>
@@ -66,6 +99,15 @@ export default function PostInfoScreen() {
                 <View style={ScreenStyles.screen}>
                     <ScrollView contentContainerStyle={{ gap: 6 }}>
                         <ProfileThumbnail user={post.seller} />
+                        {post.seller.id != user?.id ? 
+                            <TouchableOpacity 
+                                onPress={handleMessage}
+                                style={{ alignSelf:'flex-end', position:'absolute', top: 3}}
+                            >
+                                <Ionicons name="chatbubble-outline" size={28} color={Colors.dark60} />
+                            </TouchableOpacity>
+                            : null
+                        }
                         <PhotoCarousel />
                         {post.isListing ? (
                             <ListingInfo post={post} liked={liked} toggleLike={toggleLike} />
@@ -122,6 +164,8 @@ function ListingInfo({ post, liked, toggleLike }: { post: Post, liked: boolean, 
             <Text style={[TextStyles.p, { textAlign: 'left' }]}>
                 {[post.brand, post.gender, post.condition].filter(Boolean).join('  |  ')}
             </Text>
+            <View style={{ borderBottomColor: Colors.dark60, borderBottomWidth: 1, marginVertical: 10 }} />
+            <Text style={TextStyles.p}>{post.description}</Text>
         </View>
     );
 }
@@ -134,6 +178,7 @@ function PostInfo({ post, liked, toggleLike }: { post: Post, liked: boolean, tog
                 <Text style={[TextStyles.h1, TextStyles.uppercase]}>{post.title}</Text>
                 <LikeButton liked={liked} onPress={toggleLike} />
             </View>
+            <View style={{ borderBottomColor: Colors.dark60, borderBottomWidth: 1, marginVertical: 10 }} />
             <Text style={TextStyles.p}>{post.description}</Text>
         </View>
     );

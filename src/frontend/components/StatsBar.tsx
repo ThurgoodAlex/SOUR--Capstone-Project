@@ -66,8 +66,7 @@ const StatStyles = StyleSheet.create(
         statsSection: {
             flexDirection: 'row',
             justifyContent: 'space-around',
-            marginTop: 16,
-            marginBottom: 10,
+            marginTop: 8,
         }
     }
 );

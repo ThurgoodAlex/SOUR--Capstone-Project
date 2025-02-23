@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 
 /******************************

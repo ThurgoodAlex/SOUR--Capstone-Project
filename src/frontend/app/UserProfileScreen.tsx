@@ -12,6 +12,7 @@ import { useUser } from '@/context/user';
 import { usePosts } from '@/hooks/usePosts';
 import { PostsFlatList } from '@/components/PostsFlatList';
 import { Ionicons } from '@expo/vector-icons';
+import { Colors } from '@/constants/Colors';
 
 export default function UserProfileScreen() {
     const searchParams = useSearchParams(); // Retrieve query parameters
@@ -80,8 +81,8 @@ export default function UserProfileScreen() {
     const handleMessage = async () => {
         try {
             //chat already exists
-            const chatId = `${user?.id}_${targetUser?.id}`;
-            const checkChatResponse = await api.get(`/chats/${chatId}/`);
+      
+            const checkChatResponse = await api.get(`/users/${user?.id}/chats/${targetUser?.id}/`);
             if (checkChatResponse.ok) {
                 let chat = await checkChatResponse.json();
                 router.push({
@@ -90,9 +91,13 @@ export default function UserProfileScreen() {
                 })
             } else if (checkChatResponse.status === 404) {
                 // create new chat
-                const response = await api.post('/chats/', { recipientID: targetUser?.id });
-                if (response.ok) {
-                    router.push('/ChatsScreen');
+                const response = await api.post('/chats/', { reciepientID: targetUser?.id });
+                const chat = await response.json();
+                    if (response.ok) {
+                        router.push({
+                            pathname: '/MessagesScreen',
+                            params: { chatID: chat.id },
+                        })
                 } else {
                     Alert.alert('Failed to create chat.');
                 }
@@ -111,8 +116,11 @@ export default function UserProfileScreen() {
             <Stack.Screen options={{ title: 'UserProfileScreen' }} />
             <View style={ScreenStyles.screen}>
                 <ProfileInfo user={targetUser} />
-                <TouchableOpacity onPress={handleMessage}>
-                    <Ionicons name="chatbubble-outline" size={24} color="black" />
+                 <TouchableOpacity 
+                    onPress={handleMessage}
+                    style={{ alignSelf:'flex-end', position:'absolute', top: 20, right: 15}}
+                >
+                    <Ionicons name="chatbubble-outline" size={28} color={Colors.dark60} />
                 </TouchableOpacity>
                 <StatsBar user={targetUser} statsUpdated={statsUpdated} />
                 <Text> {isFollowing} </Text>

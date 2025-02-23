@@ -214,6 +214,51 @@ def get_all_chats(user_id: int,
     
     return [Chat(**chat_db.model_dump()) for chat_db in chats_db]
 
+
+
+@users_router.get('/{user_id}/chats/{recipient_id}/', response_model=Chat, status_code = 200)
+def get_chat_with_user(user_id: int,  
+                  recipient_id: int,
+                  session : Annotated[Session, Depends(get_session)],
+                  current_user: UserInDB = Depends(auth_get_current_user)
+                  ) -> Chat:
+    """Getting all chats for this user"""
+    
+    # check that user with id exists
+    user = session.get(UserInDB, user_id)
+    if not user:
+        raise EntityNotFound("user", user_id)
+    
+    # check that recipient with id exists
+    recipient = session.get(UserInDB, recipient_id)
+    if not user:
+        raise EntityNotFound("recipient user", recipient_id)
+    
+    # Authenticate that the currently logged-in user matches the URL parameter
+    if current_user.id != user_id:
+        raise PermissionDenied("view", "chats")
+    
+    # Filter chats where the user is either the sender or the recipient
+    chat_db = session.exec(
+       select(ChatInDB).where(
+            or_(
+                and_(
+                    ChatInDB.senderID == user_id,
+                    ChatInDB.recipientID == recipient_id
+                ),
+                and_(
+                    ChatInDB.senderID == recipient_id,
+                    ChatInDB.recipientID == user_id
+                )
+            )
+        )
+    ).first()
+
+    if not chat_db:
+        raise EntityNotFound("chat", f"between {user_id} and {recipient_id}")
+    return Chat(**chat_db.model_dump())
+
+
     
 
 # ------------------------ posts -------------------------- #
