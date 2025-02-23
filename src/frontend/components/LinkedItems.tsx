@@ -12,15 +12,15 @@ import { Post } from '@/constants/Types';
 
 export function LinkedItems ({ posts, columns }: { posts: Post[], columns: number }){
     return (
-        <View style={[Styles.row, { flexWrap: 'wrap', justifyContent: 'space-between' }]}>
+        <View style={[Styles.row, { flexWrap: 'wrap', justifyContent: 'flex-start' }]}>
             {posts.map((item, index) => (
-                <View key={item.id.toString()} style={{ width: `${100 / columns}%` }}>
-                    {columns === 1 ? (
-                        <LinkPreview listing={item} />
-                    ) : (
-                        <PostPreview post={item} size={110} profileThumbnail={"none"} />
-                    )}
-                </View>
+            <View key={item.id.toString()} style={{ width: `${100 / columns}%` }}>
+                {columns === 1 ? (
+                <LinkPreview listing={item} />
+                ) : (
+                <PostPreview post={item} size={110} profileThumbnail={"none"} />
+                )}
+            </View>
             ))}
         </View>
     );

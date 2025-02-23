@@ -25,3 +25,5 @@ markers = [
     "auth: authentication related tests",
 ]
 
+[tool.setuptools]
+packages = ["databaseAndSchemas", "TestUtilities", "PRISM", "SOCIAL"]

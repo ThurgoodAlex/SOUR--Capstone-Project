@@ -4,7 +4,7 @@ from sqlmodel import Field, SQLModel, Relationship
 from pydantic import BaseModel, ConfigDict
 from sqlalchemy.types import Text, DECIMAL
 from decimal import Decimal
-
+from fastapi import UploadFile
 
 class Metadata(BaseModel):
     count: int 
@@ -34,7 +34,7 @@ class UserInDB(SQLModel, table=True):
     __tablename__ = "users"
     __table_args__ = {'extend_existing': True} 
      
-    profilePic: Optional[str] = Field(default=None, foreign_key="media.url")
+    profilePic: Optional[str] = Field(default=None)   
     id: Optional[int] = Field(default=None, primary_key=True)
     firstname: str = Field(index = False)
     lastname: str = Field(index = False)
@@ -141,7 +141,10 @@ class Media(BaseModel):
     isVideo: bool
     # This allows us to map from imageInDB to an image
     model_config = ConfigDict(from_attributes=True)
-###############################
+
+class UploadMedia(BaseModel):
+    post_id: int 
+        ###############################
 
 
 ### All Likes Schemas ###
@@ -187,7 +190,7 @@ class CommentCreate(BaseModel):
 
 ### All Following Schemas
 class FollowingInDB(SQLModel, table = True):
-    __tablename__ = "FollowingAndFolowees"
+    __tablename__ = "FollowingAndFollowees"
     id: Optional[int] = Field(default=None, primary_key=True)
     followerID: int = Field(foreign_key="users.id")
     followeeID: int = Field(foreign_key="users.id")

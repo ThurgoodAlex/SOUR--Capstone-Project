@@ -6,6 +6,7 @@ services:
       - "19000:19000"  # Frontend
       - "19001:19001"  # Frontend additional
       - "19002:19002"  # Frontend additional
+      - "8081:8081"
     volumes:
       - ./:/app/
       - /app/src/frontend/node_modules  # Preserve frontend node_modules
@@ -17,10 +18,12 @@ services:
       - CDK_DEFAULT_ACCOUNT=000000000000
       - CDK_DEFAULT_REGION=us-west-1
       - AWS_ENDPOINT_URL=http://localstack:4566
+      - DATABASE_URL = "postgresql://root:password123@localhost:5432/sour-db"
     stdin_open: true  # Keep STDIN open
     tty: true        # Allocate a pseudo-TTY
     depends_on:
       - localstack
+      - db
   localstack:
     container_name: "${LOCALSTACK_DOCKER_NAME:-localstack-main}"
     image: localstack/localstack
@@ -34,4 +37,15 @@ services:
       - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
     privileged: true
-    
+  db:
+    image: postgres:17-bookworm 
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=password123
+      - POSTGRES_DB=sour-db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+volumes:
+  postgres_data:

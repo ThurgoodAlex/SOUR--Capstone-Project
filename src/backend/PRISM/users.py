@@ -20,6 +20,9 @@ from databaseAndSchemas.schema import (
 from databaseAndSchemas.test_db import get_session
 from PRISM import auth_get_current_user
 from databaseAndSchemas import *
+from PRISM.prism_exceptions import (
+    AuthException
+)
 
 
 localstack_endpoint = os.environ.get('LOCALSTACK_ENDPOINT', 'http://localstack:4566')
@@ -53,7 +56,23 @@ def get_all_users(session :Annotated[Session, Depends(get_session)])-> list[User
     user_in_db = session.exec(select(UserInDB)).all()
     return [map_user_db_to_response(user) for user in user_in_db]
 
-@users_router.get('/{user_id}/', response_model= User, status_code=200)
+
+@users_router.get('/{user_id}/', response_model= User, status_code=200, 
+    responses= {
+        404: {
+            "description": "User not found",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail":{
+                            "error": "entity_not_found",
+                            "message": "unable to find user with id:5"
+                        } 
+                    }
+                }
+            }
+        }
+    })
 def get_user_by_id(session: Annotated[Session, Depends(get_session)],
                     user_id: int,
                     current_user: UserInDB = Depends(auth_get_current_user))-> User:
@@ -62,7 +81,8 @@ def get_user_by_id(session: Annotated[Session, Depends(get_session)],
     if user:
         return map_user_db_to_response(user)
     else:
-        raise EntityNotFound("user", user_id)
+        raise HTTPException(status_code=404, 
+                            detail=f"user with id:{user_id} not found") 
 
 @users_router.put('/becomeseller/', response_model= User, status_code=200)
 def become_a_seller(session: Annotated[Session, Depends(get_session)],
@@ -254,19 +274,21 @@ def get_user_cart(
     currentUser: UserInDB = Depends(auth_get_current_user)
 ) -> list[Cart]:
     
-    #TODO: Exception if current user is not user_id?
     
     user_cart = session.exec(select(CartInDB).where(CartInDB.userID == currentUser.id)).all()
 
     return [Cart(**item.model_dump()) for item in user_cart]
 
+class CartRequest(BaseModel):
+    listing_id: int
+
 @users_router.post("/{user_id}/cart/", response_model=Cart, status_code=200)
 def add_item_to_cart(
-    listing_id: int,
+    request: CartRequest,
     session: Annotated[Session, Depends(get_session)],
     currentUser: UserInDB = Depends(auth_get_current_user)
 ) -> Cart:
-   
+    listing_id = request.listing_id 
 
     listing = session.exec(
         select(PostInDB).where(
@@ -294,13 +316,12 @@ def add_item_to_cart(
         created_at=new_cart_item.created_at
     )
 
-@users_router.delete("/users/{user_id}/cart/{cart_item_id}/", status_code=200)
+@users_router.delete("/cart/{cart_item_id}/", status_code=200)
 def del_item_from_cart(
     cart_item_id: int,
     session: Annotated[Session, Depends(get_session)],
     currentUser: UserInDB = Depends(auth_get_current_user)
 ):
-    
     cart_item = session.exec(
         select(CartInDB).where(
             and_(CartInDB.userID == currentUser.id, CartInDB.id == cart_item_id)

@@ -63,6 +63,10 @@ export const TextStyles = StyleSheet.create({
         fontWeight: 'bold',
     },
 
+  required: {
+    fontSize:11,
+    color:Colors.dark60,
+  }
 
 });
 
@@ -73,7 +77,7 @@ export const Styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: Colors.dark,
         backgroundColor: Colors.white,
-        width: '100%',
+        width:'100%',
         padding: 12,
         borderRadius: 8,
         fontSize: 16,

@@ -8,16 +8,13 @@ services:
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
       - ENDPOINT_URL=http://localstack:4566
+      - DATABASE_URL=postgresql://root:password123@sour-db-1:5432/sour-db  # Fixed spacing issue
     depends_on: 
       - localstack
+      - db
     volumes:
       - ./src/backend:/app/
-    # develop:
-    #   watch:
-    #     - action: sync
-    #       path: ./backend/
-    #       target: /app/
-        
+
   frontend:
     build: src/frontend/
     ports:
@@ -29,6 +26,7 @@ services:
     stdin_open: true
     tty: true
     command: /bin/bash
+
   localstack:
     container_name: "${LOCALSTACK_DOCKER_NAME:-localstack-main}"
     image: localstack/localstack
@@ -36,23 +34,38 @@ services:
       - "4566:4566"            
     environment:
       - DEBUG=${DEBUG:-0}
-      - DOCKER_HOST=unix:///var/run/docker.sock  # Add this line
+      - DOCKER_HOST=unix:///var/run/docker.sock
       - LAMBDA_EXECUTOR=docker
     volumes:
       - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
     privileged: true
+
   infrastructure: 
-      # image: ricardobaeza/sour-infrastructure:latest
-      build: src/infrastructure/
-      environment:
-        - AWS_ACCESS_KEY_ID=test
-        - AWS_SECRET_ACCESS_KEY=test
-        - AWS_DEFAULT_REGION=us-west-1
-        - CDK_DEFAULT_ACCOUNT=000000000000
-        - CDK_DEFAULT_REGION=us-west-1
-        - AWS_ENDPOINT_URL=http://localstack:4566
-      volumes: 
-        - ./src/:/app/
-      depends_on: 
-        - localstack
+    build: src/infrastructure/
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=us-west-1
+      - CDK_DEFAULT_ACCOUNT=000000000000
+      - CDK_DEFAULT_REGION=us-west-1
+      - AWS_ENDPOINT_URL=http://localstack:4566
+    volumes: 
+      - ./src/:/app/
+    depends_on: 
+      - localstack
+
+  db:
+    image: postgres:17-bookworm 
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=password123
+      - POSTGRES_DB=sour-db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+# Define named volumes at the root level
+volumes:
+  postgres_data:

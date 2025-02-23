@@ -34,7 +34,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
             lastname: responseData.lastname,
             username: responseData.username,
             id: responseData.id,
-            profilePicture: responseData.profilePicture,
+            profilePic: responseData.profilePicture,
             isSeller: responseData.isSeller,
             bio: responseData.bio,
             email: responseData.email

@@ -156,8 +156,6 @@ def delete_comment(session :Annotated[Session, Depends(get_session)],
         raise EntityNotFound("comment", comment_id)
 
 
-
-
 @posts_router.get('/{post_id}/', response_model = Post, status_code=200)
 def get_post_by_id(post_id: int, 
                    session: Annotated[Session, Depends(get_session)],

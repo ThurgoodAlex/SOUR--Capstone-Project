@@ -20,6 +20,10 @@ export type Post = {
   
 };
 
+export interface CartPost extends Post {
+    cartItemId: number;
+  }
+
 // export type Listing = {
 //     id:number;
 //     createdDate: Date;
@@ -85,4 +89,7 @@ export type MessageData = {
     created_at: Date;
 };
 
+export type CartButtonProps = {
+      listingID: number;
+  };
   

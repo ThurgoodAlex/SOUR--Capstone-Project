@@ -1,3 +1,3 @@
 from .schema import *
 from .test_db import *
-from .mappings import userMapping
+from .mappings.userMapping import map_user_db_to_response
