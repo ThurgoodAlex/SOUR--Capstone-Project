@@ -8,12 +8,13 @@ import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import { router } from 'expo-router';
 import { useState } from 'react';
+import useUploadImages from '@/hooks/useUploadImages';
 import {View, Text, TextInput, TouchableOpacity, Image, ScrollView, KeyboardTypeOptions, StyleSheet, Alert, ImageBackground, GestureResponderEvent,} from 'react-native';
 
 export default function CreatePost() {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-    
+    const {uploadingImages} = useUploadImages();
     const MAX_IMAGES = 10;
     const [images, setImages] = useState<string[]>([]); // Store multiple image URIs
     const [error, setError] = useState(null);
@@ -53,8 +54,8 @@ export default function CreatePost() {
   };
 
 
-  const encodingFiles = async (images: string | any[], postID: number) => {
-    const encodedFiles: FormData[] = [];
+  const creatingFormData = async (images: string | any[], postID: number) => {
+    const formDataArray: FormData[] = [];
 
     if (Array.isArray(images) && images.length > 0) {
         for (const image of images) {
@@ -64,24 +65,25 @@ export default function CreatePost() {
                 const response = await fetch(image); 
                 const blob = await response.blob();
                 console.log("Fetched image as Blob:", blob);
-                
+                const fileName = image.split('/').pop();
                 const formData = new FormData();
-                formData.append("file", blob, image.fileName || "default.jpg");
+                formData.append("file", blob, fileName || "default.jpg");
                 console.log("Post ID:", postID);
                 formData.append("post_id", postID.toString());
+                console.log("created form data", formData.get("file"))
+                formDataArray.push(formData);
                 
-                encodedFiles.push(formData);
             } catch (error) {
                 console.log("Error fetching image as Blob:", error);
             }
         }
     }
-    return encodedFiles;
+    return formDataArray;
 };
 
 const handleSubmit = async () => {
   try {
-      console.log("Submitting post with images:", images); // Log images to inspect
+      console.log("Submitting post with images:", images);
 
       // Create post first
       const response = await api.post("/posts/", {
@@ -102,24 +104,10 @@ const handleSubmit = async () => {
       // Then handle image uploads if there are any
       if (images.length > 0) {
           await new Promise((resolve) => setTimeout(resolve, 100)); // wait for the post to be created
-          const encodedFiles = await encodingFiles(images, result.id);
-          const uploadedImages = [];
-
+          const formData = creatingFormData(images, result.id);
           // Perform the upload request
-          for (const file of encodedFiles) {
-              console.log("formData for current image:", file);
-              const uploadResponse = await api.postForm("/media/upload/", file);
-              console.log("This is the response", uploadResponse);
-
-              if (uploadResponse.ok) {
-                  const result = await uploadResponse.json();
-                  console.log("Uploaded image:", result);
-                  uploadedImages.push(result.fileUrl);
-              } else {
-                  console.log("Upload failed for image");
-                  Alert.alert('Error', 'Some images failed to upload, but your post was created.');
-              }
-          }
+          const uploadedImages = await uploadingImages(await formData);
+          console.log("uploadedImages", uploadedImages)
       }
       // Navigate after everything is done
       // router.replace("/SelfProfileScreen");
