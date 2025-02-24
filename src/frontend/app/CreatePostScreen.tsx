@@ -12,9 +12,7 @@ import {View, Text, TextInput, TouchableOpacity, Image, ScrollView, KeyboardType
 
 export default function CreatePost() {
     const [name, setName] = useState('');
-    const [isImagePickerOpen, setIsImagePickerOpen] = useState(false);
     const [description, setDescription] = useState('');
-    const [PostID, setPostID] = useState('');
     
     const MAX_IMAGES = 10;
     const [images, setImages] = useState<string[]>([]); // Store multiple image URIs
@@ -26,11 +24,6 @@ export default function CreatePost() {
     
     //pick images from the device's media library
     const uploadImages = async () => {
-      if (isImagePickerOpen) {
-          return;
-      }
-      setIsImagePickerOpen(true);
-      console.log('Image Picker triggered');
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
   
       if (status !== "granted") {
@@ -44,7 +37,6 @@ export default function CreatePost() {
               allowsMultipleSelection: true,
               selectionLimit: MAX_IMAGES - images.length,
               orderedSelection: true,
-              base64: true, // Include base64 string in the response
           });
           
           console.log('Image Picker Result:', result);
@@ -58,33 +50,39 @@ export default function CreatePost() {
               setError(null);  // Clear any previous errors
           }
       }
-      setIsImagePickerOpen(false);
   };
 
 
-const fileUpload = async (images: string | any[]) => {
-    const uploadedFiles = [];
-      for (const image of images) {
-        console.log("Uploading image:", image);
-        const base64Image = await FileSystem.readAsStringAsync(image, {
-          encoding: FileSystem.EncodingType.Base64,
-        });
-        const formData = new FormData();
-        formData.append("file", base64Image);
-        formData.append("post_id", PostID);
-        //console.log("Uploading form data:", formData);
-        uploadedFiles.push(formData);
-        };
-        return uploadedFiles;
-}
+  const encodingFiles = async (images: string | any[], postID: number) => {
+    const encodedFiles: FormData[] = [];
+
+    if (Array.isArray(images) && images.length > 0) {
+        for (const image of images) {
+            console.log("Image:", image); // Log the entire image object for debugging
+            
+            try {
+                const response = await fetch(image); 
+                const blob = await response.blob();
+                console.log("Fetched image as Blob:", blob);
+                
+                const formData = new FormData();
+                formData.append("file", blob, image.fileName || "default.jpg");
+                console.log("Post ID:", postID);
+                formData.append("post_id", postID.toString());
+                
+                encodedFiles.push(formData);
+            } catch (error) {
+                console.log("Error fetching image as Blob:", error);
+            }
+        }
+    }
+    return encodedFiles;
+};
 
 const handleSubmit = async () => {
-  console.log({
-      name,
-      description,
-  });
-
   try {
+      console.log("Submitting post with images:", images); // Log images to inspect
+
       // Create post first
       const response = await api.post("/posts/", {
           "title": name,
@@ -99,18 +97,19 @@ const handleSubmit = async () => {
           return;
       }
 
-      console.log("Created post: ", result);
-      setPostID(result.id);
+      console.log("Created post: ", result, " with id: ", result.id);
 
       // Then handle image uploads if there are any
       if (images.length > 0) {
-          const formDataArray = await fileUpload(images);
+          await new Promise((resolve) => setTimeout(resolve, 100)); // wait for the post to be created
+          const encodedFiles = await encodingFiles(images, result.id);
           const uploadedImages = [];
 
           // Perform the upload request
-          for (const formData of formDataArray) {
-            //console.log("Uploading image:", formData);
-              const uploadResponse = await api.postForm("/media/upload/", formData);
+          for (const file of encodedFiles) {
+              console.log("formData for current image:", file);
+              const uploadResponse = await api.postForm("/media/upload/", file);
+              console.log("This is the response", uploadResponse);
 
               if (uploadResponse.ok) {
                   const result = await uploadResponse.json();
@@ -123,7 +122,7 @@ const handleSubmit = async () => {
           }
       }
       // Navigate after everything is done
-      router.replace("/SelfProfileScreen");
+      // router.replace("/SelfProfileScreen");
 
   } catch (error) {
       console.error('Error creating post:', error);

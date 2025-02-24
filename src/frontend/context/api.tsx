@@ -30,14 +30,10 @@ const api = (token: string | null = null) => {
     };
 
     const getFormHeaders = () => {
-
         const headers: Record<string, string> = {
-            "Content-Type": "multipart/form-data",
-            "Accept": "multipart/form-data"
+            "Authorization": `Bearer ${token}`,
+            "Accept": "application/json", // Add the 'Accept' header
         };
-        if (token) {
-            headers["Authorization"] = `Bearer ${token}`;
-        }
         return headers;
     };
 
@@ -71,13 +67,13 @@ const api = (token: string | null = null) => {
     const postForm = async (url: string, formData: FormData) => {
         const headers = getFormHeaders();
         console.log("POSTform Request URL:", baseUrl + url);
-        console.log("POSTform FormData:", formData);
+        console.log("POSTform postID:", formData.get("post_id"));
         console.log("POSTform Headers:", headers);
 
         return fetch(baseUrl + url, {
             method: "POST",
             body: formData,
-            headers: headers
+            headers,
         });
     };
 
