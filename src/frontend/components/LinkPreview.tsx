@@ -3,7 +3,7 @@ import { Post } from "@/constants/Types";
 import { router } from "expo-router";
 import { ImageBackground, TouchableOpacity, View, Text } from "react-native";
 
-export function LinkPreview({ listing }: { listing: Post }) {
+export function LinkPreview({ listing, touchable = true }: { listing: Post, touchable?: boolean }) {
 
     const formattedPrice = new Intl.NumberFormat('en-US', {
         style: 'currency',
@@ -15,7 +15,7 @@ export function LinkPreview({ listing }: { listing: Post }) {
             <TouchableOpacity
                 onPress={() => router.push(`/PostInfoScreen/${listing.id}`)}
                 style={{ flex: 1, margin: 5, borderBottomColor: 'lightgrey', borderBottomWidth:.5 }}
-                disabled={listing.isSold} 
+                disabled={listing.isSold || !touchable} 
             >
                 <View style={[Styles.row, {gap:6}]}>
                     <ImageBackground source={listing.coverImage} style={[ {height: 70}, {width: 70} ]} />

@@ -8,6 +8,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useUser } from '@/context/user';
 import { usePosts } from '@/hooks/usePosts';
 import { useStats } from '@/hooks/useStats';
+import { Colors } from '@/constants/Colors';
 
 export function RegisteredSeller() {
     const { user } = useUser();
@@ -29,7 +30,7 @@ export function RegisteredSeller() {
     return (
         <>
            {statsLoading || postsLoading ? (
-                <ActivityIndicator size="large" color="#0000ff" />
+                <ActivityIndicator size="large" color={Colors.orange} />
             ) : (
                 <>
                     <Earnings earnings={earnings} soldItems={soldItems} />
@@ -74,7 +75,7 @@ function Earnings({ earnings, soldItems }: { earnings: number, soldItems: number
 function CreateButtons(){
     return (
         <View style={[Styles.column, {gap:12}]}>
-            <Text style={[TextStyles.h1, TextStyles.uppercase, {marginTop:6}]}>Create</Text>
+            <Text style={[TextStyles.h1, TextStyles.uppercase, {marginTop:8, marginBottom:-3}]}>Create</Text>
 
             <View style={[Styles.row, {gap:20}]}>
                 <TouchableOpacity style={[Styles.column, Styles.buttonDark, {alignItems: 'center', width: 30, height: 80}]} onPress={() => router.push('/CreateListingScreen')}>

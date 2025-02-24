@@ -8,6 +8,7 @@ import { useAuth } from '@/context/auth';
 import { User } from '@/constants/Types';
 import Collapsible from 'react-native-collapsible';
 import { Ionicons } from '@expo/vector-icons';
+import { Colors } from '@/constants/Colors';
 
 
 export default function SettingsScreen() {
@@ -194,7 +195,7 @@ export default function SettingsScreen() {
                             disabled={loading || !oldPassword.trim()}
                         >
                             {loading ? (
-                                <ActivityIndicator color="#ffffff" />
+                                <ActivityIndicator color={Colors.orange} />
                             ) : (
                                 <Text style={TextStyles.light}>Verify</Text>
                             )}
@@ -216,7 +217,7 @@ export default function SettingsScreen() {
                             disabled={loading || !newPassword.trim()}
                         >
                             {loading ? (
-                                <ActivityIndicator color="#ffffff" />
+                                <ActivityIndicator color={Colors.orange} />
                             ) : (
                                 <Text style={TextStyles.light}>Confirm</Text>
                             )}
@@ -229,7 +230,7 @@ export default function SettingsScreen() {
                     disabled={loading}
                 >
                     {loading ? (
-                        <ActivityIndicator color="#ffffff" />
+                        <ActivityIndicator color={Colors.orange} />
                     ) : (
                         <Text style={TextStyles.light}>Logout</Text>
                     )}
@@ -241,7 +242,7 @@ export default function SettingsScreen() {
                         disabled={loading}
                     >
                         {loading ? (
-                            <ActivityIndicator color="#ffffff" />
+                            <ActivityIndicator color={Colors.orange} />
                         ) : (
                             <Text style={TextStyles.light}>Cancel Seller Plan</Text>
                         )}
@@ -253,7 +254,7 @@ export default function SettingsScreen() {
                         disabled={loading}
                     >
                         {loading ? (
-                            <ActivityIndicator color="#ffffff" />
+                            <ActivityIndicator color={Colors.orange} />
                         ) : (
                             <Text style={TextStyles.light}>Become a Seller</Text>
                         )}
@@ -265,7 +266,7 @@ export default function SettingsScreen() {
                     disabled={loading}
                 >
                     {loading ? (
-                        <ActivityIndicator color="#ffffff" />
+                        <ActivityIndicator color={Colors.orange} />
                     ) : (
                         <Text style={TextStyles.light}>Delete Account</Text>
                     )}

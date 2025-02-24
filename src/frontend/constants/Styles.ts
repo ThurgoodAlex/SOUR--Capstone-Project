@@ -24,6 +24,41 @@ export const TextStyles = StyleSheet.create({
     uppercase: {
         textTransform: "uppercase",
     },
+  h3: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 8,
+    color: Colors.dark,
+  },
+  p:{
+    fontSize: 16,
+      color: Colors.dark, 
+      lineHeight: 22,
+      marginBottom: 8,
+      fontWeight: 300,
+  },
+  bold:{
+    fontWeight: 500,
+  },
+  small:{
+    color: Colors.dark, 
+    fontSize: 11,
+    marginBottom: 8,
+  },
+  light: {
+    color: Colors.white,
+    fontWeight: 'bold',
+  },
+  dark: {
+      color: Colors.dark,
+      fontWeight: 'bold',
+  },
+  error: {
+    fontSize:11,
+    color:Colors.grapefruit,
+    fontWeight: 'bold'
+  },
 
     h1: {
         fontSize: 22,

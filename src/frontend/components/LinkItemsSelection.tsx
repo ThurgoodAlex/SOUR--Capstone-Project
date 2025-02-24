@@ -4,13 +4,20 @@ import { LinkPreview } from '@/components/LinkPreview';
 import { Styles } from '@/constants/Styles';
 import { Colors } from '@/constants/Colors';
 import { Post } from '@/constants/Types';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 
 
-export function LinkedItemsSelection({ posts, columns, setter }: { posts: Post[], columns: number, setter: React.Dispatch<React.SetStateAction<Post[]>> }) {
+export function LinkedItemsSelection({ posts, previouslySelected, columns, setter }: { posts: Post[], previouslySelected: Post[], columns: number, setter: React.Dispatch<React.SetStateAction<Post[]>> }) {
     const [selectedPosts, setSelectedPosts] = useState<Set<number>>(new Set());
+    
 
+    useEffect(() => {
+        if (previouslySelected) {
+            setSelectedPosts(new Set(previouslySelected.map(post => post.id)));
+        }
+    }, [previouslySelected]);
+    
     const toggleSelection = (postId: number) => {
         setSelectedPosts(prev => {
             const newSelection = new Set(prev);
@@ -34,15 +41,18 @@ export function LinkedItemsSelection({ posts, columns, setter }: { posts: Post[]
                         style={{
                             width: `${97 / columns}%`,
                             backgroundColor: isSelected ? Colors.light : 'transparent',
-                            padding:4,
-                            margin:1.5,
+                            paddingLeft:4,
+                            paddingRight:4,
+                            marginLeft:1.5,
+                            marginRight:1.5,
+                            marginTop:2,
                             borderRadius: 8,
 
                         }}
                         onPress={() => toggleSelection(item.id)}
                     >
                         {columns === 1 ? (
-                            <LinkPreview listing={item} />
+                            <LinkPreview listing={item} touchable={false}/>
                         ) : (
                             <PostPreview post={item} size={95} profileThumbnail="none" touchable={false}/>
                         )}

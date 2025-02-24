@@ -1,3 +1,4 @@
+import { Colors } from '@/constants/Colors';
 import { Styles, TextStyles } from '@/constants/Styles';
 import { User } from '@/constants/Types';
 import { api, useApi } from '@/context/api';
@@ -45,7 +46,7 @@ export function UnregisteredSeller() {
                 disabled={loading}
             >
                 {loading ? (
-                    <ActivityIndicator color="#ffffff" />
+                    <ActivityIndicator color={Colors.orange} />
                 ) : (
                     <Text style={TextStyles.light}>Sign Up</Text>
                 )}

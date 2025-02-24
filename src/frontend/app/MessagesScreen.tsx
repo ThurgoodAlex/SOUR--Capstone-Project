@@ -105,7 +105,7 @@ export default function MessagesScreen() {
               disabled={loading || !newMessage.trim()}
             >
               {loading ? (
-                <ActivityIndicator color="#ffffff" />
+                <ActivityIndicator color={Colors.orange} />
               ) : (
                 <Text style={TextStyles.light}>Send</Text>
               )}

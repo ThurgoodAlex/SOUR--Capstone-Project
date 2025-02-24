@@ -91,7 +91,7 @@ export default function LoginScreen() {
                
             
                    {loading ? (
-                    <ActivityIndicator size="large" color="#0000ff" />
+                    <ActivityIndicator size="large" color={Colors.orange} />
                 ) : (
                     <TouchableOpacity
                         style={[Styles.buttonDark, (username === "" || password === "") && Styles.buttonDisabled]}

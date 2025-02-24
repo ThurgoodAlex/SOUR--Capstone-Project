@@ -78,11 +78,17 @@ def upload_listing(newListing:createListing,
     return listing
 
 
-@posts_router.get('/', response_model= list[Post], )
-def get_all_posts(session: Annotated[Session, Depends(get_session)], 
-                  current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
+@posts_router.get('/', response_model=list[Post])
+def get_all_posts(
+    session: Annotated[Session, Depends(get_session)], 
+    current_user: UserInDB = Depends(auth_get_current_user),
+    is_sold: Optional[bool] = Query(None)
+) -> list[Post]:
     """Getting all posts"""
-    post_in_db = session.exec(select(PostInDB)).all()
+    query = select(PostInDB)
+    if is_sold is not None:
+        query = query.where(PostInDB.isSold == is_sold)
+    post_in_db = session.exec(query).all()
     return [Post(**post.model_dump()) for post in post_in_db]
 
 @posts_router.get('/isListing=false/', response_model= list[Post], )
@@ -137,7 +143,7 @@ def get_newest_posts(session: Annotated[Session, Depends(get_session)],
                   current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
     """Getting up to the 5 newest posts, ordered from newest to oldest."""
     post_in_db = session.exec(
-        select(PostInDB).order_by(desc(PostInDB.created_at)).limit(5)
+        select(PostInDB).where(PostInDB.isSold==False).order_by(desc(PostInDB.created_at)).limit(5)
     ).all()
     return [Post(**post.model_dump()) for post in post_in_db]
 

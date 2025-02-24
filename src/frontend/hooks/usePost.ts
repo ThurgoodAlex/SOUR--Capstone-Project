@@ -57,7 +57,7 @@ export function usePost(id: string) {
             description: result.description,
             brand: result.brand,
             condition: result.condition,
-            size: "n/a", // Set default size
+            size: result.size || "n/a", // Set default size
             gender: result.gender,
             coverImage: result.coverImage,
             price: result.price,
