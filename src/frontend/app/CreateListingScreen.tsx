@@ -7,7 +7,6 @@ import * as ImagePicker from "expo-image-picker";
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, StyleSheet, Alert, KeyboardTypeOptions } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
 import { Colors } from '@/constants/Colors';
 import ModalSelector from 'react-native-modal-selector';
 import * as Yup from 'yup';

@@ -10,6 +10,7 @@ import { useApi } from '@/context/api';
 import { Post } from '@/constants/Types';
 import { Ionicons } from '@expo/vector-icons';
 import { LinkedItems } from '@/components/LinkedItems';
+import  CartButton  from '@/components/CartButton';
 import { usePost } from '@/hooks/usePost';
 import { usePosts } from '@/hooks/usePosts';
 
