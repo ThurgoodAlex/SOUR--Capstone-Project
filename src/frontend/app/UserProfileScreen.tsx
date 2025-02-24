@@ -122,7 +122,7 @@ export default function UserProfileScreen() {
                 >
                     <Ionicons name="chatbubble-outline" size={28} color={Colors.dark60} />
                 </TouchableOpacity>
-                <StatsBar user={targetUser}/>
+                <StatsBar user={targetUser} statsUpdated={statsUpdated} />
                 <Text> {isFollowing} </Text>
                
                         {isFollowing ? (
