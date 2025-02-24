@@ -18,6 +18,7 @@ from SOCIAL import (
     posts_router,
     media_router
 )
+from LOTUS import stripe_router
 
 
 @asynccontextmanager
@@ -39,6 +40,7 @@ app.add_middleware(
 
 
 app.include_router(auth_router, prefix="/auth")
+app.include_router(stripe_router, prefix="/stripe")
 app.include_router(users_router, prefix="/users")
 app.include_router(posts_router, prefix="/posts")
 app.include_router(media_router, prefix="/media")

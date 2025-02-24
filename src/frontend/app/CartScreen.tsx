@@ -115,7 +115,7 @@ export default function CartScreen() {
       <View>
         <TouchableOpacity
           style={[Styles.buttonDark, {width:'100%'}]}
-          onPress={() => Alert.alert("Proceeding to checkout")}
+          onPress={() => router.push('/CheckoutScreen')}
         >
           <Text style={TextStyles.light}>Checkout</Text>
         </TouchableOpacity>
