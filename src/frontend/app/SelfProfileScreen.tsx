@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, Alert, StyleSheet } from 'react-native';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 
 import { useUser } from '@/context/user';
@@ -46,7 +46,7 @@ export default function SelfProfileScreen() {
             
             <View style={ScreenStyles.screen}>
                 <ProfileInfo user={user} />
-                <StatsBar user={user}/>
+                <StatsBar user={user} statsUpdated={true}/>
                 <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} tab1={'Posts'} tab2={'Likes'} />
                 <PostsFlatList posts={posts} height={270} />
             </View>

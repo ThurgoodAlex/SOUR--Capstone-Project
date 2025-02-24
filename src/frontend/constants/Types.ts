@@ -77,7 +77,7 @@ export type CartItemProps = {
 
 export type ChatData = {
     id: number;
-    senderID: number;
+    sellerID: number;
     recipientID: number;
 };
 

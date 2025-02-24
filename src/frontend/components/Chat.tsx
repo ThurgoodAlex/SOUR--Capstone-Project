@@ -12,10 +12,8 @@ export function Chat({ chat }: { chat: ChatData }) {
     let targetUserId;
     const [targetUser, setTargetUser] = useState<User | null>(null);
 
-    console.log("chat", chat);
-    if (chat?.recipientID == user?.id) {
-        targetUserId=chat.senderID;
-        console.log("targetUserId", targetUserId);
+    if (chat?.recipientID === user?.id) {
+        targetUserId=chat.sellerID;
     } else {
         targetUserId=chat.recipientID;
     }
