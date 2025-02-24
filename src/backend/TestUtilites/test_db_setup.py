@@ -9,7 +9,7 @@ from databaseAndSchemas import *
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from sqlalchemy_utils import database_exists, create_database
-from sqlalchemy import text
+from sqlalchemy import text, Engine
 from PRISM import (
     auth_router,
     users_router

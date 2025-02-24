@@ -1,6 +1,6 @@
 from fastapi.testclient import TestClient
 from sqlmodel import Session, select
-from databaseAndSchemas import UserInDB
+from databaseAndSchemas import UserInDB, PostInDB
 from typing import Dict
 from sqlalchemy import text 
 
@@ -70,6 +70,26 @@ class TestEnvManager:
         return self.session.exec(
                                 select(UserInDB).where(UserInDB.username == username)
                                 ).first()
+    
+    def create_post(self, username: str, post_title)-> int:
+        """Creates a post in the DB then returns the post ID"""
+        user = self.get_user(username)
+        user_id = user.id
+
+        post = PostInDB(
+           sellerID=user_id, 
+           title= post_title, 
+        )
+
+        try: 
+            self.session.add(post)
+            self.session.commit()
+            self.session.refresh(post)  # Refresh to get the generated ID
+            return post.id
+        except:
+            return None
+
+
 
 
 
