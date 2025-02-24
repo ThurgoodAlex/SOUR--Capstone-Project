@@ -3,8 +3,10 @@ import { View, Text, TouchableOpacity, Image, Alert, StyleSheet, FlatList, Scrol
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 import { User } from '@/constants/Types';
 import { useApi } from '@/context/api';
+import { useAuth } from '@/context/auth';
+import { useUser } from '@/context/user';
 
-export function StatsBar({ user, statsUpdated }: { user: User | null; statsUpdated: boolean }) {
+export function StatsBar({ user }: { user: User | null; }) {
     const api = useApi();
     const [sales, setSales] = useState(0);
     const [posts, setPosts] = useState(0);
@@ -26,7 +28,7 @@ export function StatsBar({ user, statsUpdated }: { user: User | null; statsUpdat
                 setFollowers((await followersResponse.json()).length);
                 setFollowing((await followingResponse.json()).length);
             } else {
-                Alert.alert('Error', 'Failed to fetch stats.');
+                console.error('Error fetching stats:', salesResponse, postsResponse, followersResponse, followingResponse);
             }
         } catch (error) {
             console.error('Error fetching stats:', error);
@@ -36,7 +38,7 @@ export function StatsBar({ user, statsUpdated }: { user: User | null; statsUpdat
 
     useEffect(() => {
         fetchUserStats();
-    }, [user, statsUpdated]);
+    }, []);
 
     return (
         <View style={StatStyles.statsSection}>
