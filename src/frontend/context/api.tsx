@@ -11,7 +11,7 @@ import { useAuth } from "@/context/auth";
 const api = (token: string | null = null) => {
     // local host url
 
-     const baseUrl = "http://10.0.0.62:8000";
+     const baseUrl = "http://10.18.145.245:8000";
      //const baseUrl = "http://10.18.224.228:8000";
 
     // emma's url
@@ -25,7 +25,7 @@ const api = (token: string | null = null) => {
         };
         if (token) {
             headers["Authorization"] = `Bearer ${token}`;
-        }
+        };
         return headers;
     };
 
@@ -33,7 +33,6 @@ const api = (token: string | null = null) => {
         const headers: Record<string, string> = {
             "Authorization": `Bearer ${token}`,
             "Accept": "application/json",
-            // "Content-Type": "multipart/form-data"
         };
         return headers;
     };
@@ -66,19 +65,83 @@ const api = (token: string | null = null) => {
     };
 
     const postForm = async (url: string, formData: FormData) => {
-        const headers = getFormHeaders();
-        console.log("POSTform Request URL:", baseUrl + url);
-        console.log("POSTform form data:", formData.get("file"));
-        console.log("POSTform Headers:", headers);
-
-        return fetch(baseUrl + url, {
-            method: "POST",
-            body: formData,
-            headers: {
-                ...headers,
-                "Content-Type": "multipart/form-data",
-            },
+      console.log("Starting postForm with URL:", url);
+      console.log("FormData argument received:", formData);
+    
+      console.log("Attempting to get form headers...");
+      const headers = getFormHeaders();
+      console.log("Headers retrieved:", headers);
+    
+      console.log("Constructing full URL...");
+      const fullUrl = baseUrl + url;
+      console.log("POSTform Request URL:", fullUrl);
+    
+      console.log("Inspecting FormData...");
+      console.log("FormData file field:", formData.get("file"));
+      try {
+        console.log("Attempting to iterate FormData entries...");
+        formData.forEach((value, key) => {
+          console.log(`FormData entry - ${key}:`, value);
         });
+      } catch (error) {
+        console.error("Error inspecting FormData entries:", error);
+      }
+    
+      console.log("POSTform Headers (before modification):", headers);
+      console.log("Removing Content-Type from headers...");
+      delete headers["Content-Type"]; // Let XMLHttpRequest set multipart/form-data
+      console.log("POSTform Headers (after removing Content-Type):", headers);
+    
+      console.log("Preparing XMLHttpRequest...");
+      console.log("Request method:", "POST");
+      console.log("Request body:", formData);
+      console.log("Request headers:", headers);
+    
+      return new Promise((resolve, reject) => {
+        console.log("Executing XMLHttpRequest to:", fullUrl);
+        const xhr = new XMLHttpRequest();
+    
+        // Set up event listeners
+        xhr.onload = () => {
+          console.log("XHR completed with status:", xhr.status);
+          if (xhr.status >= 200 && xhr.status < 300) {
+            console.log("Response text:", xhr.responseText);
+            const response = {
+              ok: true,
+              status: xhr.status,
+              json: () => Promise.resolve(JSON.parse(xhr.responseText)),
+            };
+            console.log("Returning response...");
+            resolve(response);
+          } else {
+            console.error("XHR failed with status:", xhr.status);
+            console.error("XHR response text:", xhr.responseText);
+            reject(new Error(`Upload failed: ${xhr.status} - ${xhr.responseText}`));
+          }
+        };
+    
+        xhr.onerror = () => {
+          console.error("XHR error occurred");
+          reject(new Error("Network request failed"));
+        };
+    
+        xhr.ontimeout = () => {
+          console.error("XHR timed out");
+          reject(new Error("Request timed out"));
+        };
+    
+        // Configure request
+        xhr.open("POST", fullUrl, true);
+        xhr.timeout = 10000; // 10s timeout
+    
+        // Set headers
+        for (const [key, value] of Object.entries(headers)) {
+          xhr.setRequestHeader(key, value);
+        }
+    
+        // Send request
+        xhr.send(formData);
+      });
     };
 
     // have to call it remove becuase delete is not allowed as a method name :(

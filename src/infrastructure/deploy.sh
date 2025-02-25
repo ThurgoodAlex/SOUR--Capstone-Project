@@ -13,10 +13,10 @@ npm list
 npm run build
 
 # Bootstrap CDK local environment
-npx aws-cdk-local bootstrap
+npx cdklocal bootstrap
 
 echo "deploying changes" 
 
 # Deploy without approval prompt
-
-npx aws-cdk-local deploy --require-approval never --output ./cdk.out.deploy
+npx cdklocal deploy S3BucketStack --require-approval never
+# npx aws-cdk-local deploy S3BucketStack --require-approval never --output ./cdk.out.deploy

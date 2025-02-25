@@ -56,30 +56,33 @@ export default function CreatePost() {
 
   const creatingFormData = async (images: string | any[], postID: number) => {
     const formDataArray: FormData[] = [];
-
-    if (Array.isArray(images) && images.length > 0) {
-        for (const image of images) {
-            console.log("Image:", image); // Log the entire image object for debugging
-            
-            try {
-                const response = await fetch(image); 
-                const blob = await response.blob();
-                console.log("Fetched image as Blob:", blob);
-                const fileName = image.split('/').pop();
-                const formData = new FormData();
-                formData.append("file", blob, fileName || "default.jpg");
-                console.log("Post ID:", postID);
-                formData.append("post_id", postID.toString());
-                console.log("created form data", formData.get("file"))
-                formDataArray.push(formData);
-                
-            } catch (error) {
-                console.log("Error fetching image as Blob:", error);
-            }
+  
+    // Normalize input: convert single string to array, keep array as-is
+    const imageArray = Array.isArray(images) ? images : [images];
+  
+    if (imageArray.length > 0) {
+      for (const image of imageArray) {
+        console.log("Image:", image); // Log the entire image object for debugging
+  
+        try {
+          const response = await fetch(image);
+          const blob = await response.blob();
+          console.log("Fetched image as Blob:", blob);
+          const fileName = image.split("/").pop();
+          const formData = new FormData();
+          formData.append("file", blob, fileName || "default.jpg");
+          console.log("Post ID:", postID);
+          formData.append("post_id", postID.toString());
+          console.log("created form data", formData.get("file"));
+          formDataArray.push(formData);
+        } catch (error) {
+          console.log("Error fetching image as Blob:", error);
         }
+      }
     }
+  
     return formDataArray;
-};
+  };
 
 const handleSubmit = async () => {
   try {

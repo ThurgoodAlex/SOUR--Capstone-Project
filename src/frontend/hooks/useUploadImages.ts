@@ -30,32 +30,30 @@ const useUploadImages = () => {
     return encodedFiles;
   };
 
-  const uploadingImages = async (images: string | any[]) => {
+  const uploadingImages = async (formDataArray: FormData[]) => {
     setLoading(true);
     const uploadedImages: string[] = [];
-
-
-    if (images.length === 0) {
-      Alert.alert('Error', 'No images were encoded.');
+  
+    if (formDataArray.length === 0) {
+      Alert.alert("Error", "No images were encoded.");
       setLoading(false);
       return uploadedImages;
     }
-
-    // Now proceed with uploading images
-    for (const file of images) {
-      console.log("FormData for current image:", file.get("file"));
-      const uploadResponse = await api.postForm("/media/upload/", file);
-      
-      if (uploadResponse.ok) {
-        const result = await uploadResponse.json();
+  
+    for (const formData of formDataArray) {
+      console.log("FormData for current image:", formData.get("file"));
+      try {
+        const response = await api.postForm("/media/upload/", formData);
+        const result = await (response as Response).json();
         console.log("Uploaded image:", result);
-        uploadedImages.push(result.fileUrl);
-      } else {
-        console.log("Upload failed for image");
-        Alert.alert('Error', 'Some images failed to upload, but your post was created.');
+        uploadedImages.push(result.url); // Adjust if your endpoint uses "fileUrl"
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        Alert.alert("Error", `Failed to upload image: ${errorMessage}`);
       }
     }
-
+  
     setLoading(false);
     return uploadedImages;
   };
