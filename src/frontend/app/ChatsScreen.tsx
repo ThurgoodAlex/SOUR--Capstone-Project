@@ -13,13 +13,13 @@ export default function ChatsScreen() {
     const api = useApi();
     const {user} = useUser();
     const [chats, setChats] = useState<ChatData[]>([]);
+
     const getChats = async () => {
         try {
             const response = await api.get(`/users/${user?.id}/chats/`);
             if (response.ok) {
                 const chatData = await response.json();
                 console.log("Chats retrived successfully.");
-                
                 setChats(chatData);
             } else {
                 console.error("Chats retrival failed:", response);
@@ -35,8 +35,7 @@ export default function ChatsScreen() {
 
     const renderChat = ({ item }: {item: ChatData}) => (
         <Chat chat={item} />
-        
-      );
+    );
     return (
         <>
             <Stack.Screen
