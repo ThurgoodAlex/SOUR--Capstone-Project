@@ -18,7 +18,6 @@ export default function CreatePost() {
     const MAX_IMAGES = 10;
     const [images, setImages] = useState<string[]>([]); // Store multiple image URIs
     const [error, setError] = useState(null);
-
     const api = useApi();
     const {logout} = useAuth();
     const {user} = useUser(); // Fetch user details
@@ -65,24 +64,36 @@ export default function CreatePost() {
         console.log("Image:", image); // Log the entire image object for debugging
   
         try {
-          const response = await fetch(image);
-          const blob = await response.blob();
-          console.log("Fetched image as Blob:", blob);
-          const fileName = image.split("/").pop();
-          const formData = new FormData();
-          formData.append("file", blob, fileName || "default.jpg");
-          console.log("Post ID:", postID);
-          formData.append("post_id", postID.toString());
-          console.log("created form data", formData.get("file"));
-          formDataArray.push(formData);
+          // Compress the image
+        
+  
+          // If the image was compressed, proceed to fetch the compressed image as Blob
+          if (image) {
+            const response = await fetch(image);
+            const blob = await response.blob();
+            console.log("Fetched compressed image as Blob:", blob);
+            const fileName = image.split("/").pop();
+            const formData = new FormData();
+            const uri = image;
+            const type = uri.split('.').pop();
+            formData.append('file', { uri, name: image.name, type: `image/${type}` } as any);
+            ;
+            console.log("Post ID:", postID);
+            formData.append("post_id", postID.toString());
+            console.log("Created form data", formData.get("file"));
+            formDataArray.push(formData);
+          } else {
+            console.log("Image compression failed, skipping upload.");
+          }
         } catch (error) {
-          console.log("Error fetching image as Blob:", error);
+          console.log("Error during image processing:", error);
         }
       }
     }
   
     return formDataArray;
   };
+  
 
 const handleSubmit = async () => {
   try {

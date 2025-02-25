@@ -11,7 +11,7 @@ import { useAuth } from "@/context/auth";
 const api = (token: string | null = null) => {
     // local host url
 
-     const baseUrl = "http://10.18.145.245:8000";
+     const baseUrl = "http://10.0.0.210:8000";
      //const baseUrl = "http://10.18.224.228:8000";
 
     // emma's url
@@ -89,60 +89,48 @@ const api = (token: string | null = null) => {
     
       console.log("POSTform Headers (before modification):", headers);
       console.log("Removing Content-Type from headers...");
-      delete headers["Content-Type"]; // Let XMLHttpRequest set multipart/form-data
+      delete headers["Content-Type"]; // Let fetch set multipart/form-data automatically
       console.log("POSTform Headers (after removing Content-Type):", headers);
     
-      console.log("Preparing XMLHttpRequest...");
+      console.log("Preparing fetch request...");
       console.log("Request method:", "POST");
       console.log("Request body:", formData);
       console.log("Request headers:", headers);
     
-      return new Promise((resolve, reject) => {
-        console.log("Executing XMLHttpRequest to:", fullUrl);
-        const xhr = new XMLHttpRequest();
-    
-        // Set up event listeners
-        xhr.onload = () => {
-          console.log("XHR completed with status:", xhr.status);
-          if (xhr.status >= 200 && xhr.status < 300) {
-            console.log("Response text:", xhr.responseText);
-            const response = {
-              ok: true,
-              status: xhr.status,
-              json: () => Promise.resolve(JSON.parse(xhr.responseText)),
-            };
-            console.log("Returning response...");
-            resolve(response);
-          } else {
-            console.error("XHR failed with status:", xhr.status);
-            console.error("XHR response text:", xhr.responseText);
-            reject(new Error(`Upload failed: ${xhr.status} - ${xhr.responseText}`));
-          }
-        };
-    
-        xhr.onerror = () => {
-          console.error("XHR error occurred");
-          reject(new Error("Network request failed"));
-        };
-    
-        xhr.ontimeout = () => {
-          console.error("XHR timed out");
-          reject(new Error("Request timed out"));
-        };
-    
-        // Configure request
-        xhr.open("POST", fullUrl, true);
-        xhr.timeout = 10000; // 10s timeout
-    
-        // Set headers
-        for (const [key, value] of Object.entries(headers)) {
-          xhr.setRequestHeader(key, value);
-        }
-    
-        // Send request
-        xhr.send(formData);
+      formData.forEach((value, key) => {
+        console.log(key, value);
       });
+    
+      try {
+        console.log("Executing fetch request to:", fullUrl);
+        const response = await fetch(fullUrl, {
+          method: "POST",
+          headers: headers,
+          body: formData,
+        });
+    
+        console.log("Fetch response status:", response.status);
+    
+        if (response.ok) {
+          const responseBody = await response.json();
+          console.log("Response body:", responseBody);
+          return {
+            ok: true,
+            status: response.status,
+            json: () => Promise.resolve(responseBody),
+          };
+        } else {
+          const responseText = await response.text();
+          console.error("Fetch failed with status:", response.status);
+          console.error("Response text:", responseText);
+          throw new Error(`Upload failed: ${response.status} - ${responseText}`);
+        }
+      } catch (error) {
+        console.error("Fetch error occurred:", error);
+        throw new Error("Network request failed");
+      }
     };
+    
 
     // have to call it remove becuase delete is not allowed as a method name :(
     const remove = async (url: string, body: Record<string, unknown> = {}) => {
