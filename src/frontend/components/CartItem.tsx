@@ -1,9 +1,11 @@
 import React from "react";
-import { Text, Image, View, Pressable, ImageSourcePropType } from "react-native";
+import { Text, Image, View, Pressable, ImageSourcePropType, TouchableOpacity } from "react-native";
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 import Animated, { SharedValue, useSharedValue, interpolate, Extrapolation } from "react-native-reanimated"; // Correct import for interpolate and Extrapolation
 import { CartItemProps } from "@/constants/Types";
 import { StyleSheet } from "react-native";
+import { router } from "expo-router";
+import { TextStyles } from "@/constants/Styles";
 
 export const CartItem: React.FC<CartItemProps> = ({ item, onPress, onDelete }) => {
   // Determine if the image is a local asset or a URL
@@ -41,6 +43,7 @@ export const CartItem: React.FC<CartItemProps> = ({ item, onPress, onDelete }) =
   };
 
   return (
+    <View>
     <Swipeable renderRightActions={(progress, dragX) => renderRightActions(progress, dragX)}>
       <Pressable onPress={() => onPress(item)} style={cartStyle.container}>
         {item.coverImage && <Image source={imageSource} style={cartStyle.image} />}
@@ -51,6 +54,16 @@ export const CartItem: React.FC<CartItemProps> = ({ item, onPress, onDelete }) =
         </View>
       </Pressable>
     </Swipeable>
+    
+      <TouchableOpacity
+        onPress={() => router.push({
+          pathname: '/CheckoutScreen',
+          params: { item: JSON.stringify(item)},
+      })}
+      >
+        <Text style={TextStyles.dark}>Purchase</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 

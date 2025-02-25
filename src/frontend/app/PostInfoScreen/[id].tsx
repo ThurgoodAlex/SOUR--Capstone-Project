@@ -178,7 +178,6 @@ function PostInfo({ post, liked, toggleLike }: { post: Post, liked: boolean, tog
                 <Text style={[TextStyles.h1, TextStyles.uppercase]}>{post.title}</Text>
                 <LikeButton liked={liked} onPress={toggleLike} />
             </View>
-            <View style={{ borderBottomColor: Colors.dark60, borderBottomWidth: 1, marginVertical: 10 }} />
             <Text style={TextStyles.p}>{post.description}</Text>
         </View>
     );

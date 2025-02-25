@@ -1,64 +1,88 @@
 import React, { useState, useEffect } from "react";
-import { Button, View, Text } from "react-native";
-import { useStripe, CardField, CardFieldInput, useConfirmPayment } from "@stripe/stripe-react-native";
+import { View, Button, Text, ActivityIndicator, Alert, TouchableOpacity } from "react-native";
+import { useStripe } from "@stripe/stripe-react-native";
 import { useApi } from "@/context/api";
+import { useUser } from "@/context/user";
+import { Styles, TextStyles } from "@/constants/Styles";
 
-export default function CheckoutForm() {
-  const { confirmPayment, loading } = useConfirmPayment();
-  const [clientSecret, setClientSecret] = useState(null);
+export default function CheckoutForm({total} : {total: number}) {
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const {user} = useUser();
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const api = useApi();
 
   useEffect(() => {
-    const fetchClientSecret = async () => {
+    const fetchPaymentSheetParams = async () => {
       try {
-        const response = await api.post("/create-payment-intent");
+        setLoading(true);
+        const response = await api.post(`/stripe/create-payment-intent/${total}`);
         const result = await response.json();
-        setClientSecret(result.client_secret);
-      } catch (error) {
-        console.error("Failed to fetch client secret:", error);
+        console.log("RESPONSE", result);
+        const client_secret = result.clientSecret;
+
+        if (!client_secret) throw new Error("Missing client secret from server.");
+
+        setClientSecret(client_secret);
+
+        const { error } = await initPaymentSheet({
+          paymentIntentClientSecret: client_secret,
+          customerId: user?.id.toString(),
+          merchantDisplayName: "SOUR Clothing",
+          allowsDelayedPaymentMethods: true,
+          returnURL: "sour://checkout-return",
+        });
+
+        if (error) {
+          console.error("Error initializing PaymentSheet:", error);
+          Alert.alert("Initialization Error", error.message);
+        }
+      } catch (error: any) {
+        console.error("Failed to fetch payment sheet parameters:", error);
+        Alert.alert("Error", error.message ?? "Unable to initialize payment.");
+      } finally {
+        setLoading(false);
       }
     };
-    fetchClientSecret();
-  }, [api]);
 
-  const handlePayPress = async () => {
+    fetchPaymentSheetParams();
+  }, []); // Empty dependency array to avoid infinite re-renders
+
+  const openPaymentSheet = async () => {
     if (!clientSecret) return;
 
-    const { error, paymentIntent } = await confirmPayment(clientSecret, {
-        paymentMethodType: "Card",
-        paymentMethodData: {
-            billingDetails: {
-                email: "test@example.com",
-            },
-        },
-    });
+    setLoading(true);
+    const { error } = await presentPaymentSheet();
 
     if (error) {
-      console.log("Payment confirmation error", error.message);
-    } else if (paymentIntent) {
-      console.log("Payment successful", paymentIntent);
+      console.log("Payment failed", error.message);
+      Alert.alert("Payment Failed", error.message);
+    } else {
+      console.log("Payment complete!");
+      Alert.alert("Success", "Your payment is confirmed!");
+      setClientSecret(null);
     }
+    setLoading(false);
   };
 
   return (
     <View>
-      <CardField
-        postalCodeEnabled={true}
-        placeholders={{ number: "4242 4242 4242 4242" }}
-        cardStyle={{
-          backgroundColor: "#FFFFFF",
-          textColor: "#000000",
-        }}
-        style={{
-          width: "100%",
-          height: 50,
-          marginVertical: 30,
-        }}
-      />
-      <Button onPress={handlePayPress} title="Pay Now" disabled={loading} />
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <>
+            <TouchableOpacity 
+                onPress={openPaymentSheet}
+                style={Styles.buttonDark}>
+                <Text style={TextStyles.light}>Pay Now</Text>
+            </TouchableOpacity>
+           
+        </>
+      )}
     </View>
   );
 }
+
 
 
 // OLD STUFF FROM EXPO DOCS
