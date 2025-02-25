@@ -72,36 +72,7 @@ export const TextStyles = StyleSheet.create({
         marginBottom: 8,
         color: Colors.dark,
     },
-    h3: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        marginBottom: 8,
-        color: Colors.dark,
-    },
-    p: {
-        fontSize: 16,
-        color: Colors.dark,
-        lineHeight: 22,
-        marginBottom: 8,
-    },
-    small: {
-        fontSize: 11,
-        color: Colors.dark,
-    },
-    light: {
-        color: Colors.light,
-        fontWeight: 'bold',
-    },
-    dark: {
-        color: Colors.dark,
-        fontWeight: 'bold',
-    },
-    error: {
-        fontSize:11,
-        color:Colors.grapefruit,
-        fontWeight: 'bold'
-    },
+   
 
     required: {
         fontSize:11,

@@ -100,7 +100,7 @@ export default function CheckoutScreen() {
             <StripeProvider
                 publishableKey="pk_test_51Qw5QM08yxMUUHDI26yhD2zYs8SRe7a5lCHDJV7MBQ9ltf48CN5dk4YX3wRfR1XWp25smAVLWs68eqfthLx9IECK00SrFO2r5d"
             >
-                <CheckoutForm total={parseFloat(post.price)*100} />
+                <CheckoutForm total={parseFloat(post.price)*100} postID={post.id} cartItemID={post.cartItemId}/>
             </StripeProvider>
         </View>
     );

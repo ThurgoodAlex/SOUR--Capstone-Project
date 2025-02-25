@@ -4,8 +4,9 @@ import { useStripe } from "@stripe/stripe-react-native";
 import { useApi } from "@/context/api";
 import { useUser } from "@/context/user";
 import { Styles, TextStyles } from "@/constants/Styles";
+import { router } from "expo-router";
 
-export default function CheckoutForm({total} : {total: number}) {
+export default function CheckoutForm({total, postID, cartItemID} : {total: number, postID: number, cartItemID: number}) {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const {user} = useUser();
@@ -55,14 +56,37 @@ export default function CheckoutForm({total} : {total: number}) {
     const { error } = await presentPaymentSheet();
 
     if (error) {
-      console.log("Payment failed", error.message);
-      Alert.alert("Payment Failed", error.message);
+        console.log("Payment failed", error.message);
+        Alert.alert("Payment Failed", error.message);
+
     } else {
-      console.log("Payment complete!");
-      Alert.alert("Success", "Your payment is confirmed!");
-      setClientSecret(null);
+        console.log("Payment complete!");
+        setClientSecret(null);
+
+        // Make the API call to mark the post as sold
+        try {
+            const sellPostResponse = await api.put(`/posts/${postID}/sold/`);
+
+            if (sellPostResponse.ok) {
+                console.log("Post marked as sold successfully");
+            } else {
+                console.error("Failed to mark post as sold");
+            }
+
+            const removeCartItemResponse = await api.remove(`/users/cart/${cartItemID}/`);
+            if (removeCartItemResponse.ok) {
+                console.log("Cart item removed successfully");
+            }  else {
+                console.error("Failed to remove cart item");
+            }
+
+        } catch (err) {
+            console.error("Error marking post as sold:", err);
+        }
+
+        // Navigate to the completed purchase page
+        router.push("/CompletedPurchaseScreen");
     }
-    setLoading(false);
   };
 
   return (
@@ -82,100 +106,3 @@ export default function CheckoutForm({total} : {total: number}) {
     </View>
   );
 }
-
-
-
-// OLD STUFF FROM EXPO DOCS
-// import React, { useCallback, useState, useEffect } from "react";
-// import {loadStripe} from '@stripe/stripe-js';
-// import {
-//   EmbeddedCheckoutProvider,
-//   EmbeddedCheckout
-// } from '@stripe/react-stripe-js';
-// import { router } from "expo-router";
-// import { View } from "react-native";
-// import { useApi } from "@/context/api";
-
-
-// // Make sure to call `loadStripe` outside of a component’s render to avoid
-// // recreating the `Stripe` object on every render.
-// // This is your test secret API key.
-// const stripePromise = loadStripe("pk_test_51Qw5QM08yxMUUHDI26yhD2zYs8SRe7a5lCHDJV7MBQ9ltf48CN5dk4YX3wRfR1XWp25smAVLWs68eqfthLx9IECK00SrFO2r5d");
-
-// export async function CheckoutForm (){
-//     const api = useApi();
-
-
-//     const fetchClientSecret = (async () => {
-//         const response = await api.post('/create-payment-intent')
-//         const result = await response.json()
-//         const clientSecret = result.client_secret
-//         return clientSecret;
-//     });
-    
-//     const secret = {fetchClientSecret};
-// //   const fetchClientSecret = useCallback(() => {
-// //     // Create a Checkout Session
-// //     return fetch("/create-checkout-session", {
-// //       method: "POST",
-// //     })
-// //       .then((res) => res.json())
-// //       .then((data) => data.clientSecret);
-// //   }, []);
-
-// //   const options = {fetchClientSecret};
-
-
-//   return (
-//     <View id="checkout">
-//       <EmbeddedCheckoutProvider
-//         stripe={stripePromise}
-//         options={secret}
-//       >
-//         <EmbeddedCheckout />
-//       </EmbeddedCheckoutProvider>
-//     </View>
-//   )
-// }
-
-// const Return = () => {
-//   const [status, setStatus] = useState(null);
-//   const [customerEmail, setCustomerEmail] = useState('');
-
-//   useEffect(() => {
-//     const queryString = window.location.search;
-//     const urlParams = new URLSearchParams(queryString);
-//     const sessionId = urlParams.get('session_id');
-
-//     fetch(`/session-status?session_id=${sessionId}`)
-//       .then((res) => res.json())
-//       .then((data) => {
-//         setStatus(data.status);
-//         setCustomerEmail(data.customer_email);
-//       });
-//   }, []);
-
-// //   if (status === 'open') {
-// //     return (
-// //     //   router.push()
-// //     )
-// //   }
-
-//   if (status === 'complete') {
-//     return (
-//       <section id="success">
-//         <p>
-//           We appreciate your business! A confirmation email will be sent to {customerEmail}.
-
-//           If you have any questions, please email <a href="mailto:orders@example.com">orders@example.com</a>.
-//         </p>
-//       </section>
-//     )
-//   }
-
-//   return null;
-// }
-
-// export default Return;
-
-
