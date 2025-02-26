@@ -74,7 +74,7 @@ export default function CreatePost() {
             Alert.alert('Error', 'Something went wrong, we could not create your post.');
             return;
         }
-
+        Alert.alert("Created post")
         console.log("Created post: ", result, " with id: ", result.id);
 
         // creating the form data with the selected Images and performing the upload.
@@ -84,12 +84,15 @@ export default function CreatePost() {
             
             const uploadedImages = await uploadingImages(await formData);
             console.log("uploadedImages", uploadedImages);
+            router.replace("/SelfProfileScreen");
         }
 
     } catch (error) {
         console.error('Error creating post:', error);
         Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
     }
+
+    
 };
 
   return (
