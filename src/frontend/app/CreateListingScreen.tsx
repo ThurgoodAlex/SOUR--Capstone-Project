@@ -19,6 +19,9 @@ import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { Post } from '@/constants/Types';
 import { LinkedItemsSelection } from '@/components/LinkItemsSelection';
+import useUploadImages from '@/hooks/useUploadImages';
+import useCreateFormData from '@/hooks/useCreateFormData';
+
 
 
 const validationSchema = Yup.object().shape({
@@ -35,12 +38,12 @@ export default function CreateListing(): JSX.Element {
     const [description, setDescription] =  useState<string>('');
     const [brand, setBrand] =  useState<string>('');
     const [color, setColor] = useState('');
-       
+    const {uploadingImages} = useUploadImages();
+    const { creatingFormData } = useCreateFormData();
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
     const PlaceholderImage = require('@/assets/images/icon.png');
-
     const MAX_IMAGES = 10;
     const [images, setImages] = useState<string[]>([]);
 
@@ -116,6 +119,15 @@ export default function CreateListing(): JSX.Element {
             const listingId = newListing.id;
     
             console.log("Created listing:", listingId);
+
+            if (images.length > 0) {
+                await new Promise((resolve) => setTimeout(resolve, 100));
+                const formData = creatingFormData(images, listingId);
+                
+                const uploadedImages = await uploadingImages(await formData);
+                console.log("uploadedImages", uploadedImages);
+                router.replace("/SelfProfileScreen");
+            }
     
             // Link listing to selected posts
             for (const post of linkedPosts) {
@@ -374,4 +386,8 @@ export const CreateListingStyles = StyleSheet.create({
 
 });
 
+
+function creatingFormData(images: string[], id: any) {
+    throw new Error('Function not implemented.');
+}
 
