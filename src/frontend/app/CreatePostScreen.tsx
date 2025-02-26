@@ -79,7 +79,7 @@ export default function CreatePost() {
         }
         Alert.alert("Created post")
         console.log("Created post: ", result, " with id: ", result.id);
-
+        const postId = result.id
         // creating the form data with the selected Images and performing the upload.
         if (images.length > 0) {
             await new Promise((resolve) => setTimeout(resolve, 100));
@@ -87,7 +87,7 @@ export default function CreatePost() {
             
             const uploadedImages = await uploadingImages(await formData);
             console.log("uploadedImages", uploadedImages);
-            router.replace("/SelfProfileScreen");
+           
         }
         // Link listing to selected posts
         for (const listing of linkedListings) {
@@ -99,8 +99,8 @@ export default function CreatePost() {
                 console.error(`Failed to link post ${postId} with listing ${listing.id}`);
             }
         }
-  
 
+        router.replace("/SelfProfileScreen");
     } catch (error) {
         console.error('Error creating post:', error);
         Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
