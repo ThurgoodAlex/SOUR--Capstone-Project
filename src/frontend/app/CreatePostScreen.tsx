@@ -10,9 +10,11 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import useUploadImages from '@/hooks/useUploadImages';
 import {View, Text, TextInput, TouchableOpacity, Image, ScrollView, KeyboardTypeOptions, StyleSheet, Alert, ImageBackground, GestureResponderEvent,} from 'react-native';
+import useCreateFormData from '@/hooks/useCreateFormData';
 
 export default function CreatePost() {
     const [name, setName] = useState('');
+    const { creatingFormData } = useCreateFormData();
     const [description, setDescription] = useState('');
     const {uploadingImages} = useUploadImages();
     const MAX_IMAGES = 10;
@@ -53,83 +55,41 @@ export default function CreatePost() {
   };
 
 
-  const creatingFormData = async (images: string | any[], postID: number) => {
-    const formDataArray: FormData[] = [];
   
-    // Normalize input: convert single string to array, keep array as-is
-    const imageArray = Array.isArray(images) ? images : [images];
   
-    if (imageArray.length > 0) {
-      for (const image of imageArray) {
-        console.log("Image:", image); // Log the entire image object for debugging
-  
-        try {
-          // Compress the image
+
+  const handleSubmit = async () => {
+    try {
+        console.log("Submitting post with images:", images);
         
-  
-          // If the image was compressed, proceed to fetch the compressed image as Blob
-          if (image) {
-            const response = await fetch(image);
-            const blob = await response.blob();
-            console.log("Fetched compressed image as Blob:", blob);
-            const fileName = image.split("/").pop();
-            const formData = new FormData();
-            const uri = image;
-            const type = uri.split('.').pop();
-            formData.append('file', { uri, name: image.name, type: `image/${type}` } as any);
-            ;
-            console.log("Post ID:", postID);
-            formData.append("post_id", postID.toString());
-            console.log("Created form data", formData.get("file"));
-            formDataArray.push(formData);
-          } else {
-            console.log("Image compression failed, skipping upload.");
-          }
-        } catch (error) {
-          console.log("Error during image processing:", error);
+        // Create post first
+        const response = await api.post("/posts/", {
+            "title": name,
+            "description": description,
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            Alert.alert('Error', 'Something went wrong, we could not create your post.');
+            return;
         }
-      }
+
+        console.log("Created post: ", result, " with id: ", result.id);
+
+        // creating the form data with the selected Images and performing the upload.
+        if (images.length > 0) {
+            await new Promise((resolve) => setTimeout(resolve, 100));
+            const formData = creatingFormData(images, result.id);
+            
+            const uploadedImages = await uploadingImages(await formData);
+            console.log("uploadedImages", uploadedImages);
+        }
+
+    } catch (error) {
+        console.error('Error creating post:', error);
+        Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
     }
-  
-    return formDataArray;
-  };
-  
-
-const handleSubmit = async () => {
-  try {
-      console.log("Submitting post with images:", images);
-
-      // Create post first
-      const response = await api.post("/posts/", {
-          "title": name,
-          "description": description,
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-          console.log(response);
-          Alert.alert('Error', 'Something went wrong, we could not create your post.');
-          return;
-      }
-
-      console.log("Created post: ", result, " with id: ", result.id);
-
-      // Then handle image uploads if there are any
-      if (images.length > 0) {
-          await new Promise((resolve) => setTimeout(resolve, 100)); // wait for the post to be created
-          const formData = creatingFormData(images, result.id);
-          // Perform the upload request
-          const uploadedImages = await uploadingImages(await formData);
-          console.log("uploadedImages", uploadedImages)
-      }
-      // Navigate after everything is done
-      // router.replace("/SelfProfileScreen");
-
-  } catch (error) {
-      console.error('Error creating post:', error);
-      Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
-  }
 };
 
   return (
