@@ -10,16 +10,18 @@ import { usePosts } from '@/hooks/usePosts';
 import * as ImagePicker from "expo-image-picker";
 import { router } from 'expo-router';
 import { useState } from 'react';
+import useUploadImages from '@/hooks/useUploadImages';
 import {View, Text, TextInput, TouchableOpacity, Image, ScrollView, KeyboardTypeOptions, StyleSheet, Alert, ImageBackground, GestureResponderEvent,} from 'react-native';
+import useCreateFormData from '@/hooks/useCreateFormData';
 
 export default function CreatePost() {
     const [name, setName] = useState('');
+    const { creatingFormData } = useCreateFormData();
     const [description, setDescription] = useState('');
-    
+    const {uploadingImages} = useUploadImages();
     const MAX_IMAGES = 10;
     const [images, setImages] = useState<string[]>([]); // Store multiple image URIs
     const [error, setError] = useState(null);
-
     const api = useApi();
     const [loading, setLoading] = useState(false);
     const {logout} = useAuth();
@@ -44,69 +46,68 @@ export default function CreatePost() {
               selectionLimit: MAX_IMAGES - images.length,
               orderedSelection: true,
           });
-  
+          
+          console.log('Image Picker Result:', result);
           if (!result.canceled && result.assets) {
               const newImages = result.assets
-                  .map((asset) => asset.uri)  // Get the URIs of the selected images
-                  .filter((uri) => !images.includes(uri));  // Filter out duplicates
+                  .map((asset) => asset.uri)
+                  .filter((uri) => !images.includes(uri));
   
               console.log('NewImages:', newImages);
-              // Add the new images to the existing images array
               setImages((prevImages) => [...prevImages, ...newImages]);
               setError(null);  // Clear any previous errors
-              
           }
       }
   };
   
-
-    
-      
-    
-    const handleSubmit = async () => {
-
-        console.log({
-            name,
-            description,
+  // This is the handle submit. Right now it calls hooks to create the Form Data and upload the images.
+  const handleSubmit = async () => {
+    try {
+        console.log("Submitting post with images:", images);
+        
+        // Create post first
+        const response = await api.post("/posts/", {
+            "title": name,
+            "description": description,
         });
 
-        try {
-          const response = await api.post("/posts/",
-            {
-              "title": name,
-              "description": description,
-            }
-          );
+        const result = await response.json();
 
-          if (!response.ok) {
-            Alert.alert('Error', 'Something went wrong, we could not create your listing.');
+        if (!response.ok) {
+            Alert.alert('Error', 'Something went wrong, we could not create your post.');
             return;
         }
-          const newPost = await response.json();
-          const postId = newPost.id;
-  
-          console.log("Created post:", postId);
-  
-          // Link listing to selected posts
-          for (const listing of linkedListings) {
-              console.log("linking post id = ", listing.id)
-              const linkResponse = await api.post(`/posts/${postId}/link/${listing.id}/`);
+        Alert.alert("Created post")
+        console.log("Created post: ", result, " with id: ", result.id);
 
-              console.log(linkResponse.json())
-              if (!linkResponse.ok) {
-                  console.error(`Failed to link post ${postId} with listing ${listing.id}`);
-              }
-          }
-  
-          // Navigate after success
-          router.replace("/SelfProfileScreen");
+        // creating the form data with the selected Images and performing the upload.
+        if (images.length > 0) {
+            await new Promise((resolve) => setTimeout(resolve, 100));
+            const formData = creatingFormData(images, result.id);
             
-          } catch (err) {
-            Alert.alert('Error', 'An unexpected error occurred. Please try again.');
-          } finally {
-              setLoading(false);
-          }
-    };
+            const uploadedImages = await uploadingImages(await formData);
+            console.log("uploadedImages", uploadedImages);
+            router.replace("/SelfProfileScreen");
+        }
+        // Link listing to selected posts
+        for (const listing of linkedListings) {
+            console.log("linking post id = ", listing.id)
+            const linkResponse = await api.post(`/posts/${postId}/link/${listing.id}/`);
+
+            console.log(linkResponse.json())
+            if (!linkResponse.ok) {
+                console.error(`Failed to link post ${postId} with listing ${listing.id}`);
+            }
+        }
+  
+
+    } catch (error) {
+        console.error('Error creating post:', error);
+        Alert.alert('Error', 'Failed to connect to the server. Please check your connection.');
+    }
+
+    
+};
 
   return (
     <>

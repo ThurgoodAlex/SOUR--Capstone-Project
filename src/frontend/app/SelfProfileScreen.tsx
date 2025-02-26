@@ -18,7 +18,6 @@ export default function SelfProfileScreen() {
     // default to posts
     const [activeTab, setActiveTab] = useState('Posts');
 
-
     const [endpoint, setEndpoint] = useState(`/users/${user?.id}/posts/`);
     const { posts, loading, error } = usePosts(endpoint);
     

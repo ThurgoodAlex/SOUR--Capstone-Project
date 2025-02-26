@@ -8,7 +8,8 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useApi } from '@/context/api';
 import { Post } from '@/constants/Types';
 import { Ionicons } from '@expo/vector-icons';
-import CartButton from '@/components/CartButton';
+import  CartButton  from '@/components/CartButton';
+
 import { LinkedItems } from '@/components/Linkedtems';
 import { usePost } from '@/hooks/usePost';
 import { usePosts } from '@/hooks/usePosts';

@@ -12,6 +12,10 @@ const api = (token: string | null = null) => {
     //tunnel URL
     const baseUrl = "http://127.0.0.1:8000";
 
+    //Alex desktop URL
+    //const baseUrl = "http://10.0.0.210:8000";
+    //const baseUrl = "http://10.18.224.228:8000";
+
     //Ashlyn's URL (please don't delete me)
     //const baseUrl = "http://10.18.224.228:8000";
 
@@ -29,9 +33,18 @@ const api = (token: string | null = null) => {
         };
         if (token) {
             headers["Authorization"] = `Bearer ${token}`;
-        }
+        };
         return headers;
     };
+
+    const getFormHeaders = () => {
+        const headers: Record<string, string> = {
+            "Authorization": `Bearer ${token}`,
+            "Accept": "application/json",
+        };
+        return headers;
+    };
+
 
     // GET request method with logging
     const get = async (url: string) => {
@@ -59,6 +72,46 @@ const api = (token: string | null = null) => {
         });
     };
 
+    const postForm = async (url: string, formData: FormData) => {
+      console.log("Starting postForm with URL:", url);
+      console.log("FormData argument received:", formData);
+    
+      const headers = getFormHeaders();
+      console.log("Headers retrieved:", headers);
+    
+      console.log("Constructing full URL...");
+      const fullUrl = baseUrl + url;
+     
+      try {
+        console.log("Executing fetch request to:", fullUrl);
+        const response = await fetch(fullUrl, {
+          method: "POST",
+          headers: headers,
+          body: formData,
+        });
+    
+        console.log("Fetch response status:", response.status);
+    
+        if (response.ok) {
+          const responseBody = await response.json();
+          console.log("Response body:", responseBody);
+          return {
+            ok: true,
+            status: response.status,
+            json: () => Promise.resolve(responseBody),
+          };
+        } else {
+          const responseText = await response.text();
+          console.error("Fetch failed with status:", response.status);
+          console.error("Response text:", responseText);
+          throw new Error(`Upload failed: ${response.status} - ${responseText}`);
+        }
+      } catch (error) {
+        console.error("Fetch error occurred:", error);
+        throw new Error("Network request failed");
+      }
+    };
+    
 
     // have to call it remove becuase delete is not allowed as a method name :(
     const remove = async (url: string, body: Record<string, unknown> = {}) => {
@@ -102,7 +155,7 @@ const api = (token: string | null = null) => {
         });
     };
 
-    return { get, post, put, remove, login };
+    return { get, post, put, remove, login, postForm };
 };
 
 // Custom hook to provide the API instance with the current token
