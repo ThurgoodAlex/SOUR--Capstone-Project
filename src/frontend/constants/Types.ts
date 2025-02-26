@@ -70,10 +70,10 @@ export type ThemedTextProps = TextProps & {
 };
 
 export type CartItemProps = {
-    item: Post;
-    onPress: (item: Post) => void;
-    onDelete: (item: Post) => void;
-  };
+    id : number,
+    userID: number,
+    listingID: number,
+}
 
 export type ChatData = {
     id: number;
@@ -88,8 +88,4 @@ export type MessageData = {
     message: string;
     created_at: Date;
 };
-
-export type CartButtonProps = {
-      listingID: number;
-  };
   

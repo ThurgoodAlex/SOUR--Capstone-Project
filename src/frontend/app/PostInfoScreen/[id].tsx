@@ -160,12 +160,19 @@ function ListingInfo({ post, liked, toggleLike }: { post: Post, liked: boolean, 
                 {!post.isSold && <CartButton listingID={post.id} onItemAdded={handleItemAdded} />}
             </View>
 
-            <Text style={[TextStyles.h3, { textAlign: 'left', marginBottom: -2 }]}>Size: {post.size}</Text>
+            <Text style={[TextStyles.h3, { textAlign: 'left', marginBottom: -1 }]}>Size: {post.size}</Text>
             <Text style={[TextStyles.p, { textAlign: 'left' }]}>
                 {[post.brand, post.gender, post.condition].filter(Boolean).join('  |  ')}
             </Text>
-            <View style={{ borderBottomColor: Colors.dark60, borderBottomWidth: 1, marginVertical: 10 }} />
-            <Text style={TextStyles.p}>{post.description}</Text>
+            {post.description && 
+                <View>
+                    <View style={{ borderBottomColor: Colors.dark60, borderBottomWidth: 1, marginVertical: 10 }} />
+                    <Text style={[TextStyles.h3, {textAlign:'left'}]}>Description</Text>
+                    <Text style={TextStyles.p}>{post.description}</Text>
+                   
+                </View>
+            }
+            
         </View>
     );
 }
@@ -178,7 +185,6 @@ function PostInfo({ post, liked, toggleLike }: { post: Post, liked: boolean, tog
                 <Text style={[TextStyles.h1, TextStyles.uppercase]}>{post.title}</Text>
                 <LikeButton liked={liked} onPress={toggleLike} />
             </View>
-            <View style={{ borderBottomColor: Colors.dark60, borderBottomWidth: 1, marginVertical: 10 }} />
             <Text style={TextStyles.p}>{post.description}</Text>
         </View>
     );
