@@ -3,15 +3,9 @@ import { Alert } from 'react-native';
 import { api, useApi } from '@/context/api';
 
 const useUploadImages = () => {
-  const [encodedFiles, setEncodedFiles] = useState<FormData[]>([]);
   const [loading, setLoading] = useState(false);
   const api = useApi();
-
-
- 
-
   const uploadingImages = async (formDataArray: FormData[]) => {
-    setLoading(true);
     const uploadedImages: string[] = [];
   
     if (formDataArray.length === 0) {
@@ -34,14 +28,11 @@ const useUploadImages = () => {
       }
     }
   
-    setLoading(false);
     return uploadedImages;
   };
 
   return {
-    encodedFiles,
     uploadingImages,
-    loading,
   };
 };
 

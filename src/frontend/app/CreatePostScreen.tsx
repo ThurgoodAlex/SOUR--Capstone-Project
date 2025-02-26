@@ -5,7 +5,6 @@ import { api, useApi } from '@/context/api';
 import { useAuth } from '@/context/auth';
 import { useUser } from '@/context/user';
 import * as ImagePicker from "expo-image-picker";
-import * as FileSystem from "expo-file-system";
 import { router } from 'expo-router';
 import { useState } from 'react';
 import useUploadImages from '@/hooks/useUploadImages';
@@ -53,11 +52,8 @@ export default function CreatePost() {
           }
       }
   };
-
-
   
-  
-
+  // This is the handle submit. Right now it calls hooks to create the Form Data and upload the images.
   const handleSubmit = async () => {
     try {
         console.log("Submitting post with images:", images);

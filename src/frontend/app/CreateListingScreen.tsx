@@ -10,18 +10,12 @@ import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, StyleSheet,
 import { Colors } from '@/constants/Colors';
 import ModalSelector from 'react-native-modal-selector';
 import * as Yup from 'yup';
-import { style } from '@/app/SignUpScreen';
 import { Ionicons } from '@expo/vector-icons';
-import { LinkedItems } from '@/components/Linkedtems';
 import { usePosts } from '@/hooks/usePosts';
-import { Collapsible } from '@/components/Collapsible';
-import { ThemedView } from '@/components/ThemedView';
-import { ThemedText } from '@/components/ThemedText';
 import { Post } from '@/constants/Types';
 import { LinkedItemsSelection } from '@/components/LinkItemsSelection';
 import useUploadImages from '@/hooks/useUploadImages';
 import useCreateFormData from '@/hooks/useCreateFormData';
-
 
 
 const validationSchema = Yup.object().shape({
@@ -29,6 +23,7 @@ const validationSchema = Yup.object().shape({
     price: Yup.string().matches(/^\d+(\.\d{1,2})?$/, 'Enter a valid price').required('Price is required'),
     size: Yup.string().required('Size is required'),
 });
+
 export default function CreateListing(): JSX.Element {
     const [name, setName] = useState<string>('');
     const [price, setPrice] = useState<string>('');
@@ -42,18 +37,16 @@ export default function CreateListing(): JSX.Element {
     const { creatingFormData } = useCreateFormData();
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
-
     const PlaceholderImage = require('@/assets/images/icon.png');
     const MAX_IMAGES = 10;
     const [images, setImages] = useState<string[]>([]);
-
     const [error, setError] = useState<string | null>(null);
-
     const api = useApi();
     const { logout } = useAuth();
     const { user } = useUser();
     const { posts } = usePosts(`/users/${user?.id}/posts/`);
     const [ linkedPosts, setLinkedPosts] = useState<Post[]>([]);
+
     if (!user) logout();
 
     const uploadImages = async (): Promise<void> => {
@@ -73,7 +66,6 @@ export default function CreateListing(): JSX.Element {
                 selectionLimit: MAX_IMAGES - images.length,
                 orderedSelection: true,
             });
-
             if (!result.canceled && result.assets) {
                 const newImages = result.assets
                     .map((asset) => asset.uri)
@@ -119,6 +111,7 @@ export default function CreateListing(): JSX.Element {
             const listingId = newListing.id;
     
             console.log("Created listing:", listingId);
+            Alert.alert("Created listing")
 
             if (images.length > 0) {
                 await new Promise((resolve) => setTimeout(resolve, 100));
@@ -126,7 +119,6 @@ export default function CreateListing(): JSX.Element {
                 
                 const uploadedImages = await uploadingImages(await formData);
                 console.log("uploadedImages", uploadedImages);
-                router.replace("/SelfProfileScreen");
             }
     
             // Link listing to selected posts

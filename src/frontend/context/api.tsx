@@ -68,39 +68,12 @@ const api = (token: string | null = null) => {
       console.log("Starting postForm with URL:", url);
       console.log("FormData argument received:", formData);
     
-      console.log("Attempting to get form headers...");
       const headers = getFormHeaders();
       console.log("Headers retrieved:", headers);
     
       console.log("Constructing full URL...");
       const fullUrl = baseUrl + url;
-      console.log("POSTform Request URL:", fullUrl);
-    
-      console.log("Inspecting FormData...");
-      console.log("FormData file field:", formData.get("file"));
-      try {
-        console.log("Attempting to iterate FormData entries...");
-        formData.forEach((value, key) => {
-          console.log(`FormData entry - ${key}:`, value);
-        });
-      } catch (error) {
-        console.error("Error inspecting FormData entries:", error);
-      }
-    
-      console.log("POSTform Headers (before modification):", headers);
-      console.log("Removing Content-Type from headers...");
-      delete headers["Content-Type"]; // Let fetch set multipart/form-data automatically
-      console.log("POSTform Headers (after removing Content-Type):", headers);
-    
-      console.log("Preparing fetch request...");
-      console.log("Request method:", "POST");
-      console.log("Request body:", formData);
-      console.log("Request headers:", headers);
-    
-      formData.forEach((value, key) => {
-        console.log(key, value);
-      });
-    
+     
       try {
         console.log("Executing fetch request to:", fullUrl);
         const response = await fetch(fullUrl, {
