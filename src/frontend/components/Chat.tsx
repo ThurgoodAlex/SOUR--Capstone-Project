@@ -13,7 +13,7 @@ export function Chat({ chat }: { chat: ChatData }) {
     const [targetUser, setTargetUser] = useState<User | null>(null);
 
     if (chat?.recipientID === user?.id) {
-        targetUserId=chat.sellerID;
+        targetUserId=chat.senderID;
     } else {
         targetUserId=chat.recipientID;
     }

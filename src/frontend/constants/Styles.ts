@@ -174,8 +174,8 @@ export const Styles = StyleSheet.create({
     },
 
     image: {
-        width: 250,
-        height: 250,
+        width: 220,
+        height: 220,
         borderRadius: 8,
         marginRight: 8,
         marginBottom: 16,

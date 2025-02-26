@@ -47,5 +47,4 @@ export const CheckoutReturn: React.FC = () => {
     );
 //   }
 
-  return null;
 };

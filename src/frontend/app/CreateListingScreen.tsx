@@ -113,7 +113,6 @@ export default function CreateListing(): JSX.Element {
             const listingId = newListing.id;
     
             console.log("Created listing:", listingId);
-            Alert.alert("Created listing")
 
             if (images.length > 0) {
                 await new Promise((resolve) => setTimeout(resolve, 100));

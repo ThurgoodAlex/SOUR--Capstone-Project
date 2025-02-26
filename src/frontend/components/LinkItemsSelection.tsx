@@ -45,6 +45,7 @@ export function LinkedItemsSelection({ posts, previouslySelected, columns, sette
                             paddingRight:4,
                             marginLeft:1.5,
                             marginRight:1.5,
+                            height:150,
                             marginTop:2,
                             borderRadius: 8,
 

@@ -27,6 +27,7 @@ export function useStats(user: User) {
 
                 setEarnings(result.totalEarnings);
                 setSoldItems(result.itemsSold);
+                setLoading(false);
 
             } else {
                 setEarnings(0.00)

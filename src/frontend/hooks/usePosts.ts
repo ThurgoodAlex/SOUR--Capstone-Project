@@ -55,8 +55,11 @@ export function usePosts(endpoint: string) {
     setError(null);
 
     try {
+      console.log('calling endpoint:', endpoint);
       const response = await api.get(endpoint);
       const result = await response.json();
+
+      console.log('Posts fetched:', result);
 
       if (!response.ok) throw new Error('Could not fetch posts.');
 

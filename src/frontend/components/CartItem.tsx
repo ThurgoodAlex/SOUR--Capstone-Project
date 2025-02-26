@@ -67,7 +67,7 @@ export  function CartItem({ item, refreshCart } : {item : CartItemProps, refresh
             <TouchableOpacity
                 onPress={() => router.push({
                     pathname: '/CheckoutScreen',
-                    params: { item: JSON.stringify(item) },
+                    params: { item: JSON.stringify(listing), cartID: item.id },
                 })}
             >
                 <Text style={TextStyles.dark}>Purchase</Text>

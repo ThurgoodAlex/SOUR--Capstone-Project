@@ -77,7 +77,7 @@ export default function CreatePost() {
             Alert.alert('Error', 'Something went wrong, we could not create your post.');
             return;
         }
-        Alert.alert("Created post")
+
         console.log("Created post: ", result, " with id: ", result.id);
         const postId = result.id
         // creating the form data with the selected Images and performing the upload.
