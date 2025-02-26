@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 
 /******************************
@@ -43,7 +44,7 @@ const BackendData = () => {
   };
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
+    return <ActivityIndicator size="large" color={Colors.orange} />;
   }
 
   if (error) {

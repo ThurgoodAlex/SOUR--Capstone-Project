@@ -62,6 +62,21 @@ def upload_chat(new_chat : ChatCreate,
     session.refresh(chat_db)
     return Chat(**chat_db.model_dump())
 
+@chats_router.get('/{chat_id}', response_model=Chat,status_code=200)
+def get_chat(chat_id: int,
+            session: Annotated[Session, Depends(get_session)], 
+            current_user: UserInDB = Depends(auth_get_current_user)
+            ) -> Chat:
+    """Get a chat to the database"""
+  
+    
+    # Check to see if a chat already exists between these 2 users (check twice because it's bidirectional)
+    chat = session.get(ChatInDB, chat_id)
+    if chat:
+        return Chat(**chat.model_dump())
+    else:
+        raise EntityNotFound("chat", chat_id)
+
 
 @chats_router.post('/{chat_id}/messages/', response_model=Message,status_code=201)
 def upload_message(

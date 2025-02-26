@@ -1,30 +1,22 @@
 
-import { useVideoPlayer, VideoView, VideoSource } from 'expo-video';
-import { View, Dimensions, FlatList, StyleSheet, Pressable } from 'react-native';
+import { View, Dimensions, FlatList, StyleSheet } from 'react-native';
 import { useEffect, useRef, useState } from 'react';
-import { useEvent } from 'expo';
 import { NavBar } from '@/components/NavBar';
 import { Stack } from 'expo-router';
 import { ScreenStyles } from '@/constants/Styles';
+import { useApi } from '@/context/api';
+import { Video } from '@/components/Video';
+import { Post } from '@/constants/Types';
+import { Colors } from '@/constants/Colors';
+import { useVideoPlayer, VideoView } from 'expo-video';
+import { StatusBar } from 'expo-status-bar';
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
-
-const videos = [
-    require('../assets/vids/testFashion.mp4'),
-    require('../assets/vids/testFashion(1).mp4'),
-    require('../assets/vids/testFashion(2).mp4'),
-    require('../assets/vids/testFashion(3).mp4'),
-    require('../assets/vids/testFashion(4).mp4'),
-    require('../assets/vids/testFashion(5).mp4'),
-    require('../assets/vids/testFashion(6).mp4'),
-    // "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-    // "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-    // "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-    // "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-    // "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-];
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+const VIDEO_HEIGHT = SCREEN_HEIGHT - 40;
 
 export default function VideoScreen() {
+    const api = useApi();
+    const [videos, setVideos] = useState();
     const [currentViewableItemIndex, setCurrentViewableItemIndex] = useState(0);
     const viewabilityConfig = { viewAreaCoveragePercentThreshold: 50 }
     const onViewableItemsChanged = ({ viewableItems }: any) => {
@@ -33,19 +25,51 @@ export default function VideoScreen() {
         }
     }
     const viewabilityConfigCallbackPairs = useRef([{ viewabilityConfig, onViewableItemsChanged }])
+
+    const getVideos = async () => {
+        try {
+            const response = await api.get(`/posts/isListing=false/`);
+            if (response.ok) {
+                const videosData = await response.json();
+                setVideos(videosData)
+            } else {
+                console.error("posts retrival failed:", response);
+            }
+        } catch (error) {
+            console.error('posts retrival failed:', error);
+        }
+    };
+
+    useEffect(() => {
+        getVideos();
+    }, []);
+
+    // const player = useVideoPlayer(require('../assets/vids/testFashion.mp4'), player => {
+    //     player.loop = true;
+    //     player.play();
+    //   });
+
+    const renderVideo = ({item, index} : {item: Post, index: number}) => (
+        <Video post={item} index={index} currentViewableItemIndex={currentViewableItemIndex}/>
+        // <VideoView style={{ width: '100%', height: VIDEO_HEIGHT }} player={player} />
+    );
     return (
         <>
-            <Stack.Screen options={{ title: 'VideosScreen' }}/>
+            <Stack.Screen options={{
+                title: 'VideosScreen',
+                headerShown: false
+                }}/>
+            <StatusBar style='light'/>
             <View style={styles.container}>
                 <FlatList
                     data={videos}
                     renderItem={({ item, index }) => (
-                        <Item assetId={item} shouldPlay={index === currentViewableItemIndex} />
+                        renderVideo({item, index})
                     )}
-                    keyExtractor={item => item}
+                    keyExtractor={item => item.id}
                     pagingEnabled
                     snapToAlignment="start"
-                    snapToInterval={SCREEN_HEIGHT}
+                    snapToInterval={VIDEO_HEIGHT}
                     decelerationRate="fast"
                     showsVerticalScrollIndicator={false}
                     viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
@@ -57,44 +81,9 @@ export default function VideoScreen() {
     );
 }
 
-const Item = ({ assetId, shouldPlay }: { assetId: any; shouldPlay: boolean }) => {
-    const videoSource: VideoSource = {assetId};
-    const player = useVideoPlayer(videoSource, player => {
-        player.loop = true;
-    });
-
-    const { isPlaying } = useEvent(player, 'playingChange', { isPlaying: player.playing });
-
-    useEffect(() => {
-        if (shouldPlay) {
-          player.play();
-        } else {
-          player.pause();
-          player.currentTime = 0;
-        }
-      }, [shouldPlay]);
-
-    return (
-        <Pressable onPress={() => (isPlaying ? player.pause() : player.play())}>
-            <View style={styles.videoContainer}>
-                <VideoView player={player} style={styles.video} />
-            </View>
-        </Pressable>
-    );
-}
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        paddingBottom: 34
-    },
-    videoContainer: {
-        width: SCREEN_WIDTH,
-        height: SCREEN_HEIGHT,
-    },
-    video: {
-        width: '100%',
-        height: '100%',
+        backgroundColor: 'black',
     },
 });

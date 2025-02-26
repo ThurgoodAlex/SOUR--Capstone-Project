@@ -16,6 +16,7 @@ import { Post } from '@/constants/Types';
 import { LinkedItemsSelection } from '@/components/LinkItemsSelection';
 import useUploadImages from '@/hooks/useUploadImages';
 import useCreateFormData from '@/hooks/useCreateFormData';
+import { LinkInputDropdown } from '@/components/LinkInputDropdown';
 
 
 const validationSchema = Yup.object().shape({
@@ -44,7 +45,7 @@ export default function CreateListing(): JSX.Element {
     const api = useApi();
     const { logout } = useAuth();
     const { user } = useUser();
-    const { posts } = usePosts(`/users/${user?.id}/posts/`);
+    const { posts } = usePosts(`/users/${user?.id}/posts/?is_listing=false`);
     const [ linkedPosts, setLinkedPosts] = useState<Post[]>([]);
 
     if (!user) logout();
@@ -78,6 +79,7 @@ export default function CreateListing(): JSX.Element {
             setError("Failed to upload images. Please try again.");
         }
     };
+    
     const handleSubmit = async (): Promise<void> => {
         try {
             await validationSchema.validate(
@@ -160,13 +162,12 @@ export default function CreateListing(): JSX.Element {
                     <UploadPhotosCarousel images={images} onAddImages={uploadImages} />
                     <FormGroup labelText="Name" placeholderText="Enter item name" value={name} setter={setName} error={errors["name"]} required/>
                     <FormGroup labelText="Price" placeholderText="Enter price" value={price} setter={setPrice} error={errors["price"]} keyboardType="numeric" required/>
+                    <Dropdown labelText="Gender" selectedValue={gender} onValueChange={setGender} options={["Men's", "Women's", "Unisex"]} error={errors["gender"]} />
                     <Dropdown labelText="Size" selectedValue={size} onValueChange={setSize} options={["XXSmall", "XSmall", "Small", "Medium", "Large", "XLarge", "XXLarge", "XXXLarge", "00", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]} error={errors["size"]} required/>
                     <FormGroup labelText="Description" placeholderText="Enter item description" value={description} setter={setDescription} error={errors["description"]} multiline/>
                     <FormGroup labelText="Brand" placeholderText="Enter brand" value={brand} setter={setBrand} error={errors["brand"]}/>
-                    <Dropdown labelText="Gender" selectedValue={gender} onValueChange={setGender} options={["Men's", "Women's", "Unisex"]} error={errors["gender"]} />
                     <Dropdown labelText="Condition" selectedValue={condition} onValueChange={setCondition} options={["New", "Like New", "Good", "Fair", "Needs Repair"]} error={errors["condition"]}/>
-                    <FormGroup labelText="Color" placeholderText="Select a color" value={color} setter={setColor} error={errors["color"]}/>
-                    <SelectLinks posts={posts} selected={linkedPosts} setter={setLinkedPosts}/>
+                    <LinkInputDropdown posts={posts} selected={linkedPosts} setter={setLinkedPosts} columns={3}/>
                     
                     <TouchableOpacity 
                         style={[Styles.buttonDark, (name == "" || price == "" || size == "") && Styles.buttonDisabled]}
@@ -199,56 +200,7 @@ function UploadPhotosCarousel({ images, onAddImages }: { images: string[]; onAdd
     );
 }
 
-function SelectLinks({ posts, selected, setter }: {posts: Post[], selected: Post[], setter: React.Dispatch<React.SetStateAction<Post[]>>}){
-    const [isOpen, setIsOpen] = useState(false);
-     
-    
-    return (
-    <View>
-        <Text style={[TextStyles.h3, {textAlign:'left'}]}>Link Posts</Text>
-        <TouchableOpacity
-        style={[TextStyles.h3,  
-            {
-                backgroundColor: Colors.light60,
-                height: 45,
-                borderColor: Colors.dark,
-                borderWidth:1,
-                borderRadius: 8,
-                paddingRight: 30, // Make space for the icon
-                justifyContent: 'center'
-            }
-        ]}
-        onPress={() => setIsOpen((value) => !value)}
-        activeOpacity={0.8}>
-        <Ionicons
-                name={isOpen? 'chevron-forward':'chevron-down-outline'}
-                size={24}
-                color={Colors.dark}
-                style={{
-                    position: 'absolute',
-                    right: 10,
-                    top: '50%',
-                    transform: [{ translateY: -12 }], // Adjusts it to center vertically
-                    pointerEvents: 'none' // Prevents blocking touch events
-                }}
-            />
 
-        
-        <Text 
-            style={[TextStyles.p, 
-                    { color: 'gray', 
-                    textAlign: 'left', 
-                    marginTop: 4, 
-                    paddingLeft:12}
-                    ]}>
-            {selected.length} selected
-        </Text>
-        </TouchableOpacity>
-        {isOpen && <LinkedItemsSelection posts={posts} columns={3} setter={setter}/>}
-    </View>
-    );
-
-}
 
 function FormGroup({ labelText, placeholderText, value, setter, error, keyboardType, multiline, required}: {
     labelText: string;
@@ -347,7 +299,7 @@ function Dropdown({ labelText, selectedValue, onValueChange, options, error, req
                 style={{
                     position: 'absolute',
                     right: 10,
-                    top: '50%',
+                    top: 15,
                     transform: [{ translateY: -12 }], // Adjusts it to center vertically
                     pointerEvents: 'none' // Prevents blocking touch events
                 }}

@@ -104,7 +104,7 @@ export default function RootLayout() {
           />
 
             <Stack.Screen 
-              name="MessagesScreen" 
+              name="ChatsScreen" 
               options={{
                 headerLeft: () => ""
               }} 

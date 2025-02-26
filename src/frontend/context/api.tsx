@@ -9,13 +9,21 @@ import { useAuth } from "@/context/auth";
 
 // API utility function
 const api = (token: string | null = null) => {
-    // local host url
+    //tunnel URL
+    const baseUrl = "http://127.0.0.1:8000";
 
-     const baseUrl = "http://10.0.0.210:8000";
-     //const baseUrl = "http://10.18.224.228:8000";
+    //Alex desktop URL
+    //const baseUrl = "http://10.0.0.210:8000";
+    //const baseUrl = "http://10.18.224.228:8000";
+
+    //Ashlyn's URL (please don't delete me)
+    //const baseUrl = "http://10.18.224.228:8000";
 
     // emma's url
     //const baseUrl = 'http://10.18.236.253:8000';
+
+    // alternate url 
+    //const baseUrl = 'http://10.0.0.117:8000';
 
     const getAuthHeaders = () => {
 

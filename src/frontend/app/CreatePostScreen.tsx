@@ -1,9 +1,12 @@
+import { LinkInputDropdown } from '@/components/LinkInputDropdown';
 import { NavBar } from '@/components/NavBar';
 import { Colors } from '@/constants/Colors';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
+import { Post } from '@/constants/Types';
 import { api, useApi } from '@/context/api';
 import { useAuth } from '@/context/auth';
 import { useUser } from '@/context/user';
+import { usePosts } from '@/hooks/usePosts';
 import * as ImagePicker from "expo-image-picker";
 import { router } from 'expo-router';
 import { useState } from 'react';
@@ -20,8 +23,12 @@ export default function CreatePost() {
     const [images, setImages] = useState<string[]>([]); // Store multiple image URIs
     const [error, setError] = useState(null);
     const api = useApi();
+    const [loading, setLoading] = useState(false);
     const {logout} = useAuth();
     const {user} = useUser(); // Fetch user details
+    const { posts } = usePosts(`/users/${user?.id}/posts/?is_listing=true`);
+    const [ linkedListings, setLinkedListings] = useState<Post[]>([]);
+
     
     //pick images from the device's media library
     const uploadImages = async () => {
@@ -82,6 +89,17 @@ export default function CreatePost() {
             console.log("uploadedImages", uploadedImages);
             router.replace("/SelfProfileScreen");
         }
+        // Link listing to selected posts
+        for (const listing of linkedListings) {
+            console.log("linking post id = ", listing.id)
+            const linkResponse = await api.post(`/posts/${postId}/link/${listing.id}/`);
+
+            console.log(linkResponse.json())
+            if (!linkResponse.ok) {
+                console.error(`Failed to link post ${postId} with listing ${listing.id}`);
+            }
+        }
+  
 
     } catch (error) {
         console.error('Error creating post:', error);
@@ -103,7 +121,8 @@ export default function CreatePost() {
           {/* Form Inputs */}
           <FormGroup labelText="Name" placeholderText="Enter post name" value={name} setter={setName} required />
           <FormGroup labelText="Caption" placeholderText="Enter caption" value={description} setter={setDescription} multiline/>
-          
+          <LinkInputDropdown posts={posts} selected={linkedListings} setter={setLinkedListings} columns={1}/>
+
           {/* Submit Button */}
           <TouchableOpacity 
               style={[Styles.buttonDark, (name == "") && Styles.buttonDisabled]}
