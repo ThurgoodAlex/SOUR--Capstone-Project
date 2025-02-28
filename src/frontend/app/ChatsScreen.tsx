@@ -38,19 +38,7 @@ export default function ChatsScreen() {
     );
     return (
         <>
-            <Stack.Screen
-                name="ChatsScreen"
-                options={{
-                    headerRight: () => (
-                        <TouchableOpacity onPress={() => router.push('/CartScreen')}>
-                            <Ionicons size={30} name="cart-outline" color="#692b20" />
-                        </TouchableOpacity>
-                    ),
-                    headerLeft: () => (
-                        <Ionicons size={30} name="chevron-back-outline" color="#d8ccaf" />
-                    )
-                }}
-            />
+          
             <View style={ScreenStyles.screen}>
                 {chats.length > 0 ? (
                     <FlatList

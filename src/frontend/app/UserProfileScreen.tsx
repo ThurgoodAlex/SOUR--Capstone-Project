@@ -23,6 +23,7 @@ export default function UserProfileScreen() {
     const [isFollowing, setIsFollowing] = useState<boolean>();
     const [statsUpdated, setStatsUpdated] = useState(false);
 
+   
     const { posts, loading, error } = usePosts(`/users/${targetUser?.id}/posts/`);
     
     const follow = async () => {
@@ -122,7 +123,7 @@ export default function UserProfileScreen() {
                 >
                     <Ionicons name="chatbubble-outline" size={28} color={Colors.dark60} />
                 </TouchableOpacity>
-                <StatsBar user={targetUser} statsUpdated={statsUpdated} />
+                <StatsBar user={targetUser} />
                 <Text> {isFollowing} </Text>
                
                         {isFollowing ? (
@@ -148,10 +149,26 @@ export default function UserProfileScreen() {
 
 
 function ProfileInfo({ user }: { user: User | null }) {
+
+    let ProfileImage;
+    if(user?.id == 3){
+      ProfileImage = require('../assets/images/prof1.jpg') // Default fallback
+    }
+    else if(user?.id == 2){
+      ProfileImage = require('../assets/images/profile_pic.jpg') // Default fallback
+    }
+    else if(user?.id == 1){
+      ProfileImage = require('../assets/images/prof2.jpeg') // Default fallback
+    }
+    else{
+      ProfileImage = require('../assets/images/prof3.jpeg') // Default fallback
+    }
+
     return (
         <View style={Styles.center}>
             <Image
-                source={require('../assets/images/profile_pic.jpg')}
+                source = {ProfileImage}
+                // source={require('../assets/images/profile_pic.jpg')}
                 style={UserProfileStyles.profileImage}
             />
             <Text style={TextStyles.h1}>{user?.firstname + " " + user?.lastname || "ERROR: can't find name"}</Text>

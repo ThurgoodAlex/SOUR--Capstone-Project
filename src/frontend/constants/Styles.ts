@@ -117,7 +117,6 @@ export const Styles = StyleSheet.create({
         padding: 16,
         borderRadius: 8,
         alignItems: 'center',
-        marginBottom: 16,
         justifyContent: 'space-around'
 
     },

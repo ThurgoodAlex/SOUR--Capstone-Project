@@ -42,7 +42,7 @@ export function useStats(user: User) {
 
     useEffect(() => {
         fetchStats();
-    }, [fetchStats]);
+    }, []);
 
     return { earnings, soldItems, loading, error, refetch: fetchStats };
 }

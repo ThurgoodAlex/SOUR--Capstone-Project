@@ -116,8 +116,9 @@ export default function CreatePost() {
           <Text style={[TextStyles.h2, TextStyles.uppercase]}>New Post</Text>
         
           {/* Display Selected Images */}
-          <UploadPhotosCarousel images={images} onAddImages={uploadImages} />
+        
         <ScrollView >
+        <UploadPhotosCarousel images={images} onAddImages={uploadImages} />
           {/* Form Inputs */}
           <FormGroup labelText="Name" placeholderText="Enter post name" value={name} setter={setName} required />
           <FormGroup labelText="Caption" placeholderText="Enter caption" value={description} setter={setDescription} multiline/>

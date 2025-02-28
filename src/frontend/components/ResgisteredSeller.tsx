@@ -12,7 +12,7 @@ import { Colors } from '@/constants/Colors';
 
 export function RegisteredSeller() {
     const { user } = useUser();
-    const [activeTab, setActiveTab] = useState('Active Listings');
+    const [activeTab, setActiveTab] = useState('Active');
     
     const [endpoint, setEndpoint] = useState(`/users/${user?.id}/posts/issold=false/`);
     
@@ -21,7 +21,7 @@ export function RegisteredSeller() {
     
     const handleTabSwitch = (tab: string) => {
         setActiveTab(tab);
-        setEndpoint(tab === 'Active Listings' 
+        setEndpoint(tab === 'Active' 
             ? `/users/${user?.id}/posts/issold=false/`
             : `/users/${user?.id}/posts/issold=true/`
         );
@@ -37,8 +37,8 @@ export function RegisteredSeller() {
                     <Tabs 
                         activeTab={activeTab} 
                         handleTabSwitch={handleTabSwitch} 
-                        tab1={'Active Listings'} 
-                        tab2={'Sold Listings'} 
+                        tab1={'Active'} 
+                        tab2={'Sold'} 
                     />
                     <PostsFlatList posts={posts} height={250} />
                     <CreateButtons />
@@ -75,7 +75,7 @@ function Earnings({ earnings, soldItems }: { earnings: number, soldItems: number
 function CreateButtons(){
     return (
         <View style={[Styles.column, {gap:12}]}>
-            <Text style={[TextStyles.h1, TextStyles.uppercase, {marginTop:8, marginBottom:-3}]}>Create</Text>
+            <Text style={[TextStyles.h1, TextStyles.uppercase, {marginTop:8, marginBottom:0}]}>Create</Text>
 
             <View style={[Styles.row, {gap:20}]}>
                 <TouchableOpacity style={[Styles.column, Styles.buttonDark, {alignItems: 'center', width: 30, height: 80}]} onPress={() => router.push('/CreateListingScreen')}>
