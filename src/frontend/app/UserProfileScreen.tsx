@@ -114,6 +114,11 @@ export default function UserProfileScreen() {
 
     return (
         <>
+            <Stack.Screen
+                options={{
+                    headerBackButtonDisplayMode: 'minimal'
+                }}
+            />
             <View style={ScreenStyles.screen}>
                 <ProfileInfo user={targetUser} />
                  <TouchableOpacity 

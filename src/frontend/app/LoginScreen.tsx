@@ -51,6 +51,11 @@ export default function LoginScreen() {
 
     return (
         <>
+            <Stack.Screen
+                options={{
+                    headerBackButtonDisplayMode: 'minimal'
+                }}
+            />
             <View style={ScreenStyles.screenCentered}>
                 
                 <Text style={[TextStyles.h1, TextStyles.uppercase]}>Login</Text>

@@ -156,6 +156,7 @@ export default function SettingsScreen() {
         <>
             <Stack.Screen
                 options={{
+                    headerBackButtonDisplayMode: 'minimal',
                     headerTitle: "Settings",
                     headerRight: () => ""
                 }}

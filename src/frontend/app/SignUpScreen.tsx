@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert, StyleSheet, KeyboardTypeOptions } from 'react-native';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
-import { router } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import { useApi } from '@/context/api';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Ionicons } from '@expo/vector-icons';
@@ -100,62 +100,69 @@ export default function SignUpScreen() {
         { key: 'password', placeholder: 'Password', secureTextEntry: true },
         { key: 'verifyPassword', placeholder: 'Confirm Password', secureTextEntry: true },
     ];
-    
+
     return (
-        <KeyboardAwareScrollView contentContainerStyle={ScreenStyles.screenCentered}>
-            <Text style={[TextStyles.h1, TextStyles.uppercase]}>Sign Up</Text>
-    
-            {fields.map(({ key, placeholder, keyboardType, secureTextEntry }, index) => (
-                <>
-                <View key={index} style={style.passwordContainer}>
-                    <TextInput
-                        style={Styles.input}
-                        placeholder={placeholder}
-                        onChangeText={value => {
-                            if (key === 'username') setUsername(value);
-                            else if (key === 'firstName') setFirstName(value);
-                            else if (key === 'lastName') setLastName(value);
-                            else if (key === 'email') setEmail(value);
-                            else if (key === 'password') setPassword(value);
-                            else if (key === 'verifyPassword') setVerifyPassword(value);
-                        }}
-                        keyboardType={(keyboardType as KeyboardTypeOptions) || 'default'}
-                        secureTextEntry={secureTextEntry ? passwordVisibility[key] : false}
-                    />
-                    {secureTextEntry && (
+        <>
+            <Stack.Screen
+                options={{
+                    headerBackButtonDisplayMode: 'minimal'
+                }}
+            />
+            <KeyboardAwareScrollView contentContainerStyle={ScreenStyles.screenCentered}>
+                <Text style={[TextStyles.h1, TextStyles.uppercase]}>Sign Up</Text>
 
-                        <TouchableOpacity
-                            onPress={() => togglePasswordVisibility(key)}
-                            style={style.icon}
-                        >
-                            <Ionicons
-                                name={passwordVisibility[key] ? 'eye-off' : 'eye'}
-                                size={24}
-                                color={Colors.dark}
+                {fields.map(({ key, placeholder, keyboardType, secureTextEntry }, index) => (
+                    <>
+                        <View key={index} style={style.passwordContainer}>
+                            <TextInput
+                                style={Styles.input}
+                                placeholder={placeholder}
+                                onChangeText={value => {
+                                    if (key === 'username') setUsername(value);
+                                    else if (key === 'firstName') setFirstName(value);
+                                    else if (key === 'lastName') setLastName(value);
+                                    else if (key === 'email') setEmail(value);
+                                    else if (key === 'password') setPassword(value);
+                                    else if (key === 'verifyPassword') setVerifyPassword(value);
+                                }}
+                                keyboardType={(keyboardType as KeyboardTypeOptions) || 'default'}
+                                secureTextEntry={secureTextEntry ? passwordVisibility[key] : false}
                             />
-                          
+                            {secureTextEntry && (
 
-                        </TouchableOpacity>
-                    
-                    )}  
-                </View>
-                {key === 'password' && <Text style={style.hint}>Password must be at least 8 characters long, contain at least one uppercase letter, and include either a number or a special character.</Text>}
-                {errors[key] && <Text style={[TextStyles.error, {marginTop:-10, marginBottom:10,}]}>{errors[key]}</Text>}
-                </>
-            ))}
-    
-            {loading ? (
-                <ActivityIndicator size="large" color={Colors.orange} />
-            ) : (
-                <TouchableOpacity 
-                    style={[Styles.buttonDark, (username === "" || password === "") && Styles.buttonDisabled]} 
-                    onPress={requestCreateUser} 
-                    disabled={username == "" || firstName == ""|| lastName == "" || email == "" || password == ""|| verifyPassword == ""}
-                >
-                    <Text style={TextStyles.light}>Sign Up</Text>
-                </TouchableOpacity>
-            )}
-        </KeyboardAwareScrollView>
+                                <TouchableOpacity
+                                    onPress={() => togglePasswordVisibility(key)}
+                                    style={style.icon}
+                                >
+                                    <Ionicons
+                                        name={passwordVisibility[key] ? 'eye-off' : 'eye'}
+                                        size={24}
+                                        color={Colors.dark}
+                                    />
+
+
+                                </TouchableOpacity>
+
+                            )}
+                        </View>
+                        {key === 'password' && <Text style={style.hint}>Password must be at least 8 characters long, contain at least one uppercase letter, and include either a number or a special character.</Text>}
+                        {errors[key] && <Text style={[TextStyles.error, { marginTop: -10, marginBottom: 10, }]}>{errors[key]}</Text>}
+                    </>
+                ))}
+
+                {loading ? (
+                    <ActivityIndicator size="large" color={Colors.orange} />
+                ) : (
+                    <TouchableOpacity
+                        style={[Styles.buttonDark, (username === "" || password === "") && Styles.buttonDisabled]}
+                        onPress={requestCreateUser}
+                        disabled={username == "" || firstName == "" || lastName == "" || email == "" || password == "" || verifyPassword == ""}
+                    >
+                        <Text style={TextStyles.light}>Sign Up</Text>
+                    </TouchableOpacity>
+                )}
+            </KeyboardAwareScrollView>
+        </>
     );
 }
 
@@ -173,9 +180,9 @@ export const style = StyleSheet.create({
         bottom: 15
     },
     hint: {
-        marginTop:-10,
-        marginBottom:15,
-        color:Colors.dark
+        marginTop: -10,
+        marginBottom: 15,
+        color: Colors.dark
     }
-   
+
 });

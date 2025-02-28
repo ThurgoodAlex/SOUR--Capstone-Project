@@ -39,6 +39,11 @@ export default function CartScreen() {
 
     return (
         <>
+            <Stack.Screen
+                options={{
+                    headerBackButtonDisplayMode: 'minimal'
+                }}
+            />
             <View style={ScreenStyles.screen}>
                 {!cart || cart.length === 0 ? (
                     <Text style={cartPageStyle.emptyText}>Your cart is empty!</Text>

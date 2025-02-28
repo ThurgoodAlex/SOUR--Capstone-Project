@@ -4,7 +4,7 @@ import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 import ProfileThumbnail from '@/components/ProfileThumbnail';
 import PhotoCarousel from '@/components/PhotoCarousel';
 import { NavBar } from '@/components/NavBar';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useApi } from '@/context/api';
 import { Post } from '@/constants/Types';
 import { Ionicons } from '@expo/vector-icons';
@@ -97,6 +97,16 @@ export default function PostInfoScreen() {
     if (post) {
         return (
             <>
+                <Stack.Screen
+                    options={{
+                        headerBackButtonDisplayMode: 'minimal',
+                        headerRight: () => (
+                            <TouchableOpacity onPress={() => router.push('/CartScreen')}>
+                                <Ionicons size={30} name="cart-outline" color="#692b20" />
+                            </TouchableOpacity>
+                        ),
+                    }}
+                />
                 <View style={ScreenStyles.screen}>
                     <ScrollView contentContainerStyle={{ gap: 6 }}>
                         <ProfileThumbnail user={post.seller} />

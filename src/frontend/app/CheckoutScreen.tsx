@@ -55,6 +55,11 @@ export default function CheckoutScreen() {
 
     return (
         <>
+            <Stack.Screen
+                options={{
+                    headerBackButtonDisplayMode: 'minimal',
+                }}
+            />
             <View style={ScreenStyles.screen}>
                 <View style={Styles.column}>
                     {seller && (

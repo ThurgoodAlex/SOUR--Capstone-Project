@@ -71,6 +71,7 @@ export default function MessagesScreen() {
         <>
             <Stack.Screen
                 options={{
+                    headerBackButtonDisplayMode: 'minimal',
                     headerRight: () => (
                         <TouchableOpacity onPress={() => router.push('/CartScreen')}>
                             <Ionicons size={30} name="cart-outline" color="#692b20" />

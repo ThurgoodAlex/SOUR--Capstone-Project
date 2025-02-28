@@ -155,6 +155,11 @@ export default function CreateListing(): JSX.Element {
 
     return (
         <>
+            <Stack.Screen
+                options={{
+                    headerBackButtonDisplayMode: 'minimal'
+                }}
+            />
             <View style={ScreenStyles.screen}>
                 <Text style={[TextStyles.h2, TextStyles.uppercase]}>New Listing</Text>
                 <ScrollView>
