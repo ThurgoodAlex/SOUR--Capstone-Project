@@ -297,9 +297,8 @@ function Dropdown({ labelText, selectedValue, onValueChange, options, error, req
                 color={Colors.dark}
                 style={{
                     position: 'absolute',
-                    right: 10,
-                    top: 15,
-                    transform: [{ translateY: -12 }], // Adjusts it to center vertically
+                    top: 13,
+                    right:10,
                     pointerEvents: 'none' // Prevents blocking touch events
                 }}
             />

@@ -105,7 +105,7 @@ export default function MessagesScreen() {
                     <TouchableOpacity
                         style={[
                             Styles.buttonDark,
-                            { width: 70, height: 50 },
+                            { width: 70, height: 50, marginBottom:0 },
                             (loading || !newMessage.trim()) && Styles.buttonDisabled,
                         ]}
                         onPress={sendMessage}

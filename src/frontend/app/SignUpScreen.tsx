@@ -123,6 +123,7 @@ export default function SignUpScreen() {
                         secureTextEntry={secureTextEntry ? passwordVisibility[key] : false}
                     />
                     {secureTextEntry && (
+
                         <TouchableOpacity
                             onPress={() => togglePasswordVisibility(key)}
                             style={style.icon}
@@ -132,9 +133,13 @@ export default function SignUpScreen() {
                                 size={24}
                                 color={Colors.dark}
                             />
+                          
+
                         </TouchableOpacity>
+                    
                     )}  
                 </View>
+                {key === 'password' && <Text style={style.hint}>Password must be at least 8 characters long, contain at least one uppercase letter, and include either a number or a special character.</Text>}
                 {errors[key] && <Text style={[TextStyles.error, {marginTop:-10, marginBottom:10,}]}>{errors[key]}</Text>}
                 </>
             ))}

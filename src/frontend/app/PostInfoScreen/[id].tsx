@@ -111,7 +111,7 @@ export default function PostInfoScreen() {
                         }
                         <PhotoCarousel />
                         {post.isListing ? (
-                            <ListingInfo post={post} liked={liked} toggleLike={toggleLike} />
+                            <ListingInfo post={post} liked={liked} toggleLike={toggleLike} userID={user?.id ?? 0} />
                         ) : (
                             <PostInfo post={post} liked={liked} toggleLike={toggleLike} />
                         )}
@@ -139,7 +139,7 @@ export default function PostInfoScreen() {
 }
 
 // ListingInfo Component
-function ListingInfo({ post, liked, toggleLike }: { post: Post, liked: boolean, toggleLike: () => void }) {
+function ListingInfo({ post, liked, toggleLike, userID }: { post: Post, liked: boolean, toggleLike: () => void, userID:number }) {
     const formattedPrice = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
@@ -152,13 +152,13 @@ function ListingInfo({ post, liked, toggleLike }: { post: Post, liked: boolean, 
     return (
         <View style={Styles.column}>
             <View style={[Styles.row, { justifyContent: 'space-between' }]}>
-                <Text style={[TextStyles.h1, TextStyles.uppercase]}>{post.title}</Text>
+                <Text style={[TextStyles.h1, TextStyles.uppercase, {width:'90%'}]}>{post.title}</Text>
                 {!post.isSold && <LikeButton liked={liked} onPress={toggleLike} />}
             </View>
 
             <View style={[Styles.row, { justifyContent: 'space-between', marginBottom: -10, marginTop: -2 }]}>
                 <Text style={[TextStyles.h2, { textAlign: 'left' }]}>{formattedPrice}</Text>
-                {!post.isSold && <CartButton listingID={post.id} onItemAdded={handleItemAdded} />}
+                {!post.isSold && post.seller.id != userID && <CartButton listingID={post.id} onItemAdded={handleItemAdded} />}
             </View>
 
             <Text style={[TextStyles.h3, { textAlign: 'left', marginBottom: -1 }]}>Size: {post.size}</Text>

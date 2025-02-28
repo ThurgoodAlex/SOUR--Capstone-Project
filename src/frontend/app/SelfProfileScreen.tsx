@@ -45,7 +45,7 @@ export default function SelfProfileScreen() {
             
             <View style={ScreenStyles.screen}>
                 <ProfileInfo user={user} />
-                <StatsBar user={user} statsUpdated={true}/>
+                <StatsBar user={user}/>
                 <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} tab1={'Posts'} tab2={'Likes'} />
                 <PostsFlatList posts={posts} height={270} />
             </View>
@@ -55,10 +55,24 @@ export default function SelfProfileScreen() {
 }
 
 function ProfileInfo({ user }: { user: any }) {
+    let ProfileImage;
+    if(user?.id == 3){
+      ProfileImage = require('../assets/images/prof1.jpg') // Default fallback
+    }
+    else if(user?.id == 2){
+      ProfileImage = require('../assets/images/profile_pic.jpg') // Default fallback
+    }
+    else if(user?.id == 1){
+      ProfileImage = require('../assets/images/prof2.jpeg') // Default fallback
+    }
+    else{
+      ProfileImage = require('../assets/images/prof3.jpeg') // Default fallback
+    }
+
     return (
         <View style={Styles.center}>
             <Image
-                source={require('../assets/images/profile_pic.jpg')}
+                source={ProfileImage}
                 style={ProfileStyles.profileImage}
             />
             <Text style={TextStyles.h1}>{user?.firstname + " " + user?.lastname|| "ERROR: can't find name"}</Text>
