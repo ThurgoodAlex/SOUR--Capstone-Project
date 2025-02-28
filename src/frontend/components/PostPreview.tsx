@@ -5,6 +5,7 @@ import { Post, User } from '@/constants/Types';
 import ProfileThumbnail from '@/components/ProfileThumbnail';
 import { router } from 'expo-router';
 import ProfileThumbnailSmall from '@/components/ProfileThumbnailSmall';
+import { Colors } from '@/constants/Colors';
 
 /**
  * @param post - Props object containing the post details.
@@ -21,14 +22,11 @@ export function PostPreview({ post, size, profileThumbnail = "none", touchable=t
     let icon;
     let type = post.isListing ? "listing" : "post";
 
-    // if (type === 'listing') {
-    //     icon = <Ionicons size={20} name='videocam' />
-    // }
     if (type === 'post') {
-        icon = <Ionicons size={20} name='megaphone' />
+        icon = <Ionicons size={25} style={{color: Colors.dark, opacity: 0.7, margin: 5}} name='megaphone' />
     }
     else if (type === 'listing') {
-        icon = <Ionicons size={20} name='pricetag' />
+        icon = <Ionicons size={25} style={{color: Colors.dark, opacity: 0.7, margin: 5}} name='pricetag' />
     }
 
     // Styles for the post preview, including opacity if sold
@@ -82,9 +80,6 @@ export function PostPreview({ post, size, profileThumbnail = "none", touchable=t
                             </Text>
                         </View>
                     )}
-
-
-                  
                 </ImageBackground>
                
             </TouchableOpacity>
