@@ -31,18 +31,6 @@ export default function SelfProfileScreen() {
 
     return (
         <>
-            <Stack.Screen options={{
-                title: 'SelfProfileScreen',
-                headerLeft: () => "",
-                headerRight: () =>
-                    <Ionicons
-                        size={30}
-                        name="cog-outline"
-                        color='#692b20'
-                        onPress={() => router.push('/SettingsScreen')}
-                    />
-            }}/>
-            
             <View style={ScreenStyles.screen}>
                 <ProfileInfo user={user} />
                 <StatsBar user={user}/>

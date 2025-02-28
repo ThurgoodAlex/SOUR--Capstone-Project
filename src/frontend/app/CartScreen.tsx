@@ -8,6 +8,7 @@ import { CartItem } from "@/components/CartItem";
 import { ScreenStyles } from "@/constants/Styles";
 import { NavBar } from "@/components/NavBar";
 import { Colors } from "@/constants/Colors";
+import { Stack } from "expo-router";
 
 export default function CartScreen() {
     const [cart, setCart] = useState<CartItemProps[]>([]);

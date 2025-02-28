@@ -70,7 +70,6 @@ export default function MessagesScreen() {
     return (
         <>
             <Stack.Screen
-                name="MessagesScreen"
                 options={{
                     headerRight: () => (
                         <TouchableOpacity onPress={() => router.push('/CartScreen')}>

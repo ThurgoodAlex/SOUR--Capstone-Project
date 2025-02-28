@@ -38,7 +38,6 @@ export default function ChatsScreen() {
     );
     return (
         <>
-          
             <View style={ScreenStyles.screen}>
                 {chats.length > 0 ? (
                     <FlatList

@@ -156,7 +156,6 @@ export default function SettingsScreen() {
         <>
             <Stack.Screen
                 options={{
-                    title: "SettingsScreen",
                     headerTitle: "Settings",
                     headerRight: () => ""
                 }}

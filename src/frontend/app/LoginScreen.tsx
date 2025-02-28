@@ -51,7 +51,6 @@ export default function LoginScreen() {
 
     return (
         <>
-            <Stack.Screen options={{ title: "LoginScreen" }} />
             <View style={ScreenStyles.screenCentered}>
                 
                 <Text style={[TextStyles.h1, TextStyles.uppercase]}>Login</Text>

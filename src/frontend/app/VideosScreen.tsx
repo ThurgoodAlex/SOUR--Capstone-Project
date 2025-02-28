@@ -55,10 +55,6 @@ export default function VideoScreen() {
     );
     return (
         <>
-            <Stack.Screen options={{
-                title: 'VideosScreen',
-                headerShown: false
-                }}/>
             <StatusBar style='light'/>
             <View style={styles.container}>
                 <FlatList

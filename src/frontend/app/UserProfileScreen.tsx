@@ -114,7 +114,6 @@ export default function UserProfileScreen() {
 
     return (
         <>
-            <Stack.Screen options={{ title: 'UserProfileScreen' }} />
             <View style={ScreenStyles.screen}>
                 <ProfileInfo user={targetUser} />
                  <TouchableOpacity 

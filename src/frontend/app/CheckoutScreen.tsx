@@ -6,6 +6,7 @@ import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 import { Colors } from '@/constants/Colors';
 import { useApi } from '@/context/api';
 import { useEffect, useState } from 'react';
+import { Stack } from 'expo-router';
 
 export default function CheckoutScreen() {
     const api = useApi();
@@ -53,57 +54,60 @@ export default function CheckoutScreen() {
     }, [post.sellerID]);
 
     return (
-        <View style={ScreenStyles.screen}>
-            <View style={Styles.column}>
-                {seller && (
-                    <Text style={[TextStyles.h2, { textAlign: 'left', marginBottom: 20 }]}>
-                        Complete Payment to {seller.firstname} {seller.lastname}
-                    </Text>
-                )}
+        <>
+            <View style={ScreenStyles.screen}>
+                <View style={Styles.column}>
+                    {seller && (
+                        <Text style={[TextStyles.h2, { textAlign: 'left', marginBottom: 20 }]}>
+                            Complete Payment to {seller.firstname} {seller.lastname}
+                        </Text>
+                    )}
 
-                <View
-                    style={{
-                        backgroundColor: Colors.light60,
-                        padding: 10,
-                        borderRadius: 10,
-                        marginBottom: 20,
-                    }}
-                >
-                    <Text style={[TextStyles.h2]}>{post.title}</Text>
+                    <View
+                        style={{
+                            backgroundColor: Colors.light60,
+                            padding: 10,
+                            borderRadius: 10,
+                            marginBottom: 20,
+                        }}
+                    >
+                        <Text style={[TextStyles.h2]}>{post.title}</Text>
+
+                        <Text
+                            style={[TextStyles.h3, { textAlign: 'left', marginBottom: -2 }]}
+                        >
+                            Size: {post.size}
+                        </Text>
+                        <Text style={[TextStyles.p, { textAlign: 'left' }]}>
+                            {[post.brand, post.gender, post.condition]
+                                .filter(Boolean)
+                                .join('  |  ')}
+                        </Text>
+                    </View>
+
+
 
                     <Text
-                        style={[TextStyles.h3, { textAlign: 'left', marginBottom: -2 }]}
+                        style={[
+                            TextStyles.h1,
+                            { textAlign: 'center', color: 'green', marginTop: 10 },
+                        ]}
                     >
-                        Size: {post.size}
-                    </Text>
-                    <Text style={[TextStyles.p, { textAlign: 'left' }]}>
-                        {[post.brand, post.gender, post.condition]
-                            .filter(Boolean)
-                            .join('  |  ')}
+                        Subtotal:{' '}
+                        {Intl.NumberFormat('en-US', {
+                            style: 'currency',
+                            currency: 'USD',
+                        }).format(parseFloat(post.price))}
                     </Text>
                 </View>
 
-    
-
-                <Text
-                    style={[
-                        TextStyles.h1,
-                        { textAlign: 'center', color: 'green', marginTop: 10 },
-                    ]}
+                <StripeProvider
+                    publishableKey="pk_test_51Qw5QM08yxMUUHDI26yhD2zYs8SRe7a5lCHDJV7MBQ9ltf48CN5dk4YX3wRfR1XWp25smAVLWs68eqfthLx9IECK00SrFO2r5d"
                 >
-                    Subtotal:{' '}
-                    {Intl.NumberFormat('en-US', {
-                        style: 'currency',
-                        currency: 'USD',
-                    }).format(parseFloat(post.price))}
-                </Text>
+                    <CheckoutForm total={parseFloat(post.price) * 100} postID={post.id} cartItemID={cartID} />
+                </StripeProvider>
             </View>
+        </>
 
-            <StripeProvider
-                publishableKey="pk_test_51Qw5QM08yxMUUHDI26yhD2zYs8SRe7a5lCHDJV7MBQ9ltf48CN5dk4YX3wRfR1XWp25smAVLWs68eqfthLx9IECK00SrFO2r5d"
-            >
-                <CheckoutForm total={parseFloat(post.price)*100} postID={post.id} cartItemID={cartID}/>
-            </StripeProvider>
-        </View>
     );
 }

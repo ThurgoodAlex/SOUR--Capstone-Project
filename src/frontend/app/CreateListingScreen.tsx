@@ -4,7 +4,7 @@ import { api, useApi } from '@/context/api';
 import { useAuth } from '@/context/auth';
 import { useUser } from '@/context/user';
 import * as ImagePicker from "expo-image-picker";
-import { router } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, StyleSheet, Alert, KeyboardTypeOptions } from 'react-native';
 import { Colors } from '@/constants/Colors';

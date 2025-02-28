@@ -14,7 +14,6 @@ export default function SellerScreen() {
     if (user){
         return (
             <>
-                <Stack.Screen options={{ title: 'SellerScreen' }} />
                 <View style={ScreenStyles.screen}>
                     {user.isSeller ? (
                         <RegisteredSeller/>
