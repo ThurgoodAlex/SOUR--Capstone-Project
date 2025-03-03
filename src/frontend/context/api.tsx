@@ -6,21 +6,13 @@
  */
 
 import { useAuth } from "@/context/auth";
+import { fullUrl } from "@/context/urls";
 
 // API utility function
 const api = (token: string | null = null) => {
     //tunnel URL
-    // const baseUrl = "http://127.0.0.1:8000";
+    const localhost = fullUrl;
 
-    //Alex desktop URL
-    //const baseUrl = "http://10.0.0.210:8000";
-    //const baseUrl = "http://10.18.224.228:8000";
-
-    //Ashlyn's URL (please don't delete me)
-    //const baseUrl = "http://10.18.224.228:8000";
-
-    // emma's url
-    const baseUrl = 'http://10.18.40.63:8000';
 
     const getAuthHeaders = () => {
 
@@ -46,10 +38,10 @@ const api = (token: string | null = null) => {
     // GET request method with logging
     const get = async (url: string) => {
         const headers = getAuthHeaders();
-        console.log("GET Request URL:", baseUrl + url);
+        console.log("GET Request URL:", localhost + url);
         console.log("GET Headers:", headers);
 
-        return fetch(baseUrl + url, {
+        return fetch(localhost + url, {
             method: "GET",
             headers,
         });
@@ -58,11 +50,11 @@ const api = (token: string | null = null) => {
     // POST request method with logging
     const post = async (url: string, body: Record<string, unknown> = {}) => {
         const headers = getAuthHeaders();
-        console.log("POST Request URL:", baseUrl + url);
+        console.log("POST Request URL:", localhost + url);
         console.log("POST Body:", JSON.stringify(body));
         console.log("POST Headers:", headers);
 
-        return fetch(baseUrl + url, {
+        return fetch(localhost + url, {
             method: "POST",
             body: JSON.stringify(body),
             headers,
@@ -77,7 +69,7 @@ const api = (token: string | null = null) => {
       console.log("Headers retrieved:", headers);
     
       console.log("Constructing full URL...");
-      const fullUrl = baseUrl + url;
+      const fullUrl = localhost + url;
      
       try {
         console.log("Executing fetch request to:", fullUrl);
@@ -113,11 +105,11 @@ const api = (token: string | null = null) => {
     // have to call it remove becuase delete is not allowed as a method name :(
     const remove = async (url: string, body: Record<string, unknown> = {}) => {
         const headers = getAuthHeaders();
-        console.log("DELETE Request URL:", baseUrl + url);
+        console.log("DELETE Request URL:", localhost + url);
         console.log("DELETE Body:", JSON.stringify(body));
         console.log("DELETE Headers:", headers);
 
-        return fetch(baseUrl + url, {
+        return fetch(localhost + url, {
             method: "DELETE",
             body: JSON.stringify(body),
             headers,
@@ -127,10 +119,10 @@ const api = (token: string | null = null) => {
     // PUT request method
     const put = async (url: string, body: Record<string, unknown> = {}) => {
         const headers = getAuthHeaders();
-        console.log("PUT Request URL:", baseUrl + url);
+        console.log("PUT Request URL:", localhost + url);
         console.log("PUT Headers:", headers);
 
-        return fetch(baseUrl + url, {
+        return fetch(localhost + url, {
             method: 'PUT',
             body: JSON.stringify(body),
             headers,
@@ -141,11 +133,11 @@ const api = (token: string | null = null) => {
      const login = async (body: URLSearchParams) => {
         const headers = {"Content-Type": "application/x-www-form-urlencoded", 'accept': 'application/json',};
     
-        console.log("POST Request URL:", baseUrl + "/auth/token/");
+        console.log("POST Request URL:", localhost + "/auth/token/");
         console.log("POST Body:", body.toString());
         console.log("POST Headers:", headers);
 
-        return fetch(baseUrl + "/auth/token/", {
+        return fetch(localhost + "/auth/token/", {
             method: "POST",
             body: body.toString(),
             headers,
