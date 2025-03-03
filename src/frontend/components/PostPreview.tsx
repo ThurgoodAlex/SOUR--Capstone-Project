@@ -19,7 +19,7 @@ interface PostPreviewProps {
 export function PostPreview({ post, size, profileThumbnail = 'none', touchable = true }: PostPreviewProps) {
   const { images, loading: mediaLoading, error: mediaError } = useGetMedia(Number(post.id));
 
-  if (mediaLoading) return <Text>Loading...</Text>;
+  // if (mediaLoading) return <Text>Loading...</Text>;
   if (mediaError) return <Text>Error: {mediaError}</Text>;
 
   const coverImage = images && images.length > 0 ? images[0].url : post.coverImage || "";

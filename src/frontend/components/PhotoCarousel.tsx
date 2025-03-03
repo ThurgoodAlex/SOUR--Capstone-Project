@@ -11,13 +11,13 @@ interface PhotoCarouselProps {
   export default function PhotoCarousel({ postId }: PhotoCarouselProps) {
     const { images, loading, error, refetch } = useGetMedia(postId);
     console.log("PhotoCarousel images:", images);
-  if (loading) {
-    return (
-        <View style={Styles.row}>
-            <Text>Loading images...</Text>
-        </View>
-    );
-}
+  // if (loading) {
+  //   return (
+  //       <View style={Styles.row}>
+  //           <Text>Loading images...</Text>
+  //       </View>
+  //   );
+  // }
 
 if (error) {
   return (

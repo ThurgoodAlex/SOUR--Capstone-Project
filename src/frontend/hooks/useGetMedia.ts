@@ -1,12 +1,15 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useApi } from '@/context/api';
 import { PostImage, PostImagesResponse } from '@/constants/Types';
+import { localhostIP } from '@/context/urls';
 
 export function useGetMedia(postId: number) {
   const api = useApi();
   const [images, setImages] = useState<PostImage[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  const localhost = localhostIP;
 
   const fetchImages = useCallback(async () => {
     if (!postId) {
@@ -33,7 +36,7 @@ export function useGetMedia(postId: number) {
       }
 
       const adjustedImages = data.items.map(item => {
-        const newUrl = item.url.replace("localhost", "10.0.0.62");
+        const newUrl = item.url.replace("localhost", localhost);
         console.log("Original URL:", item.url, "Adjusted URL:", newUrl);
         return {
           ...item,
