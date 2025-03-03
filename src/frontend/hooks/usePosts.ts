@@ -2,26 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { useApi } from '@/context/api';
 import { Post } from '@/constants/Types';
 
-// Dummy images for placeholders
-const dummyImages = [
-  require('../assets/images/video.png'),
-  require('../assets/images/post.png'),
-  require('../assets/images/sweater1.png'),
-  require('../assets/images/listing2.png'),
-  require('../assets/images/listing.png'),
-  require('../assets/images/random1.png'),
-  require('../assets/images/random2.png'),
-  require('../assets/images/random3.png'),
-  require('../assets/images/random4.png'),
-  require('../assets/images/random5.png'),
-];
-
-const getRandomImage = () => dummyImages[Math.floor(Math.random() * dummyImages.length)];
-
-/**
- * Custom hook to fetch posts from a given endpoint
- * @param endpoint - API endpoint for fetching posts
- */
 export function usePosts(endpoint: string) {
   const api = useApi();
   const [posts, setPosts] = useState<Post[]>([]);
@@ -63,18 +43,18 @@ export function usePosts(endpoint: string) {
 
       if (!response.ok) throw new Error('Could not fetch posts.');
 
-      const transformedPosts: Post[] = await Promise.all(
+      const posts: Post[] = await Promise.all(
         result.map(async (item: any) => {
           const seller = await fetchSeller(item.sellerID);
           return {
             id: item.id,
             createdDate: item.created_at || new Date().toISOString(),
-            coverImage: getRandomImage(),
+            coverImage: item.coverImage || "", // Raw or empty
             title: item.title,
             description: item.description,
             brand: item.brand,
             condition: item.condition,
-            size: item.size,
+            size: item.size || "n/a",
             gender: item.gender,
             price: item.price,
             isSold: item.isSold,
@@ -84,7 +64,7 @@ export function usePosts(endpoint: string) {
         })
       );
 
-      setPosts(transformedPosts);
+      setPosts(posts);
     } catch (error) {
       console.error('Error fetching posts:', error);
       setError((error as Error).message);
