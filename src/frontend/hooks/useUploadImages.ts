@@ -20,7 +20,7 @@ const useUploadImages = () => {
         const response = await api.postForm("/media/upload/", formData);
         const result = await (response as Response).json();
         console.log("Uploaded image:", result);
-        uploadedImages.push(result.url); // Adjust if your endpoint uses "fileUrl"
+        uploadedImages.push(result.url);
       } catch (error) {
         console.error("Error uploading image:", error);
         const errorMessage = error instanceof Error ? error.message : "Unknown error";

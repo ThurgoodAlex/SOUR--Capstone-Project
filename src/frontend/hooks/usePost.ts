@@ -1,8 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useApi } from '@/context/api';
 import { Post } from '@/constants/Types';
-
-const images = ["sweater1.png", "sweater2.png", "sweater3.png", "sweater4.png"]
+import { useGetMedia } from '@/hooks/useGetMedia';
 
 /**
  * Custom hook to fetch post with given id
@@ -13,7 +12,7 @@ export function usePost(id: string) {
   const [post, setPost] = useState<Post>();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
+  const { images, loading: mediaLoading, error: mediaError } = useGetMedia(Number(id));
   const fetchSeller = async (sellerId: string) => {
     try {
       const sellerResponse = await api.get(`/users/${sellerId}/`);
@@ -49,6 +48,8 @@ export function usePost(id: string) {
       const seller = await fetchSeller(result.sellerID);
 
       if (seller) {
+        const coverImage = images && images.length > 0 
+          ? images[0].url : result.coverImage || "";
         const transformedPost: Post = {
             id: result.id,
             createdDate: result.created_at,
@@ -59,7 +60,7 @@ export function usePost(id: string) {
             condition: result.condition,
             size: result.size || "n/a", // Set default size
             gender: result.gender,
-            coverImage: result.coverImage,
+            coverImage: coverImage,
             price: result.price,
             isSold: result.isSold,
             isListing: result.isListing

@@ -13,8 +13,7 @@ const api = (token: string | null = null) => {
     // const baseUrl = "http://127.0.0.1:8000";
 
     //Alex desktop URL
-    //const baseUrl = "http://10.0.0.210:8000";
-    //const baseUrl = "http://10.18.224.228:8000";
+    //const baseUrl = "http://10.0.0.62:8000";
 
     //Ashlyn's URL (please don't delete me)
     //const baseUrl = "http://10.18.224.228:8000";

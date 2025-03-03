@@ -119,7 +119,7 @@ export default function PostInfoScreen() {
                             </TouchableOpacity>
                             : null
                         }
-                        <PhotoCarousel />
+                        <PhotoCarousel postId={post.id}/>
                         {post.isListing ? (
                             <ListingInfo post={post} liked={liked} toggleLike={toggleLike} userID={user?.id ?? 0} />
                         ) : (
