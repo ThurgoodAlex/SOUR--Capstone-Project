@@ -10,7 +10,6 @@ import { useApi } from '@/context/api';
 import { usePosts } from '@/hooks/usePosts';
 import { LinkedItems } from '@/components/LinkedItems';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Styles } from '@/constants/Styles';
 import { Colors } from '@/constants/Colors';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -53,7 +52,7 @@ export function Video({ post, index, currentViewableItemIndex }: { post: Post, i
         username: "emma_luky",
         bio: "",
         email: "emmahluk@gmail.com",
-        profilePic: require('../assets/images/profile_pic.jpg'),
+        profilePic: require('../assets/images/prof1.jpg'),
         isSeller: true,
         id: 2,
     }; 

@@ -43,7 +43,11 @@ export function Chat({ chat }: { chat: ChatData }) {
                 params: { chatID: chat.id },
         })}>
             <Image
-                source={require('../assets/images/profile_pic.jpg')}
+                source={
+                    targetUser?.profilePic
+                    ? targetUser.profilePic
+                    : require('../assets/images/blank_profile_pic.png')
+                }
                 style={ChatProfileStyles.profileImage}
             />
             <Text style={TextStyles.dark}>{targetUser?.username}</Text>

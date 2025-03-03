@@ -20,7 +20,7 @@ const api = (token: string | null = null) => {
     //const baseUrl = "http://10.18.224.228:8000";
 
     // emma's url
-    const baseUrl = 'http://10.18.75.111:8000';
+    const baseUrl = 'http://10.18.40.63:8000';
 
     const getAuthHeaders = () => {
 

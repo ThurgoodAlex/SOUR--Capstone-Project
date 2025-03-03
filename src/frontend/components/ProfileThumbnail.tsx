@@ -2,7 +2,6 @@ import { Styles, TextStyles } from '@/constants/Styles';
 import { User } from '@/constants/Types';
 import { useUser } from '@/context/user';
 import { router } from 'expo-router';
-import { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 
 export default function ProfileThumbnail({ user }: {user: User}) {
@@ -16,20 +15,7 @@ export default function ProfileThumbnail({ user }: {user: User}) {
       borderRadius: 20,
     },
   })
-
- let ProfileImage;
-  if(user.id == 3){
-    ProfileImage = require('../assets/images/prof1.jpg') // Default fallback
-  }
-  else if(user.id == 2){
-    ProfileImage = require('../assets/images/profile_pic.jpg') // Default fallback
-  }
-  else if(user.id == 1){
-    ProfileImage = require('../assets/images/prof2.jpeg') // Default fallback
-  }
-  else{
-    ProfileImage = require('../assets/images/prof3.jpeg') // Default fallback
-  }
+  
   return (
     <>
       <TouchableOpacity
@@ -53,10 +39,10 @@ export default function ProfileThumbnail({ user }: {user: User}) {
         
         <Image
             source={
-              ProfileImage
-                // user.profilePic
-                // ? user.profilePic
-                // : require('../assets/images/profile_pic.jpg') // Default fallback
+            //   ProfileImage
+                user.profilePic
+                ? user.profilePic
+                : require('../assets/images/blank_profile_pic.png') // Default fallback
             }
             style={ProfileStyles.thumbnailImage}
             />

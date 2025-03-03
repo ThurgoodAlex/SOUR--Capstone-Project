@@ -16,19 +16,6 @@ export default function ProfileThumbnailSmall({ user }: { user: User}) {
    
   });
 
-  let ProfileImage;
-  if(user.id == 3){
-    ProfileImage = require('../assets/images/prof1.jpg') // Default fallback
-  }
-  else if(user.id == 2){
-    ProfileImage = require('../assets/images/profile_pic.jpg') // Default fallback
-  }
-  else if(user.id == 1){
-    ProfileImage = require('../assets/images/prof2.jpeg') // Default fallback
-  }
-  else{
-    ProfileImage = require('../assets/images/prof3.jpeg') // Default fallback
-  }
   return (
     <TouchableOpacity
         onPress={() =>
@@ -52,10 +39,10 @@ export default function ProfileThumbnailSmall({ user }: { user: User}) {
       <View style={[Styles.row, {marginBottom: 10}]}>
         <Image
           source={
-            ProfileImage
-              // user.profilePic
-              // ? user.profilePic
-              // : require('../assets/images/profile_pic.jpg') // Default fallback
+            // ProfileImage
+              user.profilePic
+              ? user.profilePic
+              : require('../assets/images/blank_profile_pic.png') // Default fallback
           }
           style={ProfileStyles.thumbnailImage}
         />

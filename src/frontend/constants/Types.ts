@@ -24,24 +24,12 @@ export interface CartPost extends Post {
     cartItemId: number;
   }
 
-// export type Listing = {
-//     id:number;
-//     createdDate: Date;
-
-//     title: string;
-//     price: string;
-//     description: string;
-//     size: string;
-
-//     seller: User;
-// };
-
 export type User = {
     firstname: string;
     lastname: string;
     username: string;
     id:number;
-    profilePic?:string | '../assets/images/profile_pic.jpg';
+    profilePic?:string | '../assets/images/blank_profile_pic.png';
     isSeller: boolean;
     email: string;
     bio: string;
