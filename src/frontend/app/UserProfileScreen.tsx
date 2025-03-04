@@ -88,7 +88,7 @@ export default function UserProfileScreen() {
                 let chat = await checkChatResponse.json();
                 router.push({
                     pathname: '/MessagesScreen',
-                    params: { chatID: chat.id },
+                    params: { chatID: chat.id, userID: targetUser?.id },
                 })
             } else if (checkChatResponse.status === 404) {
                 // create new chat
@@ -97,7 +97,7 @@ export default function UserProfileScreen() {
                     if (response.ok) {
                         router.push({
                             pathname: '/MessagesScreen',
-                            params: { chatID: chat.id },
+                            params: { chatID: chat.id,  userID: targetUser?.id },
                         })
                 } else {
                     Alert.alert('Failed to create chat.');

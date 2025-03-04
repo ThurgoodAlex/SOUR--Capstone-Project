@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, Touchable, TouchableOpacity } from 'react-native';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 import { useUser } from '@/context/user';
 import { NavBar } from '@/components/NavBar';
@@ -7,48 +7,54 @@ import { StatsBar } from '@/components/StatsBar';
 import { Tabs } from '@/components/Tabs';
 import { usePosts } from '@/hooks/usePosts';
 import { PostsFlatList } from '@/components/PostsFlatList';
+import { router } from 'expo-router';
+import { Colors } from '@/constants/Colors';
 
 export default function SelfProfileScreen() {
   const { user } = useUser();
   const [activeTab, setActiveTab] = useState('Posts');
   const [endpoint, setEndpoint] = useState(`/users/${user?.id}/posts/`);
   const { posts, loading, error, refetch } = usePosts(endpoint);
-  const [displayedPosts, setDisplayedPosts] = useState(posts); 
-
-  // Update displayedPosts when new posts load
-  useEffect(() => {
-    if (!loading && posts.length > 0) {
-      setDisplayedPosts(posts);
-    }
-  }, [posts, loading]);
+  
 
   const handleTabSwitch = (tab: string) => {
     setActiveTab(tab);
-    setEndpoint(tab === 'Posts' 
+    const newEndpoint = tab === 'Posts' 
       ? `/users/${user?.id}/posts/`
-      : `/users/${user?.id}/likes/`
-    );
+      : `/users/${user?.id}/likes/`;
+  
+    setEndpoint(newEndpoint);
   };
-
-  if (error) return <Text>Error: {error}</Text>;
-
+  
+  // Refetch posts when `endpoint` changes
+  useEffect(() => {
+    refetch();
+  }, [endpoint]);
+  
   return (
     <>
       <View style={ScreenStyles.screen}>
         <ProfileInfo user={user} />
         <StatsBar user={user} />
         <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} tab1={'Posts'} tab2={'Likes'} />
-        {loading && displayedPosts.length === 0 ? (
-          <View style={styles.loadingContainer}>
-            <Text style={styles.loadingText}>Loading posts...</Text>
-          </View>
+        
+        {user?.isSeller || activeTab === 'Likes' ? (
+          <PostsFlatList posts={posts} height={270} />
         ) : (
-          <PostsFlatList posts={displayedPosts} height={270} />
+          <>
+            <Text style={[TextStyles.h3, { marginTop: 15 }]}>You are not a seller yet</Text>
+            <TouchableOpacity 
+              style={[Styles.buttonDark]}
+              onPress={() => router.push('/SellerScreen')}> 
+                <Text style={TextStyles.light}>Become a Seller Today!</Text>
+            </TouchableOpacity>
+          </>
         )}
       </View>
       <NavBar />
     </>
   );
+  
 }
 
 function ProfileInfo({ user }: { user: any }) {
@@ -74,6 +80,7 @@ function ProfileInfo({ user }: { user: any }) {
     </View>
   );
 }
+
 
 const ProfileStyles = StyleSheet.create({
   profileImage: {

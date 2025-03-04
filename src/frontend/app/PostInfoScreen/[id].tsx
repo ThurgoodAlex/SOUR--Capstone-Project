@@ -15,6 +15,7 @@ import { usePost } from '@/hooks/usePost';
 import { usePosts } from '@/hooks/usePosts';
 import { Colors } from '@/constants/Colors';
 import { useUser } from '@/context/user';
+import { boolean } from 'yup';
 
 export default function PostInfoScreen() {
     const api = useApi();
@@ -31,14 +32,18 @@ export default function PostInfoScreen() {
                 try {
                     const response = await api.get(`/posts/${post.id}/like/`);
                     const data = await response.json();
-                    setLike(data?.liked ?? false); 
+    
+                    console.log("\n LIKED:", data, "\n");
+                    setLike(Boolean(data)); 
                 } catch (error) {
                     console.error('Error fetching like status:', error);
                 }
             };
             fetchLike();
         }
-    }, [post?.id]);
+    }, [post?.id]); 
+
+  
 
     const toggleLike = async () => {
         if (!post?.id) return;

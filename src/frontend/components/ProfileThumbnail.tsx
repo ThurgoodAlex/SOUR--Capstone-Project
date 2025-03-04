@@ -48,7 +48,7 @@ export default function ProfileThumbnail({ user }: {user: User}) {
                 }
             }
         }
-        style={[Styles.row, {marginLeft:6}]}
+        style={[Styles.row, {marginLeft:6, maxHeight: 60, alignItems: 'center'}]}
       >
         
         <Image

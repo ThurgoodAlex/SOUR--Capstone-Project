@@ -1,7 +1,7 @@
 import { Colors } from '@/constants/Colors';
 import { NavBar } from '@/components/NavBar';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
-import { MessageData } from '@/constants/Types';
+import { MessageData, User } from '@/constants/Types';
 import { useApi } from '@/context/api';
 import { Ionicons } from '@expo/vector-icons';
 import { router, Stack } from 'expo-router';
@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'expo-router/build/hooks';
 import { ActivityIndicator, FlatList, Text, TextInput, TouchableOpacity, View, StyleSheet, KeyboardAvoidingView, Platform, Dimensions } from 'react-native';
 import { Message } from '@/components/Message';
+import ProfileThumbnail from '@/components/ProfileThumbnail';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const INPUT_WIDTH = SCREEN_WIDTH - 80;
@@ -17,10 +18,30 @@ export default function MessagesScreen() {
     const api = useApi();
     const searchParams = useSearchParams();
     const chatParam = Number(searchParams.get('chatID'));
+    const targetUserID = Number(searchParams.get('userID'));
     const [messages, setMessages] = useState<MessageData[]>([]);
     const [newMessage, setNewMessage] = useState('');
     const [loading, setLoading] = useState(false);
 
+    const [targetUser, setTargetUser] = useState<User | null>(null);
+    const getUser = async () => {
+        try {
+            const response = await api.get(`/users/${targetUserID}/`);
+            if (response.ok) {
+                const userData = await response.json();
+                console.log("User retrived successfully.");
+                setTargetUser(userData);
+            } else {
+                console.error("User retrival failed:", response);
+            }
+        } catch (error) {
+            console.error('User retrival failed:', error);
+        }
+    };
+    useEffect(() => {
+        getUser();
+    }, []);
+    
     const getMessages = async () => {
         try {
             const response = await api.get(`/chats/${chatParam}/messages/`);
@@ -79,11 +100,18 @@ export default function MessagesScreen() {
                     )
                 }}
             />
+
+            <View style={[Styles.column, {backgroundColor: Colors.light60, padding: 2, borderBottomColor: Colors.light, borderBottomWidth: 1, maxHeight:60}]}>
+         
+                {targetUser && <ProfileThumbnail user={targetUser} />}
+
+            </View>
+            
             <View style={ScreenStyles.screen}>
             <KeyboardAvoidingView
-                style={{ flex: 1 }}
+                style={{ flex: 1, alignSelf: 'flex-end' }}
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 180 : 0}
             >
                 <FlatList
                     data={messages}
@@ -94,7 +122,7 @@ export default function MessagesScreen() {
                     ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
                     inverted={true}
                 />
-                <View style={[Styles.row, { alignItems: 'center', marginTop: 20, marginBottom: 20 }]}>
+                <View style={[Styles.row, { alignItems: 'center', marginTop: 20, marginBottom: 20, width: SCREEN_WIDTH - 35 }]}>
                     <TextInput
                         style={MessageScreenStyles.input}
                         placeholder="Message"

@@ -40,14 +40,20 @@ export function Chat({ chat }: { chat: ChatData }) {
             style={ChatProfileStyles.chat}
             onPress={() => router.push({
                 pathname: '/MessagesScreen',
-                params: { chatID: chat.id },
+                params: { chatID: chat.id, userID: targetUser?.id },
         })}>
-            <Image
-                source={require('../assets/images/profile_pic.jpg')}
-                style={ChatProfileStyles.profileImage}
-            />
-            <Text style={TextStyles.dark}>{targetUser?.username}</Text>
-        </TouchableOpacity>
+            <View style={[Styles.row, {justifyContent: 'space-between'}]}>
+                <Image
+                    source={require('../assets/images/profile_pic.jpg')}
+                    style={ChatProfileStyles.profileImage}
+                />
+                <View style={Styles.column}>
+                    <Text style={[TextStyles.dark, TextStyles.h3, {textAlign:'right'}]}>{targetUser?.firstname} {targetUser?.lastname}</Text>
+                    <Text style={[TextStyles.dark, {textAlign:'right'}]}>{targetUser?.username}</Text>
+                </View>
+            </View>
+            
+            </TouchableOpacity>
     );
 };
 
