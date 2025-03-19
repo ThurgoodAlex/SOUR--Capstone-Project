@@ -242,4 +242,4 @@ def clear_database():
 
 if __name__ == "__main__":
     clear_database()
-    seed_database()
+    #seed_database()

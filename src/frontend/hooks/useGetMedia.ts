@@ -36,7 +36,8 @@ export function useGetMedia(postId: number) {
       }
 
       const adjustedImages = data.items.map(item => {
-        const newUrl = item.url.replace("localhost", localhost);
+        //const newUrl = item.url.replace("localhost", localhost);
+        const newUrl = item.url;
         console.log("Original URL:", item.url, "Adjusted URL:", newUrl);
         return {
           ...item,
