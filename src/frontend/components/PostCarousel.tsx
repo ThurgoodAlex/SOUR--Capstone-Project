@@ -12,7 +12,7 @@ import { usePosts } from '@/hooks/usePosts';
 export default function PostCarousel() {
     const { posts, loading, error } = usePosts('/posts/new');
   
-    if (loading) return <Text>Loading...</Text>;
+    // if (loading) return <Text>Loading...</Text>;
     if (error) return <Text>Error: {error}</Text>;
   
     return (

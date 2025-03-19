@@ -1,6 +1,7 @@
 import { Colors } from "@/constants/Colors";
 import { Styles, TextStyles } from "@/constants/Styles";
 import { Post } from "@/constants/Types";
+import { useGetMedia } from "@/hooks/useGetMedia";
 import { router } from "expo-router";
 import { ImageBackground, TouchableOpacity, View, Text } from "react-native";
 
@@ -10,6 +11,14 @@ export function LinkPreview({ listing, touchable = true }: { listing: Post, touc
         style: 'currency',
         currency: 'USD',
       }).format(parseFloat(listing.price));
+    
+    const { images, loading: mediaLoading, error: mediaError } = useGetMedia(Number(listing.id));
+    
+    // if (mediaLoading) return <Text>Loading...</Text>;
+    if (mediaError) return <Text>Error: {mediaError}</Text>;
+
+    const coverImage = images && images.length > 0 ? images[0].url : listing.coverImage || "";
+    
 
     return (
         <View key={listing.id} style={{ minHeight:85, maxHeight:120, opacity: listing.isSold ? 0.5 : 1 }}> 
@@ -19,7 +28,10 @@ export function LinkPreview({ listing, touchable = true }: { listing: Post, touc
                 disabled={listing.isSold || !touchable} 
             >
                 <View style={[Styles.row, {gap:6}]}>
-                    <ImageBackground source={listing.coverImage} style={[ {height: 70}, {width: 70} ]} />
+                    <ImageBackground  
+                        source={{ uri: typeof coverImage === 'string' ? coverImage : '' }}
+                        style={[ {height: 70}, {width: 70} ]} 
+                    />
 
                     <View style={[Styles.row, { justifyContent: "space-between" }]}>
                     
