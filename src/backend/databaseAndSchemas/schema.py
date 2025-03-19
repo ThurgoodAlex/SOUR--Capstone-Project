@@ -119,6 +119,7 @@ class Post(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+
 ###############################
 
 
@@ -144,6 +145,11 @@ class Media(BaseModel):
 
 class UploadMedia(BaseModel):
     post_id: int 
+    
+class MediaListResponse(BaseModel):
+    post_id: int 
+    items: list[Media]
+
         ###############################
 
 

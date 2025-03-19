@@ -12,7 +12,7 @@ export type Post = {
     condition: string;
     size: string;
     gender: string;
-    coverImage: ImageSourcePropType | undefined;
+    coverImage: ImageSourcePropType | string
     price: string;
 
     isSold: boolean;
@@ -77,3 +77,15 @@ export type MessageData = {
     created_at: Date;
 };
   
+export type PostImage = {
+    url: string;
+    id: number;
+    postID: number;
+    isVideo: boolean;
+  };
+
+
+  export type PostImagesResponse = {
+    post_id: number;
+    items: PostImage[];
+  };

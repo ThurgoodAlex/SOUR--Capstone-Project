@@ -16,7 +16,12 @@ from sqlmodel import(
 ) 
 from exceptions import *
 from databaseAndSchemas.schema import (
-    Media, MediaInDB, UploadMedia, UserInDB, User, PostInDB, Delete
+    Media,
+    MediaInDB,
+    MediaListResponse,
+    UserInDB,
+    PostInDB,
+    Delete
 )
 from databaseAndSchemas.test_db import get_session
 from PRISM.auth import auth_get_current_user
@@ -107,18 +112,30 @@ def get_all_media(session : Annotated[Session, Depends(get_session)],
     media_in_db = session.exec(select(MediaInDB)).all()
     return [Media(**media.model_dump()) for media in media_in_db]
 
-@media_router.get('/{media_id}/', response_model= Media, status_code=200)
-def get_media_by_id(media_id : int,
-                    session : Annotated[Session, Depends(get_session)],
-                    current_user: UserInDB = Depends(auth_get_current_user)) -> Media:
-    """Getting media by id"""
-    media = session.get(MediaInDB, media_id)
-    if not media:
-        #raise EntityNotFound("Media", media_id)
-        print("EntityNotFound")
-   
-    return Media(**media.model_dump())
 
+@media_router.get('/{post_id}/', response_model= MediaListResponse, status_code=200)
+def get_media_by_id(
+    post_id : int,
+    session : Annotated[Session, Depends(get_session)],
+    current_user: UserInDB = Depends(auth_get_current_user)
+    ) -> Media:
+    """Getting media by post id"""
+    
+    post_exists = session.exec(select(PostInDB).where(PostInDB.id == post_id)).first()
+    
+    if not post_exists:
+        raise AssociatedPostNotFound(post_id)
+
+    related_media = session.exec(select(MediaInDB).where(MediaInDB.postID == post_id)).all()
+    
+    if not related_media:
+        raise EntityNotFound("media of post", post_id)
+    
+    return MediaListResponse(
+        post_id=post_id,
+        items=related_media
+    ) 
+    
 
 @media_router.delete('/{media_id}/', response_model = Delete, status_code=200)
 def del_media_by_id(

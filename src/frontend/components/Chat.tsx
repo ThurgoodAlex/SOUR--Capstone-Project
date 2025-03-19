@@ -44,7 +44,7 @@ export function Chat({ chat }: { chat: ChatData }) {
         })}>
             <View style={[Styles.row, {justifyContent: 'space-between'}]}>
                 <Image
-                    source={require('../assets/images/profile_pic.jpg')}
+                    source={require('../assets/images/blank_profile_pic.png')}
                     style={ChatProfileStyles.profileImage}
                 />
                 <View style={Styles.column}>

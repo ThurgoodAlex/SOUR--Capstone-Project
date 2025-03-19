@@ -19,13 +19,18 @@ import { useGetMedia } from '@/hooks/useGetMedia';
  * @returns A post view component.
  */
 export function PostPreview({ post, size, profileThumbnail = "none", touchable=true}: { post: Post, size: number, profileThumbnail: string, touchable?: boolean }) {
+  console.log("PostPreview post id:", post.id);
   const { images, loading: mediaLoading, error: mediaError } = useGetMedia(Number(post.id));
 
 
   // if (mediaLoading) return <Text>Loading...</Text>;
-  if (mediaError) return <Text>Error: {mediaError}</Text>;
+  let coverImage = images && images.length > 0 ? images[0].url : post.coverImage;
 
-  const coverImage = images && images.length > 0 ? images[0].url : post.coverImage || "";
+  if (mediaError) 
+  {
+    console.log('Error loading media:', mediaError)
+  }
+
 
   let icon;
   let type = post.isListing ? 'listing' : 'post';
@@ -71,7 +76,7 @@ export function PostPreview({ post, size, profileThumbnail = "none", touchable=t
         disabled={!touchable}
       >
         <ImageBackground
-          source={{ uri: typeof coverImage === 'string' ? coverImage : '' }}
+          source={typeof coverImage === 'string' ? { uri: coverImage } : coverImage}
           style={{ height: size, width: size }}
         >
           {icon}

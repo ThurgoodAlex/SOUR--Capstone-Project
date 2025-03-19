@@ -14,11 +14,14 @@ export function LinkPreview({ listing, touchable = true }: { listing: Post, touc
     
     const { images, loading: mediaLoading, error: mediaError } = useGetMedia(Number(listing.id));
     
-    // if (mediaLoading) return <Text>Loading...</Text>;
-    if (mediaError) return <Text>Error: {mediaError}</Text>;
-
-    const coverImage = images && images.length > 0 ? images[0].url : listing.coverImage || "";
     
+    let coverImage = images && images.length > 0 ? images[0].url : listing.coverImage
+    if (mediaError) 
+    {
+        console.log('Error loading media:', mediaError)
+        coverImage = require('../assets/images/placeholder.png')
+    }
+
 
     return (
         <View key={listing.id} style={{ minHeight:85, maxHeight:120, opacity: listing.isSold ? 0.5 : 1 }}> 
@@ -29,7 +32,7 @@ export function LinkPreview({ listing, touchable = true }: { listing: Post, touc
             >
                 <View style={[Styles.row, {gap:6}]}>
                     <ImageBackground  
-                        source={{ uri: typeof coverImage === 'string' ? coverImage : '' }}
+                        source={typeof coverImage === 'string' ? { uri: coverImage } : coverImage}
                         style={[ {height: 70}, {width: 70} ]} 
                     />
 
