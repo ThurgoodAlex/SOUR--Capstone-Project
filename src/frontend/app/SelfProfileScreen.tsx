@@ -1,66 +1,71 @@
-import { useState } from 'react';
-import { View, Text, Image, Alert, StyleSheet } from 'react-native';
+import { useState, useEffect } from 'react';
+import { View, Text, Image, StyleSheet, Touchable, TouchableOpacity } from 'react-native';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
-
 import { useUser } from '@/context/user';
-import { router, Stack } from 'expo-router';
 import { NavBar } from '@/components/NavBar';
 import { StatsBar } from '@/components/StatsBar';
 import { Tabs } from '@/components/Tabs';
-import { Ionicons } from '@expo/vector-icons';
 import { usePosts } from '@/hooks/usePosts';
 import { PostsFlatList } from '@/components/PostsFlatList';
-
+import { router } from 'expo-router';
+import { Colors } from '@/constants/Colors';
 
 export default function SelfProfileScreen() {
+  const { user } = useUser();
+  const [activeTab, setActiveTab] = useState('Posts');
+  const [endpoint, setEndpoint] = useState(`/users/${user?.id}/posts/`);
+  const { posts, loading, error, refetch } = usePosts(endpoint);
+  
 
-    const {user} = useUser(); 
-    // default to posts
-    const [activeTab, setActiveTab] = useState('Posts');
-
-    const [endpoint, setEndpoint] = useState(`/users/${user?.id}/posts/`);
-    const { posts, loading, error } = usePosts(endpoint);
-    
-    const handleTabSwitch = (tab: string) => {
-        setActiveTab(tab);
-        setEndpoint(tab === 'Posts' 
-            ? `/users/${user?.id}/posts/`
-            : `/users/${user?.id}/likes/`
-        );
-    };
-
-    return (
-        <>
-            <View style={ScreenStyles.screen}>
-                <ProfileInfo user={user} />
-                <StatsBar user={user}/>
-                <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} tab1={'Posts'} tab2={'Likes'} />
-                <PostsFlatList posts={posts} height={270} />
-            </View>
-            <NavBar/>
-        </>
-    );
+  const handleTabSwitch = (tab: string) => {
+    setActiveTab(tab);
+    const newEndpoint = tab === 'Posts' 
+      ? `/users/${user?.id}/posts/`
+      : `/users/${user?.id}/likes/`;
+  
+    setEndpoint(newEndpoint);
+  };
+  
+  // Refetch posts when `endpoint` changes
+  useEffect(() => {
+    refetch();
+  }, [endpoint]);
+  
+  return (
+    <>
+      <View style={ScreenStyles.screen}>
+        <ProfileInfo user={user} />
+        <StatsBar user={user} />
+        <Tabs activeTab={activeTab} handleTabSwitch={handleTabSwitch} tab1={'Posts'} tab2={'Likes'} />
+        
+        {user?.isSeller || activeTab === 'Likes' ? (
+          <PostsFlatList posts={posts} height={270} />
+        ) : (
+          <>
+            <Text style={[TextStyles.h3, { marginTop: 15 }]}>You are not a seller yet</Text>
+            <TouchableOpacity 
+              style={[Styles.buttonDark]}
+              onPress={() => router.push('/SellerScreen')}> 
+                <Text style={TextStyles.light}>Become a Seller Today!</Text>
+            </TouchableOpacity>
+          </>
+        )}
+      </View>
+      <NavBar />
+    </>
+  );
+  
 }
 
 function ProfileInfo({ user }: { user: any }) {
-    let ProfileImage;
-    if(user?.id == 3){
-      ProfileImage = require('../assets/images/prof1.jpg') // Default fallback
-    }
-    else if(user?.id == 2){
-      ProfileImage = require('../assets/images/profile_pic.jpg') // Default fallback
-    }
-    else if(user?.id == 1){
-      ProfileImage = require('../assets/images/prof2.jpeg') // Default fallback
-    }
-    else{
-      ProfileImage = require('../assets/images/prof3.jpeg') // Default fallback
-    }
-
     return (
         <View style={Styles.center}>
             <Image
-                source={ProfileImage}
+                source={
+                    user.profilePic
+                    ? user.profilePic
+                    : require('../assets/images/blank_profile_pic.png')
+                }
                 style={ProfileStyles.profileImage}
             />
             <Text style={TextStyles.h1}>{user?.firstname + " " + user?.lastname|| "ERROR: can't find name"}</Text>
@@ -71,16 +76,23 @@ function ProfileInfo({ user }: { user: any }) {
 
 
 const ProfileStyles = StyleSheet.create({
-    profileImage: {
-        width: 80,
-        height: 80,
-        borderRadius: 40,
-    },
-    listingItem: {
-        marginVertical: 10,
-        padding: 15,
-        borderWidth: 1,
-        borderColor: '#ddd',
-        borderRadius: 5,
-    },
+  profileImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+  },
+});
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff', // Match your app’s background
+    height: 270, // Match PostsFlatList height
+  },
+  loadingText: {
+    fontSize: 16,
+    color: '#000',
+  },
 });

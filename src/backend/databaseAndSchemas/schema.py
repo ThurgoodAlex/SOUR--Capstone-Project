@@ -119,6 +119,7 @@ class Post(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+
 ###############################
 
 
@@ -144,9 +145,12 @@ class Media(BaseModel):
     
 class MediaListResponse(BaseModel):
     post_id: int 
+    
+class MediaListResponse(BaseModel):
+    post_id: int 
     items: list[Media]
 
-###############################
+        ###############################
 
 
 ### All Likes Schemas ###

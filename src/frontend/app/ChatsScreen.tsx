@@ -1,6 +1,6 @@
 import { Chat } from '@/components/Chat';
 import { NavBar } from '@/components/NavBar';
-import { ScreenStyles } from '@/constants/Styles';
+import { ScreenStyles, TextStyles } from '@/constants/Styles';
 import { User, ChatData } from '@/constants/Types';
 import { useApi } from '@/context/api';
 import { useUser } from '@/context/user';
@@ -39,6 +39,9 @@ export default function ChatsScreen() {
     return (
         <>
             <View style={ScreenStyles.screen}>
+                <Text style={[TextStyles.h2, TextStyles.uppercase]}>
+                    Your Chats
+                </Text>
                 {chats.length > 0 ? (
                     <FlatList
                         data={chats}

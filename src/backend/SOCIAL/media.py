@@ -130,7 +130,10 @@ def get_media_by_id(
         raise AssociatedPostNotFound(post_id)
 
     related_media = session.exec(select(MediaInDB).where(MediaInDB.postID == post_id)).all()
-
+    
+    if not related_media:
+        raise EntityNotFound("media of post", post_id)
+    
     return MediaListResponse(
         post_id=post_id,
         items=related_media

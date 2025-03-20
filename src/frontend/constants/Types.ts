@@ -12,7 +12,7 @@ export type Post = {
     condition: string;
     size: string;
     gender: string;
-    coverImage: ImageSourcePropType | undefined;
+    coverImage: ImageSourcePropType | string
     price: string;
 
     isSold: boolean;
@@ -24,24 +24,12 @@ export interface CartPost extends Post {
     cartItemId: number;
   }
 
-// export type Listing = {
-//     id:number;
-//     createdDate: Date;
-
-//     title: string;
-//     price: string;
-//     description: string;
-//     size: string;
-
-//     seller: User;
-// };
-
 export type User = {
     firstname: string;
     lastname: string;
     username: string;
     id:number;
-    profilePic?:string | '../assets/images/profile_pic.jpg';
+    profilePic?:string | '../assets/images/blank_profile_pic.png';
     isSeller: boolean;
     email: string;
     bio: string;
@@ -89,3 +77,15 @@ export type MessageData = {
     created_at: Date;
 };
   
+export type PostImage = {
+    url: string;
+    id: number;
+    postID: number;
+    isVideo: boolean;
+  };
+
+
+  export type PostImagesResponse = {
+    post_id: number;
+    items: PostImage[];
+  };

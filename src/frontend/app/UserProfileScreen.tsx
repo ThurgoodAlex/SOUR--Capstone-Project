@@ -88,7 +88,7 @@ export default function UserProfileScreen() {
                 let chat = await checkChatResponse.json();
                 router.push({
                     pathname: '/MessagesScreen',
-                    params: { chatID: chat.id },
+                    params: { chatID: chat.id, userID: targetUser?.id },
                 })
             } else if (checkChatResponse.status === 404) {
                 // create new chat
@@ -97,7 +97,7 @@ export default function UserProfileScreen() {
                     if (response.ok) {
                         router.push({
                             pathname: '/MessagesScreen',
-                            params: { chatID: chat.id },
+                            params: { chatID: chat.id,  userID: targetUser?.id },
                         })
                 } else {
                     Alert.alert('Failed to create chat.');
@@ -153,26 +153,14 @@ export default function UserProfileScreen() {
 
 
 function ProfileInfo({ user }: { user: User | null }) {
-
-    let ProfileImage;
-    if(user?.id == 3){
-      ProfileImage = require('../assets/images/prof1.jpg') // Default fallback
-    }
-    else if(user?.id == 2){
-      ProfileImage = require('../assets/images/profile_pic.jpg') // Default fallback
-    }
-    else if(user?.id == 1){
-      ProfileImage = require('../assets/images/prof2.jpeg') // Default fallback
-    }
-    else{
-      ProfileImage = require('../assets/images/prof3.jpeg') // Default fallback
-    }
-
     return (
         <View style={Styles.center}>
             <Image
-                source = {ProfileImage}
-                // source={require('../assets/images/profile_pic.jpg')}
+                source={
+                    user?.profilePic
+                    ? user.profilePic
+                    : require('../assets/images/blank_profile_pic.png')
+                }
                 style={UserProfileStyles.profileImage}
             />
             <Text style={TextStyles.h1}>{user?.firstname + " " + user?.lastname || "ERROR: can't find name"}</Text>
