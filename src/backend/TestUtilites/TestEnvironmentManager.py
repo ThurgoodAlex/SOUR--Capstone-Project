@@ -71,15 +71,16 @@ class TestEnvManager:
                                 select(UserInDB).where(UserInDB.username == username)
                                 ).first()
     
-    def create_post(self, username: str, post_title)-> int:
+    def create_post(self, username: str, post_title:str = None, post_in_db:PostInDB = None)-> int:
         """Creates a post in the DB then returns the post ID"""
         user = self.get_user(username)
         user_id = user.id
 
-        post = PostInDB(
-           sellerID=user_id, 
-           title= post_title, 
-        )
+        if post_in_db == None:
+            post = PostInDB(
+               sellerID=user_id, 
+               title= post_title, 
+            )
 
         try: 
             self.session.add(post)
@@ -88,9 +89,3 @@ class TestEnvManager:
             return post.id
         except:
             return None
-
-
-
-
-
-

@@ -14,7 +14,6 @@ from sqlmodel import(
     select, 
     exists
 ) 
-from exceptions import *
 from databaseAndSchemas.schema import (
     Media,
     MediaInDB,
@@ -51,6 +50,10 @@ async def upload_media(
     file: UploadFile = File(...),
     post_id: int = Form(...),
 ):
+
+    if not validate_post_id(session, post_id):
+        raise AssociatedPostNotFound(post_id)
+
     try:
         file_content = await file.read()
         if len(file_content) == 0:
