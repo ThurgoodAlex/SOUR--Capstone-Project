@@ -11,7 +11,13 @@ import boto3
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 from SOCIAL import MediaUploader 
 from databaseAndSchemas import *
+from passlib.context import CryptContext
+import os
+from sqlalchemy import text
 
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+jwt_key = str(os.environ.get("JWT_KEY"))
+jwt_alg = "HS256"
 
 AWS_REGION = os.environ.get('CDK_DEFAULT_REGION', 'us-west-1')
 AWS_ACCOUNT_ID = os.environ.get('CDK_DEFAULT_ACCOUNT', '000000000000')
@@ -53,10 +59,14 @@ class Seeder:
             for user in self.data["users"]:
                 user_copy = user.copy()
                 password = user_copy.pop("password")
-                user_copy["hashed_password"] = password
+                user_copy["hashed_password"] = pwd_context.hash(password)
                 user_in_db = UserInDB(**user_copy)
                 session.add(user_in_db)
             session.commit()
+            reset_seq(session)
+
+            
+            
 
     def create_posts(self):
        with Session(engine) as session:
@@ -78,6 +88,8 @@ class Seeder:
                         post_data.sellerID,
                         post_data.id
                     )
+            session.commit()
+            reset_seq(session)
                 
     def upload_post_media(
             self,
@@ -100,6 +112,11 @@ class Seeder:
                 session.add(media)
         session.commit()
     
+
+def reset_seq(session):
+    session.execute(text("SELECT setval('users_id_seq', (SELECT MAX(id) FROM users))"))
+    session.execute(text("SELECT setval('posts_id_seq', (SELECT MAX(id) FROM posts))"))
+    session.commit()
     
 if __name__ == "__main__":
 
