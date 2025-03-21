@@ -15,7 +15,7 @@ from databaseAndSchemas import *
 
 AWS_REGION = os.environ.get('CDK_DEFAULT_REGION', 'us-west-1')
 AWS_ACCOUNT_ID = os.environ.get('CDK_DEFAULT_ACCOUNT', '000000000000')
-POSTGRES_URL = os.environ.get('DATABASE_URL', "postgresql://root:password123@localhost:5432/sour-db")
+POSTGRES_URL = os.environ.get('DATABASE_URL', "postgresql://root:password123@db:5432/sour-db")
 
 
 s3_client = boto3.client('s3', region_name=AWS_REGION)
