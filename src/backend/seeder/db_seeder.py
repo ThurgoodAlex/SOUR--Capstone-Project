@@ -63,7 +63,9 @@ class Seeder:
                 user_in_db = UserInDB(**user_copy)
                 session.add(user_in_db)
             session.commit()
-        session.execute(text("SELECT setval('users_id_seq', (SELECT MAX(id) FROM users))"))
+            reset_seq(session)
+
+            
             
 
     def create_posts(self):
@@ -86,6 +88,8 @@ class Seeder:
                         post_data.sellerID,
                         post_data.id
                     )
+            session.commit()
+            reset_seq(session)
                 
     def upload_post_media(
             self,
@@ -108,6 +112,11 @@ class Seeder:
                 session.add(media)
         session.commit()
     
+
+def reset_seq(session):
+    session.execute(text("SELECT setval('users_id_seq', (SELECT MAX(id) FROM users))"))
+    session.execute(text("SELECT setval('posts_id_seq', (SELECT MAX(id) FROM posts))"))
+    session.commit()
     
 if __name__ == "__main__":
 
