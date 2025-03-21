@@ -142,8 +142,8 @@ class Media(BaseModel):
     isVideo: bool
     # This allows us to map from imageInDB to an image
     model_config = ConfigDict(from_attributes=True)
-
-class UploadMedia(BaseModel):
+    
+class MediaListResponse(BaseModel):
     post_id: int 
     
 class MediaListResponse(BaseModel):

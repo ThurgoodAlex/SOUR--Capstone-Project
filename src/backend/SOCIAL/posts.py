@@ -3,7 +3,7 @@ import sys
 import boto3
 from fastapi import APIRouter, Depends, Query
 from datetime import datetime, timezone
-from typing import Annotated
+from typing import Annotated, Optional
 import logging
 from sqlalchemy.future import select
 from sqlalchemy import desc
@@ -23,7 +23,12 @@ from databaseAndSchemas.schema import (
     Link,
     LinkInDB,
     Media,
-    MediaInDB
+    MediaInDB,
+    createListing,
+    Comment,
+    CommentCreate,
+    Like,
+    createMedia
 )
 
 
@@ -105,12 +110,6 @@ def get_only_listings(session: Annotated[Session, Depends(get_session)],
     post_in_db = session.exec(select(PostInDB).where(PostInDB.isListing == True)).all()
     return [Post(**post.model_dump()) for post in post_in_db]
 
-# @posts_router.get('/', response_model= list[Post], )
-# def get_only_videos(session: Annotated[Session, Depends(get_session)], 
-#                   current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
-#     """Getting all posts"""
-#     post_in_db = session.exec(select(PostInDB)).all()
-#     return [Post(**post.model_dump()) for post in post_in_db]
 
 @posts_router.get('/filter/', response_model=list[Post])
 def get_filtered_posts(
@@ -118,7 +117,7 @@ def get_filtered_posts(
     brand: Optional[str] = Query(None),
     color: Optional[str] = Query(None),
     session: Session = Depends(get_session)
-) -> List[Post]:
+) -> list[Post]:
     """Get posts with dynamic query filters"""
     query = select(PostInDB)
     filters = []

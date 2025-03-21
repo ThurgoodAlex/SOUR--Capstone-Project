@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
     vim \
     git \
+    libmagic1 \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Node.js
@@ -56,7 +57,8 @@ echo "deploy-infra    - Deploy infrastructure to LocalStack"\n\
 RUN echo '#!/bin/bash\ncd /app/src/frontend && npm start' > /usr/local/bin/start-frontend && \
     echo '#!/bin/bash\ncd /app/src/backend && uvicorn app:app --reload --host 0.0.0.0 --port 8000 --log-level debug' > /usr/local/bin/start-backend && \
     echo '#!/bin/bash\ncd /app/src/infrastructure && ./deploy.sh' > /usr/local/bin/deploy-infra && \
-    chmod +x /usr/local/bin/start-frontend /usr/local/bin/start-backend /usr/local/bin/deploy-infra
+    chmod +x /usr/local/bin/start-frontend /usr/local/bin/start-backend /usr/local/bin/deploy-infra 
+
 
 # Expose ports
 EXPOSE 8000 19000 19001 19002

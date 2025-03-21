@@ -24,7 +24,8 @@ from databaseAndSchemas.schema import(
     User, 
     UserLogin, 
     AccessToken, 
-    Claims
+    Claims,
+    TokenRequest
 )
 from databaseAndSchemas.mappings.userMapping import *
 from .prism_exceptions import(
