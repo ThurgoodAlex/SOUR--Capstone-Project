@@ -58,6 +58,10 @@ export default function SelfProfileScreen() {
 }
 
 function ProfileInfo({ user }: { user: any }) {
+  if(!user){
+    router.replace("/LoggedOutScreen");
+    return null;
+  }
     return (
         <View style={Styles.center}>
             <Image
