@@ -39,7 +39,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     setToken("");
     //clearToken();
-    router.replace('/LoggedOutScreen');
+    setTimeout(() => {
+      router.replace('/LoggedOutScreen');
+    }, 100);
   };
 
   const isLoggedIn = !!token;
