@@ -6,6 +6,7 @@ from datetime import datetime
 from sqlmodel import Session, SQLModel, create_engine, select#
 from fastapi.testclient import TestClient
 from sqlalchemy import text
+from sqlalchemy import text
 import sys
 import logging
 from contextlib import asynccontextmanager
