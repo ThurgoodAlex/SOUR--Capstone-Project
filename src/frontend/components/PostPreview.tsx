@@ -22,7 +22,12 @@ export function PostPreview({ post, size, profileThumbnail = "none", touchable =
   const { images, loading: mediaLoading, error: mediaError } = useGetMedia(Number(post.id));
 
   // Fallback to placeholder image if cover image is null
-  let coverImage = (images && images.length > 0 ? images[0].url : post.coverImage) || require('../assets/images/placeholder.png');
+  let coverImage = post.coverImage;
+
+  if (coverImage == null || coverImage === '') {
+    coverImage = (images && images.length > 0 ? images[0].url : require('../assets/images/placeholder.png'));
+  }
+
 
   console.log('Cover Image:', coverImage);
   if (mediaError) {
