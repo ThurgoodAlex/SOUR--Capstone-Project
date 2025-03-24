@@ -1,5 +1,5 @@
  //tunnel URL
- const localhostIP = "localhost";
+ const localhostIP = "127.0.0.1";
 
  //Alex desktop URL
  //const localhostIP = "10.0.0.62";

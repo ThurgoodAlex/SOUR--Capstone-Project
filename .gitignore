@@ -14,3 +14,4 @@ volume/*
 *.log
 src/frontend/.expo/settings.json
 src/infrastructure/cdk.out.deploy/*
+src/frontend/assets/images/.DS_Store
