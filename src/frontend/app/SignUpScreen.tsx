@@ -117,6 +117,7 @@ export default function SignUpScreen() {
                             <TextInput
                                 style={Styles.input}
                                 placeholder={placeholder}
+                                placeholderTextColor={Colors.dark60}
                                 onChangeText={value => {
                                     if (key === 'username') setUsername(value);
                                     else if (key === 'firstName') setFirstName(value);

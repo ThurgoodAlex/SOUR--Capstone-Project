@@ -67,6 +67,7 @@ export default function LoginScreen() {
                 <TextInput
                     style={Styles.input}
                     placeholder="Username"
+                    placeholderTextColor={Colors.dark60}
                     keyboardType="default"
                     value={username}
                     onChangeText={setUsername}
