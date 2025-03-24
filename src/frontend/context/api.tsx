@@ -37,6 +37,10 @@ const api = (token: string | null = null) => {
 
     // GET request method with logging
     const get = async (url: string) => {
+        if (url.includes('/undefined/')) {
+            console.warn("Skipping request with undefined parameter:", url);
+            return Promise.resolve(new Response(JSON.stringify({error: "Invalid request parameters"})));
+        }
         const headers = getAuthHeaders();
         console.log("GET Request URL:", localhost + url);
         console.log("GET Headers:", headers);

@@ -5,7 +5,7 @@ export type Post = {
     id: number;
     createdDate: Date;
 
-    seller: User;
+    seller: User | null;
     title: string;
     description: string;
     brand: string;

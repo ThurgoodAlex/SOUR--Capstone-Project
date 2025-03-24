@@ -51,17 +51,31 @@ export function usePosts(endpoint: string) {
   };
 
   const fetchPosts = useCallback(async () => {
+    if (!endpoint || endpoint.trim() === '' || endpoint.includes('undefined')) {
+      setPosts([]);
+      setLoading(false);
+      return;
+    }
+  
     setLoading(true);
     setError(null);
-
     try {
       console.log('calling endpoint:', endpoint);
       const response = await api.get(endpoint);
+      
+      if (!response.ok) {
+        throw new Error('Could not fetch posts.');
+      }
+      
       const result = await response.json();
-
       console.log('Posts fetched:', result);
-
-      if (!response.ok) throw new Error('Could not fetch posts.');
+      
+      // Check if result is an array before mapping
+      if (!Array.isArray(result)) {
+        console.error('API did not return an array:', result);
+        setPosts([]);
+        return;
+      }
 
       const transformedPosts: Post[] = await Promise.all(
         result.map(async (item: any) => {

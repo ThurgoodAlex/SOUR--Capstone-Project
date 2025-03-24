@@ -28,6 +28,7 @@ from databaseAndSchemas.schema import (
     Comment,
     CommentCreate,
     Like,
+    LikeInDB,
     createMedia
 )
 
