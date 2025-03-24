@@ -120,6 +120,46 @@ def fuzzy_search(
     return results
 
 
+
+@posts_router.get('/search/', response_model=list[Post], status_code=200)
+def fuzzy_search(search: str, threshold_val: float = 0.3, session: Session = Depends(get_session), 
+                current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
+    session.execute(text('CREATE EXTENSION IF NOT EXISTS pg_trgm;'))
+    session.execute(text('CREATE INDEX IF NOT EXISTS idx_trgm_name ON posts USING gin (title gin_trgm_ops);'))
+    
+    session.commit()
+
+
+    # query = text("""
+    #     SELECT *, similarity(title, :search) as score
+    #     FROM posts
+    #     WHERE similarity(title, :search) > :threshold
+    #     ORDER BY score DESC;
+    # """)
+
+    #We will want to do something like this once we have a basic tag column up.
+#     CREATE FUNCTION update_search_vector() RETURNS TRIGGER AS $$
+# BEGIN
+#   NEW.search_vector := to_tsvector('english', NEW.title);
+#   RETURN NEW;
+# END;
+# $$ LANGUAGE plpgsql;
+
+# CREATE TRIGGER search_vector_update
+# BEFORE INSERT OR UPDATE ON posts
+# FOR EACH ROW EXECUTE FUNCTION update_search_vector();
+    query = text("""
+        SELECT *, similarity(title, :search) AS score
+        FROM posts
+        WHERE (search_vector @@ plainto_tsquery(:search)
+        OR similarity(title, :search) > :threshold)
+        ORDER BY score DESC;
+    """)    
+    results = session.execute(query, {"search": search, "threshold": threshold_val}).fetchall()
+
+    return results
+
+
 @posts_router.post('/listings/', response_model= Post, status_code=201)
 def upload_listing(newListing:createListing,  
                 session: Annotated[Session, Depends(get_session)], 
