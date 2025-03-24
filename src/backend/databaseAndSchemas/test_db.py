@@ -5,6 +5,7 @@ import boto3
 from datetime import datetime
 from sqlmodel import Session, SQLModel, create_engine, select#
 from fastapi.testclient import TestClient
+from sqlalchemy import text
 import sys
 import logging
 from contextlib import asynccontextmanager
@@ -24,7 +25,43 @@ engine = create_engine(
 )
 
 def create_db_and_tables():
-    SQLModel.metadata.create_all(engine)
+    SQLModel.metadata.create_all(engine)  # Create tables
+
+    with Session(engine) as session:
+        # Add search_vector column if it doesn’t exist
+        session.execute(text("ALTER TABLE posts ADD COLUMN IF NOT EXISTS search_vector tsvector;"))
+
+        # Populate existing data
+        session.execute(text("UPDATE posts SET search_vector = to_tsvector('english', title);"))
+
+        # Create index
+        session.execute(text("CREATE INDEX IF NOT EXISTS search_idx ON posts USING GIN (search_vector);"))
+
+        # Create trigger function
+        session.execute(text("""
+        CREATE OR REPLACE FUNCTION update_search_vector() RETURNS TRIGGER AS $$ 
+        BEGIN
+          NEW.search_vector := to_tsvector('english', NEW.title);
+          RETURN NEW;
+        END;
+        $$ LANGUAGE plpgsql;
+        """))
+
+        # Create trigger if it doesn't exist
+        session.execute(text("""
+        DO $$ 
+        BEGIN
+            IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'search_vector_update') THEN
+                CREATE TRIGGER search_vector_update
+                BEFORE INSERT OR UPDATE ON posts
+                FOR EACH ROW EXECUTE FUNCTION update_search_vector();
+            END IF;
+        END $$;
+        """))
+
+        session.commit()  # Save changes
+
+
 
 def get_session():
     with Session(engine) as session:
