@@ -133,7 +133,7 @@ class MediaInDB(SQLModel, table=True):
 
 class createMedia(BaseModel):
     url: str
-    isVideo: bool
+    isVideo: Optional[bool] = False
 
 class Media(BaseModel):
     url: str

@@ -10,6 +10,8 @@ import { usePosts } from '@/hooks/usePosts';
 import * as ImagePicker from "expo-image-picker";
 import { router, Stack } from 'expo-router';
 import { useState } from 'react';
+import * as VideoThumbnails from 'expo-video-thumbnails';
+
 
 import useUploadImages from '@/hooks/useUploadImages';  // Custom hook for videos
 import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, Alert } from 'react-native';
@@ -30,7 +32,8 @@ export default function CreateVideo() {
     const { creatingFormData } = useCreateFormData();
     const { uploadingImages } = useUploadImages();  // Custom hook for videos
 
-    // Pick a single video from the device's media library
+    const [coverImage, setCoverImage] = useState<string | null>(null);  // Store the cover image URI
+
     const uploadVideo = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
@@ -40,9 +43,9 @@ export default function CreateVideo() {
         }
 
         const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: 'videos',  // Video only
-            allowsMultipleSelection: false,  // Only one video
-            quality: 1,  // Max quality
+            mediaTypes: 'videos',
+            allowsMultipleSelection: false,
+            quality: 1,
         });
 
         console.log('Video Picker Result:', result);
@@ -50,7 +53,20 @@ export default function CreateVideo() {
         if (!result.canceled && result.assets?.[0]) {
             const videoUri = result.assets[0].uri;
             setVideo(videoUri);
-            setError(null);  // Clear any previous errors
+            setError(null);
+
+            try {
+                const thumbnail = await VideoThumbnails.getThumbnailAsync(videoUri, {
+                    time: 1000,  // Capture a frame at 1 second
+                    quality: 0.8
+                });
+
+                console.log('Thumbnail URI:', thumbnail.uri);
+                setCoverImage(thumbnail.uri);  // Store the thumbnail URI
+            } catch (e) {
+                console.error('Failed to generate thumbnail:', e);
+                Alert.alert('Error', 'Failed to generate video thumbnail.');
+            }
         }
     };
 
@@ -59,46 +75,61 @@ export default function CreateVideo() {
             Alert.alert('Error', 'Please select a video to upload.');
             return;
         }
-
+    
         try {
             setLoading(true);
-
+    
             console.log("Submitting post with video:", video);
-
+    
             // Create post first
             const response = await api.post("/posts/", {
                 "title": name,
                 "description": description,
             });
-
+    
             const result = await response.json();
-
+    
             if (!response.ok) {
                 Alert.alert('Error', 'Failed to create post.');
                 return;
             }
-
+    
             console.log("Created post:", result);
-
+    
             const postId = result.id;
-
+    
             // Upload the video
             if (video) {
                 const formData = creatingFormData([video], postId);
                 const uploadedVideo = await uploadingImages(await formData);
                 console.log("Uploaded Video:", uploadedVideo);
             }
-
+    
+            // Upload cover image
+            if (coverImage) {
+                const coverFormData = creatingFormData([coverImage], postId);
+                const uploadedCover = await uploadingImages(await coverFormData);
+                
+                if (uploadedCover.length > 0) {
+                    console.log("Uploaded cover image:", uploadedCover[0]);
+                    
+                    // Update the post with the cover image
+                    await api.put(`/posts/${postId}/coverImage`, {
+                        url: uploadedCover[0]  // Attach the cover image URL
+                    });
+                }
+            }
+    
             // Link listing to selected posts
             for (const listing of linkedListings) {
                 console.log("Linking post id =", listing.id);
                 const linkResponse = await api.post(`/posts/${postId}/link/${listing.id}/`);
-
+    
                 if (!linkResponse.ok) {
                     console.error(`Failed to link post ${postId} with listing ${listing.id}`);
                 }
             }
-
+    
             router.replace("/SelfProfileScreen");
         } catch (error) {
             console.error('Error creating post:', error);
@@ -107,6 +138,7 @@ export default function CreateVideo() {
             setLoading(false);
         }
     };
+    
 
     return (
         <>
@@ -138,7 +170,7 @@ export default function CreateVideo() {
 
 function VideoUploadSection({ video, onUpload }: { video: string | null; onUpload: () => void }) {
     return (
-        <View style={Styles.column}>
+        <View>
             {video ? (
                 <Video
                     source={{ uri: video }}
@@ -149,7 +181,9 @@ function VideoUploadSection({ video, onUpload }: { video: string | null; onUploa
                     shouldPlay
                 />
             ) : (
-                <TouchableOpacity style={[Styles.buttonLight, { height: 200 }]} onPress={onUpload}>
+                <TouchableOpacity 
+                    style={[Styles.buttonLight, { backgroundColor: Colors.dark60, width: 220, height: 220, borderColor: Colors.dark, borderWidth: 1 }]} 
+                    onPress={onUpload}>
                     <Text style={TextStyles.h3}>Upload Video</Text>
                 </TouchableOpacity>
             )}
