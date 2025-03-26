@@ -86,6 +86,7 @@ class PostInDB(SQLModel, table = True):
     isSold: Optional[bool] = Field(default=False, nullable=False)
     created_at: datetime = Field(default_factory=datetime.now)
     isListing: bool = Field(default=False, nullable=False)
+    isVideo: Optional[bool] = Field(default=False, nullable=False)
 
 class createPost(BaseModel):
     title: str
@@ -155,7 +156,7 @@ class MediaListResponse(BaseModel):
 
 ### All Likes Schemas ###
 class LikeInDB(SQLModel, table = True):
-    __tablename__ = "Likes"
+    __tablename__ = "likes"
     id: Optional[int] = Field(default=None, primary_key=True)
     userID: int = Field(foreign_key="users.id")
     postID: int = Field(foreign_key= "posts.id")
@@ -171,10 +172,29 @@ class LikeCreate(BaseModel):
     postID: int
 ###############################
 
+### All Likes Schemas ###
+class TagInDB(SQLModel, table = True):
+    __tablename__ = "tags"
+    id: Optional[int] = Field(default=None, primary_key=True)
+    postID: int = Field(foreign_key= "posts.id")
+    tag: str
+
+class Tag(BaseModel):
+    id: int
+    postID: int
+    tag: str
+    model_config = ConfigDict(from_attributes=True)
+
+class TagCreat(BaseModel):
+    postID: int
+    tag: str
+###############################
+
+
 
 ### All Comments Schemas ###
 class CommentInDB(SQLModel, table = True):
-    __tablename__ = "Comments"
+    __tablename__ = "comments"
     id: Optional[int] = Field(default=None, primary_key=True)
     userID: int = Field(foreign_key="users.id")
     postID: int = Field(foreign_key= "posts.id")
@@ -196,7 +216,7 @@ class CommentCreate(BaseModel):
 
 ### All Following Schemas
 class FollowingInDB(SQLModel, table = True):
-    __tablename__ = "FollowingAndFollowees"
+    __tablename__ = "following"
     id: Optional[int] = Field(default=None, primary_key=True)
     followerID: int = Field(foreign_key="users.id")
     followeeID: int = Field(foreign_key="users.id")
@@ -215,7 +235,7 @@ class FollowingCreate(BaseModel):
 
 ### All Link Schemas ###
 class LinkInDB(SQLModel, table = True):
-    __tablename__ = "Links"
+    __tablename__ = "links"
     id: Optional[int] = Field(default=None, primary_key=True)
     listingID: int = Field(foreign_key= "posts.id")
     postID: int = Field(foreign_key= "posts.id")
@@ -234,7 +254,7 @@ class LinkCreate(BaseModel):
 
 ### ALl Chat Schemas ###
 class ChatInDB(SQLModel, table = True):
-    __tablename__ = "Chats"
+    __tablename__ = "chats"
     id: Optional[int] = Field(default=None, primary_key=True)
     senderID: int = Field(foreign_key="users.id", index=True)
     recipientID: int = Field(foreign_key="users.id", index=True)
@@ -252,9 +272,9 @@ class ChatCreate(BaseModel):
 
 ### All Message Schemas ###
 class MessageInDB(SQLModel, table = True):
-    __tablename__ = "Messages"
+    __tablename__ = "messages"
     id: Optional[int] = Field(default=None, primary_key=True)
-    chatID: int = Field(default=None, foreign_key="Chats.id", index=True)
+    chatID: int = Field(default=None, foreign_key="chats.id", index=True)
     author: int = Field(foreign_key="users.id", index=True)
     message: str
     created_at: datetime = Field(default_factory=datetime.now)
@@ -274,7 +294,7 @@ class MessageCreate(BaseModel):
 
 ### All Cart Schemas ###
 class CartInDB(SQLModel, table = True):
-    __tablename__ = "Cart"
+    __tablename__ = "cart"
     id: Optional[int] = Field(default=None, primary_key=True)
     userID: int = Field(foreign_key="users.id", index=True)
     listingID: int = Field(foreign_key= "posts.id")
@@ -295,7 +315,7 @@ class CartCreate(BaseModel):
 
 ### All Seller Stat Schemas ###
 class SellerStatInDB(SQLModel, table = True):
-    __tablename__ = "SellerStats"
+    __tablename__ = "sellerStats"
     id: Optional[int] = Field(default=None, primary_key=True)
     sellerID: int = Field(foreign_key="users.id", index=True)
     totalEarnings: Decimal = Field(default=0.00)
