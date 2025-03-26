@@ -2,13 +2,9 @@
 import { View, Dimensions, FlatList, StyleSheet } from 'react-native';
 import { useEffect, useRef, useState } from 'react';
 import { NavBar } from '@/components/NavBar';
-import { Stack } from 'expo-router';
-import { ScreenStyles } from '@/constants/Styles';
 import { useApi } from '@/context/api';
 import { Video } from '@/components/Video';
 import { Post } from '@/constants/Types';
-import { Colors } from '@/constants/Colors';
-import { useVideoPlayer, VideoView } from 'expo-video';
 import { StatusBar } from 'expo-status-bar';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -28,7 +24,7 @@ export default function VideoScreen() {
 
     const getVideos = async () => {
         try {
-            const response = await api.get(`/posts/isListing=false/`);
+            const response = await api.get(`/posts/isVideo=true/`);
             if (response.ok) {
                 const videosData = await response.json();
                 setVideos(videosData)
@@ -44,14 +40,8 @@ export default function VideoScreen() {
         getVideos();
     }, []);
 
-    // const player = useVideoPlayer(require('../assets/vids/testFashion.mp4'), player => {
-    //     player.loop = true;
-    //     player.play();
-    //   });
-
     const renderVideo = ({item, index} : {item: Post, index: number}) => (
         <Video post={item} index={index} currentViewableItemIndex={currentViewableItemIndex}/>
-        // <VideoView style={{ width: '100%', height: VIDEO_HEIGHT }} player={player} />
     );
     return (
         <>
