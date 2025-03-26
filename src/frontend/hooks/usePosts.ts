@@ -2,21 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { useApi } from '@/context/api';
 import { Post } from '@/constants/Types';
 
-// Dummy images for placeholders
-const dummyImages = [
-  require('../assets/images/video.png'),
-  require('../assets/images/post.png'),
-  require('../assets/images/sweater1.png'),
-  require('../assets/images/listing2.png'),
-  require('../assets/images/listing.png'),
-  require('../assets/images/random1.png'),
-  require('../assets/images/random2.png'),
-  require('../assets/images/random3.png'),
-  require('../assets/images/random4.png'),
-  require('../assets/images/random5.png'),
-];
-
-const getRandomImage = () => dummyImages[Math.floor(Math.random() * dummyImages.length)];
 
 /**
  * Custom hook to fetch posts from a given endpoint
@@ -83,7 +68,7 @@ export function usePosts(endpoint: string) {
           return {
             id: item.id,
             createdDate: item.created_at || new Date().toISOString(),
-            coverImage: getRandomImage(),
+            coverImage: item.coverImage,
             title: item.title,
             description: item.description,
             brand: item.brand,

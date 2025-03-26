@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { useApi } from '@/context/api';
 import { Post } from '@/constants/Types';
 
-const images = ["sweater1.png", "sweater2.png", "sweater3.png", "sweater4.png"]
 
 /**
  * Custom hook to fetch post with given id

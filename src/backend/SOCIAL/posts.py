@@ -373,6 +373,34 @@ def post_sold(post_id: int, session :Annotated[Session, Depends(get_session)]):
     return {"message": "Post marked as sold and stats updated"}
 
 
+
+@posts_router.put('/{post_id}/coverImage')
+def add_cover_image(
+    post_id: int, 
+    cover_image: createMedia,
+    session: Annotated[Session, Depends(get_session)]
+):
+    # Find the post by ID
+    post = session.get(PostInDB, post_id)
+
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
+
+    # Update the cover image field
+    post.coverImage = cover_image.url
+
+    # Save changes
+    session.commit()
+    session.refresh(post)
+
+    return {
+        "message": "Cover image added successfully",
+        "post": {
+            "id": post.id,
+            "coverImage": post.coverImage
+        }
+    }
+
 @posts_router.post('/{post_id}/media/', response_model=Media,status_code=201)
 def upload_media(post_ID: int, 
                  new_media : createMedia, 

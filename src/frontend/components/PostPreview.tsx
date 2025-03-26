@@ -18,19 +18,21 @@ import { useGetMedia } from '@/hooks/useGetMedia';
  * 
  * @returns A post view component.
  */
-export function PostPreview({ post, size, profileThumbnail = "none", touchable=true}: { post: Post, size: number, profileThumbnail: string, touchable?: boolean }) {
-  console.log("PostPreview post id:", post.id);
+export function PostPreview({ post, size, profileThumbnail = "none", touchable = true }: { post: Post, size: number, profileThumbnail: string, touchable?: boolean }) {
   const { images, loading: mediaLoading, error: mediaError } = useGetMedia(Number(post.id));
 
+  // Fallback to placeholder image if cover image is null
+  let coverImage = post.coverImage;
 
-  // if (mediaLoading) return <Text>Loading...</Text>;
-  let coverImage = images && images.length > 0 ? images[0].url : post.coverImage;
-
-  if (mediaError) 
-  {
-    console.log('Error loading media:', mediaError)
+  if (coverImage == null || coverImage === '') {
+    coverImage = (images && images.length > 0 ? images[0].url : require('../assets/images/placeholder.png'));
   }
 
+
+  console.log('Cover Image:', coverImage);
+  if (mediaError) {
+    console.log('Error loading media:', mediaError);
+  }
 
   let icon;
   let type = post.isListing ? 'listing' : 'post';
@@ -57,16 +59,18 @@ export function PostPreview({ post, size, profileThumbnail = "none", touchable=t
       }
     : undefined;
 
-  const seller: User = {
-    firstname: post.seller.firstname,
-    lastname: post.seller.lastname,
-    username: post.seller.username,
-    bio: post.seller.bio,
-    email: post.seller.email,
-    profilePic: post.seller.profilePic,
-    isSeller: post.seller.isSeller,
-    id: post.seller.id,
-  };
+  const seller: User | null = post.seller
+    ? {
+        firstname: post.seller.firstname,
+        lastname: post.seller.lastname,
+        username: post.seller.username,
+        bio: post.seller.bio,
+        email: post.seller.email,
+        profilePic: post.seller.profilePic,
+        isSeller: post.seller.isSeller,
+        id: post.seller.id,
+      }
+    : null;
 
   return (
     <View key={post.id} style={[previewStyle, { justifyContent: 'flex-start' }]}>
@@ -76,7 +80,7 @@ export function PostPreview({ post, size, profileThumbnail = "none", touchable=t
         disabled={!touchable}
       >
         <ImageBackground
-          source={typeof coverImage === 'string' ? { uri: coverImage } : coverImage}
+          source={typeof coverImage === 'string' ? { uri: coverImage } : require('../assets/images/placeholder.png')}
           style={{ height: size, width: size }}
         >
           {icon}
@@ -90,10 +94,12 @@ export function PostPreview({ post, size, profileThumbnail = "none", touchable=t
       </TouchableOpacity>
 
       {profileThumbnail !== 'none' ? (
-        profileThumbnail === 'big' ? (
-          <ProfileThumbnail user={seller} />
-        ) : seller ? (
-          <ProfileThumbnailSmall user={seller} />
+        seller ? (
+          profileThumbnail === 'big' ? (
+            <ProfileThumbnail user={seller} />
+          ) : (
+            <ProfileThumbnailSmall user={seller} />
+          )
         ) : (
           <Text>No seller information available</Text>
         )
@@ -103,5 +109,3 @@ export function PostPreview({ post, size, profileThumbnail = "none", touchable=t
     </View>
   );
 }
-
-
