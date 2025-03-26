@@ -116,6 +116,7 @@ def fuzzy_search(
     results = session.execute(query, {"tsquery": tsquery}).fetchall()
     return results
 
+<<<<<<< HEAD
 
 
 @posts_router.get('/search/', response_model=list[Post], status_code=200)
@@ -158,6 +159,8 @@ def fuzzy_search(
     results = session.execute(query, {"tsquery": tsquery}).fetchall()
     return results
 
+=======
+>>>>>>> 2fa514742c379aec9394ba025ab243a2f72996f4
 
 @posts_router.post('/listings/', response_model= Post, status_code=201)
 def upload_listing(newListing:createListing,  
