@@ -185,7 +185,7 @@ class Tag(BaseModel):
     tag: str
     model_config = ConfigDict(from_attributes=True)
 
-class TagCreat(BaseModel):
+class TagCreate(BaseModel):
     postID: int
     tag: str
 ###############################
