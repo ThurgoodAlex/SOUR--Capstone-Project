@@ -66,44 +66,57 @@ def upload_post(new_post:createPost,
     session.refresh(post)
     return post
 
-
+related_terms = {
+    "sneakers": ["shoes", "kicks", "trainers", "sneaker"],
+    "shoes": ["sneakers", "kicks", "trainers", "footwear"],
+    "jacket": ["coat", "bomber", "windbreaker", "fleece"],
+    "bomber": ["jacket", "coat"],
+    "windbreaker": ["jacket", "coat"],
+    "sweater": ["pullover", "knit", "cardigan"],
+    "jeans": ["pants", "denim"],
+    "pants": ["jeans", "trousers", "denim"],
+    "tee": ["shirt", "t-shirt"],
+    "shirt": ["tee", "t-shirt", "top"]
+}
 
 @posts_router.get('/search/', response_model=list[Post], status_code=200)
-def fuzzy_search(search: str, threshold_val: float = 0.3, session: Session = Depends(get_session), 
-                current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
+def fuzzy_search(
+    search: str, 
+    session: Session = Depends(get_session),
+    current_user: UserInDB = Depends(auth_get_current_user)
+) -> list[Post]:
     session.execute(text('CREATE EXTENSION IF NOT EXISTS pg_trgm;'))
-    session.execute(text('CREATE INDEX IF NOT EXISTS idx_trgm_name ON posts USING gin (title gin_trgm_ops);'))
-    
+    session.execute(text('CREATE EXTENSION IF NOT EXISTS unaccent;'))
     session.commit()
 
+    # Include related search terms for better searching
+    search_lower = search.lower()
+    search_terms = [search_lower]
+    if search_lower in related_terms:
+        search_terms.extend(related_terms[search_lower])
 
-    # query = text("""
-    #     SELECT *, similarity(title, :search) as score
-    #     FROM posts
-    #     WHERE similarity(title, :search) > :threshold
-    #     ORDER BY score DESC;
-    # """)
+    # Build tsquery (e.g., "sneakers | shoes | kicks")
+    tsquery = ' | '.join(search_terms)
 
-    #We will want to do something like this once we have a basic tag column up.
-#     CREATE FUNCTION update_search_vector() RETURNS TRIGGER AS $$
-# BEGIN
-#   NEW.search_vector := to_tsvector('english', NEW.title);
-#   RETURN NEW;
-# END;
-# $$ LANGUAGE plpgsql;
-
-# CREATE TRIGGER search_vector_update
-# BEFORE INSERT OR UPDATE ON posts
-# FOR EACH ROW EXECUTE FUNCTION update_search_vector();
+    # query to find related items, 
+    # this is a bit confusing and convulated. When support for tags gets included, im gonna try and simplify it.
     query = text("""
-        SELECT *, similarity(title, :search) AS score
+        SELECT 
+            *, 
+            ts_rank(
+                to_tsvector('english', unaccent(title || ' ' || COALESCE(description, '') || ' ' || COALESCE(brand, ''))),
+                to_tsquery('english', :tsquery)
+            ) AS rank
         FROM posts
-        WHERE (search_vector @@ plainto_tsquery(:search)
-        OR similarity(title, :search) > :threshold)
-        ORDER BY score DESC;
-    """)    
-    results = session.execute(query, {"search": search, "threshold": threshold_val}).fetchall()
+        WHERE 
+            to_tsvector('english', unaccent(title || ' ' || COALESCE(description, '') || ' ' || COALESCE(brand, ''))) 
+            @@ to_tsquery('english', :tsquery)
+        ORDER BY 
+            rank DESC
+        LIMIT 50;
+    """)
 
+    results = session.execute(query, {"tsquery": tsquery}).fetchall()
     return results
 
 
