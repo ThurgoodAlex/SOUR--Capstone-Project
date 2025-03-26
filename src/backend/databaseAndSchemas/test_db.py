@@ -28,20 +28,31 @@ def create_db_and_tables():
     SQLModel.metadata.create_all(engine)  # Create tables
 
     with Session(engine) as session:
-        # Add search_vector column if it doesn’t exist
+        # Add search_vector column if it doesn't exist
         session.execute(text("ALTER TABLE posts ADD COLUMN IF NOT EXISTS search_vector tsvector;"))
 
-        # Populate existing data
-        session.execute(text("UPDATE posts SET search_vector = to_tsvector('english', title);"))
+        # Populate existing data with a more comprehensive search vector
+        session.execute(text("""
+        UPDATE posts 
+        SET search_vector = to_tsvector('english', 
+            COALESCE(title, '') || ' ' || 
+            COALESCE(description, '') || ' ' || 
+            COALESCE(brand, '')
+        );
+        """))
 
         # Create index
         session.execute(text("CREATE INDEX IF NOT EXISTS search_idx ON posts USING GIN (search_vector);"))
 
-        # Create trigger function
+        # Create trigger function with more comprehensive search vector
         session.execute(text("""
         CREATE OR REPLACE FUNCTION update_search_vector() RETURNS TRIGGER AS $$ 
         BEGIN
-          NEW.search_vector := to_tsvector('english', NEW.title);
+          NEW.search_vector := to_tsvector('english', 
+            COALESCE(NEW.title, '') || ' ' || 
+            COALESCE(NEW.description, '') || ' ' || 
+            COALESCE(NEW.brand, '')
+          );
           RETURN NEW;
         END;
         $$ LANGUAGE plpgsql;
