@@ -126,7 +126,7 @@ export default function CreatePost() {
                     {/* Form Inputs */}
                     <FormGroup labelText="Name" placeholderText="Enter post name" value={name} setter={setName} required />
                     <FormGroup labelText="Caption" placeholderText="Enter caption" value={description} setter={setDescription} multiline />
-                    <LinkInputDropdown posts={posts} selected={linkedListings} setter={setLinkedListings} columns={1} />
+                    <LinkInputDropdown posts={posts} selected={linkedListings} setter={setLinkedListings} columns={1} isListing={false} />
 
                     {/* Submit Button */}
                     <TouchableOpacity

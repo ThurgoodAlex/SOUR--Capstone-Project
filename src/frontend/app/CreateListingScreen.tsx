@@ -11,6 +11,7 @@ import { Colors } from '@/constants/Colors';
 import ModalSelector from 'react-native-modal-selector';
 import * as Yup from 'yup';
 import { Ionicons } from '@expo/vector-icons';
+import { Button } from 'react-native'; // Add this line if using the Button from react-native
 import { usePosts } from '@/hooks/usePosts';
 import { Post } from '@/constants/Types';
 import { LinkedItemsSelection } from '@/components/LinkItemsSelection';
@@ -152,6 +153,11 @@ export default function CreateListing(): JSX.Element {
         }
     };
     
+    const generateWithAI = async (): Promise<void> => {
+    
+        console.log("Generate AI listing Info");
+        
+    };
 
     return (
         <>
@@ -164,6 +170,19 @@ export default function CreateListing(): JSX.Element {
                 <Text style={[TextStyles.h2, TextStyles.uppercase]}>New Listing</Text>
                 <ScrollView>
                     <UploadPhotosCarousel images={images} onAddImages={uploadImages} />
+
+                    <TouchableOpacity 
+                        style={[Styles.buttonDark, (images.length == 0) && Styles.buttonDisabled]}
+                        onPress={generateWithAI}
+                        disabled={images.length == 0}
+                    >
+                       { (images.length == 0 ? 
+                        <Text style={TextStyles.light}>Upload an Image to Generate with AI</Text> 
+                        : <Text style={TextStyles.light}>Generate Listing with AI</Text>)
+                       }
+                    </TouchableOpacity>
+
+
                     <FormGroup labelText="Name" placeholderText="Enter item name" value={name} setter={setName} error={errors["name"]} required/>
                     <FormGroup labelText="Price" placeholderText="Enter price" value={price} setter={setPrice} error={errors["price"]} keyboardType="numeric" required/>
                     <Dropdown labelText="Gender" selectedValue={gender} onValueChange={setGender} options={["Men's", "Women's", "Unisex"]} error={errors["gender"]} />
@@ -171,7 +190,7 @@ export default function CreateListing(): JSX.Element {
                     <FormGroup labelText="Description" placeholderText="Enter item description" value={description} setter={setDescription} error={errors["description"]} multiline/>
                     <FormGroup labelText="Brand" placeholderText="Enter brand" value={brand} setter={setBrand} error={errors["brand"]}/>
                     <Dropdown labelText="Condition" selectedValue={condition} onValueChange={setCondition} options={["New", "Like New", "Good", "Fair", "Needs Repair"]} error={errors["condition"]}/>
-                    <LinkInputDropdown posts={posts} selected={linkedPosts} setter={setLinkedPosts} columns={3}/>
+                    <LinkInputDropdown posts={posts} selected={linkedPosts} setter={setLinkedPosts} columns={3} isListing={true}/>
                     
                     <TouchableOpacity 
                         style={[Styles.buttonDark, (name == "" || price == "" || size == "") && Styles.buttonDisabled]}

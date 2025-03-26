@@ -10,13 +10,15 @@ import { LinkedItemsSelection } from '@/components/LinkItemsSelection';
 
 
 
-export function LinkInputDropdown({ posts, selected, setter, columns }: {posts: Post[], selected: Post[], setter: React.Dispatch<React.SetStateAction<Post[]>>, columns: number}){
+export function LinkInputDropdown({ posts, selected, setter, columns, isListing }: {posts: Post[], selected: Post[], setter: React.Dispatch<React.SetStateAction<Post[]>>, columns: number, isListing: boolean}) {
       const [isOpen, setIsOpen] = useState(false);
        
       
       return (
       <View>
-          <Text style={[TextStyles.h3, {textAlign:'left'}]}>Link Posts</Text>
+        {isListing ? <Text style={[TextStyles.h3, {textAlign:'left'}]}>Link Posts</Text>
+        : <Text style={[TextStyles.h3, {textAlign:'left'}]}>Link Listings</Text>}
+          
           <TouchableOpacity
           style={[TextStyles.h3,  
               {
