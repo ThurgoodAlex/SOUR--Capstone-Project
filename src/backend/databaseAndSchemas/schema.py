@@ -87,6 +87,7 @@ class PostInDB(SQLModel, table = True):
     created_at: datetime = Field(default_factory=datetime.now)
     isListing: bool = Field(default=False, nullable=False)
     isVideo: Optional[bool] = Field(default=False, nullable=False)
+    isVideo: Optional[bool] = Field(default=False, nullable=False)
 
 class createPost(BaseModel):
     title: str
