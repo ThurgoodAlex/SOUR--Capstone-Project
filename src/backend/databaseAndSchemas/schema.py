@@ -117,6 +117,7 @@ class Post(BaseModel):
     created_at: datetime
     isSold: bool
     isListing: bool
+    isVideo: bool
     model_config = ConfigDict(from_attributes=True)
 
 

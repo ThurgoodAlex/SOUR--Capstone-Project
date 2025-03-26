@@ -85,6 +85,7 @@ export default function CreateVideo() {
             const response = await api.post("/posts/", {
                 "title": name,
                 "description": description,
+                "isVideo": true
             });
     
             const result = await response.json();
