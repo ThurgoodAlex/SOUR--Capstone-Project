@@ -7,6 +7,7 @@ from typing import Annotated, Optional
 import logging
 from sqlalchemy.future import select
 from sqlalchemy import desc, text
+from sqlalchemy import desc, text
 from jose import JWTError, jwt
 from sqlmodel import Session, and_, select
 from exceptions import *
@@ -118,9 +119,6 @@ def fuzzy_search(
 
     results = session.execute(query, {"tsquery": tsquery}).fetchall()
     return results
-
-
-
 
 @posts_router.post('/listings/', response_model= Post, status_code=201)
 def upload_listing(newListing:createListing,  
