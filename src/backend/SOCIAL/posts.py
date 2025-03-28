@@ -100,42 +100,44 @@ def fuzzy_search(
 
     print(f"TSQuery: {tsquery}") 
 
-    # Query with tags
+    # This is a massive query. This currently works and im happy with it, but I dont fully understand.
+    # I might try and change my approach. 
     query = text("""
-        WITH posts_with_tags AS (
-            SELECT 
-                p.*,
-                COALESCE(STRING_AGG(t.tag, ' '), '') AS tags
-            FROM posts p
-            LEFT JOIN tags t ON p.id = t."postID"
-            GROUP BY p.id
-        )
-        SELECT 
-            pwt.*, 
-            ts_rank(
-                to_tsvector('english', unaccent(
-                    pwt.title || ' ' || 
-                    COALESCE(pwt.description, '') || ' ' || 
-                    COALESCE(pwt.brand, '') || ' ' || 
-                    pwt.tags
-                )),
-                to_tsquery('english', :tsquery)
-            ) AS rank
-        FROM posts_with_tags pwt
-        WHERE 
+       WITH posts_with_tags AS (
+    SELECT 
+        p.*,
+        STRING_AGG(t.tag, ' ') AS tags
+    FROM posts p
+    LEFT JOIN tags t ON p.id = t."postID"
+    GROUP BY p.id
+    )
+    SELECT 
+        pwt.*, 
+        ts_rank(
             to_tsvector('english', unaccent(
-                pwt.title || ' ' || 
-                COALESCE(pwt.description, '') || ' ' || 
+                CONCAT_WS(' ', 
+                    pwt.title, 
+                    COALESCE(pwt.description, ''), 
+                    pwt.tags
+                )
+            )),
+            to_tsquery('english', :tsquery)
+        ) AS rank
+    FROM posts_with_tags pwt
+    WHERE 
+        to_tsvector('english', unaccent(
+            CONCAT_WS(' ', 
+                pwt.title, 
+                COALESCE(pwt.description, ''), 
                 pwt.tags
-            )) 
-            @@ to_tsquery('english', :tsquery)
-        ORDER BY 
-            rank DESC
+            )
+        )) @@ to_tsquery('english', :tsquery)
+    ORDER BY rank DESC
     """)
 
     results = session.execute(query, {"tsquery": tsquery}).mappings().fetchall()
     for row in results:
-        print(f"ID: {row['id']}, Title: {row['title']}, Tags: {row['tags']}")
+        print(f"ID: {row['id']}, Title: {row['title']}, Description: {row['description']}, Tags: {row['tags']}")
     return [Post(**dict(row)) for row in results]
 
 @posts_router.post('/listings/', response_model= Post, status_code=201)
