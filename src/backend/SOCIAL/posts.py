@@ -101,7 +101,9 @@ def fuzzy_search(
     print(f"TSQuery: {tsquery}") 
 
     # This is a massive query. This currently works and im happy with it, but I dont fully understand.
-    # I might try and change my approach. 
+    # I might try and change my approach.
+    # -- next thing ill mess around with is purely searching off tags
+        # -- need to create a get_tags_of_post method
     query = text("""
        WITH posts_with_tags AS (
     SELECT 
