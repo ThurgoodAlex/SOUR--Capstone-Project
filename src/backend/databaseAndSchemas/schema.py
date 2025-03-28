@@ -118,8 +118,10 @@ class Post(BaseModel):
     created_at: datetime
     isSold: bool
     isListing: bool
-    model_config = ConfigDict(from_attributes=True)
+    isVideo: bool
 
+    class Config:
+            from_attributes = True
 
 
 ###############################

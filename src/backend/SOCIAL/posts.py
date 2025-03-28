@@ -6,8 +6,7 @@ from datetime import datetime, timezone
 from typing import Annotated, Optional
 import logging
 from sqlalchemy.future import select
-from sqlalchemy import desc, text
-from sqlalchemy import desc, text
+from sqlalchemy import desc, text, func
 from jose import JWTError, jwt
 from sqlmodel import Session, and_, select
 from exceptions import *
@@ -79,46 +78,65 @@ related_terms = {
     "tee": ["shirt", "t-shirt"],
     "shirt": ["tee", "t-shirt", "top"]
 }
-
 @posts_router.get('/search/', response_model=list[Post], status_code=200)
 def fuzzy_search(
     search: str, 
-    session: Session = Depends(get_session),
+    session: Annotated[Session, Depends(get_session)],
     current_user: UserInDB = Depends(auth_get_current_user)
 ) -> list[Post]:
+    # Ensure extensions
     session.execute(text('CREATE EXTENSION IF NOT EXISTS pg_trgm;'))
     session.execute(text('CREATE EXTENSION IF NOT EXISTS unaccent;'))
     session.commit()
 
-    # Include related search terms for better searching
+    # Build search terms
+    #This finda and builds the related terms so if someone searches in shoes
+    # it knows that shoes = sneakers.
     search_lower = search.lower()
     search_terms = [search_lower]
     if search_lower in related_terms:
         search_terms.extend(related_terms[search_lower])
+    tsquery = ' | '.join(search_terms)  
 
-    # Build tsquery (e.g., "sneakers | shoes | kicks")
-    tsquery = ' | '.join(search_terms)
+    print(f"TSQuery: {tsquery}") 
 
-    # query to find related items, 
-    # this is a bit confusing and convulated. When support for tags gets included, im gonna try and simplify it.
+    # Query with tags
     query = text("""
+        WITH posts_with_tags AS (
+            SELECT 
+                p.*,
+                COALESCE(STRING_AGG(t.tag, ' '), '') AS tags
+            FROM posts p
+            LEFT JOIN tags t ON p.id = t."postID"
+            GROUP BY p.id
+        )
         SELECT 
-            *, 
+            pwt.*, 
             ts_rank(
-                to_tsvector('english', unaccent(title || ' ' || COALESCE(description, '') || ' ' || COALESCE(brand, ''))),
+                to_tsvector('english', unaccent(
+                    pwt.title || ' ' || 
+                    COALESCE(pwt.description, '') || ' ' || 
+                    COALESCE(pwt.brand, '') || ' ' || 
+                    pwt.tags
+                )),
                 to_tsquery('english', :tsquery)
             ) AS rank
-        FROM posts
+        FROM posts_with_tags pwt
         WHERE 
-            to_tsvector('english', unaccent(title || ' ' || COALESCE(description, '') || ' ' || COALESCE(brand, ''))) 
+            to_tsvector('english', unaccent(
+                pwt.title || ' ' || 
+                COALESCE(pwt.description, '') || ' ' || 
+                pwt.tags
+            )) 
             @@ to_tsquery('english', :tsquery)
         ORDER BY 
             rank DESC
-        LIMIT 50;
     """)
 
-    results = session.execute(query, {"tsquery": tsquery}).fetchall()
-    return results
+    results = session.execute(query, {"tsquery": tsquery}).mappings().fetchall()
+    for row in results:
+        print(f"ID: {row['id']}, Title: {row['title']}, Tags: {row['tags']}")
+    return [Post(**dict(row)) for row in results]
 
 @posts_router.post('/listings/', response_model= Post, status_code=201)
 def upload_listing(newListing:createListing,  
