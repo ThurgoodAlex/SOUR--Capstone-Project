@@ -28,7 +28,11 @@ from databaseAndSchemas.schema import (
     Comment,
     CommentCreate,
     Like,
-    createMedia
+    LikeInDB,
+    createMedia,
+    Tag,
+    TagCreate,
+    TagInDB
 )
 
 
@@ -372,6 +376,34 @@ def post_sold(post_id: int, session :Annotated[Session, Depends(get_session)]):
     return {"message": "Post marked as sold and stats updated"}
 
 
+
+@posts_router.put('/{post_id}/coverImage')
+def add_cover_image(
+    post_id: int, 
+    cover_image: createMedia,
+    session: Annotated[Session, Depends(get_session)]
+):
+    # Find the post by ID
+    post = session.get(PostInDB, post_id)
+
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
+
+    # Update the cover image field
+    post.coverImage = cover_image.url
+
+    # Save changes
+    session.commit()
+    session.refresh(post)
+
+    return {
+        "message": "Cover image added successfully",
+        "post": {
+            "id": post.id,
+            "coverImage": post.coverImage
+        }
+    }
+
 @posts_router.post('/{post_id}/media/', response_model=Media,status_code=201)
 def upload_media(post_ID: int, 
                  new_media : createMedia, 
@@ -386,7 +418,7 @@ def upload_media(post_ID: int,
         postID=post_ID,
     )
     if current_user.id != post.sellerID:
-        raise PermissionDenied("upload", "media", current_user.id)
+        raise PermissionDenied("upload", "media")
     session.add(mediaDb)
     session.commit()
     session.refresh(mediaDb)
@@ -409,3 +441,48 @@ def get_media_by_post(post_id: int,
     media_in_db = session.exec(query).all()
 
     return [Media(**media.model_dump()) for media in media_in_db]
+
+
+
+@posts_router.post('/{post_id}/tags/', response_model=Tag,status_code=201)
+def upload_tag(post_ID: int, 
+                 tag : TagCreate, 
+                 session: Annotated[Session, Depends(get_session)],
+                 current_user: UserInDB = Depends(auth_get_current_user)) -> Tag:
+    """Uploading new media to a post"""
+    post = session.get(PostInDB, post_ID)
+    if not post:
+        raise EntityNotFound("Post", post_ID)
+    
+    tagInDb = TagInDB(
+        **tag.model_dump(),
+        postID=post_ID,
+    )
+    
+    # if current_user.id != post.sellerID:
+    #     raise PermissionDenied("upload", "tag")
+    
+    
+    session.add(tagInDb)
+    session.commit()
+    session.refresh(tagInDb)
+    return Tag(
+        id=tagInDb.id,        
+        postID=tagInDb.postID,
+        tag = tagInDb.tag
+    )
+    
+@posts_router.get('/{post_id}/tags/', response_model=list[Tag], status_code=200)
+def get_tags_of_post(post_id: int,
+                    session: Annotated[Session, Depends(get_session)], 
+                    current_user: UserInDB = Depends(auth_get_current_user)) -> list[Media]:
+    """Getting all media for a post"""
+    post = session.get(PostInDB, post_id)
+
+    if not post:
+        raise EntityNotFound("post", post_id) 
+    query = select(TagInDB).where(TagInDB.postID == post_id)
+    tags_in_db = session.exec(query).all()
+
+    return [Tag(**tag.model_dump()) for tag in tags_in_db]
+

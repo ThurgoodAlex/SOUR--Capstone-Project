@@ -265,5 +265,44 @@
             "isSold": true,
             "isListing": true
         }
+    ],
+
+    "tags": [
+        {
+            "postID": 2,
+            "tags": ["vintage", "sneakers", "Reebok", "90s", "women's fashion"]
+        },
+        {
+            "postID": 3,
+            "tags": ["sweater", "knitwear", "thrifted", "Hollister", "women's fashion"]
+        },
+        {
+            "postID": 6,
+            "tags": ["jacket", "vintage", "Pacsun", "fleece", "women's fashion"]
+        },
+        {
+            "postID": 7,
+            "tags": ["bomber jacket", "90s", "block color", "Head", "men's fashion"]
+        },
+        {
+            "postID": 9,
+            "tags": ["jeans", "denim", "baggy fit", "Levi's", "men's fashion"]
+        },
+        {
+            "postID": 10,
+            "tags": ["leather jacket", "beige", "Overland", "men's fashion"]
+        },
+        {
+            "postID": 11,
+            "tags": ["sneakers", "vintage", "Adidas", "suede", "men's fashion"]
+        },
+        {
+            "postID": 12,
+            "tags": ["windbreaker", "vintage", "Adidas", "retro", "men's fashion"]
+        },
+        {
+            "postID": 13,
+            "tags": ["t-shirt", "yellow", "boxy fit", "women's fashion"]
+        }
     ]
 }

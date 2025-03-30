@@ -10,9 +10,10 @@ import json
 import boto3
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 from SOCIAL import MediaUploader 
-from databaseAndSchemas import *
+from databaseAndSchemas import *  # Ensure TagInDB is part of the imported entities
 from passlib.context import CryptContext
 import os
+from sqlalchemy import text
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 jwt_key = str(os.environ.get("JWT_KEY"))
@@ -62,6 +63,10 @@ class Seeder:
                 user_in_db = UserInDB(**user_copy)
                 session.add(user_in_db)
             session.commit()
+            reset_seq(session)
+
+            
+            
 
     def create_posts(self):
        with Session(engine) as session:
@@ -83,6 +88,8 @@ class Seeder:
                         post_data.sellerID,
                         post_data.id
                     )
+            session.commit()
+            reset_seq(session)
                 
     def upload_post_media(
             self,
@@ -104,7 +111,37 @@ class Seeder:
                 )
                 session.add(media)
         session.commit()
-    
+
+
+    def create_tags(self):
+        with Session(engine) as session:
+            for tag_entry in self.data["tags"]:
+                post_id = tag_entry["postID"]
+
+                # Check if post exists before adding tags
+                post_exists = session.exec(select(PostInDB).where(PostInDB.id == post_id)).first()
+                if not post_exists:
+                    print(f"Warning: Post with ID {post_id} not found. Skipping tags.")
+                    continue
+                print(tag_entry["tags"])
+                for tag_name in tag_entry["tags"]:
+                    print(f"Adding tag '{tag_name}' to post ID {post_id}")
+                    tag = TagInDB(
+                        postID=post_id,
+                        tag=tag_name
+                    )
+                    session.add(tag)
+
+            session.commit()
+            print("Tags seeded successfully!")
+
+
+def reset_seq(session):
+    session.execute(text("SELECT setval('users_id_seq', (SELECT MAX(id) FROM users))"))
+    session.execute(text("SELECT setval('posts_id_seq', (SELECT MAX(id) FROM posts))"))
+    session.execute(text("SELECT setval('tags_id_seq', (SELECT MAX(id) FROM tags))"))  # <-- Add this line
+
+    session.commit()
     
 if __name__ == "__main__":
 
@@ -137,5 +174,8 @@ if __name__ == "__main__":
         seeder.create_users() 
 
         seeder.create_posts()
+        
+        seeder.create_tags()
+        
     else:
         print("No argument was provided. Usage: python script.py <argument>")

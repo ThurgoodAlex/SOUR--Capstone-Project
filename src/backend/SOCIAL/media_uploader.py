@@ -4,12 +4,7 @@ from mypy_boto3_s3.client import S3Client
 from .socialexceptions import(
     InvalidFileType, 
 )
-from passlib.context import CryptContext
-import os
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-jwt_key = str(os.environ.get("JWT_KEY"))
-jwt_alg = "HS256"
 class MediaUploader:
     def __init__(
             self,

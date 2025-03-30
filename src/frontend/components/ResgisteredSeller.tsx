@@ -88,7 +88,7 @@ function CreateButtons(){
                     <Text style={[TextStyles.h3, TextStyles.light]}>Post</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={[Styles.column, Styles.buttonDark, {alignItems: 'center', width: 30, height: 80}]} onPress={() => router.push('/CreatePostScreen')}>
+                <TouchableOpacity style={[Styles.column, Styles.buttonDark, {alignItems: 'center', width: 30, height: 80}]} onPress={() => router.push('/createVideoScreen')}>
                     <Ionicons style={{color: '#FFF'}} size={30} name="videocam" />
                     <Text style={[TextStyles.h3, TextStyles.light]}>Video</Text>
                 </TouchableOpacity>

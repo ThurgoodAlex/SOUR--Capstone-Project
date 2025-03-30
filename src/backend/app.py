@@ -16,7 +16,8 @@ from PRISM import (
 from SOCIAL import (
     chats_router,
     posts_router,
-    media_router
+    media_router,
+    tags_router,
 )
 from LOTUS import stripe_router
 
@@ -44,6 +45,7 @@ app.include_router(stripe_router, prefix="/stripe")
 app.include_router(users_router, prefix="/users")
 app.include_router(posts_router, prefix="/posts")
 app.include_router(media_router, prefix="/media")
+app.include_router(tags_router, prefix="/tags")
 app.include_router(chats_router, prefix="/chats")
 
 # Configure boto3 to use LocalStack
