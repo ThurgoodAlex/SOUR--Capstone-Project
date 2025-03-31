@@ -5,6 +5,7 @@ import { useAuth } from '@/context/auth';
 import { useUser } from '@/context/user';
 import * as ImagePicker from "expo-image-picker";
 import { router, Stack } from 'expo-router';
+import * as FileSystem from 'expo-file-system';
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, StyleSheet, Alert, KeyboardTypeOptions } from 'react-native';
 import { Colors } from '@/constants/Colors';
@@ -48,6 +49,8 @@ export default function CreateListing(): JSX.Element {
     const { user } = useUser();
     const { posts } = usePosts(`/users/${user?.id}/posts/?is_listing=false`);
     const [ linkedPosts, setLinkedPosts] = useState<Post[]>([]);
+    const [ tags, setTags] = useState<string[]>([]);
+
 
     if (!user) logout();
 
@@ -133,6 +136,15 @@ export default function CreateListing(): JSX.Element {
                     console.error(`Failed to link post ${post.id} with listing ${listingId}`);
                 }
             }
+
+
+            //upload tags
+            for (const tag of tags) {
+                const tagResponse = await api.post(`/posts/${listingId}/tags/`, { tag: tag });
+                if (!tagResponse.ok) {
+                    console.error(`Failed to upload tag ${tag} for listing ${listingId}`);
+                }
+            }
     
             // Navigate after success
             router.replace("/SelfProfileScreen");
@@ -156,6 +168,81 @@ export default function CreateListing(): JSX.Element {
     const generateWithAI = async (): Promise<void> => {
     
         console.log("Generate AI listing Info");
+
+        const visionApiKey = "AIzaSyDhh_6MMBG62N4NzGJeLVj4CksuF69Kui4";
+        const visionApiUrl = `https://vision.googleapis.com/v1/images:annotate?key=${visionApiKey}`;
+
+        const base64ImageData = await FileSystem.readAsStringAsync(images[0], {
+            encoding: FileSystem.EncodingType.Base64,
+        });
+
+        const requestData = {
+            requests:
+                [
+                    {
+                        image: {
+                            content: base64ImageData,
+                        },
+                        features: [
+                            {
+                                type: "LABEL_DETECTION",
+                                maxResults: 8,
+                            },
+                            {
+                                type: "TEXT_DETECTION",
+                            }
+                        ],
+                    },
+                ],
+        };
+        
+        const response = await fetch(visionApiUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestData),
+        });
+
+        const data = await response.json();
+
+        console.log("AI Generated Data: ", data);
+        if (!response.ok) {
+            Alert.alert("Error", "Failed to generate tags with AI.");
+            return;
+        }
+        const labels = data.responses[0].labelAnnotations;
+        //keep only label with score >= 0.8
+        const filteredLabels = labels.filter((label: any) => label.score >= 0.8);
+        console.log("Kept Labels: ", filteredLabels);
+
+        const textAnnotations = data.responses[0].textAnnotations;
+        console.log("Text Annotations: ", textAnnotations);
+
+
+        let newTags: string[] = [...tags];
+
+
+        if (!textAnnotations) {
+            console.log("No text annotations found.");
+        }
+        else{
+            const generatedText = textAnnotations[0].description || "";
+            console.log("Generated Text: ", generatedText);
+            newTags = [...newTags, generatedText];
+            setTags(newTags);
+        }
+
+
+        if (!filteredLabels) {
+            console.log("No labels found.");
+        }
+        else{
+            const generatedLabels = filteredLabels.map((label: any) => label.description) || [];
+            console.log("Generated Labels: ", generatedLabels);
+            newTags = [...newTags, ...generatedLabels];
+            setTags(newTags);
+        }   
         
     };
 
@@ -171,17 +258,7 @@ export default function CreateListing(): JSX.Element {
                 <ScrollView>
                     <UploadPhotosCarousel images={images} onAddImages={uploadImages} />
 
-                    <TouchableOpacity 
-                        style={[Styles.buttonDark, (images.length == 0) && Styles.buttonDisabled]}
-                        onPress={generateWithAI}
-                        disabled={images.length == 0}
-                    >
-                       { (images.length == 0 ? 
-                        <Text style={TextStyles.light}>Upload an Image to Generate with AI</Text> 
-                        : <Text style={TextStyles.light}>Generate Listing with AI</Text>)
-                       }
-                    </TouchableOpacity>
-
+                    
 
                     <FormGroup labelText="Name" placeholderText="Enter item name" value={name} setter={setName} error={errors["name"]} required/>
                     <FormGroup labelText="Price" placeholderText="Enter price" value={price} setter={setPrice} error={errors["price"]} keyboardType="numeric" required/>
@@ -190,7 +267,35 @@ export default function CreateListing(): JSX.Element {
                     <FormGroup labelText="Description" placeholderText="Enter item description" value={description} setter={setDescription} error={errors["description"]} multiline/>
                     <FormGroup labelText="Brand" placeholderText="Enter brand" value={brand} setter={setBrand} error={errors["brand"]}/>
                     <Dropdown labelText="Condition" selectedValue={condition} onValueChange={setCondition} options={["New", "Like New", "Good", "Fair", "Needs Repair"]} error={errors["condition"]}/>
-                    <LinkInputDropdown posts={posts} selected={linkedPosts} setter={setLinkedPosts} columns={3} isListing={true}/>
+                    
+                    <Text style={[TextStyles.h3, { textAlign: 'left' }]}>Tags</Text>
+
+                    {images.length > 0 &&
+                        <TouchableOpacity 
+                            style={[Styles.buttonLight, 
+                                { 
+                                    padding:0,  
+                                    backgroundColor: Colors.green,
+                                    width: 220, 
+                                    height: 40, 
+                                    borderColor: Colors.green,
+                                    borderWidth:1 
+                                }
+                            ]}
+                            onPress={generateWithAI}
+                            disabled={images.length == 0}
+                        >
+                        <View style={[Styles.row, {gap: 5}]}>
+                                <Text style={TextStyles.light}>Generate Tags with AI</Text>
+                                <Ionicons name="sparkles" size={16} color={Colors.white} />
+                            </View>
+                        
+                        </TouchableOpacity>
+                    }
+                    
+                    
+                    <Tags tags={tags} setter={setTags} error={errors["tags"]}/>
+                    {linkedPosts.length > 0 &&  <LinkInputDropdown posts={posts} selected={linkedPosts} setter={setLinkedPosts} columns={3} isListing={true}/>}
                     
                     <TouchableOpacity 
                         style={[Styles.buttonDark, (name == "" || price == "" || size == "") && Styles.buttonDisabled]}
@@ -254,6 +359,60 @@ function FormGroup({ labelText, placeholderText, value, setter, error, keyboardT
         </View>
     );
 }
+
+
+function Tags({ tags, setter, error }: {
+    tags: string[];
+    setter: React.Dispatch<React.SetStateAction<string[]>>;
+    error: string;
+}): JSX.Element {
+    const [input, setInput] = useState("");
+
+    const handleInputChange = (text: string): void => {
+        setInput(text);
+    };
+
+    const handleKeyPress = (event: any): void => {
+        if (input.trim()) {
+            const newTag: string = input.trim();
+            if (newTag && !tags.includes(newTag)) {
+                setter([...tags, newTag]);
+            }
+            setInput("");  // Clear input after adding tag
+        }
+    };
+
+    const removeTag = (index: number): void => {
+        const newTags: string[] = tags.filter((_, i) => i !== index);
+        setter(newTags);
+    };
+
+    return (
+        <View style={Styles.column}>
+           
+            <View style={CreateListingStyles.tagsContainer}>
+                {tags.map((tag, index) => (
+                    <View key={index} style={CreateListingStyles.tag}>
+                        <Text style={{color:Colors.dark}}>{tag}</Text>
+                        <TouchableOpacity onPress={() => removeTag(index)}>
+                            <Text style={CreateListingStyles.removeBtn}>✕</Text>
+                        </TouchableOpacity>
+                    </View>
+                ))}
+                <TextInput
+                    style={[CreateListingStyles.tagInput]}
+                    placeholder="Type a tag and press enter"
+                    value={input}
+                    onChangeText={handleInputChange}
+                    onSubmitEditing={handleKeyPress}
+                />
+            </View>
+
+            {error && <Text style={TextStyles.error}>{error}</Text>}
+        </View>
+    );
+};
+
 
 
 function Dropdown({ labelText, selectedValue, onValueChange, options, error, required }: {
@@ -347,6 +506,38 @@ export const CreateListingStyles = StyleSheet.create({
       height: 120,
       textAlignVertical: 'top',
 
+    },
+    tag:{
+        flexDirection: "row",
+        gap:3,
+        alignItems: "center",
+        backgroundColor: Colors.light60,
+        borderRadius: 8,
+        padding: 5,
+        margin: 2,
+        color: Colors.dark
+    },
+    tagsContainer: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        alignItems: "center",
+        borderWidth: 1,
+        borderColor: Colors.dark,
+        borderRadius: 8,
+        padding: 10,
+        minHeight: 50,
+        marginBottom: 10,
+    },
+    tagInput:{
+        backgroundColor: Colors.white,
+        width:'100%',
+        borderRadius: 8,
+        fontSize: 16,
+        marginTop:8,
+    },
+    removeBtn: {
+        color: Colors.grapefruit,
+        fontWeight: "bold",
     },
    
 

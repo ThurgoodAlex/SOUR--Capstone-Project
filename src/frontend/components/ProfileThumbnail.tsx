@@ -39,7 +39,6 @@ export default function ProfileThumbnail({ user }: {user: User}) {
         
         <Image
             source={
-            //   ProfileImage
                 user.profilePic
                 ? user.profilePic
                 : require('../assets/images/blank_profile_pic.png') // Default fallback

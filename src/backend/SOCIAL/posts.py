@@ -445,18 +445,18 @@ def get_media_by_post(post_id: int,
 
 
 @posts_router.post('/{post_id}/tags/', response_model=Tag,status_code=201)
-def upload_tag(post_ID: int, 
+def upload_tag(post_id: int, 
                  tag : TagCreate, 
                  session: Annotated[Session, Depends(get_session)],
                  current_user: UserInDB = Depends(auth_get_current_user)) -> Tag:
     """Uploading new media to a post"""
-    post = session.get(PostInDB, post_ID)
+    post = session.get(PostInDB, post_id)
     if not post:
-        raise EntityNotFound("Post", post_ID)
+        raise EntityNotFound("Post", post_id)
     
     tagInDb = TagInDB(
         **tag.model_dump(),
-        postID=post_ID,
+        postID=post_id,
     )
     
     # if current_user.id != post.sellerID:

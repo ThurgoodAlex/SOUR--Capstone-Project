@@ -18,7 +18,7 @@ export function LinkInputDropdown({ posts, selected, setter, columns, isListing 
       <View>
         {isListing ? <Text style={[TextStyles.h3, {textAlign:'left'}]}>Link Posts</Text>
         : <Text style={[TextStyles.h3, {textAlign:'left'}]}>Link Listings</Text>}
-          
+
           <TouchableOpacity
           style={[TextStyles.h3,  
               {
