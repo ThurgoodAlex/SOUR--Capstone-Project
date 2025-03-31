@@ -1,6 +1,5 @@
-
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   View, 
   TextInput, 
@@ -12,11 +11,11 @@ import {
   SafeAreaView,
   StatusBar
 } from 'react-native';
-import { Search } from 'lucide-react';
+import { Search } from 'lucide-react-native';
 
 export default function SearchComponent() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<{ id: string; title: string }[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   
   // Sample data for demonstration
@@ -31,22 +30,30 @@ export default function SearchComponent() {
     { id: '8', title: 'App Performance Optimization' }
   ];
   
-  const handleSearch = () => {
-    if (searchTerm.trim() === '') return;
-    
+  // Real-time search effect that triggers whenever searchTerm changes
+  useEffect(() => {
+    if (searchTerm.trim() === '') {
+      setIsSearching(false);
+      setResults([]);
+      return;
+    }
+        
     setIsSearching(true);
     
     // Simulate API call with setTimeout
-    setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       const filteredResults = sampleData.filter(item => 
         item.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setResults(filteredResults);
       setIsSearching(false);
-    }, 500);
-  };
+    }, 300);
+    
+    // Clean up timeout if component unmounts or searchTerm changes again
+    return () => clearTimeout(timeoutId);
+  }, [searchTerm]);
   
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item }: { item: { id: string; title: string } }) => (
     <TouchableOpacity style={styles.resultItem}>
       <Text style={styles.resultText}>{item.title}</Text>
     </TouchableOpacity>
@@ -59,22 +66,25 @@ export default function SearchComponent() {
       <Text style={styles.title}>Search</Text>
       
       <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.input}
-          value={searchTerm}
-          onChangeText={setSearchTerm}
-          placeholder="Search for something..."
-          placeholderTextColor="#9ca3af"
-          returnKeyType="search"
-          onSubmitEditing={handleSearch}
-        />
-        <TouchableOpacity 
-          style={styles.searchButton} 
-          onPress={handleSearch}
-          activeOpacity={0.7}
-        >
-          <Text style={styles.searchButtonText}>Search</Text>
-        </TouchableOpacity>
+        <View style={styles.inputContainer}>
+          <Search size={20} color="#6b7280" style={styles.searchIcon} />
+          <TextInput
+            style={styles.input}
+            value={searchTerm}
+            onChangeText={setSearchTerm}
+            placeholder="Search for something..."
+            placeholderTextColor="#9ca3af"
+            returnKeyType="search"
+          />
+          {searchTerm.length > 0 && (
+            <TouchableOpacity 
+              onPress={() => setSearchTerm('')}
+              style={styles.clearButton}
+            >
+              <Text style={styles.clearButtonText}>✕</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
       
       <View style={styles.resultsContainer}>
@@ -115,32 +125,34 @@ const styles = StyleSheet.create({
     color: '#1f2937',
   },
   searchContainer: {
-    flexDirection: 'row',
     marginBottom: 20,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#d1d5db',
+    borderRadius: 8,
+    backgroundColor: '#ffffff',
+    paddingHorizontal: 12,
+    height: 50,
+  },
+  searchIcon: {
+    marginRight: 8,
   },
   input: {
     flex: 1,
     height: 50,
-    borderWidth: 1,
-    borderColor: '#d1d5db',
-    borderRadius: 8,
-    paddingHorizontal: 16,
     fontSize: 16,
-    backgroundColor: '#ffffff',
     color: '#1f2937',
   },
-  searchButton: {
-    marginLeft: 10,
-    backgroundColor: '#3b82f6',
-    borderRadius: 8,
-    height: 50,
-    justifyContent: 'center',
-    paddingHorizontal: 16,
+  clearButton: {
+    padding: 6,
   },
-  searchButtonText: {
-    color: '#ffffff',
-    fontWeight: '600',
+  clearButtonText: {
+    color: '#6b7280',
     fontSize: 16,
+    fontWeight: '600',
   },
   resultsContainer: {
     flex: 1,
