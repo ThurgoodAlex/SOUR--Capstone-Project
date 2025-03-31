@@ -1,5 +1,5 @@
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, Button, View } from 'react-native';
 import { PostPreview } from '@/components/PostPreview';
 import { NavBar } from '@/components/NavBar';
 import { FlatList, Text } from 'react-native';
@@ -8,7 +8,7 @@ import { Post } from '@/constants/Types';
 import { usePosts } from '@/hooks/usePosts';
 import { useRef, useState } from 'react';
 import { Colors } from '@/constants/Colors';
-
+import { router } from 'expo-router';
 
 export default function DiscoverScreen() {
 
@@ -34,6 +34,7 @@ export default function DiscoverScreen() {
     return (
         <>
             <View style={ScreenStyles.screen}>
+                <Button title='Search' onPress={() => router.push("/SearchComponent")}/>
                  {isAnyLoading ? (
                                 <ActivityIndicator size="large" color={Colors.orange} />
                             ) : (
