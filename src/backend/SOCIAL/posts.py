@@ -78,7 +78,7 @@ related_terms = {
     "tee": ["shirt", "t-shirt"],
     "shirt": ["tee", "t-shirt", "top"]
 }
-@posts_router.get('/search/', response_model=list[Post], status_code=200)
+@posts_router.get('/search', response_model=list[Post], status_code=200)
 def fuzzy_search(
     search: str, 
     session: Annotated[Session, Depends(get_session)],

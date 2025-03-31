@@ -14,6 +14,8 @@ import {
 import { Search } from 'lucide-react-native';
 import { useApi } from '@/context/api';
 import { Post } from '@/constants/Types';
+import { router } from 'expo-router';
+import { PostPreview } from '@/components/PostPreview';
 
 export default function SearchComponent() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -35,14 +37,18 @@ export default function SearchComponent() {
       setError(null);
       
       try {
+        // Log timing to check token freshness
+        console.log('Request initiated at:', new Date().toISOString());
+        
         const response = await api.get(`/posts/search?search=${encodeURIComponent(searchTerm)}`);
         
+        console.log('Response status:', response.status);
+        console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+        const responseText = await response.clone().text();
+        console.log('Response body:', responseText);
+
         if (!response.ok) {
-          if (response.status === 401) {
-            const data = await response.json();
-            throw new Error(data.detail || 'Authentication failed - please log in again');
-          }
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error(`HTTP error! status: ${response.status} - ${responseText}`);
         }
 
         const data = await response.json();
@@ -70,12 +76,10 @@ export default function SearchComponent() {
     return () => {
       clearTimeout(timeoutId);
     };
-  }, [searchTerm, api]);
+  }, [searchTerm]);
 
   const renderItem = ({ item }: { item: Post }) => (
-    <TouchableOpacity style={styles.resultItem}>
-      <Text style={styles.resultText}>{item.title}</Text>
-    </TouchableOpacity>
+    <PostPreview post={item} size={160} profileThumbnail='small' />
   );
   
   return (
@@ -119,6 +123,7 @@ export default function SearchComponent() {
             <FlatList
               data={results}
               renderItem={renderItem}
+              numColumns={2}
               keyExtractor={item => item.id.toString()}
               contentContainerStyle={styles.resultsList}
             />

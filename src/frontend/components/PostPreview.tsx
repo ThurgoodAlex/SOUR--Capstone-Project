@@ -95,6 +95,7 @@ export function PostPreview({ post, size, profileThumbnail = "none", touchable =
 
       {profileThumbnail !== 'none' ? (
         seller ? (
+          console.log('Seller:', seller),
           profileThumbnail === 'big' ? (
             <ProfileThumbnail user={seller} />
           ) : (
