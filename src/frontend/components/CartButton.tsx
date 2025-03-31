@@ -55,7 +55,7 @@ const CartButton: React.FC<CartButtonProps> = ({ listingID, onItemAdded }) => {
             disabled={loading}
         >
             {loading ? <ActivityIndicator color={Colors.orange} /> :
-                <Text style={{ color: isAdded ?  Colors.white  : Colors.green  }}>
+                <Text style={{ color: isAdded ?  Colors.white  : Colors.green, fontWeight: 'bold' }}>
                     {isAdded ? 'Added to Cart' : 'Add to Cart'}
                 </Text>
             }
