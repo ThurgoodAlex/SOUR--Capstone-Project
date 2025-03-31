@@ -12,48 +12,67 @@ import {
   StatusBar
 } from 'react-native';
 import { Search } from 'lucide-react-native';
+import { useApi } from '@/context/api';
+import { Post } from '@/constants/Types';
 
 export default function SearchComponent() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [results, setResults] = useState<{ id: string; title: string }[]>([]);
+  const [results, setResults] = useState<Post[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  
-  // Sample data for demonstration
-  const sampleData = [
-    { id: '1', title: 'React Native Basics' },
-    { id: '2', title: 'Building a Search Component' },
-    { id: '3', title: 'Styling in React Native' },
-    { id: '4', title: 'JavaScript ES6 Features' },
-    { id: '5', title: 'Mobile App Design Principles' },
-    { id: '6', title: 'State Management in React Native' },
-    { id: '7', title: 'API Integration for Mobile' },
-    { id: '8', title: 'App Performance Optimization' }
-  ];
-  
-  // Real-time search effect that triggers whenever searchTerm changes
+  const [error, setError] = useState<string | null>(null);
+  const api = useApi();
+
   useEffect(() => {
-    if (searchTerm.trim() === '') {
-      setIsSearching(false);
-      setResults([]);
-      return;
-    }
+    const searchPosts = async () => {
+      if (searchTerm.trim() === '') {
+        setIsSearching(false);
+        setResults([]);
+        setError(null);
+        return;
+      }
+      
+      setIsSearching(true);
+      setError(null);
+      
+      try {
+        const response = await api.get(`/posts/search?search=${encodeURIComponent(searchTerm)}`);
         
-    setIsSearching(true);
-    
-    // Simulate API call with setTimeout
+        if (!response.ok) {
+          if (response.status === 401) {
+            const data = await response.json();
+            throw new Error(data.detail || 'Authentication failed - please log in again');
+          }
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        if (Array.isArray(data)) {
+          setResults(data);
+        } else {
+          console.warn('Unexpected response format:', data);
+          setResults([]);
+        }
+        
+        setIsSearching(false);
+      } catch (err) {
+        console.error('Error fetching search results:', err);
+        setError(err instanceof Error ? err.message : 'Failed to fetch search results');
+        setResults([]);
+        setIsSearching(false);
+      }
+    };
+
     const timeoutId = setTimeout(() => {
-      const filteredResults = sampleData.filter(item => 
-        item.title.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setResults(filteredResults);
-      setIsSearching(false);
+      searchPosts();
     }, 300);
-    
-    // Clean up timeout if component unmounts or searchTerm changes again
-    return () => clearTimeout(timeoutId);
-  }, [searchTerm]);
-  
-  const renderItem = ({ item }: { item: { id: string; title: string } }) => (
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [searchTerm, api]);
+
+  const renderItem = ({ item }: { item: Post }) => (
     <TouchableOpacity style={styles.resultItem}>
       <Text style={styles.resultText}>{item.title}</Text>
     </TouchableOpacity>
@@ -90,6 +109,8 @@ export default function SearchComponent() {
       <View style={styles.resultsContainer}>
         {isSearching ? (
           <ActivityIndicator size="large" color="#3b82f6" style={styles.loader} />
+        ) : error ? (
+          <Text style={styles.errorText}>{error}</Text>
         ) : results.length > 0 ? (
           <View>
             <Text style={styles.resultsTitle}>
@@ -98,7 +119,7 @@ export default function SearchComponent() {
             <FlatList
               data={results}
               renderItem={renderItem}
-              keyExtractor={item => item.id}
+              keyExtractor={item => item.id.toString()}
               contentContainerStyle={styles.resultsList}
             />
           </View>
@@ -110,7 +131,7 @@ export default function SearchComponent() {
       </View>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -185,6 +206,12 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 16,
     color: '#6b7280',
+    textAlign: 'center',
+  },
+  errorText: {
+    marginTop: 20,
+    fontSize: 16,
+    color: '#ef4444',
     textAlign: 'center',
   },
 });
