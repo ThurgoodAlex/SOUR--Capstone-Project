@@ -7,7 +7,7 @@ import * as ImagePicker from "expo-image-picker";
 import { router, Stack } from 'expo-router';
 import * as FileSystem from 'expo-file-system';
 import { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, StyleSheet, Alert, KeyboardTypeOptions } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, StyleSheet, Alert, KeyboardTypeOptions, ActivityIndicator } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import ModalSelector from 'react-native-modal-selector';
 import * as Yup from 'yup';
@@ -39,6 +39,7 @@ export default function CreateListing(): JSX.Element {
     const {uploadingImages} = useUploadImages();
     const { creatingFormData } = useCreateFormData();
     const [loading, setLoading] = useState(false);
+    const [aiGenerated, setAiGenerated] = useState(false);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const PlaceholderImage = require('@/assets/images/icon.png');
     const MAX_IMAGES = 10;
@@ -166,85 +167,84 @@ export default function CreateListing(): JSX.Element {
     };
     
     const generateWithAI = async (): Promise<void> => {
-    
         console.log("Generate AI listing Info");
-
+    
         const visionApiKey = "AIzaSyDhh_6MMBG62N4NzGJeLVj4CksuF69Kui4";
         const visionApiUrl = `https://vision.googleapis.com/v1/images:annotate?key=${visionApiKey}`;
-
-        const base64ImageData = await FileSystem.readAsStringAsync(images[0], {
-            encoding: FileSystem.EncodingType.Base64,
-        });
-
-        const requestData = {
-            requests:
-                [
-                    {
-                        image: {
-                            content: base64ImageData,
+    
+        setLoading(true);
+    
+        let allTags: string[] = [];  // Temporary array to collect all tags
+    
+        for (const image of images) {
+            try {
+                const base64ImageData = await FileSystem.readAsStringAsync(image, {
+                    encoding: FileSystem.EncodingType.Base64,
+                });
+    
+                const requestData = {
+                    requests: [
+                        {
+                            image: { content: base64ImageData },
+                            features: [
+                                { type: "LABEL_DETECTION", maxResults: 8 },
+                                { type: "TEXT_DETECTION" },
+                                { type: "IMAGE_PROPERTIES" }
+                            ],
                         },
-                        features: [
-                            {
-                                type: "LABEL_DETECTION",
-                                maxResults: 8,
-                            },
-                            {
-                                type: "TEXT_DETECTION",
-                            }
-                        ],
-                    },
-                ],
-        };
-        
-        const response = await fetch(visionApiUrl, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(requestData),
-        });
-
-        const data = await response.json();
-
-        console.log("AI Generated Data: ", data);
-        if (!response.ok) {
-            Alert.alert("Error", "Failed to generate tags with AI.");
-            return;
+                    ],
+                };
+    
+                const response = await fetch(visionApiUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(requestData),
+                });
+    
+                if (!response.ok) {
+                    Alert.alert("Error", "Failed to generate tags with AI.");
+                    setLoading(false);
+                    return;
+                }
+    
+                const data = await response.json();
+                console.log("AI Generated Data: ", data);
+    
+                const labels = data.responses[0]?.labelAnnotations || [];
+                const filteredLabels = labels
+                    .filter((label: any) => label.score >= 0.8)
+                    //only keep labels that are not already in the tags
+                    .filter((label: any) => !allTags.includes(label.description))
+                    .map((label: any) => label.description);
+    
+                const textAnnotations = data.responses[0]?.textAnnotations || [];
+                const generatedText = textAnnotations[0]?.description || "";
+    
+                // Collect tags for this image
+                const newTags = [
+                    ...filteredLabels,
+                    ...(generatedText ? [generatedText] : [])
+                ];
+    
+                console.log("Tags for image:", newTags);
+    
+                // Append the tags for this image to the final list
+                allTags = [...allTags, ...newTags];
+    
+            } catch (error) {
+                console.error("Error processing image:", error);
+            }
         }
-        const labels = data.responses[0].labelAnnotations;
-        //keep only label with score >= 0.8
-        const filteredLabels = labels.filter((label: any) => label.score >= 0.8);
-        console.log("Kept Labels: ", filteredLabels);
-
-        const textAnnotations = data.responses[0].textAnnotations;
-        console.log("Text Annotations: ", textAnnotations);
-
-
-        let newTags: string[] = [...tags];
-
-
-        if (!textAnnotations) {
-            console.log("No text annotations found.");
-        }
-        else{
-            const generatedText = textAnnotations[0].description || "";
-            console.log("Generated Text: ", generatedText);
-            newTags = [...newTags, generatedText];
-            setTags(newTags);
-        }
-
-
-        if (!filteredLabels) {
-            console.log("No labels found.");
-        }
-        else{
-            const generatedLabels = filteredLabels.map((label: any) => label.description) || [];
-            console.log("Generated Labels: ", generatedLabels);
-            newTags = [...newTags, ...generatedLabels];
-            setTags(newTags);
-        }   
-        
+    
+        // Set all tags only once after processing all images
+        console.log("All tags combined:", allTags);
+        setTags(allTags);
+    
+        setAiGenerated(true);
+        setLoading(false);
     };
+    
+       
 
     return (
         <>
@@ -275,22 +275,32 @@ export default function CreateListing(): JSX.Element {
                             style={[Styles.buttonLight, 
                                 { 
                                     padding:0,  
-                                    backgroundColor: Colors.green,
+                                    backgroundColor: aiGenerated || loading ? Colors.white : Colors.green,
                                     width: 220, 
                                     height: 40, 
-                                    borderColor: Colors.green,
-                                    borderWidth:1 
+                                    borderColor: aiGenerated ? Colors.green60 : Colors.green,
+                                    borderWidth:2,
                                 }
+
                             ]}
                             onPress={generateWithAI}
-                            disabled={images.length == 0}
+                            disabled={images.length == 0 || aiGenerated}
                         >
                         <View style={[Styles.row, {gap: 5}]}>
-                                <Text style={TextStyles.light}>Generate Tags with AI</Text>
-                                <Ionicons name="sparkles" size={16} color={Colors.white} />
+                                <Text 
+                                    style={aiGenerated? {color:Colors.green60, fontWeight:'bold'}: loading ? {color:Colors.green, fontWeight:'bold'}: TextStyles.light}
+                                >
+                                   {loading ? ("Generating Tags") : (aiGenerated ? "Tags generated by AI" : "Generate Tags with AI")}
+                                </Text>
+                                {loading ? 
+                                    <ActivityIndicator size="small" color={Colors.green} style={{marginLeft: 5}} /> 
+                                    : <Ionicons name="sparkles" size={16} color={aiGenerated? Colors.green60 : Colors.white} />
+                                }
+                              
                             </View>
                         
                         </TouchableOpacity>
+
                     }
                     
                     
