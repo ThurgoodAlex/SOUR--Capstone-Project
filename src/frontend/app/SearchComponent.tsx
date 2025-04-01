@@ -1,4 +1,5 @@
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
+import { Colors } from '@/constants/Colors';
 import React, { useState, useEffect } from 'react';
 import { 
   View, 
@@ -44,12 +45,11 @@ export default function SearchComponent() {
         const rawPosts = await response.json();
     
         if (Array.isArray(rawPosts)) {
-          // Map API data to Post type
           const posts = rawPosts.map(post => ({
             id: post.id,
-            createdDate: new Date(post.created_at), // Convert created_at to Date
+            createdDate: new Date(post.created_at), 
             sellerID: post.sellerID,
-            seller: post.seller || null, // Initially null
+            seller: post.seller || null, 
             title: post.title,
             description: post.description,
             brand: post.brand,
@@ -63,11 +63,9 @@ export default function SearchComponent() {
             isVideo: post.isVideo,
           }));
     
-          // Extract unique seller IDs
           const sellerIds = [...new Set(posts.map(post => post.sellerID).filter(id => id))];
           console.log('Seller IDs:', sellerIds); // Debug
     
-          // Fetch seller data
           const sellerPromises = sellerIds.map(id =>
             api.get(`/users/${id}/`).then(res => res.json()).catch(err => {
               console.error(`Failed to fetch user ${id}:`, err);
@@ -77,7 +75,6 @@ export default function SearchComponent() {
           const sellers = (await Promise.all(sellerPromises)).filter(s => s !== null);
           console.log('Fetched sellers:', sellers); // Debug
     
-          // Enrich posts with seller data
           const enrichedPosts = posts.map(post => ({
             ...post,
             seller: sellers.find(s => s.id === post.sellerID) || null,
@@ -171,14 +168,14 @@ export default function SearchComponent() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: Colors.white,
     padding: 16,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#1f2937',
+    color: Colors.dark,
   },
   searchContainer: {
     marginBottom: 20,
@@ -189,7 +186,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#d1d5db',
     borderRadius: 8,
-    backgroundColor: '#ffffff',
+    backgroundColor: Colors.white,
     paddingHorizontal: 12,
     height: 50,
   },
@@ -217,7 +214,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 12,
-    color: '#374151',
+    color: Colors.dark,
   },
   resultsList: {
     paddingBottom: 20,
