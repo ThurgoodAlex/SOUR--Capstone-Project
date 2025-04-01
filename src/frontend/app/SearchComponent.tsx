@@ -14,7 +14,6 @@ import {
 import { Search } from 'lucide-react-native';
 import { useApi } from '@/context/api';
 import { Post } from '@/constants/Types';
-import { router } from 'expo-router';
 import { PostPreview } from '@/components/PostPreview';
 
 export default function SearchComponent() {
@@ -32,34 +31,64 @@ export default function SearchComponent() {
         setError(null);
         return;
       }
-      
+    
       setIsSearching(true);
       setError(null);
-      
+    
       try {
-        // Log timing to check token freshness
-        console.log('Request initiated at:', new Date().toISOString());
-        
         const response = await api.get(`/posts/search?search=${encodeURIComponent(searchTerm)}`);
-        
-        console.log('Response status:', response.status);
-        console.log('Response headers:', Object.fromEntries(response.headers.entries()));
-        const responseText = await response.clone().text();
-        console.log('Response body:', responseText);
-
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status} - ${responseText}`);
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
-
-        const data = await response.json();
-        
-        if (Array.isArray(data)) {
-          setResults(data);
+    
+        const rawPosts = await response.json();
+    
+        if (Array.isArray(rawPosts)) {
+          // Map API data to Post type
+          const posts = rawPosts.map(post => ({
+            id: post.id,
+            createdDate: new Date(post.created_at), // Convert created_at to Date
+            sellerID: post.sellerID,
+            seller: post.seller || null, // Initially null
+            title: post.title,
+            description: post.description,
+            brand: post.brand,
+            condition: post.condition,
+            size: post.size,
+            gender: post.gender,
+            coverImage: post.coverImage,
+            price: post.price,
+            isSold: post.isSold,
+            isListing: post.isListing,
+            isVideo: post.isVideo,
+          }));
+    
+          // Extract unique seller IDs
+          const sellerIds = [...new Set(posts.map(post => post.sellerID).filter(id => id))];
+          console.log('Seller IDs:', sellerIds); // Debug
+    
+          // Fetch seller data
+          const sellerPromises = sellerIds.map(id =>
+            api.get(`/users/${id}/`).then(res => res.json()).catch(err => {
+              console.error(`Failed to fetch user ${id}:`, err);
+              return null;
+            })
+          );
+          const sellers = (await Promise.all(sellerPromises)).filter(s => s !== null);
+          console.log('Fetched sellers:', sellers); // Debug
+    
+          // Enrich posts with seller data
+          const enrichedPosts = posts.map(post => ({
+            ...post,
+            seller: sellers.find(s => s.id === post.sellerID) || null,
+          }));
+          console.log('Enriched posts:', enrichedPosts); // Debug
+    
+          setResults(enrichedPosts);
         } else {
-          console.warn('Unexpected response format:', data);
           setResults([]);
         }
-        
+    
         setIsSearching(false);
       } catch (err) {
         console.error('Error fetching search results:', err);
@@ -79,6 +108,7 @@ export default function SearchComponent() {
   }, [searchTerm]);
 
   const renderItem = ({ item }: { item: Post }) => (
+    console.log('Rendering item:', item),
     <PostPreview post={item} size={160} profileThumbnail='small' />
   );
   
