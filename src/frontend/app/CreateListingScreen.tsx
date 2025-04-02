@@ -274,7 +274,7 @@ export default function CreateListing(): JSX.Element {
                 <ScrollView>
                     <UploadPhotosCarousel images={images} onAddImages={uploadImages} />
 
-                    <KeyboardAwareScrollView contentContainerStyle={ScreenStyles.screenCentered}>
+                    <KeyboardAwareScrollView >
 
                         <FormGroup labelText="Name" placeholderText="Enter item name" value={name} setter={setName} error={errors["name"]} required/>
                         <FormGroup labelText="Price" placeholderText="Enter price" value={price} setter={setPrice} error={errors["price"]} keyboardType="numeric" required/>
@@ -459,7 +459,8 @@ const basicColors = [
     { name: 'Black', hex: '#000000' },
     { name: 'White', hex: '#FFFFFF' },
     { name: 'Gray', hex: '#808080' },
-    { name: 'Brown', hex: '#A52A2A' }
+    { name: 'Brown', hex: '#A52A2A'},
+    { name: 'Multi', hex: '#37FBD3' },
 ];
 function ColorTags({ colors, setter, error }: {
     colors: string[];
@@ -478,7 +479,7 @@ function ColorTags({ colors, setter, error }: {
     return (
         <ScrollView style={{ marginBottom: 25 }}>
 
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginBottom:3 }}>
                 {colors.map((color) => {
                     const colorData = basicColors.find(c => c.name === color);
                     return colorData ? (
@@ -493,6 +494,7 @@ function ColorTags({ colors, setter, error }: {
                                     height: 16,
                                     borderRadius: 10,
                                     marginRight: 2,
+                                   
                                 }
                             }>
                                 
