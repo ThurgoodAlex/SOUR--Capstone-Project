@@ -31,28 +31,26 @@ export function Video({ post, index, currentViewableItemIndex }: { post: Post, i
     });
 
     //extract seller information into a User object
-    // const seller: User | null = post.seller
-    //     ? {
-    //         firstname: post.seller.firstname,
-    //         lastname: post.seller.lastname,
-    //         username: post.seller.username,
-    //         bio: post.seller.bio,
-    //         email: post.seller.email,
-    //         profilePic: post.seller.profilePic,
-    //         isSeller: post.seller.isSeller,
-    //         id: post.seller.id,
-    //     }
-    //     : null;
-    const seller: User = {
-        firstname: "Emma",
-        lastname: "Luk",
-        username: "emma_luky",
-        bio: "",
-        email: "emmahluk@gmail.com",
-        profilePic: require('../assets/images/prof1.jpg'),
-        isSeller: true,
-        id: 2,
-    };
+    const seller: User ={
+            firstname: post.seller!.firstname,
+            lastname: post.seller!.lastname,
+            username: post.seller!.username,
+            bio: post.seller!.bio,
+            email: post.seller!.email,
+            profilePic: post.seller!.profilePic,
+            isSeller: post.seller!.isSeller,
+            id: post.seller!.id,
+        };
+    // const seller: User = {
+    //     firstname: "Emma",
+    //     lastname: "Luk",
+    //     username: "emma_luky",
+    //     bio: "",
+    //     email: "emmahluk@gmail.com",
+    //     profilePic: require('../assets/images/prof1.jpg'),
+    //     isSeller: true,
+    //     id: 2,
+    // };
     const fetchLike = async () => {
         const response = await api.get(`/posts/${post.id}/like/`);
         const data = await response.json();
@@ -110,11 +108,7 @@ export function Video({ post, index, currentViewableItemIndex }: { post: Post, i
                         ) : null
                         }
                         <View style={VideoStyles.fixedProfile}>
-                            {seller ? (
-                                <ProfileThumbnail user={seller} />
-                            ) : (
-                                <Text>No seller information available</Text>
-                            )}
+                            <ProfileThumbnail user={seller} />
                         </View>
                     </View>
                     <View style={VideoStyles.rightColumn}>

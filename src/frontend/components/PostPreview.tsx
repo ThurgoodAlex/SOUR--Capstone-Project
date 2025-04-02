@@ -81,7 +81,10 @@ export function PostPreview({ post, size, profileThumbnail = "none", touchable =
             <TouchableOpacity
                 onPress={() => {
                     if (post.isVideo){
-                        router.push(`/VideosScreen`)
+                        router.push({
+                            pathname: '/VideosScreen',
+                            params: { videoId: post.id },
+                        })
                     }
                     else{
                         router.push(`/PostInfoScreen/${post.id}`)
