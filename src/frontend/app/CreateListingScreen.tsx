@@ -8,6 +8,7 @@ import { router, Stack } from 'expo-router';
 import * as FileSystem from 'expo-file-system';
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, StyleSheet, Alert, KeyboardTypeOptions, ActivityIndicator } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Colors } from '@/constants/Colors';
 import ModalSelector from 'react-native-modal-selector';
 import * as Yup from 'yup';
@@ -51,7 +52,7 @@ export default function CreateListing(): JSX.Element {
     const { posts } = usePosts(`/users/${user?.id}/posts/?is_listing=false`);
     const [ linkedPosts, setLinkedPosts] = useState<Post[]>([]);
     const [ tags, setTags] = useState<string[]>([]);
-    const [ colors, setColors] = useState<string[]>(["blue", "red"]);
+    const [ colors, setColors] = useState<string[]>([]);
 
 
     if (!user) logout();
@@ -190,7 +191,6 @@ export default function CreateListing(): JSX.Element {
                             features: [
                                 { type: "LABEL_DETECTION", maxResults: 8 },
                                 { type: "TEXT_DETECTION" },
-                                { type: "IMAGE_PROPERTIES" }
                             ],
                         },
                     ],
@@ -274,56 +274,59 @@ export default function CreateListing(): JSX.Element {
                 <ScrollView>
                     <UploadPhotosCarousel images={images} onAddImages={uploadImages} />
 
+                    <KeyboardAwareScrollView contentContainerStyle={ScreenStyles.screenCentered}>
+
+                        <FormGroup labelText="Name" placeholderText="Enter item name" value={name} setter={setName} error={errors["name"]} required/>
+                        <FormGroup labelText="Price" placeholderText="Enter price" value={price} setter={setPrice} error={errors["price"]} keyboardType="numeric" required/>
+                        <Dropdown labelText="Gender" selectedValue={gender} onValueChange={setGender} options={["Men's", "Women's", "Unisex"]} error={errors["gender"]} />
+                        <Dropdown labelText="Size" selectedValue={size} onValueChange={setSize} options={["XXSmall", "XSmall", "Small", "Medium", "Large", "XLarge", "XXLarge", "XXXLarge", "00", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]} error={errors["size"]} required/>
+                        <FormGroup labelText="Description" placeholderText="Enter item description" value={description} setter={setDescription} error={errors["description"]} multiline/>
+                        <FormGroup labelText="Brand" placeholderText="Enter brand" value={brand} setter={setBrand} error={errors["brand"]}/>
+                        <Dropdown labelText="Condition" selectedValue={condition} onValueChange={setCondition} options={["New", "Like New", "Good", "Fair", "Needs Repair"]} error={errors["condition"]}/>
+                        
+                        <Text style={[TextStyles.h3, { textAlign: 'left' }]}>Colors</Text>
+                        <ColorTags colors={colors} setter={setColors} error={errors["colors"]}/>
                     
+                        <Text style={[TextStyles.h3, { textAlign: 'left' }]}>Tags</Text>
+                        {images.length > 0 &&
+                            <TouchableOpacity 
+                                style={[Styles.buttonLight, 
+                                    { 
+                                        padding:0,  
+                                        backgroundColor: aiGenerated || loading ? Colors.white : Colors.green,
+                                        width: 220, 
+                                        height: 40, 
+                                        borderColor: aiGenerated ? Colors.green60 : Colors.green,
+                                        borderWidth:2,
+                                    }
 
-                    <FormGroup labelText="Name" placeholderText="Enter item name" value={name} setter={setName} error={errors["name"]} required/>
-                    <FormGroup labelText="Price" placeholderText="Enter price" value={price} setter={setPrice} error={errors["price"]} keyboardType="numeric" required/>
-                    <Dropdown labelText="Gender" selectedValue={gender} onValueChange={setGender} options={["Men's", "Women's", "Unisex"]} error={errors["gender"]} />
-                    <Dropdown labelText="Size" selectedValue={size} onValueChange={setSize} options={["XXSmall", "XSmall", "Small", "Medium", "Large", "XLarge", "XXLarge", "XXXLarge", "00", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]} error={errors["size"]} required/>
-                    <FormGroup labelText="Description" placeholderText="Enter item description" value={description} setter={setDescription} error={errors["description"]} multiline/>
-                    <FormGroup labelText="Brand" placeholderText="Enter brand" value={brand} setter={setBrand} error={errors["brand"]}/>
-                    <Dropdown labelText="Condition" selectedValue={condition} onValueChange={setCondition} options={["New", "Like New", "Good", "Fair", "Needs Repair"]} error={errors["condition"]}/>
-                    
-                    <Text style={[TextStyles.h3, { textAlign: 'left' }]}>Colors</Text>
-                    <ColorTags colors={colors} setter={setColors} error={errors["colors"]}/>
-                   
-                    <Text style={[TextStyles.h3, { textAlign: 'left' }]}>Tags</Text>
-                    {images.length > 0 &&
-                        <TouchableOpacity 
-                            style={[Styles.buttonLight, 
-                                { 
-                                    padding:0,  
-                                    backgroundColor: aiGenerated || loading ? Colors.white : Colors.green,
-                                    width: 220, 
-                                    height: 40, 
-                                    borderColor: aiGenerated ? Colors.green60 : Colors.green,
-                                    borderWidth:2,
-                                }
+                                ]}
+                                onPress={generateWithAI}
+                                disabled={images.length == 0 || aiGenerated}
+                            >
+                                <View style={[Styles.row, {gap: 5}]}>
+                                    <Text 
+                                        style={aiGenerated? {color:Colors.green60, fontWeight:'bold'}: loading ? {color:Colors.green, fontWeight:'bold'}: TextStyles.light}
+                                    >
+                                    {loading ? ("Generating Tags") : (aiGenerated ? "Tags generated by AI" : "Generate Tags with AI")}
+                                    </Text>
+                                    {loading ? 
+                                        <ActivityIndicator size="small" color={Colors.green} style={{marginLeft: 5}} /> 
+                                        : <Ionicons name="sparkles" size={16} color={aiGenerated? Colors.green60 : Colors.white} />
+                                    }
+                                </View>
+                            </TouchableOpacity>
+                            
+                        }
+                        <Tags tags={tags} setter={setTags} error={errors["tags"]}/>
 
-                            ]}
-                            onPress={generateWithAI}
-                            disabled={images.length == 0 || aiGenerated}
-                        >
-                            <View style={[Styles.row, {gap: 5}]}>
-                                <Text 
-                                    style={aiGenerated? {color:Colors.green60, fontWeight:'bold'}: loading ? {color:Colors.green, fontWeight:'bold'}: TextStyles.light}
-                                >
-                                   {loading ? ("Generating Tags") : (aiGenerated ? "Tags generated by AI" : "Generate Tags with AI")}
-                                </Text>
-                                {loading ? 
-                                    <ActivityIndicator size="small" color={Colors.green} style={{marginLeft: 5}} /> 
-                                    : <Ionicons name="sparkles" size={16} color={aiGenerated? Colors.green60 : Colors.white} />
-                                }
-                            </View>
-                        </TouchableOpacity>
-                    }
+                        {linkedPosts.length > 0 &&  <LinkInputDropdown posts={posts} selected={linkedPosts} setter={setLinkedPosts} columns={3} isListing={true}/>}
 
-                 
+
+                    </KeyboardAwareScrollView>
 
                    
-                    <Tags tags={tags} setter={setTags} error={errors["tags"]}/>
 
-                    {linkedPosts.length > 0 &&  <LinkInputDropdown posts={posts} selected={linkedPosts} setter={setLinkedPosts} columns={3} isListing={true}/>}
                     
                     <TouchableOpacity 
                         style={[Styles.buttonDark, (name == "" || price == "" || size == "") && Styles.buttonDisabled]}
