@@ -275,7 +275,7 @@ export default function CreateListing(): JSX.Element {
                 <ScrollView>
                     <UploadPhotosCarousel images={images} onAddImages={uploadImages} />
 
-                    <KeyboardAwareScrollView contentContainerStyle={ScreenStyles.screenCentered}>
+                    <KeyboardAwareScrollView >
 
                         <FormGroup labelText="Name" placeholderText="Enter item name" value={name} setter={setName} error={errors["name"]} required/>
                         <FormGroup labelText="Price" placeholderText="Enter price" value={price} setter={setPrice} error={errors["price"]} keyboardType="numeric" required/>
