@@ -8,7 +8,7 @@
  //const localhostIP = "192.168.68.60";
 
  // emma's url
- const localhostIP = '10.18.41.54';
+ const localhostIP = '10.18.114.117';
 
 const fullUrl = "http://" + localhostIP + ":8000";
 

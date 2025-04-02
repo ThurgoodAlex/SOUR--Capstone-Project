@@ -1,4 +1,5 @@
 import { NavBar } from '@/components/NavBar';
+import { ColorTags } from '@/components/ColorTags';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 import { api, useApi } from '@/context/api';
 import { useAuth } from '@/context/auth';
@@ -9,11 +10,10 @@ import * as FileSystem from 'expo-file-system';
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, StyleSheet, Alert, KeyboardTypeOptions, ActivityIndicator } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { Colors } from '@/constants/Colors';
+import { Colors, basicColors } from '@/constants/Colors';
 import ModalSelector from 'react-native-modal-selector';
 import * as Yup from 'yup';
 import { Ionicons } from '@expo/vector-icons';
-import { Button } from 'react-native'; // Add this line if using the Button from react-native
 import { usePosts } from '@/hooks/usePosts';
 import { Post } from '@/constants/Types';
 import { LinkedItemsSelection } from '@/components/LinkItemsSelection';
@@ -97,7 +97,7 @@ export default function CreateListing(): JSX.Element {
             setLoading(true);
     
             // Create the listing first
-            const response = await api.post("/posts/listings/", {
+            const listingResponse = await api.post("/posts/listings/", {
                 title: name,
                 gender: gender,
                 size: size,
@@ -108,15 +108,14 @@ export default function CreateListing(): JSX.Element {
                 isSold: false,
                 isListing: true,
                 coverImage: "",
-                color: color
             });
     
-            if (!response.ok) {
+            if (!listingResponse.ok) {
                 Alert.alert('Error', 'Something went wrong, we could not create your listing.');
                 return;
             }
     
-            const newListing = await response.json();
+            const newListing = await listingResponse.json();
             const listingId = newListing.id;
     
             console.log("Created listing:", listingId);
@@ -140,12 +139,19 @@ export default function CreateListing(): JSX.Element {
                 }
             }
 
-
             //upload tags
             for (const tag of tags) {
                 const tagResponse = await api.post(`/posts/${listingId}/tags/`, { tag: tag });
                 if (!tagResponse.ok) {
                     console.error(`Failed to upload tag ${tag} for listing ${listingId}`);
+                }
+            }
+
+            //upload colors
+            for (const color of colors) {
+                const colorResponse = await api.post(`/posts/${listingId}/${color}/`, { color: color });
+                if (!colorResponse.ok) {
+                    console.error(`Failed to upload color ${color} for listing ${listingId}`);
                 }
             }
     
@@ -233,9 +239,6 @@ export default function CreateListing(): JSX.Element {
                     sanitizedText = null;
                 }
 
-
-              
-    
                 // Collect tags for this image
                 const newTags = [
                     ...filteredLabels,
@@ -258,9 +261,7 @@ export default function CreateListing(): JSX.Element {
     
         setAiGenerated(true);
         setLoading(false);
-    };
-    
-       
+    };   
 
     return (
         <>
@@ -285,7 +286,7 @@ export default function CreateListing(): JSX.Element {
                         <Dropdown labelText="Condition" selectedValue={condition} onValueChange={setCondition} options={["New", "Like New", "Good", "Fair", "Needs Repair"]} error={errors["condition"]}/>
                         
                         <Text style={[TextStyles.h3, { textAlign: 'left' }]}>Colors</Text>
-                        <ColorTags colors={colors} setter={setColors} error={errors["colors"]}/>
+                        <SetColorTags colors={colors} setter={setColors} error={errors["colors"]}/>
                     
                         <Text style={[TextStyles.h3, { textAlign: 'left' }]}>Tags</Text>
                         {images.length > 0 &&
@@ -321,13 +322,8 @@ export default function CreateListing(): JSX.Element {
                         <Tags tags={tags} setter={setTags} error={errors["tags"]}/>
 
                         {linkedPosts.length > 0 &&  <LinkInputDropdown posts={posts} selected={linkedPosts} setter={setLinkedPosts} columns={3} isListing={true}/>}
-
-
                     </KeyboardAwareScrollView>
 
-                   
-
-                    
                     <TouchableOpacity 
                         style={[Styles.buttonDark, (name == "" || price == "" || size == "") && Styles.buttonDisabled]}
                         onPress={handleSubmit}
@@ -445,23 +441,7 @@ function Tags({ tags, setter, error }: {
 };
 
 
-
-
-
-const basicColors = [
-    { name: 'Red', hex: '#FF0000' },
-    { name: 'Orange', hex: '#FFA500' },
-    { name: 'Yellow', hex: '#FFFF00' },
-    { name: 'Green', hex: '#008000' },
-    { name: 'Blue', hex: '#0000FF' },
-    { name: 'Purple', hex: '#800080' },
-    { name: 'Pink', hex: '#FFC0CB' },
-    { name: 'Black', hex: '#000000' },
-    { name: 'White', hex: '#FFFFFF' },
-    { name: 'Gray', hex: '#808080' },
-    { name: 'Brown', hex: '#A52A2A' }
-];
-function ColorTags({ colors, setter, error }: {
+function SetColorTags({ colors, setter, error }: {
     colors: string[];
     setter: React.Dispatch<React.SetStateAction<string[]>>;
     error: string;
@@ -478,34 +458,8 @@ function ColorTags({ colors, setter, error }: {
     return (
         <ScrollView style={{ marginBottom: 25 }}>
 
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                {colors.map((color) => {
-                    const colorData = basicColors.find(c => c.name === color);
-                    return colorData ? (
-                        <View
-                            key={color}
-                            style={CreateListingStyles.tag}
-                        >
-                            <View style= {
-                                {
-                                    backgroundColor: colorData.hex,
-                                    width: 16,
-                                    height: 16,
-                                    borderRadius: 10,
-                                    marginRight: 2,
-                                }
-                            }>
-                                
-                            </View>
-                            <Text style={{ color: Colors.dark }}>{color}</Text>
-                            <TouchableOpacity onPress={() => toggleColor(color)}>
-                                <Text style={CreateListingStyles.removeBtn}>✕</Text>
-                            </TouchableOpacity>
-                        </View>
-                    ) : null;
-                })}
-            </View>
-            
+            {colors.length > 0 ? <ColorTags colors={colors}/> : null}
+
             {/* Color Checkboxes */}
             <View style={
                 {   
