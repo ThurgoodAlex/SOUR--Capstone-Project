@@ -14,7 +14,6 @@ import { usePost } from '@/hooks/usePost';
 import { usePosts } from '@/hooks/usePosts';
 import { Colors } from '@/constants/Colors';
 import { useUser } from '@/context/user';
-import { boolean } from 'yup';
 import { ColorTags } from '@/components/ColorTags';
 
 export default function PostInfoScreen() {
