@@ -6,11 +6,11 @@
             "profilePic": "assets/prof1.jpg",
             "firstname": "Ashlyn",
             "lastname": "Hansen",
-            "username": "Ashlyn.Hansen",
+            "username": "ashlynhansen",
             "email": "ashlyn.hansen@example.com",
             "bio": "A regular user",
-            "password": "password123",
-            "isSeller": false
+            "password": "password",
+            "isSeller": true
         },
         {
             "id":2,
@@ -20,7 +20,7 @@
             "username": "jane.smith",
             "email": "jane@example.com",
             "bio": "A seller account",
-            "password": "password123",
+            "password": "password",
             "isSeller": true
         },
         {
@@ -31,7 +31,7 @@
             "username": "julia.wilson",
             "email": "julia.wilson@example.com",
             "bio": "Another seller",
-            "password": "password123",
+            "password": "password",
             "isSeller": true
         },
         {
@@ -42,7 +42,7 @@
             "username": "cass.stavos",
             "email": "cass.stavos@example.com",
             "bio": "Another seller",
-            "password": "password123",
+            "password": "password",
             "isSeller": true
         },
         {
@@ -74,7 +74,7 @@
             "isSold": false,
             "isListing": false, 
             "post_images": [ 
-                "assets/images/ashlyn_hansen.jpg"
+                "assets/images/ashlyn_intro.jpg"
             ]
         },
         {
@@ -95,24 +95,174 @@
                 "assets/images/vintage_sneakers.jpg"
             ]
         },
+        
+       
+       
+      
         {
-            "id": 3,
-            "sellerID": 1,
-            "title": "Blue Knit Sweater",
-            "description": "Thrifted blue knot sweater. Super soft, slightly worn with some pilling but no holes.",
-            "brand": "Hollister",
-            "condition": "Fair",
-            "size": "Medium",
+            "id": 5,
+            "sellerID": 2,
+            "title": "Sneak Peak: Jacket Haul!",
+            "description": "here’s a sneak peak of whats coming to my shop! keep your eyes peeled! coming wednesday…\n",
+            "brand": null,
+            "condition": null,
+            "size": null,
+            "gender": null,
+            "coverImage": null,
+            "price": null,
+            "created_at": "2025-03-03T18:40:14.249377",
+            "isSold": false,
+            "isListing": false,
+            "post_images": [
+                "assets/images/vintage_store.jpg"
+            ]
+        },
+      
+        {
+            "id": 8,
+            "sellerID": 5,
+            "title": "hey sour ✌🏼",
+            "description": "hey sour, my names marcus and i previously sold off of depop and insta, but i hear this is the cool new thing. follow me to see whats in my closet",
+            "brand": null,
+            "condition": null,
+            "size": null,
+            "gender": null,
+            "coverImage": null,
+            "price": null,
+            "created_at": "2025-03-03T19:15:36.405646",
+            "isSold": false,
+            "isListing": false,
+            "post_images": [
+                "assets/images/jake.jpg"
+            ]
+        },
+
+        {
+            "id": 7,
+            "sellerID": 2,
+            "title": "90s block color bomber!",
+            "description": "Block colored 90s bomber jacket! One hole in the pocket, but great condition. ",
+            "brand": "Head",
+            "condition": "Good",
+            "size": "Large",
+            "gender": "Men's",
+            "coverImage": "",
+            "price": "42.0",
+            "created_at": "2025-03-03T18:43:44.489861",
+            "isSold": false,
+            "isListing": true,
+            "post_images": [
+                "assets/images/block_bomber.jpg"
+            ]
+        },
+        {
+            "id": 9,
+            "sellerID": 5,
+            "title": "Green Overalls",
+            "description": "Vintage green overalls. Paird with a white tee and sneakers for a cute look!",
+            "brand": "Free People",
+            "condition": "Good",
+            "size": "4",
+            "gender": "Womens",
+            "coverImage": "",
+            "price": "45.99",
+            "created_at": "2025-03-03T19:17:42.109348",
+            "isSold": false,
+            "isListing": true,
+            "post_images": [
+                "assets/images/random5.png"
+            ]
+        },
+        {
+            "id": 6,
+            "sellerID": 2,
+            "title": "Red Fleece Pullover",
+            "description": "Vintage Red Fleece Printed Pullover Zip-up Sweatshirt In used condition. Super warm, soft fleece. Perfect for hiking and being outside. Zipper V-neck and collar. Teddy material ",
+            "brand": "Pacsun",
+            "condition": "Good",
+            "size": "XLarge",
             "gender": "Women's",
             "coverImage": "",
-            "price": "25.99",
-            "created_at": "2025-03-03T18:36:17.829389",
-            "isSold": false,
-            "isListing": true, 
+            "price": "34.0",
+            "created_at": "2025-03-03T18:41:52.914138",
+            "isSold": true,
+            "isListing": true,
             "post_images": [
-                "assets/images/blue_sweater.png", 
-                "assets/images/blue_sweater1.png", 
-                "assets/images/blue_sweater2.png"
+                "assets/images/red_fleece.jpg"
+            ]
+        },
+       
+        {
+            "id": 10,
+            "sellerID": 2,
+            "title": "Carhartt Beige Canvas Jacket",
+            "description": "Worn a couple times, bought for $89. Like new.",
+            "brand": "Carhartt",
+            "condition": "Like New",
+            "size": "Large",
+            "gender": "Men's",
+            "coverImage": "",
+            "price": "62.99",
+            "created_at": "2025-03-03T19:27:06.997688",
+            "isSold": false,
+            "isListing": true,
+            "post_images": [
+                "assets/images/random3.png"
+            ]
+        },
+        {
+            "id": 11,
+            "sellerID": 5,
+            "title": "Adidas suede vintage sneakers",
+            "description": "Vintage find, blue suede sneakers. Kind of worn on the inside but they look pretty good.",
+            "brand": "Adidas",
+            "condition": "Good",
+            "size": "11",
+            "gender": "Men's",
+            "coverImage": "",
+            "price": "62.99",
+            "created_at":"2025-03-03T18:36:17.829389", 
+            "isSold": false,
+            "isListing": true,
+            "post_images": [
+                "assets/images/adidas.jpg"
+            ]
+
+        },
+        {
+            "id": 13,
+            "sellerID": 2,
+            "title": "Levi's Bermuda Shorts",
+            "description": "Vintage Levi's Bermuda shorts. Super cute and comfy, perfect for summer! ",
+            "brand": "Levi's",
+            "condition": "",
+            "size": "12",
+            "gender": "Women's",
+            "coverImage": "",
+            "price": "19.99",
+            "created_at": "2025-03-03T19:40:18.243796",
+            "isSold": true,
+            "isListing": true,
+            "post_images": [
+                "assets/images/listing.png"
+            ]
+        },
+        {
+            "id": 12,
+            "sellerID": 2,
+            "title": "Vintage Fila Windbreaker",
+            "description": "Vintage fila windbreaker. Great condition, no holes or stains. Super cute and comfy, perfect for spring weather! ",
+            "brand": "Fila",
+            "condition": "Good",
+            "size": "Medium",
+            "gender": "Men's",
+            "coverImage": "",
+            "price": "36.0",
+            "created_at": "2025-03-03T19:36:55.464407",
+            "isSold": true,
+            "isListing": true,
+            "post_images": [
+                "assets/images/fila.jpg"
             ]
         },
         {
@@ -128,142 +278,30 @@
             "price": null,
             "created_at": "2025-03-03T18:38:28.682148",
             "isSold": false,
-            "isListing": false
+            "isListing": false,
+            "post_images": [
+                "assets/images/julia_post.png"
+            ]
         },
         {
-            "id": 5,
-            "sellerID": 2,
-            "title": "Sneak Peak: Jacket Haul!",
-            "description": "here’s a sneak peak of whats coming to my shop! keep your eyes peeled! coming wednesday…\n",
-            "brand": null,
-            "condition": null,
-            "size": null,
-            "gender": null,
-            "coverImage": null,
-            "price": null,
-            "created_at": "2025-03-03T18:40:14.249377",
-            "isSold": false,
-            "isListing": false
-        },
-        {
-            "id": 7,
-            "sellerID": 2,
-            "title": "90s block color bomber!",
-            "description": "Block colored 90s bomber jacket! One hole in the pocket, but great condition. ",
-            "brand": "Head",
-            "condition": "Good",
-            "size": "Large",
-            "gender": "Men's",
-            "coverImage": "",
-            "price": "42.0",
-            "created_at": "2025-03-03T18:43:44.489861",
-            "isSold": false,
-            "isListing": true
-        },
-        {
-            "id": 6,
-            "sellerID": 2,
-            "title": "Green Pacsun Vintage Jacket",
-            "description": "Oversized boxy vintage pacsun fleece. Really good condition.",
-            "brand": "Pacsun",
-            "condition": "Like New",
-            "size": "XLarge",
+            "id": 3,
+            "sellerID": 1,
+            "title": "Blue Knit Sweater",
+            "description": "Thrifted blue knot sweater. Super soft, slightly worn with some pilling but no holes.",
+            "brand": "Hollister",
+            "condition": "Fair",
+            "size": "Medium",
             "gender": "Women's",
             "coverImage": "",
-            "price": "34.0",
-            "created_at": "2025-03-03T18:41:52.914138",
-            "isSold": true,
-            "isListing": true
-        },
-        {
-            "id": 8,
-            "sellerID": 5,
-            "title": "hey sour ✌🏼",
-            "description": "hey sour, my names jake and i previously sold off of depop and insta, but i hear this is the cool new thing. follow me to see whats in my closet",
-            "brand": null,
-            "condition": null,
-            "size": null,
-            "gender": null,
-            "coverImage": null,
-            "price": null,
-            "created_at": "2025-03-03T19:15:36.405646",
-            "isSold": false,
-            "isListing": false
-        },
-        {
-            "id": 9,
-            "sellerID": 5,
-            "title": "Baggy Jeans",
-            "description": "Box style baggy jeans",
-            "brand": "Levi’s ",
-            "condition": "Good",
-            "size": "20",
-            "gender": "Men's",
-            "coverImage": "",
-            "price": "45.99",
-            "created_at": "2025-03-03T19:17:42.109348",
-            "isSold": false,
-            "isListing": true
-        },
-        {
-            "id": 10,
-            "sellerID": 5,
-            "title": "Overland Beige Leather Jacket",
-            "description": "Worn a couple times, bought for $89. Like new.",
-            "brand": "Overland",
-            "condition": "Like New",
-            "size": "Medium",
-            "gender": "Men's",
-            "coverImage": "",
-            "price": "62.99",
-            "created_at": "2025-03-03T19:27:06.997688",
-            "isSold": false,
-            "isListing": true
-        },
-        {
-            "id": 11,
-            "sellerID": 5,
-            "title": "Adidas suede vintage sneakers",
-            "description": "Vintage find, blue suede sneakers. Kind of worn on the inside but they look pretty good.",
-            "brand": "Adidas",
-            "condition": "Good",
-            "size": "11",
-            "gender": "Men's",
-            "coverImage": "",
-            "price": "62.99",
+            "price": "25.99",
             "created_at": "2025-03-03T19:29:32.318013",
             "isSold": false,
-            "isListing": true
-        },
-        {
-            "id": 13,
-            "sellerID": 2,
-            "title": "Yellow Box Tee ",
-            "description": "",
-            "brand": "",
-            "condition": "",
-            "size": "XLarge",
-            "gender": "Women's",
-            "coverImage": "",
-            "price": "13.99",
-            "created_at": "2025-03-03T19:40:18.243796",
-            "isSold": true,
-            "isListing": true
-        },
-        {
-            "id": 12,
-            "sellerID": 2,
-            "title": "Vintage Windbreaker",
-            "description": "Vintage adidas windbreaker. Blue red and white. This jacket is the perfect item to complete your vintage fit!  ",
-            "brand": "Adidas ",
-            "condition": "Good",
-            "size": "Large",
-            "gender": "Men's",
-            "coverImage": "",
-            "price": "36.0",
-            "created_at": "2025-03-03T19:36:55.464407",
-            "isSold": true,
-            "isListing": true
+            "isListing": true, 
+            "post_images": [
+                "assets/images/blue_sweater.png", 
+                "assets/images/blue_sweater1.png", 
+                "assets/images/blue_sweater2.png"
+            ]
         }
     ],
 
