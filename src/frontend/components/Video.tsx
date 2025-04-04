@@ -26,7 +26,8 @@ export function Video({ post, index, currentViewableItemIndex }: { post: Post, i
     const shouldPlay = index == currentViewableItemIndex;
     const { posts: linkedItems, loading: linkedPostsLoading, error: linkedPostsError } = usePosts(`/posts/${post.id}/links/`);
     const { images, loading, error, refetch } = useGetMedia(post.id);
-    const [player, setPlayer] = useState<ReturnType<typeof useVideoPlayer> | null>(null);;
+    const [player, setPlayer] = useState<ReturnType<typeof useVideoPlayer> | null>(null);
+    const [isSellerLoaded, setIsSellerLoaded] = useState(false); // State to track if seller is loaded
 
 
     const videoPlayer = useVideoPlayer(images?.[0]?.url ?? require('../assets/vids/testFashion.mp4'), (player) => {
@@ -58,7 +59,10 @@ export function Video({ post, index, currentViewableItemIndex }: { post: Post, i
         if (images?.length > 0 && videoPlayer) {
             setPlayer(videoPlayer);
         }
-    }, [shouldPlay, images]);
+        if (post.seller) {
+            setIsSellerLoaded(true);
+        }
+    }, [shouldPlay, images, post.seller]);
 
     return (
         <View style={VideoStyles.container}>
@@ -91,10 +95,11 @@ export function Video({ post, index, currentViewableItemIndex }: { post: Post, i
                         ) : null
                         }
                         <View style={VideoStyles.fixedProfile}>
-                            
-                            <View style={Styles.column}>
-                                <VideoProfile user={post.seller!} video={post} />
-                            </View>
+                            {isSellerLoaded && post.seller ? (
+                                <VideoProfile user={post.seller} video={post} />
+                            ) : (
+                                <Text style={[TextStyles.h3, { color: Colors.light }]}>Loading seller info...</Text>
+                            )}
                         </View>
                     </View>
                     <View style={VideoStyles.rightColumn}>
@@ -127,33 +132,33 @@ function VideoProfile({ user, video }: { user: User, video: Post }) {
     })
     return (
         <TouchableOpacity
-                        onPress={() => {
-                            if (user.id == user?.id) {
-                                router.push({
-                                    pathname: '/SelfProfileScreen',
-                                })
-                            }
-                            else {
-                                router.push({
-                                    pathname: '/UserProfileScreen',
-                                    params: { user: JSON.stringify(user) },
-                                })
-                            }
-                        }
-                        }
-                        style={[Styles.row, { marginLeft: 6, maxHeight: 60, alignItems: 'center' }]}
-                    >
-        
-                        <Image
-                            source={
-                                user.profilePic ? { uri: user.profilePic } : require('../assets/images/blank_profile_pic.png')
-                            }
-                            style={thumbnailStyle.thumbnailImage}
-                        />
-                        <View style={[Styles.column, Styles.alignLeft, { marginLeft: 5 }]}>
-                            <Text style={[TextStyles.h3Light, { marginBottom: 0 }]}>{video.title}</Text>
-                            <Text style={[TextStyles.smallLight, { marginTop: 1 }]}>@{user.username}</Text>
-                        </View>
+            onPress={() => {
+                if (user.id == user?.id) {
+                    router.push({
+                        pathname: '/SelfProfileScreen',
+                    })
+                }
+                else {
+                    router.push({
+                        pathname: '/UserProfileScreen',
+                        params: { user: JSON.stringify(user) },
+                    })
+                }
+            }
+            }
+            style={[Styles.row, { marginLeft: 6, maxHeight: 60, alignItems: 'center' }]}
+        >
+
+            <Image
+                source={
+                    user.profilePic ? { uri: user.profilePic } : require('../assets/images/blank_profile_pic.png')
+                }
+                style={thumbnailStyle.thumbnailImage}
+            />
+            <View style={[Styles.column, Styles.alignLeft, { marginLeft: 5 }]}>
+                <Text style={[TextStyles.h3Light, { marginBottom: 0 }]}>{video.title}</Text>
+                <Text style={[TextStyles.smallLight, { marginTop: 1 }]}>@{user.username}</Text>
+            </View>
         </TouchableOpacity>
     );
 }

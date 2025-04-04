@@ -61,19 +61,6 @@ export function PostPreview({ post, size, profileThumbnail = "none", touchable =
         }
         : undefined;
 
-    const seller: User | null = post.seller
-        ? {
-            firstname: post.seller.firstname,
-            lastname: post.seller.lastname,
-            username: post.seller.username,
-            bio: post.seller.bio,
-            email: post.seller.email,
-            profilePic: post.seller.profilePic,
-            isSeller: post.seller.isSeller,
-            id: post.seller.id,
-        }
-        : null;
-
     return (
         <View key={post.id} style={[previewStyle, { justifyContent: 'flex-start' }]}>
             <TouchableOpacity
@@ -106,11 +93,11 @@ export function PostPreview({ post, size, profileThumbnail = "none", touchable =
             </TouchableOpacity>
 
             {profileThumbnail !== 'none' ? (
-                seller ? (
+                post.seller ? (
                     profileThumbnail === 'big' ? (
-                        <ProfileThumbnail user={seller} />
+                        <ProfileThumbnail user={post.seller} />
                     ) : (
-                        <ProfileThumbnailSmall user={seller} />
+                        <ProfileThumbnailSmall user={post.seller} />
                     )
                 ) : (
                     <Text>No seller information available</Text>
