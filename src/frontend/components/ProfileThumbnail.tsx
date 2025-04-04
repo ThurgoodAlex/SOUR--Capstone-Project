@@ -39,7 +39,6 @@ export default function ProfileThumbnail({ user }: {user: User}) {
         
         <Image
             source={
-            //   ProfileImage
                 user.profilePic
                 ? user.profilePic
                 : require('../assets/images/blank_profile_pic.png') // Default fallback
@@ -47,8 +46,8 @@ export default function ProfileThumbnail({ user }: {user: User}) {
             style={ProfileStyles.thumbnailImage}
             />
             <View style={[Styles.column, Styles.alignLeft, {marginLeft:5}]}>
-            <Text style={[TextStyles.h3, {marginBottom:0}]}>{user.firstname} {user.lastname}</Text>
-            <Text style={[TextStyles.small, {marginTop:1}]}>@{user.username}</Text>
+                <Text style={[TextStyles.h3, {marginBottom:0}]}>{user.firstname} {user.lastname}</Text>
+                <Text style={[TextStyles.small, {marginTop:1}]}>@{user.username}</Text>
             </View>
       </TouchableOpacity>
     </> 

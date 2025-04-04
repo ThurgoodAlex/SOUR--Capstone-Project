@@ -91,6 +91,7 @@ class PostInDB(SQLModel, table = True):
 class createPost(BaseModel):
     title: str
     description: Optional[str]
+    isVideo: Optional[bool]
     
 class createListing(BaseModel):
     title: str

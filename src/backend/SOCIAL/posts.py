@@ -46,7 +46,7 @@ posts_router = APIRouter(tags=["Posts"])
 
 
 @posts_router.post('/', response_model= Post, status_code=201)
-def upload_post(new_post:createPost,  
+def upload_post(new_post: createPost,  
                 session: Annotated[Session, Depends(get_session)], 
                 current_user: UserInDB = Depends(auth_get_current_user)) -> Post:
     """Creating a new posting"""

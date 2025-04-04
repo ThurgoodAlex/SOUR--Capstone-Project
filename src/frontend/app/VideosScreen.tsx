@@ -30,7 +30,7 @@ export default function VideoScreen() {
         try {
             let allVideos = [];
             let selectedVideo = null;
-    
+            console.log("videoParam", videoParam);
             if (videoParam) {
                 // Fetch the specific video first
                 const response = await api.get(`/posts/${videoParam}/`);

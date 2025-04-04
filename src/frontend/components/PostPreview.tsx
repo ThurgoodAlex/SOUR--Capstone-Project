@@ -28,8 +28,6 @@ export function PostPreview({ post, size, profileThumbnail = "none", touchable =
         coverImage = (images && images.length > 0 ? images[0].url : require('../assets/images/placeholder.png'));
     }
 
-
-    console.log('Cover Image:', coverImage);
     if (mediaError) {
         console.log('Error loading media:', mediaError);
     }

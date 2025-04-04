@@ -25,32 +25,35 @@ export function Video({ post, index, currentViewableItemIndex }: { post: Post, i
     const { posts: linkedItems, loading: linkedPostsLoading, error: linkedPostsError } = usePosts(`/posts/${post.id}/links/`);
     const { images, loading, error, refetch } = useGetMedia(post.id);
     const [player, setPlayer] = useState<ReturnType<typeof useVideoPlayer> | null>(null);;
-    const videoPlayer = useVideoPlayer(images?.[0]?.url ?? '', (player) => {
+
+    console.log("images", images);
+    console.log("post", post.id);
+    const videoPlayer = useVideoPlayer(images?.[0]?.url ?? require('../assets/vids/testFashion.mp4'), (player) => {
         player.loop = true;
         player.play();
     });
 
     //extract seller information into a User object
-    const seller: User ={
-            firstname: post.seller!.firstname,
-            lastname: post.seller!.lastname,
-            username: post.seller!.username,
-            bio: post.seller!.bio,
-            email: post.seller!.email,
-            profilePic: post.seller!.profilePic,
-            isSeller: post.seller!.isSeller,
-            id: post.seller!.id,
-        };
-    // const seller: User = {
-    //     firstname: "Emma",
-    //     lastname: "Luk",
-    //     username: "emma_luky",
-    //     bio: "",
-    //     email: "emmahluk@gmail.com",
-    //     profilePic: require('../assets/images/prof1.jpg'),
-    //     isSeller: true,
-    //     id: 2,
+    // const seller: User ={
+    //     firstname: post.seller!.firstname,
+    //     lastname: post.seller!.lastname,
+    //     username: post.seller!.username,
+    //     bio: post.seller!.bio,
+    //     email: post.seller!.email,
+    //     profilePic: post.seller!.profilePic,
+    //     isSeller: post.seller!.isSeller,
+    //     id: post.seller!.id,
     // };
+    const seller: User ={
+        firstname: "Emma",
+        lastname: "Luk",
+        username: "EmmaLuk",
+        bio: "I am a seller",
+        email: "emma@gmail.com",
+        profilePic: "../assets/images/blank_profile_pic.png",
+        isSeller: true,
+        id: 6,
+    };
     const fetchLike = async () => {
         const response = await api.get(`/posts/${post.id}/like/`);
         const data = await response.json();
