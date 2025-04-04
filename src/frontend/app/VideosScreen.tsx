@@ -7,6 +7,7 @@ import { Video } from '@/components/Video';
 import { Post } from '@/constants/Types';
 import { StatusBar } from 'expo-status-bar';
 import { useSearchParams } from 'expo-router/build/hooks';
+import { usePosts } from '@/hooks/usePosts';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const VIDEO_HEIGHT = SCREEN_HEIGHT - 40;
@@ -15,9 +16,10 @@ export default function VideoScreen() {
     const searchParams = useSearchParams();
     const videoParam = searchParams.get('videoId');
     const api = useApi();
-    const [videos, setVideos] = useState<Post[]>([]);
-    const [currentViewableItemIndex, setCurrentViewableItemIndex] = useState(0);
     const viewabilityConfig = { viewAreaCoveragePercentThreshold: 50 }
+    const { posts, loading, error } = usePosts('/posts/isVideo=true/');
+    const [videoFeed, setVideoFeed] = useState<Post[]>([]);
+    const [currentViewableItemIndex, setCurrentViewableItemIndex] = useState(0);
 
     const onViewableItemsChanged = ({ viewableItems }: any) => {
         if (viewableItems.length > 0) {
@@ -28,7 +30,6 @@ export default function VideoScreen() {
 
     const getVideos = async () => {
         try {
-            let allVideos = [];
             let selectedVideo = null;
             console.log("videoParam", videoParam);
             if (videoParam) {
@@ -40,23 +41,17 @@ export default function VideoScreen() {
                     console.error("Failed to retrieve the selected video:", response);
                 }
             }
-    
-            // Fetch all video posts
-            const allVideosResponse = await api.get(`/posts/isVideo=true/`);
-            if (allVideosResponse.ok) {
-                allVideos = await allVideosResponse.json();
-            } else {
-                console.error("Failed to retrieve video posts:", allVideosResponse);
-            }
-    
+            
             // Ensure the selected video is at the top
             if (selectedVideo) {
                 // Filter out the selected video if it appears in allVideos (to prevent duplication)
-                allVideos = allVideos.filter((video: Post) => video.id !== selectedVideo.id);
-                setVideos([selectedVideo, ...allVideos]);
+                const filteredVideos = posts.filter((video: Post) => video.id !== selectedVideo.id);
+                setVideoFeed([selectedVideo, ...filteredVideos]);
             } else {
-                setVideos(allVideos);
+                setVideoFeed(posts);
             }
+            console.log("posts", posts);
+            console.log("videoFeed", videoFeed);
         } catch (error) {
             console.error('Post retrieval failed:', error);
         }
@@ -64,7 +59,7 @@ export default function VideoScreen() {
 
     useEffect(() => {
         getVideos();
-    }, []);
+    }, [posts, videoParam]);
 
     const renderVideo = ({item, index} : {item: Post, index: number}) => (
         <Video post={item} index={index} currentViewableItemIndex={currentViewableItemIndex}/>
@@ -75,7 +70,7 @@ export default function VideoScreen() {
             <StatusBar style='light'/>
             <View style={styles.container}>
                 <FlatList
-                    data={videos}
+                    data={videoFeed}
                     renderItem={({ item, index }) => (
                         renderVideo({item, index})
                     )}

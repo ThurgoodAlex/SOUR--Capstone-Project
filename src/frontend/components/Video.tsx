@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, Text, Dimensions, StyleSheet, ScrollView } from 'react-native';
+import { View, TouchableOpacity, Text, Dimensions, StyleSheet, ScrollView, Image } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Post, User } from '@/constants/Types';
 import ProfileThumbnail from '@/components/ProfileThumbnail';
@@ -12,6 +12,8 @@ import { useGetMedia } from '@/hooks/useGetMedia'
 import { LinkedItems } from '@/components/LinkedItems';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '@/constants/Colors';
+import { Styles, TextStyles } from '@/constants/Styles';
+import { router } from 'expo-router';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const VIDEO_HEIGHT = SCREEN_HEIGHT - 40;
@@ -26,34 +28,12 @@ export function Video({ post, index, currentViewableItemIndex }: { post: Post, i
     const { images, loading, error, refetch } = useGetMedia(post.id);
     const [player, setPlayer] = useState<ReturnType<typeof useVideoPlayer> | null>(null);;
 
-    console.log("images", images);
-    console.log("post", post.id);
+
     const videoPlayer = useVideoPlayer(images?.[0]?.url ?? require('../assets/vids/testFashion.mp4'), (player) => {
         player.loop = true;
         player.play();
     });
 
-    //extract seller information into a User object
-    // const seller: User ={
-    //     firstname: post.seller!.firstname,
-    //     lastname: post.seller!.lastname,
-    //     username: post.seller!.username,
-    //     bio: post.seller!.bio,
-    //     email: post.seller!.email,
-    //     profilePic: post.seller!.profilePic,
-    //     isSeller: post.seller!.isSeller,
-    //     id: post.seller!.id,
-    // };
-    const seller: User ={
-        firstname: "Emma",
-        lastname: "Luk",
-        username: "EmmaLuk",
-        bio: "I am a seller",
-        email: "emma@gmail.com",
-        profilePic: "../assets/images/blank_profile_pic.png",
-        isSeller: true,
-        id: 6,
-    };
     const fetchLike = async () => {
         const response = await api.get(`/posts/${post.id}/like/`);
         const data = await response.json();
@@ -111,7 +91,10 @@ export function Video({ post, index, currentViewableItemIndex }: { post: Post, i
                         ) : null
                         }
                         <View style={VideoStyles.fixedProfile}>
-                            <ProfileThumbnail user={seller} />
+                            
+                            <View style={Styles.column}>
+                                <VideoProfile user={post.seller!} video={post} />
+                            </View>
                         </View>
                     </View>
                     <View style={VideoStyles.rightColumn}>
@@ -134,10 +117,51 @@ export function Video({ post, index, currentViewableItemIndex }: { post: Post, i
     );
 }
 
+function VideoProfile({ user, video }: { user: User, video: Post }) {
+    const thumbnailStyle = StyleSheet.create({
+        thumbnailImage: {
+            width: 40,
+            height: 40,
+            borderRadius: 20,
+        },
+    })
+    return (
+        <TouchableOpacity
+                        onPress={() => {
+                            if (user.id == user?.id) {
+                                router.push({
+                                    pathname: '/SelfProfileScreen',
+                                })
+                            }
+                            else {
+                                router.push({
+                                    pathname: '/UserProfileScreen',
+                                    params: { user: JSON.stringify(user) },
+                                })
+                            }
+                        }
+                        }
+                        style={[Styles.row, { marginLeft: 6, maxHeight: 60, alignItems: 'center' }]}
+                    >
+        
+                        <Image
+                            source={
+                                user.profilePic ? { uri: user.profilePic } : require('../assets/images/blank_profile_pic.png')
+                            }
+                            style={thumbnailStyle.thumbnailImage}
+                        />
+                        <View style={[Styles.column, Styles.alignLeft, { marginLeft: 5 }]}>
+                            <Text style={[TextStyles.h3Light, { marginBottom: 0 }]}>{video.title}</Text>
+                            <Text style={[TextStyles.smallLight, { marginTop: 1 }]}>@{user.username}</Text>
+                        </View>
+        </TouchableOpacity>
+    );
+}
+
 const VideoStyles = StyleSheet.create({
     overlayContainer: {
         ...StyleSheet.absoluteFillObject,
-        flex: 1
+        flex: 1,
     },
     container: {
         height: VIDEO_HEIGHT,
@@ -161,6 +185,7 @@ const VideoStyles = StyleSheet.create({
     },
     fixedProfile: {
         position: "absolute",
+        flexDirection: "row",
         bottom: 10,
         left: 10,
     },
