@@ -15,6 +15,16 @@ export default function ProfileThumbnail({ user }: {user: User}) {
       borderRadius: 20,
     },
   })
+
+  const profPicMapping: Record<number, any> = {
+    1: require('@/assets/images/prof1.jpg'),
+    5: require('@/assets/images/prof2.jpg'),
+    2: require('@/assets/images/prof3.jpg')
+  }
+
+
+  console.log("Profile Pic: ", user.profilePic);
+  let profilePic = user.id in profPicMapping ? profPicMapping[user.id] : require('@/assets/images/blank_profile_pic.png');
   
   return (
     <>
@@ -38,11 +48,7 @@ export default function ProfileThumbnail({ user }: {user: User}) {
       >
         
         <Image
-            source={
-                user.profilePic
-                ? user.profilePic
-                : require('../assets/images/blank_profile_pic.png') // Default fallback
-            }
+            source={profilePic}
             style={ProfileStyles.thumbnailImage}
             />
             <View style={[Styles.column, Styles.alignLeft, {marginLeft:5}]}>
