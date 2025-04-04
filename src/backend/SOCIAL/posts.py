@@ -550,8 +550,8 @@ def upload_tag(post_ID: int,
 @posts_router.get('/{post_id}/tags/', response_model=list[Tag], status_code=200)
 def get_tags_of_post(post_id: int,
                     session: Annotated[Session, Depends(get_session)], 
-                    current_user: UserInDB = Depends(auth_get_current_user)) -> list[Media]:
-    """Getting all media for a post"""
+                    current_user: UserInDB = Depends(auth_get_current_user)) -> list[Tag]:
+    """Getting all tags for a post"""
     post = session.get(PostInDB, post_id)
 
     if not post:
@@ -560,4 +560,36 @@ def get_tags_of_post(post_id: int,
     tags_in_db = session.exec(query).all()
 
     return [Tag(**tag.model_dump()) for tag in tags_in_db]
+
+
+
+@posts_router.get('/related_posts/{post_id}/', response_model=list[Post], status_code=200)
+def get_related_posts(post_id: int, 
+                       session: Annotated[Session, Depends(get_session)], 
+                       current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
+    """Get related posts based on tags"""
+    post = session.get(PostInDB, post_id)
+    if not post:
+        raise EntityNotFound("post", post_id)
+
+    # Get tags for the current post
+    tags_query = select(TagInDB).where(TagInDB.postID == post_id)
+    tags_in_db = session.exec(tags_query).all()
+    tags = [tag.tag for tag in tags_in_db]
+    print("current post tags:", tags)
+
+    # Find related posts with the same tags
+    related_posts_query = select(PostInDB).join(TagInDB).where(TagInDB.tag.in_(tags)).where(PostInDB.id != post_id).limit(9)
+    related_posts_in_db = session.exec(related_posts_query).all()
+    print(related_posts_in_db)
+
+
+    seen_post_ids = set()
+    unique_posts = []
+    for post in related_posts_in_db:
+        if post.id not in seen_post_ids:
+            seen_post_ids.add(post.id)
+            unique_posts.append(Post(**post.model_dump()))
+
+    return unique_posts
 

@@ -25,6 +25,8 @@ export default function PostInfoScreen() {
     const { posts: linkedItems } = usePosts(`/posts/${id}/links/`);
     const { user } = useUser();
     const [liked, setLike] = useState(false);
+    const [relatedPosts, setRelatedPosts] = useState<Post[]>([]);
+    const [loadingRelated, setLoadingRelated] = useState(false);
 
     useEffect(() => {
         if (post?.id) {
@@ -38,12 +40,34 @@ export default function PostInfoScreen() {
                 } catch (error) {
                     console.error('Error fetching like status:', error);
                 }
+                
+                setLoadingRelated(false);
             };
             fetchLike();
+            getRelatedPosts();
         }
     }, [post?.id]); 
 
   
+    async function getRelatedPosts() {
+        if (!post?.id) 
+            return;
+        try {
+            const response = await api.get(`/posts/related_posts/${post.id}/`);
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Related posts:', data);
+                setRelatedPosts(data);
+            } else {
+                console.error('Failed to fetch related posts');
+            }
+        } catch (error) {
+            console.error('Error fetching related posts:', error);
+        } finally {
+            setLoadingRelated(false);
+        }
+    }
+
 
     const toggleLike = async () => {
         if (!post?.id) return;
@@ -115,21 +139,22 @@ export default function PostInfoScreen() {
                 <View style={ScreenStyles.screen}>
                     <ScrollView contentContainerStyle={{ gap: 6 }}>
                         <ProfileThumbnail user={post.seller} />
-                        {post.seller.id != user?.id ? 
-                            <TouchableOpacity 
+                        {post.seller.id !== user?.id ? (
+                            <TouchableOpacity
                                 onPress={handleMessage}
-                                style={{ alignSelf:'flex-end', position:'absolute', top: 3}}
+                                style={{ alignSelf: 'flex-end', position: 'absolute', top: 3 }}
                             >
                                 <Ionicons name="chatbubble-outline" size={28} color={Colors.dark60} />
                             </TouchableOpacity>
-                            : null
-                        }
+                        ) : null}
                         <PhotoCarousel postId={Number(post.id)} />
                         {post.isListing ? (
                             <ListingInfo post={post} liked={liked} toggleLike={toggleLike} userID={user?.id ?? 0} />
                         ) : (
                             <PostInfo post={post} liked={liked} toggleLike={toggleLike} />
                         )}
+    
+                    
                         {linkedItems.length > 0 && (
                             <>
                                 <View style={{ borderBottomColor: Colors.dark60, borderBottomWidth: 1, marginVertical: 10 }} />
@@ -139,19 +164,31 @@ export default function PostInfoScreen() {
                                 <LinkedItems posts={linkedItems} columns={post.isListing ? 3 : 1} />
                             </>
                         )}
+    
+                 
+                        {loadingRelated ? (
+                            <ActivityIndicator size="small" color={Colors.orange} />
+                        ) : relatedPosts.length > 0 && (
+                            <>
+                                <View style={{ borderBottomColor: Colors.dark60, borderBottomWidth: 1, marginVertical: 10 }} />
+                                <Text style={[TextStyles.h2, TextStyles.uppercase]}>
+                                    {post.isListing ? "Similar Items" : "Related Posts"}
+                                </Text>
+                                <LinkedItems posts={relatedPosts} columns={post.isListing ? 3 : 1} />
+                            </>
+                        )}
                     </ScrollView>
                 </View>
                 <NavBar />
             </>
         );
     }
-
+    
     return (
         <View style={ScreenStyles.screen}>
             <Text>Post information not available.</Text>
         </View>
     );
-}
 
 // ListingInfo Component
 function ListingInfo({ post, liked, toggleLike, userID }: { post: Post, liked: boolean, toggleLike: () => void, userID:number }) {
@@ -217,4 +254,5 @@ function LikeButton({ liked, onPress }: { liked: boolean, onPress: () => void })
             />
         </TouchableOpacity>
     );
+}
 }
