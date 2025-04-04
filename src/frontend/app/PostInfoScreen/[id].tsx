@@ -40,35 +40,31 @@ export default function PostInfoScreen() {
                 } catch (error) {
                     console.error('Error fetching like status:', error);
                 }
-                getRelatedPosts();
+                
                 setLoadingRelated(false);
             };
             fetchLike();
+            getRelatedPosts();
         }
     }, [post?.id]); 
 
   
-    function getRelatedPosts() {
-        if (post?.id) {
-            setLoadingRelated(true);
-            api.get(`/posts/related_posts/${post.id}/`)
-                .then((response) => {
-                    if (response.ok) {
-                        return response.json();
-                    } else {
-                        throw new Error('Failed to fetch related posts');
-                    }
-                })
-                .then((data) => {
-                    console.log('Related posts:', data);
-                    setRelatedPosts(data);
-                })
-                .catch((error) => {
-                    console.error('Error fetching related posts:', error);
-                })
-                .finally(() => {
-                    setLoadingRelated(false);
-                });
+    async function getRelatedPosts() {
+        if (!post?.id) 
+            return;
+        try {
+            const response = await api.get(`/posts/related_posts/${post.id}/`);
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Related posts:', data);
+                setRelatedPosts(data);
+            } else {
+                console.error('Failed to fetch related posts');
+            }
+        } catch (error) {
+            console.error('Error fetching related posts:', error);
+        } finally {
+            setLoadingRelated(false);
         }
     }
 
@@ -158,7 +154,7 @@ export default function PostInfoScreen() {
                             <PostInfo post={post} liked={liked} toggleLike={toggleLike} />
                         )}
     
-                        {/* Linked Items Section */}
+                    
                         {linkedItems.length > 0 && (
                             <>
                                 <View style={{ borderBottomColor: Colors.dark60, borderBottomWidth: 1, marginVertical: 10 }} />
@@ -169,10 +165,10 @@ export default function PostInfoScreen() {
                             </>
                         )}
     
-                        {/* Related Items Section */}
+                 
                         {loadingRelated ? (
                             <ActivityIndicator size="small" color={Colors.orange} />
-                        ) : relatedPosts.length > 0 ? (
+                        ) : relatedPosts.length > 0 && (
                             <>
                                 <View style={{ borderBottomColor: Colors.dark60, borderBottomWidth: 1, marginVertical: 10 }} />
                                 <Text style={[TextStyles.h2, TextStyles.uppercase]}>
@@ -180,7 +176,7 @@ export default function PostInfoScreen() {
                                 </Text>
                                 <LinkedItems posts={relatedPosts} columns={post.isListing ? 3 : 1} />
                             </>
-                        ) : null}
+                        )}
                     </ScrollView>
                 </View>
                 <NavBar />

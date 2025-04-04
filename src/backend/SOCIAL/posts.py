@@ -579,7 +579,7 @@ def get_related_posts(post_id: int,
     print("current post tags:", tags)
 
     # Find related posts with the same tags
-    related_posts_query = select(PostInDB).join(TagInDB).where(TagInDB.tag.in_(tags)).where(PostInDB.id != post_id).limit(3)
+    related_posts_query = select(PostInDB).join(TagInDB).where(TagInDB.tag.in_(tags)).where(PostInDB.id != post_id).limit(9)
     related_posts_in_db = session.exec(related_posts_query).all()
     print(related_posts_in_db)
 
