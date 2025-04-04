@@ -3,7 +3,7 @@
     [
         {
             "id":1,
-            "profilePic": "assets/prof1.jpg",
+            "profilePic": "../assets/prof1.jpg",
             "firstname": "Ashlyn",
             "lastname": "Hansen",
             "username": "ashlynhansen",
@@ -14,7 +14,7 @@
         },
         {
             "id":2,
-            "profilePic": "assets/prof2.jpg",
+            "profilePic": "../assets/prof2.jpg",
             "firstname": "Jane",
             "lastname": "Smith",
             "username": "jane.smith",
@@ -25,7 +25,7 @@
         },
         {
             "id":3,
-            "profilePic": "assets/prof3.jpg",
+            "profilePic": "../assets/prof3.jpg",
             "firstname": "Julia",
             "lastname": "Wilson",
             "username": "julia.wilson",
@@ -36,7 +36,7 @@
         },
         {
             "id":4, 
-            "profilePic": "assets/prof3.jpg",
+            "profilePic": "../assets/prof4.jpg",
             "firstname": "Cassandra",
             "lastname": "Stavos",
             "username": "cass.stavos",
@@ -47,7 +47,7 @@
         },
         {
             "id": 5,
-            "profilePic": "assets/prof4.jpg",
+            "profilePic": "../assets/prof5.jpg",
             "firstname": "Marcus",
             "lastname": "Chen",
             "username": "marcus.chen",

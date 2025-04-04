@@ -16,6 +16,17 @@ export default function ProfileThumbnailSmall({ user }: { user: User}) {
    
   });
 
+  const profPicMapping: Record<number, any> = {
+    1: require('@/assets/images/prof1.jpg'),
+    5: require('@/assets/images/prof2.jpg'),
+    2: require('@/assets/images/prof3.jpg')
+  }
+
+
+  console.log("Profile Pic: ", user.profilePic);
+  let profilePic = user.id in profPicMapping ? profPicMapping[user.id] : require('@/assets/images/blank_profile_pic.png');
+  
+
   return (
     <TouchableOpacity
         onPress={() =>
@@ -38,12 +49,7 @@ export default function ProfileThumbnailSmall({ user }: { user: User}) {
           
       <View style={[Styles.row, {marginBottom: 10}]}>
         <Image
-          source={
-            // ProfileImage
-              user.profilePic
-              ? user.profilePic
-              : require('../assets/images/blank_profile_pic.png') // Default fallback
-          }
+          source={profilePic}
           style={ProfileStyles.thumbnailImage}
         />
         <Text style={[TextStyles.small, {marginBottom:8}]}>@{user.username}</Text>
