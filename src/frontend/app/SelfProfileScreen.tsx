@@ -18,10 +18,12 @@ export default function SelfProfileScreen() {
   
   useEffect(() => {
     let mounted = true;
+
     
     // Important: Always set the endpoint first if user exists
     if (user && user.id && mounted) {
       setEndpoint(`/users/${user.id}/posts/`);
+
     }
     
     // Handle redirection with a delay to ensure proper component mounting
@@ -41,6 +43,7 @@ export default function SelfProfileScreen() {
     return () => {
       mounted = false;
     };
+
   }, [user]);
 
   // Only one useEffect for refetching
@@ -62,7 +65,10 @@ export default function SelfProfileScreen() {
       setEndpoint(newEndpoint);
     }
   };
+
+
   
+
   return (
     <>
       <View style={ScreenStyles.screen}>

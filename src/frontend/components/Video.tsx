@@ -14,6 +14,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '@/constants/Colors';
 import { Styles, TextStyles } from '@/constants/Styles';
 import { router } from 'expo-router';
+import { useUser } from '@/context/user';
+
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const VIDEO_HEIGHT = SCREEN_HEIGHT - 40;
@@ -123,6 +125,8 @@ export function Video({ post, index, currentViewableItemIndex }: { post: Post, i
 }
 
 function VideoProfile({ user, video }: { user: User, video: Post }) {
+    const current_user = useUser().user;
+
     const thumbnailStyle = StyleSheet.create({
         thumbnailImage: {
             width: 40,
@@ -144,7 +148,7 @@ function VideoProfile({ user, video }: { user: User, video: Post }) {
     return (
         <TouchableOpacity
             onPress={() => {
-                if (user.id == user?.id) {
+                if (user.id == current_user?.id) {
                     router.push({
                         pathname: '/SelfProfileScreen',
                     })
