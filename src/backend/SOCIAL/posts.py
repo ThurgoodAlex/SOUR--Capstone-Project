@@ -32,7 +32,8 @@ from databaseAndSchemas.schema import (
     createMedia,
     Tag,
     TagCreate,
-    TagInDB
+    TagInDB,
+    Color
 )
 
 

@@ -1,5 +1,5 @@
  //tunnel URL
-    const localhostIP = "127.0.0.1";
+const localhostIP = "localhost";
 
  //Alex desktop URL
  //const localhostIP = "10.0.0.62";
@@ -9,6 +9,8 @@
 
  // emma's url
 //  const localhostIP = '10.18.114.117';
+
+// Ricardo's url
 
 const fullUrl = "http://" + localhostIP + ":8000";
 

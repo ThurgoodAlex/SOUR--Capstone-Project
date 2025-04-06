@@ -61,6 +61,18 @@ export function PostPreview({ post, size, profileThumbnail = "none", touchable =
         }
         : undefined;
 
+    const seller: User | null = post.seller
+      ? {
+          firstname: post.seller.firstname,
+          lastname: post.seller.lastname,
+          username: post.seller.username,
+          bio: post.seller.bio,
+          email: post.seller.email,
+          profilePic: post.seller.profilePic,
+          isSeller: post.seller.isSeller,
+          id: post.seller.id,
+        }
+      : null;
     return (
         <View key={post.id} style={[previewStyle, { justifyContent: 'flex-start' }]}>
             <TouchableOpacity
@@ -90,56 +102,21 @@ export function PostPreview({ post, size, profileThumbnail = "none", touchable =
                         </View>
                     )}
                 </ImageBackground>
-            </TouchableOpacity>
-
-  const seller: User | null = post.seller
-    ? {
-        firstname: post.seller.firstname,
-        lastname: post.seller.lastname,
-        username: post.seller.username,
-        bio: post.seller.bio,
-        email: post.seller.email,
-        profilePic: post.seller.profilePic,
-        isSeller: post.seller.isSeller,
-        id: post.seller.id,
-      }
-    : null;
-
-  return (
-    <View key={post.id} style={[previewStyle, { justifyContent: 'flex-start' }]}>
-      <TouchableOpacity
-        onPress={() => router.push(`/PostInfoScreen/${post.id}`)}
-        style={{ margin: 5 }}
-        disabled={!touchable}
-      >
-        <ImageBackground
-          source={typeof coverImage === 'string' ? { uri: coverImage } : require('../assets/images/placeholder.png')}
-          style={{ height: size, width: size }}
-        >
-          {icon}
-          {Boolean(isSold) && <View style={overlayStyle} />}
-          {Boolean(isSold) && (
-            <View style={{ position: 'absolute', top: 65, left: 50 }}>
-              <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}>SOLD</Text>
-            </View>
-          )}
-        </ImageBackground>
-      </TouchableOpacity>
-
-      {profileThumbnail !== 'none' ? (
-        seller ? (
-          console.log('Seller:', seller),
-          profileThumbnail === 'big' ? (
-            <ProfileThumbnail user={seller} />
+          </TouchableOpacity>
+          {profileThumbnail !== 'none' ? (
+            seller ? (
+              console.log('Seller:', seller),
+              profileThumbnail === 'big' ? (
+                <ProfileThumbnail user={seller} />
+              ) : (
+                <ProfileThumbnailSmall user={seller} />
+              )
+            ) : (
+              <Text>No seller information available</Text>
+            )
           ) : (
-            <ProfileThumbnailSmall user={seller} />
-          )
-        ) : (
-          <Text>No seller information available</Text>
-        )
-      ) : (
-        <Text style={[TextStyles.h3, { textAlign: 'left' }]}>{post.title}</Text>
-      )}
-    </View>
-  );
+            <Text style={[TextStyles.h3, { textAlign: 'left' }]}>{post.title}</Text>
+          )}
+      </View>
+    )
 }
