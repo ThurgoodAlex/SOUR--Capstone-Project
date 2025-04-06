@@ -9,7 +9,7 @@ import { usePosts } from '@/hooks/usePosts';
 import { useRef, useState } from 'react';
 import { Colors } from '@/constants/Colors';
 import { router } from 'expo-router';
-
+import { Search } from 'lucide-react-native';
 export default function DiscoverScreen() {
 
     const { posts, loading, error } = usePosts('/posts/?is_sold=false');
@@ -34,7 +34,6 @@ export default function DiscoverScreen() {
     return (
         <>
             <View style={ScreenStyles.screen}>
-                <Button title='Search' onPress={() => router.push("/SearchComponent")}/>
                  {isAnyLoading ? (
                                 <ActivityIndicator size="large" color={Colors.orange} />
                             ) : (
