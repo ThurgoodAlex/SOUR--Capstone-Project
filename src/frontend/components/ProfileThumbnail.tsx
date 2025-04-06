@@ -36,7 +36,7 @@ export default function ProfileThumbnail({ user }: { user: User }) {
                         pathname: '/SelfProfileScreen',
                     })
                 }
-                }
+                
             }
         }
         style={[Styles.row, {marginLeft:6, maxHeight: 60, alignItems: 'center'}]}
