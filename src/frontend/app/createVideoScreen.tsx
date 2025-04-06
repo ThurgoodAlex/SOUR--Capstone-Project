@@ -85,6 +85,7 @@ export default function CreateVideo() {
             const response = await api.post("/posts/", {
                 "title": name,
                 "description": description,
+                "isVideo": true
             });
     
             const result = await response.json();
@@ -152,7 +153,7 @@ export default function CreateVideo() {
                 <ScrollView>
                     <FormGroup labelText="Name" placeholderText="Enter post name" value={name} setter={setName} required />
                     <FormGroup labelText="Caption" placeholderText="Enter caption" value={description} setter={setDescription} multiline />
-                    <LinkInputDropdown posts={posts} selected={linkedListings} setter={setLinkedListings} columns={1} />
+                    {linkedListings.length > 0 &&  <LinkInputDropdown posts={posts} selected={linkedListings} setter={setLinkedListings} columns={1} isListing={false} />}
 
                     <TouchableOpacity
                         style={[Styles.buttonDark, (!name || !video) && Styles.buttonDisabled]}

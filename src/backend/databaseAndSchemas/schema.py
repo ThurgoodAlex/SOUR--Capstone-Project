@@ -87,11 +87,11 @@ class PostInDB(SQLModel, table = True):
     created_at: datetime = Field(default_factory=datetime.now)
     isListing: bool = Field(default=False, nullable=False)
     isVideo: Optional[bool] = Field(default=False, nullable=False)
-    isVideo: Optional[bool] = Field(default=False, nullable=False)
 
 class createPost(BaseModel):
     title: str
     description: Optional[str]
+    isVideo: Optional[bool]
     
 class createListing(BaseModel):
     title: str
@@ -119,13 +119,23 @@ class Post(BaseModel):
     isSold: bool
     isListing: bool
     isVideo: bool
-
-    class Config:
-            from_attributes = True
-
+    model_config = ConfigDict(from_attributes=True)
 
 ###############################
 
+### All Color Schemas ###
+class ColorInDB(SQLModel, table = True):
+    __tablename__ = "colors"
+    id: Optional[int] = Field(default=None, primary_key=True)
+    postID: int = Field(foreign_key= "posts.id")
+    color: str = Field(index=True)
+
+class Color(BaseModel):
+    id: int
+    postID: int
+    color: str
+    model_config = ConfigDict(from_attributes=True)
+################################
 
 ### All Media Schemas ###
 class MediaInDB(SQLModel, table=True):
@@ -153,8 +163,7 @@ class MediaListResponse(BaseModel):
 class MediaListResponse(BaseModel):
     post_id: int 
     items: list[Media]
-
-        ###############################
+###############################
 
 
 ### All Likes Schemas ###
@@ -175,7 +184,7 @@ class LikeCreate(BaseModel):
     postID: int
 ###############################
 
-### All Likes Schemas ###
+### All Tag Schemas ###
 class TagInDB(SQLModel, table = True):
     __tablename__ = "tags"
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -191,7 +200,6 @@ class Tag(BaseModel):
 class TagCreate(BaseModel):
     tag: str
 ###############################
-
 
 
 ### All Comments Schemas ###

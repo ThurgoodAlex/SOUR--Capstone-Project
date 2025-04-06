@@ -593,3 +593,39 @@ def get_related_posts(post_id: int,
 
     return unique_posts
 
+@posts_router.post('/{post_id}/{color}/', response_model=Color,status_code=201)
+def upload_color(post_id: int, 
+                 color: str, 
+                 session: Annotated[Session, Depends(get_session)],
+                 current_user: UserInDB = Depends(auth_get_current_user)) -> Color:
+    """Uploading new color to a post"""
+    post = session.get(PostInDB, post_id)
+    if not post:
+        raise EntityNotFound("Post", post_id)
+    
+    color_in_db = ColorInDB(
+        color=color,
+        postID=post_id,
+    )
+    session.add(color_in_db)
+    session.commit()
+    session.refresh(color_in_db)
+    return Color(
+        id=color_in_db.id,        
+        postID=color_in_db.postID,
+        color=color_in_db.color
+    )
+
+@posts_router.get('/{post_id}/colors/', response_model=list[Color], status_code=200)
+def get_colors_of_post(post_id: int,
+                    session: Annotated[Session, Depends(get_session)], 
+                    current_user: UserInDB = Depends(auth_get_current_user)) -> list[Media]:
+    """Getting all colors for a post"""
+    post = session.get(PostInDB, post_id)
+
+    if not post:
+        raise EntityNotFound("post", post_id) 
+    query = select(ColorInDB).where(ColorInDB.postID == post_id)
+    colors_in_db = session.exec(query).all()
+
+    return [Color(**color.model_dump()) for color in colors_in_db]

@@ -17,7 +17,7 @@ from SOCIAL import (
     chats_router,
     posts_router,
     media_router,
-    tags_router,
+    tags_router
 )
 from LOTUS import stripe_router
 

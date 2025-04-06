@@ -49,7 +49,7 @@ export function NavBar() {
             <Ionicons
                 style={[
                     NavBarStyles.icon,
-                    pathname === '/VideosScreen' && NavBarStyles.activeIcon,
+                    pathname.includes('/VideosScreen') && NavBarStyles.activeIcon,
                 ]}
                 size={32}
                 name="film"
@@ -67,7 +67,7 @@ export function NavBar() {
             <Ionicons
                 style={[
                     NavBarStyles.icon,
-                    pathname === '/ChatsScreen' && NavBarStyles.activeIcon,
+                    (pathname === '/ChatsScreen' || pathname === '/MessagesScreen') && NavBarStyles.activeIcon,
                 ]}
                 size={32}
                 name="chatbubbles"

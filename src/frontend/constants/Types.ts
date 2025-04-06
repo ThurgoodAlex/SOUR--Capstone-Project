@@ -17,6 +17,7 @@ export type Post = {
 
     isSold: boolean;
     isListing: boolean;
+    isVideo: boolean;
   
 };
 
@@ -39,6 +40,9 @@ export type Stats = {
     totalEarnings: Float;
     itemsSold: number;
 }
+
+
+
 
 
 export type PostFlatListProps = {
