@@ -23,7 +23,7 @@ export function usePost(id: string) {
           lastname: sellerData.lastname,
           username: sellerData.username,
           bio: sellerData.bio,
-          profilePicture: sellerData.profilePicture,
+          profilePic: sellerData.profilePic,
           isSeller: sellerData.isSeller,
           email: sellerData.email,
           id: sellerData.id,

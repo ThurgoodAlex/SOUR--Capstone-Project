@@ -6,31 +6,35 @@ import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 
 export default function ProfileThumbnail({ user }: { user: User }) {
 
-    const current_user = useUser().user;
+  const current_user = useUser().user;
+  
+  const ProfileStyles = StyleSheet.create({
+    thumbnailImage: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+    },
+  })
 
-    const ProfileStyles = StyleSheet.create({
-        thumbnailImage: {
-            width: 40,
-            height: 40,
-            borderRadius: 20,
-        },
-    })
+  const profPicMapping: Record<number, any> = {
+    1: require('@/assets/images/prof1.jpg'),
+    5: require('@/assets/images/prof2.jpg'),
+    2: require('@/assets/images/prof3.jpg')
+  }
 
-    return (
-        <>
-            <TouchableOpacity
-                onPress={() => {
-                    if (user.id == current_user?.id) {
-                        router.push({
-                            pathname: '/SelfProfileScreen',
-                        })
-                    }
-                    else {
-                        router.push({
-                            pathname: '/UserProfileScreen',
-                            params: { user: JSON.stringify(user) },
-                        })
-                    }
+
+  console.log("Profile Pic: ", user.profilePic);
+  let profilePic = user.id in profPicMapping ? profPicMapping[user.id] : require('@/assets/images/blank_profile_pic.png');
+  
+  return (
+    <>
+      <TouchableOpacity
+        onPress={() =>
+            {
+                if(user.id == current_user?.id){
+                    router.push({
+                        pathname: '/SelfProfileScreen',
+                    })
                 }
                 }
             }
@@ -39,11 +43,7 @@ export default function ProfileThumbnail({ user }: { user: User }) {
       >
         
         <Image
-            source={
-                user.profilePic
-                ? user.profilePic
-                : require('../assets/images/blank_profile_pic.png') // Default fallback
-            }
+            source={profilePic}
             style={ProfileStyles.thumbnailImage}
             />
             <View style={[Styles.column, Styles.alignLeft, {marginLeft:5}]}>
