@@ -63,7 +63,7 @@ export default function PostInfoScreen() {
             try {
                 //chat already exists
           
-                const checkChatResponse = await api.get(`/users/${user?.id}/chats/${post?.seller.id}/`);
+                const checkChatResponse = await api.get(`/users/${user?.id}/chats/${post?.seller!.id}/`);
                 if (checkChatResponse.ok) {
                     let chat = await checkChatResponse.json();
                     router.push({
@@ -72,7 +72,7 @@ export default function PostInfoScreen() {
                     })
                 } else if (checkChatResponse.status === 404) {
                     // create new chat
-                    const response = await api.post('/chats/', { reciepientID: post?.seller.id });
+                    const response = await api.post('/chats/', { reciepientID: post?.seller!.id });
                     const chat = await response.json();
                     if (response.ok) {
                         router.push({
@@ -114,8 +114,8 @@ export default function PostInfoScreen() {
                 />
                 <View style={ScreenStyles.screen}>
                     <ScrollView contentContainerStyle={{ gap: 6 }}>
-                        <ProfileThumbnail user={post.seller} />
-                        {post.seller.id != user?.id ? 
+                        <ProfileThumbnail user={post.seller!} />
+                        {post.seller!.id != user?.id ? 
                             <TouchableOpacity 
                                 onPress={handleMessage}
                                 style={{ alignSelf:'flex-end', position:'absolute', top: 3}}
@@ -173,7 +173,7 @@ function ListingInfo({ post, liked, toggleLike, userID }: { post: Post, liked: b
 
             <View style={[Styles.row, { justifyContent: 'space-between', marginBottom: -10, marginTop: -2 }]}>
                 <Text style={[TextStyles.h2, { textAlign: 'left' }]}>{formattedPrice}</Text>
-                {!post.isSold && post.seller.id != userID && <CartButton listingID={post.id} onItemAdded={handleItemAdded} />}
+                {!post.isSold && post.seller!.id != userID && <CartButton listingID={post.id} onItemAdded={handleItemAdded} />}
             </View>
 
             <Text style={[TextStyles.h3, { textAlign: 'left', marginBottom: -1 }]}>Size: {post.size}</Text>

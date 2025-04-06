@@ -17,6 +17,7 @@ export type Post = {
 
     isSold: boolean;
     isListing: boolean;
+    isVideo: boolean;
   
 };
 
