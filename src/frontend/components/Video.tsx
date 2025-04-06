@@ -130,6 +130,17 @@ function VideoProfile({ user, video }: { user: User, video: Post }) {
             borderRadius: 20,
         },
     })
+
+    const profPicMapping: Record<number, any> = {
+        1: require('@/assets/images/prof1.jpg'),
+        5: require('@/assets/images/prof2.jpg'),
+        2: require('@/assets/images/prof3.jpg')
+      }
+    
+    
+    console.log("Profile Pic: ", user.profilePic);
+    let profilePic = user.id in profPicMapping ? profPicMapping[user.id] : require('@/assets/images/blank_profile_pic.png');
+      
     return (
         <TouchableOpacity
             onPress={() => {
@@ -150,9 +161,7 @@ function VideoProfile({ user, video }: { user: User, video: Post }) {
         >
 
             <Image
-                source={
-                    user.profilePic ? { uri: user.profilePic } : require('../assets/images/blank_profile_pic.png')
-                }
+                source={profilePic}
                 style={thumbnailStyle.thumbnailImage}
             />
             <View style={[Styles.column, Styles.alignLeft, { marginLeft: 5 }]}>
