@@ -42,6 +42,9 @@ export type Stats = {
 }
 
 
+
+
+
 export type PostFlatListProps = {
     posts: Post[];
     height: number

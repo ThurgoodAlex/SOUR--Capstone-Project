@@ -33,22 +33,24 @@ export default function ProfileThumbnail({ user }: { user: User }) {
                     }
                 }
                 }
-                style={[Styles.row, { marginLeft: 6, maxHeight: 60, alignItems: 'center' }]}
-            >
-
-                <Image
-                    source={
-                        user.profilePic
-                            ? user.profilePic
-                            : require('../assets/images/blank_profile_pic.png') // Default fallback
-                    }
-                    style={ProfileStyles.thumbnailImage}
-                />
-                <View style={[Styles.column, Styles.alignLeft, { marginLeft: 5 }]}>
-                    <Text style={[TextStyles.h3, { marginBottom: 0 }]}>{user.firstname} {user.lastname}</Text>
-                    <Text style={[TextStyles.small, { marginTop: 1 }]}>@{user.username}</Text>
-                </View>
-            </TouchableOpacity>
-        </>
-    );
+            }
+        }
+        style={[Styles.row, {marginLeft:6, maxHeight: 60, alignItems: 'center'}]}
+      >
+        
+        <Image
+            source={
+                user.profilePic
+                ? user.profilePic
+                : require('../assets/images/blank_profile_pic.png') // Default fallback
+            }
+            style={ProfileStyles.thumbnailImage}
+            />
+            <View style={[Styles.column, Styles.alignLeft, {marginLeft:5}]}>
+            <Text style={[TextStyles.h3, {marginBottom:0}]}>{user.firstname} {user.lastname}</Text>
+            <Text style={[TextStyles.small, {marginTop:1}]}>@{user.username}</Text>
+            </View>
+      </TouchableOpacity>
+    </> 
+  );
 };
