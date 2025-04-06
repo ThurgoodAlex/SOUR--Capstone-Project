@@ -20,7 +20,7 @@ import { useGetMedia } from '@/hooks/useGetMedia';
  */
 export function PostPreview({ post, size, profileThumbnail = "none", touchable = true }: { post: Post, size: number, profileThumbnail: string, touchable?: boolean }) {
     const { images, loading: mediaLoading, error: mediaError } = useGetMedia(Number(post.id));
-
+    console.log("RENDERING POST", post)
     // Fallback to placeholder image if cover image is null
     let coverImage = post.coverImage;
 
@@ -68,7 +68,7 @@ export function PostPreview({ post, size, profileThumbnail = "none", touchable =
                     if (post.isVideo){
                         router.push({
                             pathname: '/VideosScreen',
-                            params: { videoId: post.id },
+                            params: { video: JSON.stringify(post) },
                         })
                     }
                     else{

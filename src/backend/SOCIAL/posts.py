@@ -93,42 +93,25 @@ def upload_listing(newListing:createListing,
 def get_all_posts(
     session: Annotated[Session, Depends(get_session)], 
     current_user: UserInDB = Depends(auth_get_current_user),
-    is_sold: Optional[bool] = Query(None)
+    is_sold: Optional[bool] = Query(None),
+    is_listing: Optional[bool] = Query(None),
+    is_video: Optional[bool] = Query(None)
 ) -> list[Post]:
     """Getting all posts"""
     query = select(PostInDB)
     if is_sold is not None:
         query = query.where(PostInDB.isSold == is_sold)
+        
+    if is_listing is not None:
+        query = query.where(PostInDB.isListing == is_listing)
+    if is_video is not None:
+        query = query.where(PostInDB.isVideo == is_video)
+    
+    # Execute the query and fetch all posts
     post_in_db = session.exec(query).all()
     return [Post(**post.model_dump()) for post in post_in_db]
 
-@posts_router.get('/isListing=false/', response_model= list[Post], )
-def get_only_posts(session: Annotated[Session, Depends(get_session)], 
-                  current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
-    """Getting all posts"""
-    post_in_db = session.exec(select(PostInDB).where(PostInDB.isListing == False)).all()
-    return [Post(**post.model_dump()) for post in post_in_db]
 
-@posts_router.get('/isListing=true/', response_model= list[Post], )
-def get_only_listings(session: Annotated[Session, Depends(get_session)], 
-                  current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
-    """Getting all posts"""
-    post_in_db = session.exec(select(PostInDB).where(PostInDB.isListing == True)).all()
-    return [Post(**post.model_dump()) for post in post_in_db]
-
-@posts_router.get('/isVideo=true/', response_model= list[Post], )
-def get_only_listings(session: Annotated[Session, Depends(get_session)], 
-                  current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
-    """Getting all posts"""
-    post_in_db = session.exec(select(PostInDB).where(PostInDB.isVideo == True)).all()
-    return [Post(**post.model_dump()) for post in post_in_db]
-
-@posts_router.get('/isVideo=true/', response_model= list[Post], )
-def get_only_listings(session: Annotated[Session, Depends(get_session)], 
-                  current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
-    """Getting all posts"""
-    post_in_db = session.exec(select(PostInDB).where(PostInDB.isVideo == False)).all()
-    return [Post(**post.model_dump()) for post in post_in_db]
 
 @posts_router.get('/filter/', response_model=list[Post])
 def get_filtered_posts(

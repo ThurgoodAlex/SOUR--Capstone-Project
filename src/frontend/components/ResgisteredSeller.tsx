@@ -22,8 +22,8 @@ export function RegisteredSeller() {
     const handleTabSwitch = (tab: string) => {
         setActiveTab(tab);
         setEndpoint(tab === 'Active' 
-            ? `/users/${user?.id}/posts/issold=false/`
-            : `/users/${user?.id}/posts/issold=true/`
+            ? `/users/${user?.id}/posts/?is_sold=false/`
+            : `/users/${user?.id}/posts/?is_sold=true/`
         );
     };
 
