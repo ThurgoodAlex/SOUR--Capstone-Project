@@ -2,9 +2,9 @@ import { Styles, TextStyles } from '@/constants/Styles';
 import { User } from '@/constants/Types';
 import { useUser } from '@/context/user';
 import { router } from 'expo-router';
-import { View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 
-export default function ProfileThumbnail({ user }: {user: User}) {
+export default function ProfileThumbnail({ user }: { user: User }) {
 
   const current_user = useUser().user;
   
@@ -36,11 +36,6 @@ export default function ProfileThumbnail({ user }: {user: User}) {
                         pathname: '/SelfProfileScreen',
                     })
                 }
-                else{
-                    router.push({
-                        pathname: '/UserProfileScreen',
-                        params: { user: JSON.stringify(user) },
-                    })
                 }
             }
         }

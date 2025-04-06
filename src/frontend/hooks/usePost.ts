@@ -61,7 +61,8 @@ export function usePost(id: string) {
             coverImage: result.coverImage,
             price: result.price,
             isSold: result.isSold,
-            isListing: result.isListing
+            isListing: result.isListing,
+            isVideo: result.isVideo
         };
         setPost(transformedPost);
       }

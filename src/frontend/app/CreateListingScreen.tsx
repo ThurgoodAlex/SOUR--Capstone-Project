@@ -406,6 +406,9 @@ function Tags({ tags, setter, error }: {
                 setter([...tags, newTag]);
             }
             setInput("");  // Clear input after adding tag
+            // Refocus the input field
+            event.target.blur(); // Remove focus from the input
+            event.target.focus(); // Refocus the input
         }
     };
 

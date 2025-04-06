@@ -79,6 +79,7 @@ export function usePosts(endpoint: string) {
             isSold: item.isSold,
             isListing: item.isListing,
             seller,
+            isVideo: item.isVideo
           };
         })
       );

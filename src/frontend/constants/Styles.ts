@@ -31,6 +31,13 @@ export const TextStyles = StyleSheet.create({
     marginBottom: 8,
     color: Colors.dark,
   },
+  h3Light: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 8,
+    color: Colors.light,
+  },
   p:{
     fontSize: 16,
       color: Colors.dark, 
@@ -43,6 +50,11 @@ export const TextStyles = StyleSheet.create({
   },
   small:{
     color: Colors.dark, 
+    fontSize: 11,
+    marginBottom: 8,
+  },
+  smallLight:{
+    color: Colors.light,
     fontSize: 11,
     marginBottom: 8,
   },

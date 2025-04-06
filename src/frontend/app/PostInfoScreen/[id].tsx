@@ -73,6 +73,8 @@ export default function PostInfoScreen() {
 
     const handleMessage = async () => {
             try {
+                //chat already exists
+          
                 const checkChatResponse = await api.get(`/users/${user?.id}/chats/${post?.seller!.id}/`);
                 if (checkChatResponse.ok) {
                     let chat = await checkChatResponse.json();

@@ -91,6 +91,7 @@ class PostInDB(SQLModel, table = True):
 class createPost(BaseModel):
     title: str
     description: Optional[str]
+    isVideo: Optional[bool]
     
 class createListing(BaseModel):
     title: str
@@ -117,6 +118,7 @@ class Post(BaseModel):
     created_at: datetime
     isSold: bool
     isListing: bool
+    isVideo: bool
     model_config = ConfigDict(from_attributes=True)
 
 ###############################
