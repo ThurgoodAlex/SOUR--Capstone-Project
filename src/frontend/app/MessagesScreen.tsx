@@ -38,11 +38,11 @@ export default function MessagesScreen() {
             console.error('User retrival failed:', error);
         }
     };
-    
+
     useEffect(() => {
         getUser();
     }, []);
-    
+
     const getMessages = async () => {
         try {
             const response = await api.get(`/chats/${chatParam}/messages/`);
@@ -102,52 +102,50 @@ export default function MessagesScreen() {
                 }}
             />
 
-            <View style={[Styles.column, {backgroundColor: Colors.light60, padding: 2, borderBottomColor: Colors.light, borderBottomWidth: 1, maxHeight:60}]}>
-         
+            <View style={[Styles.column, { backgroundColor: Colors.white, padding: 2, borderBottomColor: Colors.light, borderBottomWidth: 2, maxHeight: 60 }]}>
                 {targetUser && <ProfileThumbnail user={targetUser} />}
-
             </View>
-            
+
             <View style={ScreenStyles.screen}>
-            <KeyboardAvoidingView
-                style={{ flex: 1, alignSelf: 'flex-end' }}
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                keyboardVerticalOffset={Platform.OS === 'ios' ? 180 : 0}
-            >
-                <FlatList
-                    data={messages}
-                    keyExtractor={(item) => item.id.toString()}
-                    renderItem={renderMessage}
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ flexGrow: 1 }}
-                    ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-                    inverted={true}
-                />
-                <View style={[Styles.row, { alignItems: 'center', marginTop: 20, marginBottom: 20, width: SCREEN_WIDTH - 35 }]}>
-                    <TextInput
-                        style={MessageScreenStyles.input}
-                        placeholder="Message"
-                        value={newMessage}
-                        onChangeText={setNewMessage}
-                        multiline={true}
+                <KeyboardAvoidingView
+                    style={{ flex: 1, alignSelf: 'flex-end' }}
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                    keyboardVerticalOffset={Platform.OS === 'ios' ? 180 : 0}
+                >
+                    <FlatList
+                        data={messages}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={renderMessage}
+                        showsVerticalScrollIndicator={false}
+                        contentContainerStyle={{ flexGrow: 1 }}
+                        ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+                        inverted={true}
                     />
-                    <TouchableOpacity
-                        style={[
-                            Styles.buttonDark,
-                            { width: 70, height: 50, marginBottom:0 },
-                            (loading || !newMessage.trim()) && Styles.buttonDisabled,
-                        ]}
-                        onPress={sendMessage}
-                        disabled={loading || !newMessage.trim()}
-                    >
-                        {loading ? (
-                            <ActivityIndicator color={Colors.orange} />
-                        ) : (
-                            <Text style={TextStyles.light}>Send</Text>
-                        )}
-                    </TouchableOpacity>
-                </View>
-            </KeyboardAvoidingView>
+                    <View style={[Styles.row, { alignItems: 'center', marginTop: 20, marginBottom: 20, width: SCREEN_WIDTH - 35 }]}>
+                        <TextInput
+                            style={MessageScreenStyles.input}
+                            placeholder="Message"
+                            value={newMessage}
+                            onChangeText={setNewMessage}
+                            multiline={true}
+                        />
+                        <TouchableOpacity
+                            style={[
+                                Styles.buttonDark,
+                                { width: 70, height: 50, marginBottom: 0 },
+                                (loading || !newMessage.trim()) && Styles.buttonDisabled,
+                            ]}
+                            onPress={sendMessage}
+                            disabled={loading || !newMessage.trim()}
+                        >
+                            {loading ? (
+                                <ActivityIndicator color={Colors.orange} />
+                            ) : (
+                                <Text style={TextStyles.light}>Send</Text>
+                            )}
+                        </TouchableOpacity>
+                    </View>
+                </KeyboardAvoidingView>
             </View>
             <NavBar />
 
