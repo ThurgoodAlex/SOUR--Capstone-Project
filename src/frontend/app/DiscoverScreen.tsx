@@ -12,7 +12,7 @@ import { router } from 'expo-router';
 import { Search } from 'lucide-react-native';
 export default function DiscoverScreen() {
 
-    const { posts, loading, error } = usePosts('/posts/?is_sold=false');
+    const { posts, loading, error } = usePosts('/posts/?is_sold=false&is_video=false');
 
     const [isAnyLoading, setIsAnyLoading] = useState<boolean>(false);
     const loadingRefs = useRef<Set<string>>(new Set());

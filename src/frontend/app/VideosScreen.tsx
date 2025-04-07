@@ -14,10 +14,10 @@ const VIDEO_HEIGHT = SCREEN_HEIGHT - 40;
 
 export default function VideoScreen() {
     const searchParams = useSearchParams();
-    const videoParam = searchParams.get('videoId');
+    const videoParam = searchParams.get('video');
     const api = useApi();
     const viewabilityConfig = { viewAreaCoveragePercentThreshold: 50 }
-    const { posts, loading, error } = usePosts('/posts/isVideo=true/');
+    const { posts, loading, error } = usePosts('/posts/?is_video=true');
     const [videoFeed, setVideoFeed] = useState<Post[]>([]);
     const [currentViewableItemIndex, setCurrentViewableItemIndex] = useState(0);
 
@@ -31,16 +31,11 @@ export default function VideoScreen() {
     const getVideos = async () => {
         try {
             let selectedVideo = null;
-            console.log("videoParam", videoParam);
             if (videoParam) {
-                // Fetch the specific video first
-                const response = await api.get(`/posts/${videoParam}/`);
-                if (response.ok) {
-                    selectedVideo = await response.json();
-                } else {
-                    console.error("Failed to retrieve the selected video:", response);
-                }
+                selectedVideo = JSON.parse(videoParam);
             }
+            console.log("videoParam", videoParam);
+            
             
             // Ensure the selected video is at the top
             if (selectedVideo) {

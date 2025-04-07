@@ -78,13 +78,14 @@ export function usePosts(endpoint: string) {
             price: item.price,
             isSold: item.isSold,
             isListing: item.isListing,
-            seller,
+            seller : seller,
             isVideo: item.isVideo
           };
         })
       );
 
       setPosts(transformedPosts);
+
     } catch (error) {
       console.error('Error fetching posts:', error);
       setError((error as Error).message);

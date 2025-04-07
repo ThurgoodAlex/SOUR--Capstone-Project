@@ -21,6 +21,7 @@ export default function PostInfoScreen() {
     const [colors, setColors] = useState<string[]>([]);
     const { id } = useLocalSearchParams(); 
     const { post, loading: postsLoading } = usePost(`${id}`);
+    console.log("Post Info Screen Post:", post);
     const { posts: linkedItems } = usePosts(`/posts/${id}/links/`);
     const { user } = useUser();
     const [liked, setLike] = useState(false);
@@ -99,14 +100,12 @@ export default function PostInfoScreen() {
 
     const handleMessage = async () => {
             try {
-                //chat already exists
-          
                 const checkChatResponse = await api.get(`/users/${user?.id}/chats/${post?.seller!.id}/`);
                 if (checkChatResponse.ok) {
                     let chat = await checkChatResponse.json();
                     router.push({
                         pathname: '/MessagesScreen',
-                        params: { chatID: chat.id },
+                        params: { chatID: chat.id, userID: post?.seller!.id },
                     })
                 } else if (checkChatResponse.status === 404) {
                     // create new chat
@@ -115,7 +114,7 @@ export default function PostInfoScreen() {
                     if (response.ok) {
                         router.push({
                             pathname: '/MessagesScreen',
-                            params: { chatID: chat.id },
+                            params: { chatID: chat.id, userID: post?.seller!.id },
                         })
                     } else {
                         Alert.alert('Failed to create chat.');

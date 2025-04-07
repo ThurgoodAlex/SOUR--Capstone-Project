@@ -22,8 +22,8 @@ export default function MessagesScreen() {
     const [messages, setMessages] = useState<MessageData[]>([]);
     const [newMessage, setNewMessage] = useState('');
     const [loading, setLoading] = useState(false);
-
     const [targetUser, setTargetUser] = useState<User | null>(null);
+
     const getUser = async () => {
         try {
             const response = await api.get(`/users/${targetUserID}/`);
@@ -38,6 +38,7 @@ export default function MessagesScreen() {
             console.error('User retrival failed:', error);
         }
     };
+    
     useEffect(() => {
         getUser();
     }, []);
