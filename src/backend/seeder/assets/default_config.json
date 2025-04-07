@@ -861,6 +861,11 @@
         }
       ],
 
+      "stats": [
+        {"sellerID": 1, "totalEarnings": 45.99, "itemsSold": 1}
+      ],
+
+
       
       "follows": [
         { "followerID": 6, "followeeID": 3 },

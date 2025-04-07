@@ -177,6 +177,23 @@ class Seeder:
             session.commit()
             print("Tags seeded successfully!")
             
+    def create_stats(self):
+        with Session(engine) as session:
+            for stats_entry in self.data["stats"]:
+                seller_id = stats_entry["sellerID"]
+                total_earnings = stats_entry["totalEarnings"]
+                items_sold = stats_entry["itemsSold"]
+                
+                stat = SellerStatInDB(
+                    sellerID=seller_id,
+                    totalEarnings=total_earnings,
+                    itemsSold=items_sold
+                )
+                session.add(stat)
+
+            session.commit()
+            print("Tags seeded successfully!")
+            
     def create_tags(self):
         with Session(engine) as session:
             for tag_entry in self.data["tags"]:
@@ -257,6 +274,8 @@ def reset_seq(session):
     session.execute(text("SELECT setval('tags_id_seq', (SELECT MAX(id) FROM tags))")) 
     session.execute(text("SELECT setval('colors_id_seq', (SELECT MAX(id) FROM colors))"))
     session.execute(text("SELECT setval('following_id_seq', (SELECT MAX(id) FROM following))"))
+    session.execute(text('SELECT setval(\'"sellerStats_id_seq"\', (SELECT MAX(id) FROM "sellerStats"))'))
+
 
     session.commit()
     
@@ -289,6 +308,8 @@ if __name__ == "__main__":
         seeder = Seeder(argument)  
 
         seeder.create_users() 
+        
+        seeder.create_stats()
         
         seeder.create_follows() 
 
