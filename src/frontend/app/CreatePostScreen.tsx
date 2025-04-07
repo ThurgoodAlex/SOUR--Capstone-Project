@@ -69,6 +69,7 @@ export default function CreatePost() {
             const response = await api.post("/posts/", {
                 "title": name,
                 "description": description,
+                "isVideo": false,
             });
 
             const result = await response.json();
@@ -127,7 +128,7 @@ export default function CreatePost() {
                     <FormGroup labelText="Name" placeholderText="Enter post name" value={name} setter={setName} required />
                     <FormGroup labelText="Caption" placeholderText="Enter caption" value={description} setter={setDescription} multiline />
                    
-                    {linkedListings.length > 0 &&  <LinkInputDropdown posts={posts} selected={linkedListings} setter={setLinkedListings} columns={1} isListing={false} />}
+                    {posts.length > 0 &&  <LinkInputDropdown posts={posts} selected={linkedListings} setter={setLinkedListings} columns={1} isListing={false} />}
 
                     {/* Submit Button */}
                     <TouchableOpacity

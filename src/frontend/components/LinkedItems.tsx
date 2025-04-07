@@ -14,7 +14,7 @@ export function LinkedItems ({ posts, columns }: { posts: Post[], columns: numbe
     return (
         <View style={[Styles.row, { flexWrap: 'wrap', justifyContent: 'flex-start' }]}>
             {posts.map((item, index) => (
-            <View key={item.id.toString()} style={{ width: `${100 / columns}%` }}>
+            <View key={item.id.toString()} style={{ width: `${(100 / columns) -2}%` }}>
                 {columns === 1 ? (
                 <LinkPreview listing={item} />
                 ) : (

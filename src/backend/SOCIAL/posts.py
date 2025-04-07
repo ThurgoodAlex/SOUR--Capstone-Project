@@ -108,7 +108,7 @@ def get_all_posts(
         query = query.where(PostInDB.isVideo == is_video)
     
     # Execute the query and fetch all posts
-    post_in_db = session.exec(query).all()
+    post_in_db = session.exec(query.order_by(desc(PostInDB.created_at))).all()
     return [Post(**post.model_dump()) for post in post_in_db]
 
 

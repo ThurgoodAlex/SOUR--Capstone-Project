@@ -14,6 +14,10 @@ from databaseAndSchemas import *  # Ensure TagInDB is part of the imported entit
 from passlib.context import CryptContext
 import os
 from sqlalchemy import text
+import cv2
+import os
+from uuid import uuid4
+
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 jwt_key = str(os.environ.get("JWT_KEY"))
@@ -66,7 +70,7 @@ class Seeder:
             reset_seq(session)
 
             
-            
+        
 
     def create_posts(self):
        with Session(engine) as session:
@@ -92,25 +96,70 @@ class Seeder:
             reset_seq(session)
                 
     def upload_post_media(
-            self,
-            session:Session,
-            post_images:list[str],
-            user_id:int,
-            post_id:int
-        ):
+        self,
+        session: Session,
+        post_images: list[str],
+        user_id: int,
+        post_id: int
+    ):
         for post_image in post_images:
-                post_url, is_video= self.media_uploader.upload_Photo_to_S3(
-                    post_image,
-                    user_id,
-                    post_id
-                )
-                media = MediaInDB(
+            # Upload main media
+            post_url, is_video = self.media_uploader.upload_Photo_to_S3(
+                post_image,
+                user_id,
+                post_id
+            )
+
+            cover_url = None
+
+            if is_video:
+                print("Video detected, extracting cover image...")
+                # Extract a frame as cover image using cv2
+                cover_path = self.extract_video_cover(post_image)
+                if cover_path:
+                    cover_url, _ = self.media_uploader.upload_Photo_to_S3(
+                        cover_path,
+                        user_id,
+                        post_id
+                    )
+                    print(f"Cover image uploaded to {cover_url}")
+                  
+
+            # Save media record
+            media = MediaInDB(
+                postID=post_id,
+                url=post_url,
+                isVideo=is_video,
+                coverImage=cover_url
+            )
+            session.add(media)
+            
+            if is_video:
+                # Save media record for the cover image (MUST BE 2nd to the video above)
+                cover_media = MediaInDB(
                     postID=post_id,
-                    url=post_url, 
-                    isVideo=is_video
+                    url=cover_url,
+                    coverImage=cover_url,
+                    isVideo=False
                 )
-                session.add(media)
+                session.add(cover_media)
+
+                
+            
         session.commit()
+
+    def extract_video_cover(self, video_path: str) -> str:
+        
+        cap = cv2.VideoCapture(video_path)
+        success, frame = cap.read()
+        cap.release()
+
+        if success:
+            filename = f"/tmp/{uuid4().hex}_cover.jpg"
+            print(f"Saving cover image to {filename}")
+            cv2.imwrite(filename, frame)
+            return filename
+        return None
 
 
     def create_tags(self):
@@ -134,12 +183,64 @@ class Seeder:
 
             session.commit()
             print("Tags seeded successfully!")
+            
+    def create_colors(self):
+        with Session(engine) as session:
+            for color_entry in self.data["colors"]:
+                post_id = color_entry["postID"]
 
+                # Check if post exists before adding colors
+                post_exists = session.exec(select(PostInDB).where(PostInDB.id == post_id)).first()
+                if not post_exists:
+                    print(f"Warning: Post with ID {post_id} not found. Skipping colors.")
+                    continue
+                print(color_entry["colors"])
+                for color_name in color_entry["colors"]:
+                    print(f"Adding color '{color_name}' to post ID {post_id}")
+                    color = ColorInDB(
+                        postID=post_id,
+                        color=color_name
+                    )
+                    session.add(color)
+
+            session.commit()
+            print("Tags seeded successfully!")
+            
+    def create_links(self):
+        with Session(engine) as session:
+            for link_entry in self.data["links"]:
+                post_id = link_entry["postID"]
+                listing_id = link_entry["listingID"]
+
+                # Check if post exists before adding links
+                post_exists = session.exec(select(PostInDB).where(PostInDB.id == post_id)).first()
+                if not post_exists:
+                    print(f"Warning: Post with ID {post_id} not found. Skipping links.")
+                    continue
+                # Check if listing exists before adding links
+                listing_exists = session.exec(select(PostInDB).where(PostInDB.id == listing_id)).first()
+                if not listing_exists:
+                    print(f"Warning: Listing with ID {listing_id} not found. Skipping links.")
+                    continue
+                
+              
+                print(f"Adding link between post ID {post_id} and listing ID {listing_id}")
+                link = LinkInDB(
+                    postID=post_id,
+                    listingID=listing_id
+                )
+                session.add(link)
+
+            session.commit()
+            print("Links seeded successfully!")
 
 def reset_seq(session):
     session.execute(text("SELECT setval('users_id_seq', (SELECT MAX(id) FROM users))"))
+    session.execute(text("SELECT setval('media_id_seq', (SELECT MAX(id) FROM media))"))
     session.execute(text("SELECT setval('posts_id_seq', (SELECT MAX(id) FROM posts))"))
-    session.execute(text("SELECT setval('tags_id_seq', (SELECT MAX(id) FROM tags))"))  # <-- Add this line
+    session.execute(text("SELECT setval('links_id_seq', (SELECT MAX(id) FROM links))"))
+    session.execute(text("SELECT setval('tags_id_seq', (SELECT MAX(id) FROM tags))")) 
+    session.execute(text("SELECT setval('colors_id_seq', (SELECT MAX(id) FROM colors))"))
 
     session.commit()
     
@@ -176,6 +277,10 @@ if __name__ == "__main__":
         seeder.create_posts()
         
         seeder.create_tags()
+        
+        seeder.create_links()
+        
+        seeder.create_colors()
         
     else:
         print("No argument was provided. Usage: python script.py <argument>")
