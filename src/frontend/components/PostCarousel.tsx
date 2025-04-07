@@ -8,12 +8,13 @@ import { useUser } from '@/context/user';
 import { useAuth } from '@/context/auth';
 import { usePosts } from '@/hooks/usePosts';
 
+interface PostCarouselProps {
+  posts: Post[];
+}
 
-export default function PostCarousel() {
-    const { posts, loading, error } = usePosts('/posts/new');
-  
+export default function PostCarousel({ posts }: PostCarouselProps) {
     // if (loading) return <Text>Loading...</Text>;
-    if (error) return <Text>Error: {error}</Text>;
+    //if (error) return <Text>Error: {error}</Text>;
   
     return (
       <View style={[Styles.row, { marginBottom: 18 }]}>
