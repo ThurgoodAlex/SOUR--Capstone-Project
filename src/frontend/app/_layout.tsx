@@ -64,7 +64,7 @@ export default function RootLayout() {
                                     headerLeft: () => "",
                                     headerRight: () => (
                                         <>
-                                            <TouchableOpacity onPress={() => router.push('/SearchComponent')}>
+                                            <TouchableOpacity onPress={() => router.push('/SearchScreen')}>
                                                 <Ionicons size={30} name="search-outline" color="#692b20" />
                                             </TouchableOpacity>
                                             <TouchableOpacity onPress={() => router.push('/CartScreen')}>
