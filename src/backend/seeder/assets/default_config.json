@@ -55,6 +55,226 @@
             "bio": "Vintage enthusiast and collector of rare finds",
             "password": "pwd",
             "isSeller": true
+        },
+        {
+            "id": 6,
+            "profilePic": "../assets/prof6.jpg",
+            "firstname": "Nina",
+            "lastname": "Lopez",
+            "username": "nina.lopez",
+            "email": "nina.lopez@example.com",
+            "bio": "Thrift lover and weekend scroll addict",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 7,
+            "profilePic": "../assets/prof7.jpg",
+            "firstname": "Derek",
+            "lastname": "Nguyen",
+            "username": "derek.nguyen",
+            "email": "derek.nguyen@example.com",
+            "bio": "Streetwear fan, always watching for new drops",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 8,
+            "profilePic": "../assets/prof8.jpg",
+            "firstname": "Tasha",
+            "lastname": "White",
+            "username": "tasha.white",
+            "email": "tasha.white@example.com",
+            "bio": "Early 2000s nostalgia and big sunglasses 😎",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 9,
+            "profilePic": "../assets/prof9.jpg",
+            "firstname": "Leo",
+            "lastname": "Anderson",
+            "username": "leo.anderson",
+            "email": "leo.anderson@example.com",
+            "bio": "Just browsing... mostly",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 10,
+            "profilePic": "../assets/prof10.jpg",
+            "firstname": "Hailey",
+            "lastname": "Tran",
+            "username": "hailey.tran",
+            "email": "hailey.tran@example.com",
+            "bio": "Pastel palettes and secondhand gold",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 11,
+            "profilePic": "../assets/prof11.jpg",
+            "firstname": "Isaac",
+            "lastname": "Taylor",
+            "username": "isaac.taylor",
+            "email": "isaac.taylor@example.com",
+            "bio": "Mostly here for the jackets 🧥",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 12,
+            "profilePic": "../assets/prof12.jpg",
+            "firstname": "Maya",
+            "lastname": "Khan",
+            "username": "maya.khan",
+            "email": "maya.khan@example.com",
+            "bio": "Capsule wardrobe in progress",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 13,
+            "profilePic": "../assets/prof13.jpg",
+            "firstname": "Jordan",
+            "lastname": "Reed",
+            "username": "jordan.reed",
+            "email": "jordan.reed@example.com",
+            "bio": "Just here to find stuff cooler than me",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 14,
+            "profilePic": "../assets/prof14.jpg",
+            "firstname": "Zara",
+            "lastname": "Patel",
+            "username": "zara.patel",
+            "email": "zara.patel@example.com",
+            "bio": "Neutrals, layers, and oversized everything",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 15,
+            "profilePic": "../assets/prof15.jpg",
+            "firstname": "Ethan",
+            "lastname": "Moore",
+            "username": "ethan.moore",
+            "email": "ethan.moore@example.com",
+            "bio": "Thrift finds > retail prices",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 16,
+            "profilePic": "../assets/prof16.jpg",
+            "firstname": "Chloe",
+            "lastname": "Kim",
+            "username": "chloe.kim",
+            "email": "chloe.kim@example.com",
+            "bio": "Soft tones, soft fabrics, soft life 🌿",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 17,
+            "profilePic": "../assets/prof17.jpg",
+            "firstname": "Andre",
+            "lastname": "Miller",
+            "username": "andre.miller",
+            "email": "andre.miller@example.com",
+            "bio": "Big fan of flannels and boots",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 18,
+            "profilePic": "../assets/prof18.jpg",
+            "firstname": "Lena",
+            "lastname": "Martinez",
+            "username": "lena.martinez",
+            "email": "lena.martinez@example.com",
+            "bio": "Warm tones and warmer sweaters 🧶",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 19,
+            "profilePic": "../assets/prof19.jpg",
+            "firstname": "Miles",
+            "lastname": "Scott",
+            "username": "miles.scott",
+            "email": "miles.scott@example.com",
+            "bio": "Just a guy who likes cool jackets",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 20,
+            "profilePic": "../assets/prof20.jpg",
+            "firstname": "Ava",
+            "lastname": "Johnson",
+            "username": "ava.johnson",
+            "email": "ava.johnson@example.com",
+            "bio": "Probably buying something I don’t need",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 21,
+            "profilePic": "../assets/prof21.jpg",
+            "firstname": "Sam",
+            "lastname": "O'Neil",
+            "username": "sam.oneil",
+            "email": "sam.oneil@example.com",
+            "bio": "Lowkey fashion geek",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 22,
+            "profilePic": "../assets/prof22.jpg",
+            "firstname": "Brielle",
+            "lastname": "Ng",
+            "username": "brielle.ng",
+            "email": "brielle.ng@example.com",
+            "bio": "Building my dream wardrobe one find at a time",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 23,
+            "profilePic": "../assets/prof23.jpg",
+            "firstname": "Noah",
+            "lastname": "Baker",
+            "username": "noah.baker",
+            "email": "noah.baker@example.com",
+            "bio": "Here for the vibes and the vintage",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 24,
+            "profilePic": "../assets/prof24.jpg",
+            "firstname": "Isabelle",
+            "lastname": "Ford",
+            "username": "isabelle.ford",
+            "email": "isabelle.ford@example.com",
+            "bio": "Scroll. Save. Repeat.",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 25,
+            "profilePic": "../assets/prof25.jpg",
+            "firstname": "Kai",
+            "lastname": "Thompson",
+            "username": "kai.thompson",
+            "email": "kai.thompson@example.com",
+            "bio": "Thrift feeds are my aesthetic 🎞️",
+            "password": "pwd",
+            "isSeller": false
         }
     ],
     "posts": 
@@ -639,6 +859,45 @@
           "postID": 22,
           "tags": ["crochet", "green cardigan", "brandy melville", "layering", "women's fashion"]
         }
-      ]
+      ],
+
+      
+      "follows": [
+        { "followerID": 6, "followeeID": 3 },
+        { "followerID": 7, "followeeID": 2 },
+        { "followerID": 8, "followeeID": 1 },
+        { "followerID": 9, "followeeID": 5 },
+        { "followerID": 10, "followeeID": 3 },
+        { "followerID": 11, "followeeID": 4 },
+        { "followerID": 12, "followeeID": 2 },
+        { "followerID": 13, "followeeID": 3 },
+        { "followerID": 14, "followeeID": 1 },
+        { "followerID": 15, "followeeID": 5 },
+        { "followerID": 16, "followeeID": 3 },
+        { "followerID": 17, "followeeID": 4 },
+        { "followerID": 18, "followeeID": 2 },
+        { "followerID": 19, "followeeID": 1 },
+        { "followerID": 20, "followeeID": 3 },
+        { "followerID": 21, "followeeID": 5 },
+        { "followerID": 22, "followeeID": 2 },
+        { "followerID": 23, "followeeID": 3 },
+        { "followerID": 24, "followeeID": 1 },
+        { "followerID": 25, "followeeID": 4 },
+        { "followerID": 6, "followeeID": 1 },
+        { "followerID": 7, "followeeID": 3 },
+        { "followerID": 8, "followeeID": 2 },
+        { "followerID": 9, "followeeID": 4 },
+        { "followerID": 10, "followeeID": 1 },
+        { "followerID": 11, "followeeID": 5 },
+        { "followerID": 12, "followeeID": 3 },
+        { "followerID": 13, "followeeID": 2 },
+        { "followerID": 14, "followeeID": 4 },
+        { "followerID": 15, "followeeID": 1 },
+        { "followerID": 16, "followeeID": 5 },
+        { "followerID": 17, "followeeID": 3 },
+        { "followerID": 18, "followeeID": 2 },
+        { "followerID": 19, "followeeID": 4 },
+        { "followerID": 20, "followeeID": 1 }
+    ]
       
 }

@@ -162,6 +162,21 @@ class Seeder:
         return None
 
 
+    def create_follows(self):
+        with Session(engine) as session:
+            for follow_entry in self.data["follows"]:
+                follower_id = follow_entry["followerID"]
+                followee_id = follow_entry["followeeID"]
+                
+                follow = FollowingInDB(
+                    followerID=follower_id,
+                    followeeID=followee_id
+                )
+                session.add(follow)
+
+            session.commit()
+            print("Tags seeded successfully!")
+            
     def create_tags(self):
         with Session(engine) as session:
             for tag_entry in self.data["tags"]:
@@ -241,6 +256,7 @@ def reset_seq(session):
     session.execute(text("SELECT setval('links_id_seq', (SELECT MAX(id) FROM links))"))
     session.execute(text("SELECT setval('tags_id_seq', (SELECT MAX(id) FROM tags))")) 
     session.execute(text("SELECT setval('colors_id_seq', (SELECT MAX(id) FROM colors))"))
+    session.execute(text("SELECT setval('following_id_seq', (SELECT MAX(id) FROM following))"))
 
     session.commit()
     
@@ -273,6 +289,8 @@ if __name__ == "__main__":
         seeder = Seeder(argument)  
 
         seeder.create_users() 
+        
+        seeder.create_follows() 
 
         seeder.create_posts()
         
