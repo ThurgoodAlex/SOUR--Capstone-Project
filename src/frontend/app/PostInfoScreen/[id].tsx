@@ -22,6 +22,7 @@ export default function PostInfoScreen() {
     const { id } = useLocalSearchParams(); 
 
     const { post, loading: postsLoading } = usePost(`${id}`);
+    console.log("Post Info Screen Post:", post);
     const { posts: linkedItems } = usePosts(`/posts/${id}/links/`);
     const { user } = useUser();
     const [liked, setLike] = useState(false);
@@ -43,8 +44,6 @@ export default function PostInfoScreen() {
         }
     }, [post?.id]); 
 
-  
-
     const toggleLike = async () => {
         if (!post?.id) return;
         try {
@@ -61,23 +60,20 @@ export default function PostInfoScreen() {
 
     const handleMessage = async () => {
             try {
-                //chat already exists
-          
-                const checkChatResponse = await api.get(`/users/${user?.id}/chats/${post?.seller.id}/`);
+                const checkChatResponse = await api.get(`/users/${user?.id}/chats/${post?.seller!.id}/`);
                 if (checkChatResponse.ok) {
                     let chat = await checkChatResponse.json();
                     router.push({
                         pathname: '/MessagesScreen',
-                        params: { chatID: chat.id },
+                        params: { chatID: chat.id, userID: post?.seller!.id },
                     })
                 } else if (checkChatResponse.status === 404) {
-                    // create new chat
-                    const response = await api.post('/chats/', { reciepientID: post?.seller.id });
+                    const response = await api.post('/chats/', { reciepientID: post?.seller!.id });
                     const chat = await response.json();
                     if (response.ok) {
                         router.push({
                             pathname: '/MessagesScreen',
-                            params: { chatID: chat.id },
+                            params: { chatID: chat.id, userID: post?.seller!.id },
                         })
                     } else {
                         Alert.alert('Failed to create chat.');
@@ -114,8 +110,8 @@ export default function PostInfoScreen() {
                 />
                 <View style={ScreenStyles.screen}>
                     <ScrollView contentContainerStyle={{ gap: 6 }}>
-                        <ProfileThumbnail user={post.seller} />
-                        {post.seller.id != user?.id ? 
+                        <ProfileThumbnail user={post.seller!} />
+                        {post.seller!.id != user?.id ? 
                             <TouchableOpacity 
                                 onPress={handleMessage}
                                 style={{ alignSelf:'flex-end', position:'absolute', top: 3}}
@@ -173,7 +169,7 @@ function ListingInfo({ post, liked, toggleLike, userID }: { post: Post, liked: b
 
             <View style={[Styles.row, { justifyContent: 'space-between', marginBottom: -10, marginTop: -2 }]}>
                 <Text style={[TextStyles.h2, { textAlign: 'left' }]}>{formattedPrice}</Text>
-                {!post.isSold && post.seller.id != userID && <CartButton listingID={post.id} onItemAdded={handleItemAdded} />}
+                {!post.isSold && post.seller!.id != userID && <CartButton listingID={post.id} onItemAdded={handleItemAdded} />}
             </View>
 
             <Text style={[TextStyles.h3, { textAlign: 'left', marginBottom: -1 }]}>Size: {post.size}</Text>

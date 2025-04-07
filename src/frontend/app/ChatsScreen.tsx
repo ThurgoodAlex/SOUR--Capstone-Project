@@ -4,8 +4,6 @@ import { ScreenStyles, TextStyles } from '@/constants/Styles';
 import { User, ChatData } from '@/constants/Types';
 import { useApi } from '@/context/api';
 import { useUser } from '@/context/user';
-import { Ionicons } from '@expo/vector-icons';
-import { router, Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 
