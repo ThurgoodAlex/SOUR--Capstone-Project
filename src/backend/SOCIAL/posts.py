@@ -1,3 +1,4 @@
+
 import os
 import sys
 import boto3
@@ -48,6 +49,83 @@ lambda_client = boto3.client('lambda', endpoint_url=localstack_endpoint,
 
 
 posts_router = APIRouter(tags=["Posts"])
+
+
+related_terms = {
+    "sneakers": ["shoes", "kicks", "trainers", "sneaker"],
+    "shoes": ["sneakers", "kicks", "trainers", "footwear"],
+    "jacket": ["coat", "bomber", "windbreaker", "fleece"],
+    "bomber": ["jacket", "coat"],
+    "windbreaker": ["jacket", "coat"],
+    "sweater": ["pullover", "knit", "cardigan"],
+    "jeans": ["pants", "denim"],
+    "pants": ["jeans", "trousers", "denim"],
+    "tee": ["shirt", "t-shirt"],
+    "shirt": ["tee", "t-shirt", "top"]
+}
+@posts_router.get('/search', response_model=list[Post], status_code=200)
+def fuzzy_search(
+    search: str, 
+    session: Annotated[Session, Depends(get_session)],
+    current_user: UserInDB = Depends(auth_get_current_user)
+) -> list[Post]:
+    # Ensure extensions
+    session.execute(text('CREATE EXTENSION IF NOT EXISTS pg_trgm;'))
+    session.execute(text('CREATE EXTENSION IF NOT EXISTS unaccent;'))
+    session.commit()
+
+    # Build search terms
+    #This finda and builds the related terms so if someone searches in shoes
+    # it knows that shoes = sneakers.
+    search_lower = search.lower()
+    search_terms = [search_lower]
+    if search_lower in related_terms:
+        search_terms.extend(related_terms[search_lower])
+    tsquery = ' | '.join(search_terms)  
+
+    print(f"TSQuery: {tsquery}") 
+
+    # This is a massive query. This currently works and im happy with it, but I dont fully understand.
+    # I might try and change my approach.
+    # -- next thing ill mess around with is purely searching off tags
+        # -- need to create a get_tags_of_post method
+    query = text("""
+       WITH posts_with_tags AS (
+    SELECT 
+        p.*,
+        STRING_AGG(t.tag, ' ') AS tags
+    FROM posts p
+    LEFT JOIN tags t ON p.id = t."postID"
+    GROUP BY p.id
+    )
+    SELECT 
+        pwt.*, 
+        ts_rank(
+            to_tsvector('english', unaccent(
+                CONCAT_WS(' ', 
+                    pwt.title, 
+                    COALESCE(pwt.description, ''), 
+                    pwt.tags
+                )
+            )),
+            to_tsquery('english', :tsquery)
+        ) AS rank
+    FROM posts_with_tags pwt
+    WHERE 
+        to_tsvector('english', unaccent(
+            CONCAT_WS(' ', 
+                pwt.title, 
+                COALESCE(pwt.description, ''), 
+                pwt.tags
+            )
+        )) @@ to_tsquery('english', :tsquery)
+    ORDER BY rank DESC
+    """)
+
+    results = session.execute(query, {"tsquery": tsquery}).mappings().fetchall()
+    for row in results:
+        print(f"ID: {row['id']}, Title: {row['title']}, Description: {row['description']}, Tags: {row['tags']}")
+    return [Post(**dict(row)) for row in results]
 
 
 @posts_router.post('/', response_model= Post, status_code=201)

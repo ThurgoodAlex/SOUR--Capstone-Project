@@ -8,7 +8,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import { AuthProvider } from '@/context/auth'; // Adjust the path as needed
 import { UserProvider } from '@/context/user'; // Adjust the path as needed
-import { TouchableOpacity, Image } from 'react-native';
+import { TouchableOpacity, Image, View, StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 
@@ -63,9 +63,14 @@ export default function RootLayout() {
                                 options={{
                                     headerLeft: () => "",
                                     headerRight: () => (
-                                        <TouchableOpacity onPress={() => router.push('/CartScreen')}>
-                                            <Ionicons size={30} name="cart-outline" color="#692b20" />
-                                        </TouchableOpacity>
+                                        <>
+                                            <TouchableOpacity onPress={() => router.push('/SearchScreen')}>
+                                                <Ionicons size={30} name="search-outline" color="#692b20" />
+                                            </TouchableOpacity>
+                                            <TouchableOpacity onPress={() => router.push('/CartScreen')}>
+                                                <Ionicons size={30} name="cart-outline" color="#692b20" />
+                                            </TouchableOpacity>
+                                        </>
                                     ),
                                 }}
                             />
@@ -124,3 +129,5 @@ export default function RootLayout() {
         </GestureHandlerRootView>
     );
 }
+
+

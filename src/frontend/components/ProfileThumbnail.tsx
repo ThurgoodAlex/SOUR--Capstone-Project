@@ -35,6 +35,11 @@ export default function ProfileThumbnail({ user }: { user: User }) {
                     router.push({
                         pathname: '/SelfProfileScreen',
                     })
+                } else {
+                  router.push({
+                    pathname: '/UserProfileScreen', 
+                    params: { user: JSON.stringify(user)},
+                  }) 
                 }
                 
             }
