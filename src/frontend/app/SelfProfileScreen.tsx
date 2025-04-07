@@ -18,10 +18,12 @@ export default function SelfProfileScreen() {
   
   useEffect(() => {
     let mounted = true;
+
     
     // Important: Always set the endpoint first if user exists
     if (user && user.id && mounted) {
       setEndpoint(`/users/${user.id}/posts/`);
+
     }
     
     // Handle redirection with a delay to ensure proper component mounting
@@ -41,6 +43,7 @@ export default function SelfProfileScreen() {
     return () => {
       mounted = false;
     };
+
   }, [user]);
 
   // Only one useEffect for refetching
@@ -62,7 +65,10 @@ export default function SelfProfileScreen() {
       setEndpoint(newEndpoint);
     }
   };
+
+
   
+
   return (
     <>
       <View style={ScreenStyles.screen}>
@@ -89,6 +95,16 @@ export default function SelfProfileScreen() {
 }
 
 function ProfileInfo({ user }: { user: any }) {
+
+  const profPicMapping: Record<number, any> = {
+    1: require('@/assets/images/prof1.jpg'),
+    5: require('@/assets/images/prof2.jpg'),
+    2: require('@/assets/images/prof3.jpg')
+}
+
+
+  let profilePic = user?.id && user.id in profPicMapping ? profPicMapping[user.id] : require('@/assets/images/blank_profile_pic.png');
+  
   if (!user) {
     return null;
   }
@@ -96,11 +112,7 @@ function ProfileInfo({ user }: { user: any }) {
   return (
     <View style={Styles.center}>
       <Image
-        source={
-          user.profilePic
-          ? user.profilePic
-          : require('../assets/images/blank_profile_pic.png')
-        }
+        source={profilePic}
         style={ProfileStyles.profileImage}
       />
       <Text style={TextStyles.h1}>{user.firstname + " " + user.lastname || "ERROR: can't find name"}</Text>

@@ -1,4 +1,5 @@
 import { NavBar } from '@/components/NavBar';
+import { ColorTags } from '@/components/ColorTags';
 import { ScreenStyles, Styles, TextStyles } from '@/constants/Styles';
 import { api, useApi } from '@/context/api';
 import { useAuth } from '@/context/auth';
@@ -8,11 +9,11 @@ import { router, Stack } from 'expo-router';
 import * as FileSystem from 'expo-file-system';
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, StyleSheet, Alert, KeyboardTypeOptions, ActivityIndicator } from 'react-native';
-import { Colors } from '@/constants/Colors';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { Colors, basicColors } from '@/constants/Colors';
 import ModalSelector from 'react-native-modal-selector';
 import * as Yup from 'yup';
 import { Ionicons } from '@expo/vector-icons';
-import { Button } from 'react-native'; // Add this line if using the Button from react-native
 import { usePosts } from '@/hooks/usePosts';
 import { Post } from '@/constants/Types';
 import { LinkedItemsSelection } from '@/components/LinkItemsSelection';
@@ -51,6 +52,7 @@ export default function CreateListing(): JSX.Element {
     const { posts } = usePosts(`/users/${user?.id}/posts/?is_listing=false`);
     const [ linkedPosts, setLinkedPosts] = useState<Post[]>([]);
     const [ tags, setTags] = useState<string[]>([]);
+    const [ colors, setColors] = useState<string[]>([]);
 
 
     if (!user) logout();
@@ -95,7 +97,7 @@ export default function CreateListing(): JSX.Element {
             setLoading(true);
     
             // Create the listing first
-            const response = await api.post("/posts/listings/", {
+            const listingResponse = await api.post("/posts/listings/", {
                 title: name,
                 gender: gender,
                 size: size,
@@ -106,15 +108,14 @@ export default function CreateListing(): JSX.Element {
                 isSold: false,
                 isListing: true,
                 coverImage: "",
-                color: color
             });
     
-            if (!response.ok) {
+            if (!listingResponse.ok) {
                 Alert.alert('Error', 'Something went wrong, we could not create your listing.');
                 return;
             }
     
-            const newListing = await response.json();
+            const newListing = await listingResponse.json();
             const listingId = newListing.id;
     
             console.log("Created listing:", listingId);
@@ -138,12 +139,19 @@ export default function CreateListing(): JSX.Element {
                 }
             }
 
-
             //upload tags
             for (const tag of tags) {
                 const tagResponse = await api.post(`/posts/${listingId}/tags/`, { tag: tag });
                 if (!tagResponse.ok) {
                     console.error(`Failed to upload tag ${tag} for listing ${listingId}`);
+                }
+            }
+
+            //upload colors
+            for (const color of colors) {
+                const colorResponse = await api.post(`/posts/${listingId}/${color}/`, { color: color });
+                if (!colorResponse.ok) {
+                    console.error(`Failed to upload color ${color} for listing ${listingId}`);
                 }
             }
     
@@ -189,7 +197,6 @@ export default function CreateListing(): JSX.Element {
                             features: [
                                 { type: "LABEL_DETECTION", maxResults: 8 },
                                 { type: "TEXT_DETECTION" },
-                                { type: "IMAGE_PROPERTIES" }
                             ],
                         },
                     ],
@@ -217,13 +224,25 @@ export default function CreateListing(): JSX.Element {
                     .filter((label: any) => !allTags.includes(label.description))
                     .map((label: any) => label.description);
     
-                const textAnnotations = data.responses[0]?.textAnnotations || [];
+                const textAnnotations = data.responses[0]?.textAnnotations|| [];
                 const generatedText = textAnnotations[0]?.description || "";
-    
+
+                // Replace new lines with spaces
+                const cleanedText = generatedText.replace(/\n/g, " ");
+                // Remove any unwanted characters, allow %, $ and @
+                let sanitizedText = cleanedText.replace(/[^a-zA-Z0-9\s%$@]/g, "");
+                // minimum 3 characters
+                const minLength = 3;
+                const maxLength = 20;
+                if(sanitizedText.length < minLength || sanitizedText.length > maxLength) {
+                    console.log("Text too short or too long, skipping");
+                    sanitizedText = null;
+                }
+
                 // Collect tags for this image
                 const newTags = [
                     ...filteredLabels,
-                    ...(generatedText ? [generatedText] : [])
+                    ...(sanitizedText ? [sanitizedText] : [])
                 ];
     
                 console.log("Tags for image:", newTags);
@@ -242,9 +261,7 @@ export default function CreateListing(): JSX.Element {
     
         setAiGenerated(true);
         setLoading(false);
-    };
-    
-       
+    };   
 
     return (
         <>
@@ -258,55 +275,55 @@ export default function CreateListing(): JSX.Element {
                 <ScrollView>
                     <UploadPhotosCarousel images={images} onAddImages={uploadImages} />
 
-                    
+                    <KeyboardAwareScrollView >
 
-                    <FormGroup labelText="Name" placeholderText="Enter item name" value={name} setter={setName} error={errors["name"]} required/>
-                    <FormGroup labelText="Price" placeholderText="Enter price" value={price} setter={setPrice} error={errors["price"]} keyboardType="numeric" required/>
-                    <Dropdown labelText="Gender" selectedValue={gender} onValueChange={setGender} options={["Men's", "Women's", "Unisex"]} error={errors["gender"]} />
-                    <Dropdown labelText="Size" selectedValue={size} onValueChange={setSize} options={["XXSmall", "XSmall", "Small", "Medium", "Large", "XLarge", "XXLarge", "XXXLarge", "00", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]} error={errors["size"]} required/>
-                    <FormGroup labelText="Description" placeholderText="Enter item description" value={description} setter={setDescription} error={errors["description"]} multiline/>
-                    <FormGroup labelText="Brand" placeholderText="Enter brand" value={brand} setter={setBrand} error={errors["brand"]}/>
-                    <Dropdown labelText="Condition" selectedValue={condition} onValueChange={setCondition} options={["New", "Like New", "Good", "Fair", "Needs Repair"]} error={errors["condition"]}/>
-                    
-                    <Text style={[TextStyles.h3, { textAlign: 'left' }]}>Tags</Text>
-
-                    {images.length > 0 &&
-                        <TouchableOpacity 
-                            style={[Styles.buttonLight, 
-                                { 
-                                    padding:0,  
-                                    backgroundColor: aiGenerated || loading ? Colors.white : Colors.green,
-                                    width: 220, 
-                                    height: 40, 
-                                    borderColor: aiGenerated ? Colors.green60 : Colors.green,
-                                    borderWidth:2,
-                                }
-
-                            ]}
-                            onPress={generateWithAI}
-                            disabled={images.length == 0 || aiGenerated}
-                        >
-                        <View style={[Styles.row, {gap: 5}]}>
-                                <Text 
-                                    style={aiGenerated? {color:Colors.green60, fontWeight:'bold'}: loading ? {color:Colors.green, fontWeight:'bold'}: TextStyles.light}
-                                >
-                                   {loading ? ("Generating Tags") : (aiGenerated ? "Tags generated by AI" : "Generate Tags with AI")}
-                                </Text>
-                                {loading ? 
-                                    <ActivityIndicator size="small" color={Colors.green} style={{marginLeft: 5}} /> 
-                                    : <Ionicons name="sparkles" size={16} color={aiGenerated? Colors.green60 : Colors.white} />
-                                }
-                              
-                            </View>
+                        <FormGroup labelText="Name" placeholderText="Enter item name" value={name} setter={setName} error={errors["name"]} required/>
+                        <FormGroup labelText="Price" placeholderText="Enter price" value={price} setter={setPrice} error={errors["price"]} keyboardType="numeric" required/>
+                        <Dropdown labelText="Gender" selectedValue={gender} onValueChange={setGender} options={["Men's", "Women's", "Unisex"]} error={errors["gender"]} />
+                        <Dropdown labelText="Size" selectedValue={size} onValueChange={setSize} options={["XXSmall", "XSmall", "Small", "Medium", "Large", "XLarge", "XXLarge", "XXXLarge", "00", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]} error={errors["size"]} required/>
+                        <FormGroup labelText="Description" placeholderText="Enter item description" value={description} setter={setDescription} error={errors["description"]} multiline/>
+                        <FormGroup labelText="Brand" placeholderText="Enter brand" value={brand} setter={setBrand} error={errors["brand"]}/>
+                        <Dropdown labelText="Condition" selectedValue={condition} onValueChange={setCondition} options={["New", "Like New", "Good", "Fair", "Needs Repair"]} error={errors["condition"]}/>
                         
-                        </TouchableOpacity>
+                        <Text style={[TextStyles.h3, { textAlign: 'left' }]}>Colors</Text>
+                        <SetColorTags colors={colors} setter={setColors} error={errors["colors"]}/>
+                    
+                        <Text style={[TextStyles.h3, { textAlign: 'left' }]}>Tags</Text>
+                        {images.length > 0 &&
+                            <TouchableOpacity 
+                                style={[Styles.buttonLight, 
+                                    { 
+                                        padding:0,  
+                                        backgroundColor: aiGenerated || loading ? Colors.white : Colors.green,
+                                        width: 220, 
+                                        height: 40, 
+                                        borderColor: aiGenerated ? Colors.green60 : Colors.green,
+                                        borderWidth:2,
+                                    }
 
-                    }
-                    
-                    
-                    <Tags tags={tags} setter={setTags} error={errors["tags"]}/>
-                    {linkedPosts.length > 0 &&  <LinkInputDropdown posts={posts} selected={linkedPosts} setter={setLinkedPosts} columns={3} isListing={true}/>}
-                    
+                                ]}
+                                onPress={generateWithAI}
+                                disabled={images.length == 0 || aiGenerated}
+                            >
+                                <View style={[Styles.row, {gap: 5}]}>
+                                    <Text 
+                                        style={aiGenerated? {color:Colors.green60, fontWeight:'bold'}: loading ? {color:Colors.green, fontWeight:'bold'}: TextStyles.light}
+                                    >
+                                    {loading ? ("Generating Tags") : (aiGenerated ? "Tags generated by AI" : "Generate Tags with AI")}
+                                    </Text>
+                                    {loading ? 
+                                        <ActivityIndicator size="small" color={Colors.green} style={{marginLeft: 5}} /> 
+                                        : <Ionicons name="sparkles" size={16} color={aiGenerated? Colors.green60 : Colors.white} />
+                                    }
+                                </View>
+                            </TouchableOpacity>
+                            
+                        }
+                        <Tags tags={tags} setter={setTags} error={errors["tags"]}/>
+
+                        {linkedPosts.length > 0 &&  <LinkInputDropdown posts={posts} selected={linkedPosts} setter={setLinkedPosts} columns={3} isListing={true}/>}
+                    </KeyboardAwareScrollView>
+
                     <TouchableOpacity 
                         style={[Styles.buttonDark, (name == "" || price == "" || size == "") && Styles.buttonDisabled]}
                         onPress={handleSubmit}
@@ -427,6 +444,71 @@ function Tags({ tags, setter, error }: {
 };
 
 
+function SetColorTags({ colors, setter, error }: {
+    colors: string[];
+    setter: React.Dispatch<React.SetStateAction<string[]>>;
+    error: string;
+}): JSX.Element {
+    const toggleColor = (color: string) => {
+        if (colors.includes(color)) {
+            setter(colors.filter(c => c !== color));
+        } else {
+            setter([...colors, color]);
+        }
+    };
+
+
+    return (
+        <ScrollView style={{ marginBottom: 25 }}>
+
+            {colors.length > 0 ? <ColorTags colors={colors}/> : null}
+
+            {/* Color Checkboxes */}
+            <View style={
+                {   
+                    flexDirection: 'column', 
+                    alignContent: 'space-between',
+                    flexWrap: 'wrap', 
+                    paddingLeft: 10,
+                    maxHeight:120,
+                    padding: 4,
+                    borderWidth: 1,
+                    borderColor: Colors.dark,
+                    borderRadius: 8,
+
+                }}>
+                {basicColors.map(({ name, hex }) => (
+                    <TouchableOpacity
+                        key={name}
+                        onPress={() => toggleColor(name)}
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            padding: 3,
+                            marginRight:18
+                        }}
+                    >
+                         {colors.includes(name) && <Text style={{ color: '#692b2095', fontWeight: '400', fontSize:22, position: 'absolute', left:5 }}>X</Text>}
+                        <View
+                            style={{
+                                width: 18,
+                                height: 18,
+                                borderWidth: 1,
+                                borderColor: Colors.dark,
+                                borderRadius: 4,
+                                marginRight: 8
+                            }}
+                        />
+                        
+                        <Text style={{color:Colors.dark}}>{name}</Text>
+                    </TouchableOpacity>
+                ))}
+            </View>
+            {error && <Text style={{ color: Colors.grapefruit }}>{error}</Text>}
+        </ScrollView>
+    );
+}
+
 
 function Dropdown({ labelText, selectedValue, onValueChange, options, error, required }: {
   labelText: string;
@@ -444,7 +526,7 @@ function Dropdown({ labelText, selectedValue, onValueChange, options, error, req
 
   return (
     <>
-      <View style={CreateListingStyles.formGroup}>
+      <View style={[CreateListingStyles.formGroup, { marginBottom: 20 }]}>
         <View style={Styles.row}>
             <Text style={[TextStyles.h3, { textAlign: 'left' }]}>{labelText} </Text>  
             {required ? <Text style={[TextStyles.required]}>*required</Text> : null}
@@ -549,7 +631,7 @@ export const CreateListingStyles = StyleSheet.create({
         marginTop:8,
     },
     removeBtn: {
-        color: Colors.grapefruit,
+        color: Colors.dark60,
         fontWeight: "bold",
     },
    

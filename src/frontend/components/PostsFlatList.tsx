@@ -16,6 +16,7 @@ export const PostsFlatList: React.FC<PostFlatListProps> = ({ posts, height }) =>
     const renderPost = ({ item }: {item: Post}) => (
         <PostPreview post={item} size={size} profileThumbnail='none'/>
     );
+    
 
     return ( 
         <FlatList

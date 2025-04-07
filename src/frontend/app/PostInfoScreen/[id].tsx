@@ -9,18 +9,17 @@ import { useApi } from '@/context/api';
 import { Post } from '@/constants/Types';
 import { Ionicons } from '@expo/vector-icons';
 import  CartButton  from '@/components/CartButton';
-
 import { LinkedItems } from '@/components/LinkedItems';
 import { usePost } from '@/hooks/usePost';
 import { usePosts } from '@/hooks/usePosts';
 import { Colors } from '@/constants/Colors';
 import { useUser } from '@/context/user';
-import { boolean } from 'yup';
+import { ColorTags } from '@/components/ColorTags';
 
 export default function PostInfoScreen() {
     const api = useApi();
+    const [colors, setColors] = useState<string[]>([]);
     const { id } = useLocalSearchParams(); 
-
     const { post, loading: postsLoading } = usePost(`${id}`);
     console.log("Post Info Screen Post:", post);
     const { posts: linkedItems } = usePosts(`/posts/${id}/links/`);
@@ -41,6 +40,21 @@ export default function PostInfoScreen() {
                 }
             };
             fetchLike();
+        }
+        if (post?.isListing){
+            const fetchColors = async () => {
+                try {
+                    const colorResponse = await api.get(`/posts/${post.id}/colors/`);
+                    if (colorResponse.ok) {
+                        const colorJSON = await colorResponse.json();
+                        const colorArray = colorJSON.map((color: { color: string }) => color.color);
+                        setColors(colorArray);
+                    }
+                } catch (error) {
+                    console.error('Error fetching colors:', error);
+                }
+            };
+            fetchColors();
         }
     }, [post?.id]); 
 
@@ -68,6 +82,7 @@ export default function PostInfoScreen() {
                         params: { chatID: chat.id, userID: post?.seller!.id },
                     })
                 } else if (checkChatResponse.status === 404) {
+                    // create new chat
                     const response = await api.post('/chats/', { reciepientID: post?.seller!.id });
                     const chat = await response.json();
                     if (response.ok) {
@@ -122,7 +137,7 @@ export default function PostInfoScreen() {
                         }
                         <PhotoCarousel postId={Number(post.id)} />
                         {post.isListing ? (
-                            <ListingInfo post={post} liked={liked} toggleLike={toggleLike} userID={user?.id ?? 0} />
+                            <ListingInfo post={post} colors={colors} liked={liked}  toggleLike={toggleLike} userID={user?.id ?? 0} />
                         ) : (
                             <PostInfo post={post} liked={liked} toggleLike={toggleLike} />
                         )}
@@ -150,7 +165,7 @@ export default function PostInfoScreen() {
 }
 
 // ListingInfo Component
-function ListingInfo({ post, liked, toggleLike, userID }: { post: Post, liked: boolean, toggleLike: () => void, userID:number }) {
+function ListingInfo({ post, colors, liked, toggleLike, userID }: { post: Post, colors: string[], liked: boolean, toggleLike: () => void, userID:number }) {
     const formattedPrice = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
@@ -159,7 +174,7 @@ function ListingInfo({ post, liked, toggleLike, userID }: { post: Post, liked: b
     const handleItemAdded = (item: any) => {
         console.log('Item added to cart:', item);
     };
-
+    
     return (
         <View style={Styles.column}>
             <View style={[Styles.row, { justifyContent: 'space-between' }]}>
@@ -176,6 +191,7 @@ function ListingInfo({ post, liked, toggleLike, userID }: { post: Post, liked: b
             <Text style={[TextStyles.p, { textAlign: 'left' }]}>
                 {[post.brand, post.gender, post.condition].filter(Boolean).join('  |  ')}
             </Text>
+            <ColorTags colors={colors} />
             {post.description && 
                 <View>
                     <View style={{ borderBottomColor: Colors.dark60, borderBottomWidth: 1, marginVertical: 10 }} />
@@ -184,7 +200,6 @@ function ListingInfo({ post, liked, toggleLike, userID }: { post: Post, liked: b
                    
                 </View>
             }
-            
         </View>
     );
 }

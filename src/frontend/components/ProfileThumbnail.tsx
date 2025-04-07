@@ -2,9 +2,9 @@ import { Styles, TextStyles } from '@/constants/Styles';
 import { User } from '@/constants/Types';
 import { useUser } from '@/context/user';
 import { router } from 'expo-router';
-import { View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 
-export default function ProfileThumbnail({ user }: {user: User}) {
+export default function ProfileThumbnail({ user }: { user: User }) {
 
   const current_user = useUser().user;
   
@@ -15,6 +15,16 @@ export default function ProfileThumbnail({ user }: {user: User}) {
       borderRadius: 20,
     },
   })
+
+  const profPicMapping: Record<number, any> = {
+    1: require('@/assets/images/prof1.jpg'),
+    5: require('@/assets/images/prof2.jpg'),
+    2: require('@/assets/images/prof3.jpg')
+  }
+
+
+  console.log("Profile Pic: ", user.profilePic);
+  let profilePic = user.id in profPicMapping ? profPicMapping[user.id] : require('@/assets/images/blank_profile_pic.png');
   
   return (
     <>
@@ -26,23 +36,14 @@ export default function ProfileThumbnail({ user }: {user: User}) {
                         pathname: '/SelfProfileScreen',
                     })
                 }
-                else{
-                    router.push({
-                        pathname: '/UserProfileScreen',
-                        params: { user: JSON.stringify(user) },
-                    })
-                }
+                
             }
         }
         style={[Styles.row, {marginLeft:6, maxHeight: 60, alignItems: 'center'}]}
       >
         
         <Image
-            source={
-                user.profilePic
-                ? user.profilePic
-                : require('../assets/images/blank_profile_pic.png') // Default fallback
-            }
+            source={profilePic}
             style={ProfileStyles.thumbnailImage}
             />
             <View style={[Styles.column, Styles.alignLeft, {marginLeft:5}]}>

@@ -32,7 +32,9 @@ from databaseAndSchemas.schema import (
     createMedia,
     Tag,
     TagCreate,
-    TagInDB
+    TagInDB,
+    Color,
+    ColorInDB,
 )
 
 
@@ -49,7 +51,7 @@ posts_router = APIRouter(tags=["Posts"])
 
 
 @posts_router.post('/', response_model= Post, status_code=201)
-def upload_post(new_post:createPost,  
+def upload_post(new_post: createPost,  
                 session: Annotated[Session, Depends(get_session)], 
                 current_user: UserInDB = Depends(auth_get_current_user)) -> Post:
     """Creating a new posting"""
@@ -91,28 +93,24 @@ def upload_listing(newListing:createListing,
 def get_all_posts(
     session: Annotated[Session, Depends(get_session)], 
     current_user: UserInDB = Depends(auth_get_current_user),
-    is_sold: Optional[bool] = Query(None)
+    is_sold: Optional[bool] = Query(None),
+    is_listing: Optional[bool] = Query(None),
+    is_video: Optional[bool] = Query(None)
 ) -> list[Post]:
     """Getting all posts"""
     query = select(PostInDB)
     if is_sold is not None:
         query = query.where(PostInDB.isSold == is_sold)
+        
+    if is_listing is not None:
+        query = query.where(PostInDB.isListing == is_listing)
+    if is_video is not None:
+        query = query.where(PostInDB.isVideo == is_video)
+    
+    # Execute the query and fetch all posts
     post_in_db = session.exec(query).all()
     return [Post(**post.model_dump()) for post in post_in_db]
 
-@posts_router.get('/isListing=false/', response_model= list[Post], )
-def get_only_posts(session: Annotated[Session, Depends(get_session)], 
-                  current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
-    """Getting all posts"""
-    post_in_db = session.exec(select(PostInDB).where(PostInDB.isListing == False)).all()
-    return [Post(**post.model_dump()) for post in post_in_db]
-
-@posts_router.get('/isListing=true/', response_model= list[Post], )
-def get_only_listings(session: Annotated[Session, Depends(get_session)], 
-                  current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
-    """Getting all posts"""
-    post_in_db = session.exec(select(PostInDB).where(PostInDB.isListing == True)).all()
-    return [Post(**post.model_dump()) for post in post_in_db]
 
 
 @posts_router.get('/filter/', response_model=list[Post])
@@ -266,9 +264,6 @@ def create_new_link(session: Annotated[Session, Depends(get_session)],
     else:
         raise EntityNotFound("post", post_id)
     
-
-    
-    
 @posts_router.get('/{post_id}/links/', response_model=list[Post], status_code=200)
 def get_all_links_by_post_id(session: Annotated[Session, Depends(get_session)],
                              post_id: int,
@@ -332,7 +327,6 @@ def unlike_post(session :Annotated[Session, Depends(get_session)],
     else:
         raise EntityNotFound("post", post_id)
 
-
 #Returns True if like between user and post exists, False otherwise
 @posts_router.get('/{post_id}/like/', response_model= bool, status_code=200)
 def get_like_of_post(session :Annotated[Session, Depends(get_session)],
@@ -348,8 +342,6 @@ def get_like_of_post(session :Annotated[Session, Depends(get_session)],
     else:
         raise EntityNotFound("post", post_id)
     
-
-
 #this is here to test the seller stats route. May or may not keep this depending on how we want to do transactions...
 @posts_router.put('/{post_id}/sold/')
 def post_sold(post_id: int, session :Annotated[Session, Depends(get_session)]):
@@ -449,7 +441,7 @@ def upload_tag(post_id: int,
                  tag : TagCreate, 
                  session: Annotated[Session, Depends(get_session)],
                  current_user: UserInDB = Depends(auth_get_current_user)) -> Tag:
-    """Uploading new media to a post"""
+    """Uploading new tag to a post"""
     post = session.get(PostInDB, post_id)
     if not post:
         raise EntityNotFound("Post", post_id)
@@ -458,11 +450,6 @@ def upload_tag(post_id: int,
         **tag.model_dump(),
         postID=post_id,
     )
-    
-    # if current_user.id != post.sellerID:
-    #     raise PermissionDenied("upload", "tag")
-    
-    
     session.add(tagInDb)
     session.commit()
     session.refresh(tagInDb)
@@ -476,13 +463,50 @@ def upload_tag(post_id: int,
 def get_tags_of_post(post_id: int,
                     session: Annotated[Session, Depends(get_session)], 
                     current_user: UserInDB = Depends(auth_get_current_user)) -> list[Media]:
-    """Getting all media for a post"""
+    """Getting all tags for a post"""
     post = session.get(PostInDB, post_id)
 
     if not post:
         raise EntityNotFound("post", post_id) 
     query = select(TagInDB).where(TagInDB.postID == post_id)
-    tags_in_db = session.exec(query).all()
+    colors_in_db = session.exec(query).all()
 
-    return [Tag(**tag.model_dump()) for tag in tags_in_db]
+    return [Tag(**tag.model_dump()) for tag in colors_in_db]
 
+
+@posts_router.post('/{post_id}/{color}/', response_model=Color,status_code=201)
+def upload_color(post_id: int, 
+                 color: str, 
+                 session: Annotated[Session, Depends(get_session)],
+                 current_user: UserInDB = Depends(auth_get_current_user)) -> Color:
+    """Uploading new color to a post"""
+    post = session.get(PostInDB, post_id)
+    if not post:
+        raise EntityNotFound("Post", post_id)
+    
+    color_in_db = ColorInDB(
+        color=color,
+        postID=post_id,
+    )
+    session.add(color_in_db)
+    session.commit()
+    session.refresh(color_in_db)
+    return Color(
+        id=color_in_db.id,        
+        postID=color_in_db.postID,
+        color=color_in_db.color
+    )
+
+@posts_router.get('/{post_id}/colors/', response_model=list[Color], status_code=200)
+def get_colors_of_post(post_id: int,
+                    session: Annotated[Session, Depends(get_session)], 
+                    current_user: UserInDB = Depends(auth_get_current_user)) -> list[Media]:
+    """Getting all colors for a post"""
+    post = session.get(PostInDB, post_id)
+
+    if not post:
+        raise EntityNotFound("post", post_id) 
+    query = select(ColorInDB).where(ColorInDB.postID == post_id)
+    colors_in_db = session.exec(query).all()
+
+    return [Color(**color.model_dump()) for color in colors_in_db]
