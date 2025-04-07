@@ -42,6 +42,10 @@
     ],
     "experiments": {
       "typedRoutes": true
+    }, 
+    "updates": {
+      "fastRefresh": true
     }
+
   }
 }

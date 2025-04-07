@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "lucide-react": "^0.486.0",
     "react-native-collapsible": "^1.6.2",
     "react-native-compressor": "^1.10.4"
   }
