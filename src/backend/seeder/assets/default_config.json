@@ -9,7 +9,7 @@
             "username": "ashlynhansen",
             "email": "ashlyn.hansen@example.com",
             "bio": "A regular user",
-            "password": "password",
+            "password": "pwd",
             "isSeller": true
         },
         {
@@ -20,7 +20,7 @@
             "username": "jane.smith",
             "email": "jane@example.com",
             "bio": "A seller account",
-            "password": "password",
+            "password": "pwd",
             "isSeller": true
         },
         {
@@ -31,7 +31,7 @@
             "username": "julia.wilson",
             "email": "julia.wilson@example.com",
             "bio": "Another seller",
-            "password": "password",
+            "password": "pwd",
             "isSeller": true
         },
         {
@@ -42,7 +42,7 @@
             "username": "cass.stavos",
             "email": "cass.stavos@example.com",
             "bio": "Another seller",
-            "password": "password",
+            "password": "pwd",
             "isSeller": true
         },
         {
@@ -53,8 +53,228 @@
             "username": "marcus.chen",
             "email": "marcus.chen@example.com",
             "bio": "Vintage enthusiast and collector of rare finds",
-            "password": "password123",
+            "password": "pwd",
             "isSeller": true
+        },
+        {
+            "id": 6,
+            "profilePic": "../assets/prof6.jpg",
+            "firstname": "Nina",
+            "lastname": "Lopez",
+            "username": "nina.lopez",
+            "email": "nina.lopez@example.com",
+            "bio": "Thrift lover and weekend scroll addict",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 7,
+            "profilePic": "../assets/prof7.jpg",
+            "firstname": "Derek",
+            "lastname": "Nguyen",
+            "username": "derek.nguyen",
+            "email": "derek.nguyen@example.com",
+            "bio": "Streetwear fan, always watching for new drops",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 8,
+            "profilePic": "../assets/prof8.jpg",
+            "firstname": "Tasha",
+            "lastname": "White",
+            "username": "tasha.white",
+            "email": "tasha.white@example.com",
+            "bio": "Early 2000s nostalgia and big sunglasses 😎",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 9,
+            "profilePic": "../assets/prof9.jpg",
+            "firstname": "Leo",
+            "lastname": "Anderson",
+            "username": "leo.anderson",
+            "email": "leo.anderson@example.com",
+            "bio": "Just browsing... mostly",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 10,
+            "profilePic": "../assets/prof10.jpg",
+            "firstname": "Hailey",
+            "lastname": "Tran",
+            "username": "hailey.tran",
+            "email": "hailey.tran@example.com",
+            "bio": "Pastel palettes and secondhand gold",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 11,
+            "profilePic": "../assets/prof11.jpg",
+            "firstname": "Isaac",
+            "lastname": "Taylor",
+            "username": "isaac.taylor",
+            "email": "isaac.taylor@example.com",
+            "bio": "Mostly here for the jackets 🧥",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 12,
+            "profilePic": "../assets/prof12.jpg",
+            "firstname": "Maya",
+            "lastname": "Khan",
+            "username": "maya.khan",
+            "email": "maya.khan@example.com",
+            "bio": "Capsule wardrobe in progress",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 13,
+            "profilePic": "../assets/prof13.jpg",
+            "firstname": "Jordan",
+            "lastname": "Reed",
+            "username": "jordan.reed",
+            "email": "jordan.reed@example.com",
+            "bio": "Just here to find stuff cooler than me",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 14,
+            "profilePic": "../assets/prof14.jpg",
+            "firstname": "Zara",
+            "lastname": "Patel",
+            "username": "zara.patel",
+            "email": "zara.patel@example.com",
+            "bio": "Neutrals, layers, and oversized everything",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 15,
+            "profilePic": "../assets/prof15.jpg",
+            "firstname": "Ethan",
+            "lastname": "Moore",
+            "username": "ethan.moore",
+            "email": "ethan.moore@example.com",
+            "bio": "Thrift finds > retail prices",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 16,
+            "profilePic": "../assets/prof16.jpg",
+            "firstname": "Chloe",
+            "lastname": "Kim",
+            "username": "chloe.kim",
+            "email": "chloe.kim@example.com",
+            "bio": "Soft tones, soft fabrics, soft life 🌿",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 17,
+            "profilePic": "../assets/prof17.jpg",
+            "firstname": "Andre",
+            "lastname": "Miller",
+            "username": "andre.miller",
+            "email": "andre.miller@example.com",
+            "bio": "Big fan of flannels and boots",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 18,
+            "profilePic": "../assets/prof18.jpg",
+            "firstname": "Lena",
+            "lastname": "Martinez",
+            "username": "lena.martinez",
+            "email": "lena.martinez@example.com",
+            "bio": "Warm tones and warmer sweaters 🧶",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 19,
+            "profilePic": "../assets/prof19.jpg",
+            "firstname": "Miles",
+            "lastname": "Scott",
+            "username": "miles.scott",
+            "email": "miles.scott@example.com",
+            "bio": "Just a guy who likes cool jackets",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 20,
+            "profilePic": "../assets/prof20.jpg",
+            "firstname": "Ava",
+            "lastname": "Johnson",
+            "username": "ava.johnson",
+            "email": "ava.johnson@example.com",
+            "bio": "Probably buying something I don’t need",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 21,
+            "profilePic": "../assets/prof21.jpg",
+            "firstname": "Sam",
+            "lastname": "O'Neil",
+            "username": "sam.oneil",
+            "email": "sam.oneil@example.com",
+            "bio": "Lowkey fashion geek",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 22,
+            "profilePic": "../assets/prof22.jpg",
+            "firstname": "Brielle",
+            "lastname": "Ng",
+            "username": "brielle.ng",
+            "email": "brielle.ng@example.com",
+            "bio": "Building my dream wardrobe one find at a time",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 23,
+            "profilePic": "../assets/prof23.jpg",
+            "firstname": "Noah",
+            "lastname": "Baker",
+            "username": "noah.baker",
+            "email": "noah.baker@example.com",
+            "bio": "Here for the vibes and the vintage",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 24,
+            "profilePic": "../assets/prof24.jpg",
+            "firstname": "Isabelle",
+            "lastname": "Ford",
+            "username": "isabelle.ford",
+            "email": "isabelle.ford@example.com",
+            "bio": "Scroll. Save. Repeat.",
+            "password": "pwd",
+            "isSeller": false
+        },
+        {
+            "id": 25,
+            "profilePic": "../assets/prof25.jpg",
+            "firstname": "Kai",
+            "lastname": "Thompson",
+            "username": "kai.thompson",
+            "email": "kai.thompson@example.com",
+            "bio": "Thrift feeds are my aesthetic 🎞️",
+            "password": "pwd",
+            "isSeller": false
         }
     ],
     "posts": 
@@ -89,7 +309,7 @@
             "coverImage": "",
             "price": "45.99",
             "created_at": "2025-03-03T18:28:24.212797",
-            "isSold": false,
+            "isSold": true,
             "isListing": true,
             "post_images": [
                 "assets/images/vintage_sneakers.jpg"
@@ -100,7 +320,7 @@
        
       
         {
-            "id": 5,
+            "id": 3,
             "sellerID": 2,
             "title": "Sneak Peak: Jacket Haul!",
             "description": "here’s a sneak peak of whats coming to my shop! keep your eyes peeled! coming wednesday…\n",
@@ -117,9 +337,29 @@
                 "assets/images/vintage_store.jpg"
             ]
         },
+
+        {
+            "id": 4,
+            "sellerID": 1,
+            "title": "Black Open Back Dress Top",
+            "description": "Black dress top with flowy sleeves. Perfect for a night out or a date!",
+            "brand": "Princess Polly",
+            "condition": "Good",
+            "size": "S",
+            "gender": "Women's",
+            "coverImage": "",
+            "price": "23",
+            "created_at": "2025-03-03T18:28:24.212797",
+            "isSold": false,
+            "isVideo": true,
+            "isListing": false,
+            "post_images": [
+                "assets/videos/testFashion.mp4"
+            ]
+        },
       
         {
-            "id": 8,
+            "id": 5,
             "sellerID": 5,
             "title": "hey sour ✌🏼",
             "description": "hey sour, my names marcus and i previously sold off of depop and insta, but i hear this is the cool new thing. follow me to see whats in my closet",
@@ -136,6 +376,20 @@
                 "assets/images/jake.jpg"
             ]
         },
+        {
+            "id": 6,
+            "sellerID": 4,
+            "title": "Sneak Peak: Hand Sewn Collection",
+            "description": "Here’s a sneak peak of my hand sewn collection! I’m so excited to share these with you all. I’ve been working on them for a while and can’t wait to show you the final pieces!\n",
+            "coverImage": "",
+            "created_at": "2025-01-10T18:28:24.212797",
+            "isVideo": true,
+            "isListing": false,
+            "post_images": [
+                "assets/videos/testFashion(2).mp4"
+            ]
+        },
+      
 
         {
             "id": 7,
@@ -156,7 +410,7 @@
             ]
         },
         {
-            "id": 9,
+            "id": 8,
             "sellerID": 5,
             "title": "Green Overalls",
             "description": "Vintage green overalls. Paird with a white tee and sneakers for a cute look!",
@@ -174,7 +428,7 @@
             ]
         },
         {
-            "id": 6,
+            "id": 9,
             "sellerID": 2,
             "title": "Red Fleece Pullover",
             "description": "Vintage Red Fleece Printed Pullover Zip-up Sweatshirt In used condition. Super warm, soft fleece. Perfect for hiking and being outside. Zipper V-neck and collar. Teddy material ",
@@ -185,7 +439,7 @@
             "coverImage": "",
             "price": "34.0",
             "created_at": "2025-03-03T18:41:52.914138",
-            "isSold": true,
+            "isSold": false,
             "isListing": true,
             "post_images": [
                 "assets/images/red_fleece.jpg"
@@ -230,7 +484,7 @@
 
         },
         {
-            "id": 13,
+            "id": 12,
             "sellerID": 2,
             "title": "Levi's Bermuda Shorts",
             "description": "Vintage Levi's Bermuda shorts. Super cute and comfy, perfect for summer! ",
@@ -241,14 +495,14 @@
             "coverImage": "",
             "price": "19.99",
             "created_at": "2025-03-03T19:40:18.243796",
-            "isSold": true,
+            "isSold": false,
             "isListing": true,
             "post_images": [
                 "assets/images/listing.png"
             ]
         },
         {
-            "id": 12,
+            "id": 13,
             "sellerID": 2,
             "title": "Vintage Fila Windbreaker",
             "description": "Vintage fila windbreaker. Great condition, no holes or stains. Super cute and comfy, perfect for spring weather! ",
@@ -266,7 +520,7 @@
             ]
         },
         {
-            "id": 4,
+            "id": 14,
             "sellerID": 2,
             "title": "Pop Up Thrift Day!",
             "description": "Don’t miss my popup shop at the farmer’s market this saturday!! 10am-2pm\nlot’s of new vintage pieces :)\n",
@@ -284,7 +538,7 @@
             ]
         },
         {
-            "id": 3,
+            "id": 15,
             "sellerID": 1,
             "title": "Blue Knit Sweater",
             "description": "Thrifted blue knot sweater. Super soft, slightly worn with some pilling but no holes.",
@@ -302,45 +556,353 @@
                 "assets/images/blue_sweater1.png", 
                 "assets/images/blue_sweater2.png"
             ]
+        },
+        {
+            "id": 16,
+            "sellerID": 4,
+            "title": "Day in my life as a clothing designer",
+            "description": "A day in my life as a clothing designer! I love what I do and I’m so grateful to be able to share it with you all. \n Also... how cute is this new fabric I got from the thrift store? Any guesses what I'm making with it??",
+            "created_at": "2025-03-03T19:29:32.318013",
+            "isVideo": true,
+            "isListing": false, 
+            "post_images": [
+                "assets/videos/sewing.mov"
+            ]
+        },
+        {
+            "id": 17,
+            "sellerID": 1,
+            "title": "Black Open Back Dress Top",
+            "description": "Black dress top with flowy sleeves. Perfect for a night out or a date!",
+            "brand": "Princess Polly",
+            "condition": "Good",
+            "size": "S",
+            "gender": "Women's",
+            "coverImage": "",
+            "price": "23",
+            "created_at": "2025-03-03T18:28:24.212797",
+            "isSold": false,
+            "isVideo": false,
+            "isListing": true,
+            "post_images": [
+                "assets/images/top1.png",
+                "assets/images/top2.png"
+            ]
+        },
+        {
+            "id": 18,
+            "sellerID": 3,
+            "title": "Cream Knit Cardigan",
+            "description": "Chunky knit cream cardigan with wooden buttons. Super cozy and perfect for layering. Worn a couple times but still in great condition.",
+            "brand": "Urban Outfitters",
+            "condition": "Good",
+            "size": "Small",
+            "gender": "Women's",
+            "coverImage": "",
+            "price": "38.50",
+            "created_at": "2025-04-06T15:12:34.102938",
+            "isSold": false,
+            "isListing": true,
+            "post_images": [
+                "assets/images/cardigan.jpg"
+            ]
+        },
+        {
+            "id": 19,
+            "sellerID": 3,
+            "title": "Vintage Wrangler Denim Jacket",
+            "description": "Classic Wrangler denim jacket from the 90s. Light wash, slightly cropped fit. Some light distressing on the cuffs but adds to the vintage look.",
+            "brand": "Wrangler",
+            "condition": "Fair",
+            "size": "Medium",
+            "gender": "Unisex",
+            "coverImage": "",
+            "price": "52.00",
+            "created_at": "2025-02-06T16:44:22.578193",
+            "isSold": false,
+            "isListing": true,
+            "post_images": [
+                "assets/images/wrangler.jpeg",
+                "assets/images/wrangler2.jpeg"
+            ]
+        },
+        {
+            "id": 20,
+            "sellerID": 3,
+            "title": "New drop this weekend!",
+            "description": "just finished sorting through a haul of spring stuff 🌷 gonna be posting new listings Friday! def some Y2K vibes and cute accessories too 👛👡",
+            "isVideo": true,
+            "created_at": "2025-04-1T17:08:47.229382",        
+            "post_images": [
+                "assets/videos/mini_thrift_haul.mp4"
+            ]
+        },
+        {
+            "id": 21,
+            "sellerID": 3,
+            "title": "Vintage Velvet Vest",
+            "description": "Super cute velvet pink and purple vest. Totally early 2000s vibes — pair with low rise jeans and a mini bag 💖",
+            "brand": "Forever 21",
+            "condition": "Good",
+            "size": "Small",
+            "gender": "Women's",
+            "coverImage": "",
+            "price": "22.00",
+            "created_at": "2025-04-06T10:14:29.182738",
+            "isSold": false,
+            "isListing": true,
+            "post_images": [
+                "assets/images/vest.jpg",
+                "assets/images/vest2.jpg"
+            ]
+        },
+       
+        {
+            "id": 22,
+            "sellerID": 3,
+            "title": "Green crocheted Cardigan",
+            "description": "Super cute green crocheted cardigan. Perfect for layering over a dress or tank top. Worn a couple times but still in great condition.",
+            "brand": "Brandy Melville",
+            "condition": "Good",
+            "size": "Medium",
+            "gender": "Women's",
+            "coverImage": "",
+            "price": "26.00",
+            "created_at": "2025-02-28T10:45:19.237594",
+            "isSold": false,
+            "isListing": true,
+            "post_images": [
+                "assets/images/green1.jpg",
+                "assets/images/green2.jpg"
+            ]
         }
+        
+
     ],
+    "links": [
+        {
+            "postID":4,
+            "listingID": 17
+        },
+        {
+            "postID":3,
+            "listingID": 7
+        },
+        {
+            "postID":3,
+            "listingID": 9
+        },
+        {
+            "postID":3,
+            "listingID": 13
+        },
+        {
+            "postID":3,
+            "listingID": 10
+        },
+        {
+            "postID":20,
+            "listingID": 21
+        },
+        {
+            "postID":20,
+            "listingID": 22
+        }
+
+    ],
+    "colors":[
+        {
+          "postID": 2,
+          "colors": ["White", "Grey"]
+        },
+        {
+          "postID": 7,
+          "colors": ["Multi", "Blue", "Red", "Yellow"]
+        },
+        {
+          "postID": 8,
+          "colors": ["Green"]
+        },
+        {
+          "postID": 9,
+          "colors": ["Red"]
+        },
+        {
+          "postID": 10,
+          "colors": ["Brown"]
+        },
+        {
+          "postID": 11,
+          "colors": ["White"]
+        },
+        {
+          "postID": 12,
+          "colors": ["Blue"]
+        },
+        {
+          "postID": 13,
+          "colors": ["Blue", "White"]
+        },
+        {
+          "postID": 15,
+          "colors": ["Blue"]
+        },
+        {
+          "postID": 17,
+          "colors": ["Black"]
+        },
+        {
+          "postID": 18,
+          "colors": ["Brown"]
+        },
+        {
+          "postID": 19,
+          "colors": ["Blue"]
+        },
+        {
+          "postID": 21,
+          "colors": ["Pink", "Purple"]
+        },
+        {
+          "postID": 22,
+          "colors": ["Green"]
+        }
+      ],
+      
 
     "tags": [
         {
-            "postID": 2,
-            "tags": ["vintage", "sneakers", "Reebok", "90s", "women's fashion"]
+          "postID": 1,
+          "tags": ["introduction", "meet", "thrifting", "small business", "coffee"]
         },
         {
-            "postID": 3,
-            "tags": ["sweater", "knitwear", "thrifted", "Hollister", "women's fashion"]
+          "postID": 2,
+          "tags": ["vintage", "sneakers", "Reebok", "90s", "women's fashion"]
         },
         {
-            "postID": 6,
-            "tags": ["jacket", "vintage", "Pacsun", "fleece", "women's fashion"]
+          "postID": 3,
+          "tags": ["sneak peek", "jacket haul", "coming soon", "vintage jackets", "pre-sale"]
         },
         {
-            "postID": 7,
-            "tags": ["bomber jacket", "90s", "block color", "Head", "men's fashion"]
+          "postID": 4,
+          "tags": ["black top", "open back", "dressy", "night out", "video"]
         },
         {
-            "postID": 9,
-            "tags": ["jeans", "denim", "baggy fit", "Levi's", "men's fashion"]
+          "postID": 5,
+          "tags": ["introduction", "depop", "menswear", "new seller", "street style"]
         },
         {
-            "postID": 10,
-            "tags": ["leather jacket", "beige", "Overland", "men's fashion"]
+          "postID": 6,
+          "tags": ["hand sewn", "sneak peek", "video", "designer", "coming soon"]
         },
         {
-            "postID": 11,
-            "tags": ["sneakers", "vintage", "Adidas", "suede", "men's fashion"]
+          "postID": 7,
+          "tags": ["vintage", "bomber jacket", "90s", "colorblock", "men's fashion"]
         },
         {
-            "postID": 12,
-            "tags": ["windbreaker", "vintage", "Adidas", "retro", "men's fashion"]
+          "postID": 8,
+          "tags": ["vintage", "green overalls", "free people", "women's fashion", "casual"]
         },
         {
-            "postID": 13,
-            "tags": ["t-shirt", "yellow", "boxy fit", "women's fashion"]
+          "postID": 9,
+          "tags": ["fleece", "red pullover", "vintage", "pacsun", "outdoor"]
+        },
+        {
+          "postID": 10,
+          "tags": ["carhartt", "canvas jacket", "men's fashion", "workwear", "neutral"]
+        },
+        {
+          "postID": 11,
+          "tags": ["vintage", "adidas", "sneakers", "blue suede", "men's fashion"]
+        },
+        {
+          "postID": 12,
+          "tags": ["vintage", "bermuda shorts", "levi's", "summer", "women's fashion"]
+        },
+        {
+          "postID": 13,
+          "tags": ["vintage", "windbreaker", "fila", "spring jacket", "men's fashion"]
+        },
+        {
+          "postID": 14,
+          "tags": ["popup shop", "event", "vintage market", "farmer's market", "community"]
+        },
+        {
+          "postID": 15,
+          "tags": ["blue sweater", "knit", "hollister", "cozy", "women's fashion"]
+        },
+        {
+          "postID": 16,
+          "tags": ["day in the life", "fashion designer", "behind the scenes", "video", "sewing"]
+        },
+        {
+          "postID": 17,
+          "tags": ["black top", "open back", "princess polly", "night out", "women's fashion"]
+        },
+        {
+          "postID": 18,
+          "tags": ["cream cardigan", "knitwear", "urban outfitters", "chunky knit", "women's fashion"]
+        },
+        {
+          "postID": 19,
+          "tags": ["wrangler", "denim jacket", "vintage", "90s", "unisex fashion"]
+        },
+        {
+          "postID": 20,
+          "tags": ["haul", "new drop", "spring fashion", "video", "Y2K"]
+        },
+        {
+          "postID": 21,
+          "tags": ["vintage", "velvet vest", "early 2000s", "pink", "women's fashion"]
+        },
+        {
+          "postID": 22,
+          "tags": ["crochet", "green cardigan", "brandy melville", "layering", "women's fashion"]
         }
+      ],
+
+      "stats": [
+        {"sellerID": 1, "totalEarnings": 45.99, "itemsSold": 1}
+      ],
+
+
+      
+      "follows": [
+        { "followerID": 6, "followeeID": 3 },
+        { "followerID": 7, "followeeID": 2 },
+        { "followerID": 8, "followeeID": 1 },
+        { "followerID": 9, "followeeID": 5 },
+        { "followerID": 10, "followeeID": 3 },
+        { "followerID": 11, "followeeID": 4 },
+        { "followerID": 12, "followeeID": 2 },
+        { "followerID": 13, "followeeID": 3 },
+        { "followerID": 14, "followeeID": 1 },
+        { "followerID": 15, "followeeID": 5 },
+        { "followerID": 16, "followeeID": 3 },
+        { "followerID": 17, "followeeID": 4 },
+        { "followerID": 18, "followeeID": 2 },
+        { "followerID": 19, "followeeID": 1 },
+        { "followerID": 20, "followeeID": 3 },
+        { "followerID": 21, "followeeID": 5 },
+        { "followerID": 22, "followeeID": 2 },
+        { "followerID": 23, "followeeID": 3 },
+        { "followerID": 24, "followeeID": 1 },
+        { "followerID": 25, "followeeID": 4 },
+        { "followerID": 6, "followeeID": 1 },
+        { "followerID": 7, "followeeID": 3 },
+        { "followerID": 8, "followeeID": 2 },
+        { "followerID": 9, "followeeID": 4 },
+        { "followerID": 10, "followeeID": 1 },
+        { "followerID": 11, "followeeID": 5 },
+        { "followerID": 12, "followeeID": 3 },
+        { "followerID": 13, "followeeID": 2 },
+        { "followerID": 14, "followeeID": 4 },
+        { "followerID": 15, "followeeID": 1 },
+        { "followerID": 16, "followeeID": 5 },
+        { "followerID": 17, "followeeID": 3 },
+        { "followerID": 18, "followeeID": 2 },
+        { "followerID": 19, "followeeID": 4 },
+        { "followerID": 20, "followeeID": 1 }
     ]
+      
 }

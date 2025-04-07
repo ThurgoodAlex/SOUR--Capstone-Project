@@ -25,7 +25,13 @@ export function PostPreview({ post, size, profileThumbnail = "none", touchable =
     let coverImage = post.coverImage;
 
     if (coverImage == null || coverImage === '') {
-        coverImage = (images && images.length > 0 ? images[0].url : require('../assets/images/placeholder.png'));
+        coverImage = (images && images.length > 1 ? images[1].url : require('../assets/images/placeholder.png'));
+        for (let i = 0; i < images.length; i++) {
+            if (!images[i].isVideo) {
+                coverImage = images[i].url;
+                break;
+            }
+        }
     }
 
     if (mediaError) {

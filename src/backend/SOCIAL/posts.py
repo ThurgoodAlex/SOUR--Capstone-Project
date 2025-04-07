@@ -1,3 +1,4 @@
+
 import os
 import sys
 import boto3
@@ -6,7 +7,7 @@ from datetime import datetime, timezone
 from typing import Annotated, Optional
 import logging
 from sqlalchemy.future import select
-from sqlalchemy import desc, text, func
+from sqlalchemy import desc
 from jose import JWTError, jwt
 from sqlmodel import Session, and_, select
 from exceptions import *
@@ -34,8 +35,7 @@ from databaseAndSchemas.schema import (
     TagCreate,
     TagInDB,
     Color,
-    ColorInDB, 
-    SellerStatInDB
+    ColorInDB,
 )
 
 
@@ -50,24 +50,6 @@ lambda_client = boto3.client('lambda', endpoint_url=localstack_endpoint,
 
 posts_router = APIRouter(tags=["Posts"])
 
-
-@posts_router.post('/', response_model= Post, status_code=201)
-def upload_post(new_post:createPost,  
-                session: Annotated[Session, Depends(get_session)], 
-                current_user: UserInDB = Depends(auth_get_current_user)) -> Post:
-    """Creating a new posting"""
-    
-    if not current_user.isSeller:
-        raise PermissionDenied("upload", "post")
-        
-    post = PostInDB(
-        **new_post.model_dump(),
-        sellerID=current_user.id,
-    )
-    session.add(post)
-    session.commit()
-    session.refresh(post)
-    return post
 
 related_terms = {
     "sneakers": ["shoes", "kicks", "trainers", "sneaker"],
@@ -145,6 +127,26 @@ def fuzzy_search(
         print(f"ID: {row['id']}, Title: {row['title']}, Description: {row['description']}, Tags: {row['tags']}")
     return [Post(**dict(row)) for row in results]
 
+
+@posts_router.post('/', response_model= Post, status_code=201)
+def upload_post(new_post: createPost,  
+                session: Annotated[Session, Depends(get_session)], 
+                current_user: UserInDB = Depends(auth_get_current_user)) -> Post:
+    """Creating a new posting"""
+    
+    if not current_user.isSeller:
+        raise PermissionDenied("upload", "post")
+        
+    post = PostInDB(
+        **new_post.model_dump(),
+        sellerID=current_user.id,
+    )
+    session.add(post)
+    session.commit()
+    session.refresh(post)
+    return post
+
+
 @posts_router.post('/listings/', response_model= Post, status_code=201)
 def upload_listing(newListing:createListing,  
                 session: Annotated[Session, Depends(get_session)], 
@@ -169,28 +171,24 @@ def upload_listing(newListing:createListing,
 def get_all_posts(
     session: Annotated[Session, Depends(get_session)], 
     current_user: UserInDB = Depends(auth_get_current_user),
-    is_sold: Optional[bool] = Query(None)
+    is_sold: Optional[bool] = Query(None),
+    is_listing: Optional[bool] = Query(None),
+    is_video: Optional[bool] = Query(None)
 ) -> list[Post]:
     """Getting all posts"""
     query = select(PostInDB)
     if is_sold is not None:
         query = query.where(PostInDB.isSold == is_sold)
-    post_in_db = session.exec(query).all()
+        
+    if is_listing is not None:
+        query = query.where(PostInDB.isListing == is_listing)
+    if is_video is not None:
+        query = query.where(PostInDB.isVideo == is_video)
+    
+    # Execute the query and fetch all posts
+    post_in_db = session.exec(query.order_by(desc(PostInDB.created_at))).all()
     return [Post(**post.model_dump()) for post in post_in_db]
 
-@posts_router.get('/isListing=false/', response_model= list[Post], )
-def get_only_posts(session: Annotated[Session, Depends(get_session)], 
-                  current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
-    """Getting all posts"""
-    post_in_db = session.exec(select(PostInDB).where(PostInDB.isListing == False)).all()
-    return [Post(**post.model_dump()) for post in post_in_db]
-
-@posts_router.get('/isListing=true/', response_model= list[Post], )
-def get_only_listings(session: Annotated[Session, Depends(get_session)], 
-                  current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
-    """Getting all posts"""
-    post_in_db = session.exec(select(PostInDB).where(PostInDB.isListing == True)).all()
-    return [Post(**post.model_dump()) for post in post_in_db]
 
 
 @posts_router.get('/filter/', response_model=list[Post])
@@ -344,9 +342,6 @@ def create_new_link(session: Annotated[Session, Depends(get_session)],
     else:
         raise EntityNotFound("post", post_id)
     
-
-    
-    
 @posts_router.get('/{post_id}/links/', response_model=list[Post], status_code=200)
 def get_all_links_by_post_id(session: Annotated[Session, Depends(get_session)],
                              post_id: int,
@@ -410,7 +405,6 @@ def unlike_post(session :Annotated[Session, Depends(get_session)],
     else:
         raise EntityNotFound("post", post_id)
 
-
 #Returns True if like between user and post exists, False otherwise
 @posts_router.get('/{post_id}/like/', response_model= bool, status_code=200)
 def get_like_of_post(session :Annotated[Session, Depends(get_session)],
@@ -426,8 +420,6 @@ def get_like_of_post(session :Annotated[Session, Depends(get_session)],
     else:
         raise EntityNotFound("post", post_id)
     
-
-
 #this is here to test the seller stats route. May or may not keep this depending on how we want to do transactions...
 @posts_router.put('/{post_id}/sold/')
 def post_sold(post_id: int, session :Annotated[Session, Depends(get_session)]):
@@ -527,7 +519,7 @@ def upload_tag(post_id: int,
                  tag : TagCreate, 
                  session: Annotated[Session, Depends(get_session)],
                  current_user: UserInDB = Depends(auth_get_current_user)) -> Tag:
-    """Uploading new media to a post"""
+    """Uploading new tag to a post"""
     post = session.get(PostInDB, post_id)
     if not post:
         raise EntityNotFound("Post", post_id)
@@ -536,11 +528,6 @@ def upload_tag(post_id: int,
         **tag.model_dump(),
         postID=post_id,
     )
-    
-    # if current_user.id != post.sellerID:
-    #     raise PermissionDenied("upload", "tag")
-    
-    
     session.add(tagInDb)
     session.commit()
     session.refresh(tagInDb)
@@ -553,48 +540,17 @@ def upload_tag(post_id: int,
 @posts_router.get('/{post_id}/tags/', response_model=list[Tag], status_code=200)
 def get_tags_of_post(post_id: int,
                     session: Annotated[Session, Depends(get_session)], 
-                    current_user: UserInDB = Depends(auth_get_current_user)) -> list[Tag]:
+                    current_user: UserInDB = Depends(auth_get_current_user)) -> list[Media]:
     """Getting all tags for a post"""
     post = session.get(PostInDB, post_id)
 
     if not post:
         raise EntityNotFound("post", post_id) 
     query = select(TagInDB).where(TagInDB.postID == post_id)
-    tags_in_db = session.exec(query).all()
+    colors_in_db = session.exec(query).all()
 
-    return [Tag(**tag.model_dump()) for tag in tags_in_db]
+    return [Tag(**tag.model_dump()) for tag in colors_in_db]
 
-
-
-@posts_router.get('/related_posts/{post_id}/', response_model=list[Post], status_code=200)
-def get_related_posts(post_id: int, 
-                       session: Annotated[Session, Depends(get_session)], 
-                       current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
-    """Get related posts based on tags"""
-    post = session.get(PostInDB, post_id)
-    if not post:
-        raise EntityNotFound("post", post_id)
-
-    # Get tags for the current post
-    tags_query = select(TagInDB).where(TagInDB.postID == post_id)
-    tags_in_db = session.exec(tags_query).all()
-    tags = [tag.tag for tag in tags_in_db]
-    print("current post tags:", tags)
-
-    # Find related posts with the same tags
-    related_posts_query = select(PostInDB).join(TagInDB).where(TagInDB.tag.in_(tags)).where(PostInDB.id != post_id).limit(9)
-    related_posts_in_db = session.exec(related_posts_query).all()
-    print(related_posts_in_db)
-
-
-    seen_post_ids = set()
-    unique_posts = []
-    for post in related_posts_in_db:
-        if post.id not in seen_post_ids:
-            seen_post_ids.add(post.id)
-            unique_posts.append(Post(**post.model_dump()))
-
-    return unique_posts
 
 @posts_router.post('/{post_id}/{color}/', response_model=Color,status_code=201)
 def upload_color(post_id: int, 

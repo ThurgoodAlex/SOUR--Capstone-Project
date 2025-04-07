@@ -24,7 +24,7 @@ export function LinkPreview({ listing, touchable = true }: { listing: Post, touc
 
 
     return (
-        <View key={listing.id} style={{ minHeight:85, maxHeight:120, opacity: listing.isSold ? 0.5 : 1 }}> 
+        <View key={listing.id} style={{ minHeight:85, maxHeight:120, opacity: listing.isSold ? 0.5 : 1, padding:5 }}> 
             <TouchableOpacity
                 onPress={() => router.push(`/PostInfoScreen/${listing.id}`)}
                 style={{ flex: 1, margin: 5, borderBottomColor: 'lightgrey', borderBottomWidth:.5 }}

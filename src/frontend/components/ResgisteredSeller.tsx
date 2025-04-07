@@ -20,10 +20,11 @@ export function RegisteredSeller() {
     const { posts, loading: postsLoading, error: postsError } = usePosts(endpoint);
     
     const handleTabSwitch = (tab: string) => {
+        console.log('Tab switched to:', tab);
         setActiveTab(tab);
         setEndpoint(tab === 'Active' 
-            ? `/users/${user?.id}/posts/?is_sold=false/`
-            : `/users/${user?.id}/posts/?is_sold=true/`
+            ? `/users/${user?.id}/posts/issold=false/`
+            : `/users/${user?.id}/posts/issold=true/`
         );
     };
 

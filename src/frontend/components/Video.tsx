@@ -32,7 +32,7 @@ export function Video({ post, index, currentViewableItemIndex }: { post: Post, i
     const [isSellerLoaded, setIsSellerLoaded] = useState(false); // State to track if seller is loaded
 
 
-    const videoPlayer = useVideoPlayer(images?.[0]?.url ?? require('../assets/vids/testFashion.mp4'), (player) => {
+    const videoPlayer = useVideoPlayer(images?.[0]?.url ?? require('../assets/images/placeholder.png'), (player) => {
         player.loop = true;
         player.play();
     });
@@ -89,35 +89,51 @@ export function Video({ post, index, currentViewableItemIndex }: { post: Post, i
             />
             <SafeAreaView style={VideoStyles.overlayContainer}>
                 <View style={VideoStyles.footer}>
-                    <View style={VideoStyles.leftColumn}>
+                   
                         {showLinks ? (
                             <ScrollView style={VideoStyles.linkedItemsContainer}>
                                 <LinkedItems posts={linkedItems} columns={1} />
                             </ScrollView>
                         ) : null
                         }
-                        <View style={VideoStyles.fixedProfile}>
+             
+
+                        
+                        <View style={[Styles.column, { backgroundColor: '#80808095', width:400, marginLeft:-10,  padding:10 }]}>
+
+                            <View style={[Styles.row, {justifyContent:'space-between', alignItems:'flex-start'}]}>
+
+                                <View style={[Styles.column, {width:330}]}>
+                                <Text style={[{ color: Colors.white, fontWeight:'bold', fontSize:17, marginBottom: 0, marginTop:10 }]}>{post.title}</Text>
+                                <Text style={[{ color: Colors.light, marginBottom: 0 }]}>{post.description}</Text>
+                                </View>
+
+                                {linkedItems.length > 0 ? (
+                                    <TouchableOpacity onPress={() => setShowLinks(!showLinks)}>
+                                        <Ionicons size={30} name='link' color={Colors.light} />
+                                    </TouchableOpacity>
+                                ) : null}
+                                <TouchableOpacity onPress={toggleLike}>
+                                    {liked ? (
+                                        <Ionicons size={30} name='heart' color='red' />
+                                    ) : (
+                                        <Ionicons size={30} name='heart-outline' color={Colors.light} />
+                                    )}
+                                </TouchableOpacity>
+                            </View>
+
+                        
                             {isSellerLoaded && post.seller ? (
                                 <VideoProfile user={post.seller} video={post} />
                             ) : (
                                 <Text style={[TextStyles.h3, { color: Colors.light }]}>Loading seller info...</Text>
                             )}
+
                         </View>
-                    </View>
-                    <View style={VideoStyles.rightColumn}>
-                        {linkedItems.length > 0 ? (
-                            <TouchableOpacity onPress={() => setShowLinks(!showLinks)}>
-                                <Ionicons size={30} name='link' color={Colors.light} />
-                            </TouchableOpacity>
-                        ) : null}
-                        <TouchableOpacity onPress={toggleLike}>
-                            {liked ? (
-                                <Ionicons size={30} name='heart' color='red' />
-                            ) : (
-                                <Ionicons size={30} name='heart-outline' color={Colors.light} />
-                            )}
-                        </TouchableOpacity>
-                    </View>
+                        
+                    
+                  
+                  
                 </View>
             </SafeAreaView>
         </View>
@@ -146,6 +162,9 @@ function VideoProfile({ user, video }: { user: User, video: Post }) {
     let profilePic = user.id in profPicMapping ? profPicMapping[user.id] : require('@/assets/images/blank_profile_pic.png');
       
     return (
+
+       
+       
         <TouchableOpacity
             onPress={() => {
                 if (user.id == current_user?.id) {
@@ -161,7 +180,7 @@ function VideoProfile({ user, video }: { user: User, video: Post }) {
                 }
             }
             }
-            style={[Styles.row, { marginLeft: 6, maxHeight: 60, alignItems: 'center' }]}
+            style={[Styles.row, { marginLeft: 6, marginTop: 6, maxHeight: 60, alignItems: 'center' }]}
         >
 
             <Image
@@ -169,10 +188,11 @@ function VideoProfile({ user, video }: { user: User, video: Post }) {
                 style={thumbnailStyle.thumbnailImage}
             />
             <View style={[Styles.column, Styles.alignLeft, { marginLeft: 5 }]}>
-                <Text style={[TextStyles.h3Light, { marginBottom: 0 }]}>{video.title}</Text>
-                <Text style={[TextStyles.smallLight, { marginTop: 1 }]}>@{user.username}</Text>
+                <Text style={[{ color:Colors.white, marginTop: 1, fontWeight:'bold', fontSize:13 }]}>{user.firstname} {user.lastname}</Text>
+                <Text style={[{ color:Colors.white, marginTop: 1, fontSize:10 }]}>@{user.username}</Text>
             </View>
         </TouchableOpacity>
+      
     );
 }
 
@@ -192,21 +212,21 @@ const VideoStyles = StyleSheet.create({
         top: '50%'
     },
     footer: {
-        flexDirection: 'row',
+        flexDirection: 'column',
         marginTop: 'auto',
-        alignItems: 'flex-end'
+        alignItems: 'flex-end',
+        backgroundColor: '#3b0b0180',
+        position: "absolute",
+        bottom:25,
+        left: -5,
+        width:'103%'
     },
     linkedItemsContainer: {
-        backgroundColor: Colors.light60,
+        backgroundColor: '#f7f3ea95',
         maxHeight: 200,
-        marginBottom: 60,
+        paddingHorizontal: 10,
     },
-    fixedProfile: {
-        position: "absolute",
-        flexDirection: "row",
-        bottom: 10,
-        left: 10,
-    },
+    
     h3: {
         fontSize: 16,
         fontWeight: 'bold',
@@ -218,11 +238,5 @@ const VideoStyles = StyleSheet.create({
         fontSize: 11,
         color: Colors.light,
     },
-    leftColumn: {
-        flex: 1
-    },
-    rightColumn: {
-        gap: 10,
-        paddingRight: 10
-    },
+   
 });

@@ -321,7 +321,7 @@ export default function CreateListing(): JSX.Element {
                         }
                         <Tags tags={tags} setter={setTags} error={errors["tags"]}/>
 
-                        {linkedPosts.length > 0 &&  <LinkInputDropdown posts={posts} selected={linkedPosts} setter={setLinkedPosts} columns={3} isListing={true}/>}
+                        {posts.length > 0 &&  <LinkInputDropdown posts={posts} selected={linkedPosts} setter={setLinkedPosts} columns={3} isListing={true}/>}
                     </KeyboardAwareScrollView>
 
                     <TouchableOpacity 

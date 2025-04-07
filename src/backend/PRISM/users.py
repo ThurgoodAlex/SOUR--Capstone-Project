@@ -1,6 +1,6 @@
 from operator import and_
 from databaseAndSchemas.mappings.userMapping import map_user_db_to_response
-from sqlalchemy import or_
+from sqlalchemy import or_, desc
 import os
 import sys
 from exceptions import DuplicateResource, EntityNotFound, MethodNotAllowed, PermissionDenied
@@ -276,7 +276,7 @@ def get_posts_for_user(user_id: int,
                        current_user: UserInDB = Depends(auth_get_current_user),
                        is_listing: bool | None = None) -> list[Post]:
     """Getting all posts for a specific user, with optional filtering for listings or posts."""
-    query = select(PostInDB).where(PostInDB.sellerID == user_id)
+    query = select(PostInDB).where(PostInDB.sellerID == user_id).order_by(desc(PostInDB.created_at))
     if is_listing is not None:
         query = query.where(PostInDB.isListing == is_listing)
     posts_in_db = session.exec(query)
@@ -291,7 +291,7 @@ def get_posts_by_user(user_id: int,
                       currentUser: UserInDB = Depends(auth_get_current_user)):
     user = session.get(UserInDB, user_id)
     if user:
-        posts_in_db = session.exec(select(PostInDB).where(PostInDB.sellerID == user_id).where(PostInDB.isSold == is_sold)).all()
+        posts_in_db = session.exec(select(PostInDB).where(PostInDB.sellerID == user_id).where(PostInDB.isSold == is_sold).order_by(desc(PostInDB.created_at))).all()
         return [Post(**post.model_dump()) for post in posts_in_db]
     else:
         raise EntityNotFound("user", user_id)
@@ -319,6 +319,7 @@ def get_liked_posts(user_id: int,
         select(PostInDB)
         .join(LikeInDB, PostInDB.id == LikeInDB.postID)
         .where(LikeInDB.userID == current_user.id)
+        .order_by(desc(PostInDB.created_at))
         
     ).all()
     

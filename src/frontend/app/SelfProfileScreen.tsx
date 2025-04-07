@@ -50,6 +50,7 @@ export default function SelfProfileScreen() {
   useEffect(() => {
     if (endpoint && !endpoint.includes('undefined')) {
       refetch();
+    
     }
   }, [endpoint, refetch]);
 
@@ -63,6 +64,7 @@ export default function SelfProfileScreen() {
         : `/users/${user.id}/likes/`;
       
       setEndpoint(newEndpoint);
+      console.log('Fetched the posts unicorn:', posts);
     }
   };
 
