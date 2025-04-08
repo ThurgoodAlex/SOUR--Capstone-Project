@@ -25,8 +25,10 @@ export default function PostInfoScreen() {
     const { posts: linkedItems } = usePosts(`/posts/${id}/links/`);
     const { user } = useUser();
     const [liked, setLike] = useState(false);
-    const [relatedPosts, setRelatedPosts] = useState<Post[]>([]);
-    const [loadingRelated, setLoadingRelated] = useState(false);
+    const { posts: relatedPosts } = usePosts(`/posts/related_posts/${id}/`);
+
+    // const [relatedPosts, setRelatedPosts] = useState<Post[]>([]);
+    // const [loadingRelated, setLoadingRelated] = useState(false);
 
     useEffect(() => {
         if (post?.id) {
@@ -41,10 +43,8 @@ export default function PostInfoScreen() {
                     console.error('Error fetching like status:', error);
                 }
                 
-                setLoadingRelated(false);
             };
             fetchLike();
-            getRelatedPosts();
         }
         if (post?.isListing){
             const fetchColors = async () => {
@@ -63,25 +63,25 @@ export default function PostInfoScreen() {
         }
     }, [post?.id]); 
 
-  
-    async function getRelatedPosts() {
-        if (!post?.id) 
-            return;
-        try {
-            const response = await api.get(`/posts/related_posts/${post.id}/`);
-            if (response.ok) {
-                const data = await response.json();
-                console.log('Related posts:', data);
-                setRelatedPosts(data);
-            } else {
-                console.error('Failed to fetch related posts');
-            }
-        } catch (error) {
-            console.error('Error fetching related posts:', error);
-        } finally {
-            setLoadingRelated(false);
-        }
-    }
+    
+    // async function getRelatedPosts() {
+    //     if (!post?.id) 
+    //         return;
+    //     try {
+    //         const response = await api.get(`/posts/related_posts/${post.id}/`);
+    //         if (response.ok) {
+    //             const data = await response.json();
+    //             console.log('Related posts:', data);
+    //             setRelatedPosts(data);
+    //         } else {
+    //             console.error('Failed to fetch related posts');
+    //         }
+    //     } catch (error) {
+    //         console.error('Error fetching related posts:', error);
+    //     } finally {
+    //         setLoadingRelated(false);
+    //     }
+    // }
 
 
     const toggleLike = async () => {
@@ -179,17 +179,17 @@ export default function PostInfoScreen() {
                         )}
     
                  
-                        {loadingRelated ? (
-                            <ActivityIndicator size="small" color={Colors.orange} />
-                        ) : relatedPosts.length > 0 && (
+        
+                       {relatedPosts.length > 0 && (
                             <>
                                 <View style={{ borderBottomColor: Colors.dark60, borderBottomWidth: 1, marginVertical: 10 }} />
                                 <Text style={[TextStyles.h2, TextStyles.uppercase]}>
                                     {post.isListing ? "Similar Items" : "Related Posts"}
                                 </Text>
-                                <LinkedItems posts={relatedPosts} columns={post.isListing ? 3 : 1} />
+                                <LinkedItems posts={relatedPosts} columns={3} />
                             </>
-                        )}
+                        )
+                     }
                     </ScrollView>
                 </View>
                 <NavBar />
