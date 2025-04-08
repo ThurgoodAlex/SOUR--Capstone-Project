@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 from typing import Annotated, Optional
 import logging
 from sqlalchemy.future import select
-from sqlalchemy import desc
+from sqlalchemy import desc, text
 from jose import JWTError, jwt
 from sqlmodel import Session, and_, select
 from exceptions import *
@@ -36,6 +36,9 @@ from databaseAndSchemas.schema import (
     TagInDB,
     Color,
     ColorInDB,
+    CommentInDB,
+    SellerStatInDB,
+
 )
 
 
@@ -70,8 +73,8 @@ def fuzzy_search(
     current_user: UserInDB = Depends(auth_get_current_user)
 ) -> list[Post]:
     # Ensure extensions
-    session.execute(text('CREATE EXTENSION IF NOT EXISTS pg_trgm;'))
-    session.execute(text('CREATE EXTENSION IF NOT EXISTS unaccent;'))
+    #session.exec(text('CREATE EXTENSION IF NOT EXISTS pg_trgm;'))
+    session.exec(text('CREATE EXTENSION IF NOT EXISTS unaccent;'))
     session.commit()
 
     # Build search terms
@@ -85,10 +88,7 @@ def fuzzy_search(
 
     print(f"TSQuery: {tsquery}") 
 
-    # This is a massive query. This currently works and im happy with it, but I dont fully understand.
-    # I might try and change my approach.
-    # -- next thing ill mess around with is purely searching off tags
-        # -- need to create a get_tags_of_post method
+    # This is a massive query.For now it works, but we can optimize/ implify  it later. this aggregates all the tags for one post. the performs the full-text search on the title, description and tags and ranks it, then matches the correct item and sorts by ranking.
     query = text("""
        WITH posts_with_tags AS (
     SELECT 
@@ -551,6 +551,36 @@ def get_tags_of_post(post_id: int,
 
     return [Tag(**tag.model_dump()) for tag in colors_in_db]
 
+
+@posts_router.get('/related_posts/{post_id}/', response_model=list[Post], status_code=200)
+def get_related_posts(post_id: int, 
+                       session: Annotated[Session, Depends(get_session)], 
+                       current_user: UserInDB = Depends(auth_get_current_user)) -> list[Post]:
+    """Get related posts based on tags"""
+    post = session.get(PostInDB, post_id)
+    if not post:
+        raise EntityNotFound("post", post_id)
+
+    # Get tags for the current post
+    tags_query = select(TagInDB).where(TagInDB.postID == post_id)
+    tags_in_db = session.exec(tags_query).all()
+    tags = [tag.tag for tag in tags_in_db]
+    print("current post tags:", tags)
+
+    # Find related posts with the same tags
+    related_posts_query = select(PostInDB).join(TagInDB).where(TagInDB.tag.in_(tags)).where(PostInDB.id != post_id).limit(9)
+    related_posts_in_db = session.exec(related_posts_query).all()
+    print(related_posts_in_db)
+
+
+    seen_post_ids = set()
+    unique_posts = []
+    for post in related_posts_in_db:
+        if post.id not in seen_post_ids:
+            seen_post_ids.add(post.id)
+            unique_posts.append(Post(**post.model_dump()))
+
+    return unique_posts
 
 @posts_router.post('/{post_id}/{color}/', response_model=Color,status_code=201)
 def upload_color(post_id: int, 
