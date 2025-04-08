@@ -10,15 +10,33 @@ import { Post } from '@/constants/Types';
  * @param columns the number of columns (1 if list of linked listings, 3 if a grid of all types of posts)
  */
 
+
+// export function LinkedItems ({ posts, columns }: { posts: Post[], columns: number }){
+//     return (
+//         <View style={[Styles.row, { flexWrap: 'wrap', justifyContent: 'flex-start' }]}>
+//             {posts.map((item, index) => (
+//             <View key={item.id.toString()} style={{ width: `${100 / columns}%` }}>
+//                 {columns === 1 ? (
+//                 <LinkPreview listing={item} />
+//                 ) : (
+//                 <PostPreview post={item} size={110} profileThumbnail={"none"} />
+//                 )}
+//             </View>
+//             ))}
+//         </View>
+//     );
+// };
+
+
 export function LinkedItems ({ posts, columns }: { posts: Post[], columns: number }){
     const itemsPerRow = columns;
     
     return (
-        <View style={styles.container}>
+        <View style={[Styles.row, { flexWrap: 'wrap', justifyContent: 'flex-start' }]}>
             // List view - display each item in a single column
             {columns === 1 ? (
                 posts.map((item) => (
-                    <View key={item.id.toString()} style={styles.listItemContainer}>
+                    <View key={item.id.toString()} style={{ width: `${100 / columns}%` }}>
                         <LinkPreview listing={item} />
                     </View>
                 ))
@@ -45,12 +63,8 @@ export function LinkedItems ({ posts, columns }: { posts: Post[], columns: numbe
 }
 
 const styles = StyleSheet.create({
-    container: {
-        width: '100%',
-    },
-    listItemContainer: {
-        marginBottom: 5,
-    },
+
+
     row: {
         flexDirection: 'row',
         width: '100%',
