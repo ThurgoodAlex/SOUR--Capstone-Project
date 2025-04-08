@@ -58,13 +58,16 @@ export function Video({ post, index, currentViewableItemIndex }: { post: Post, i
 
     useEffect(() => {
         fetchLike()
-        if (images?.length > 0 && videoPlayer) {
-            setPlayer(videoPlayer);
+        if(!linkedPostsLoading){
+            if (images?.length > 0 && videoPlayer) {
+                setPlayer(videoPlayer);
+            }
         }
+       
         if (post.seller) {
             setIsSellerLoaded(true);
         }
-    }, [shouldPlay, images, post.seller]);
+    }, [shouldPlay, images, post.seller, linkedPostsLoading]);
 
     return (
         <View style={VideoStyles.container}>
