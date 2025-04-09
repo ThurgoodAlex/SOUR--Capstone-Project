@@ -118,7 +118,12 @@ export default function UserProfileScreen() {
         <>
             <Stack.Screen
                 options={{
-                    headerBackButtonDisplayMode: 'minimal'
+                    headerBackButtonDisplayMode: 'minimal',
+                    headerRight: () => (
+                    <TouchableOpacity onPress={() => router.push('/CartScreen')}>
+                        <Ionicons size={30} name="cart-outline" color="#692b20" />
+                    </TouchableOpacity>
+                    ),
                 }}
             />
             <View style={ScreenStyles.screen}>
