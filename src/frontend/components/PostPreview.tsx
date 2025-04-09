@@ -121,7 +121,7 @@ export function PostPreview({ post, size, profileThumbnail = "none", touchable =
               <Text>No seller information available</Text>
             )
           ) : (
-            <Text style={[TextStyles.h3, { textAlign: 'left' }]}>{post.title}</Text>
+            <Text style={[TextStyles.h3, { textAlign: 'left', maxWidth:170 }]}>{post.title}</Text>
           )}
       </View>
     )

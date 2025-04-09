@@ -157,7 +157,9 @@ function VideoProfile({ user, video }: { user: User, video: Post }) {
     const profPicMapping: Record<number, any> = {
         1: require('@/assets/images/prof1.jpg'),
         5: require('@/assets/images/prof2.jpg'),
-        2: require('@/assets/images/prof3.jpg')
+        2: require('@/assets/images/prof3.jpg'),
+        3: require('@/assets/images/julia.png'),
+
       }
     
     
