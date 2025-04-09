@@ -23,5 +23,6 @@ export const basicColors = [
     { name: 'Black', hex: '#000000' },
     { name: 'White', hex: '#FFFFFF' },
     { name: 'Gray', hex: '#808080' },
-    { name: 'Brown', hex: '#A52A2A' }
+    { name: 'Brown', hex: '#A52A2A' },
+    { name: 'Multi', hex: '#00FFFF' },
 ];
