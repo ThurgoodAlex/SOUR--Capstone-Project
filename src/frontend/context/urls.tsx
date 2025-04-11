@@ -1,6 +1,6 @@
  //tunnel URL
-const localhostIP = "localhost";
-
+const localhostIP:string = process.env.EXPO_PUBLIC_HOST || 'localhost'
+console.log(localhostIP)
  //Alex desktop URL
  //const localhostIP = "10.0.0.62";
 
