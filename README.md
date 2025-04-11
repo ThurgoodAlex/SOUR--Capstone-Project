@@ -9,8 +9,8 @@ This is the Primary repository for the SOUR 🍋 E-Commerce and Social media App
 - docker desktop or docker daemon installed on device 
 - mobile application with expo installed 
 
-1. in your terminal at the root directory of this project build the docker sour docker image with `docker compose -f dev-compose build`
-2.`docker compose -f dev-compose up`
+1. in your terminal at the root directory of this project build the docker sour docker image with `docker compose -f dev-compose.yaml build`
+2.`docker compose -f dev-compose.yaml up`
 3. once built you will need to remote into the docker container this can be done in one of two ways: 
 
 **Remote explorer in visual studio code** 
