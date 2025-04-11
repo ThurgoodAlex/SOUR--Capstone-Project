@@ -59,6 +59,8 @@ RUN echo '#!/bin/bash\ncd /app/src/frontend && npm start' > /usr/local/bin/start
     echo '#!/bin/bash\ncd /app/src/infrastructure && ./deploy.sh' > /usr/local/bin/deploy-infra && \
     chmod +x /usr/local/bin/start-frontend /usr/local/bin/start-backend /usr/local/bin/deploy-infra 
 
+COPY start-project.sh .
+RUN chmod +x /app/start-project.sh
 
 # Expose ports
 EXPOSE 8000 19000 19001 19002
